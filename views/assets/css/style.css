@@ -1,0 +1,35 @@
+/*===========================
+        Common
+============================*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+body {
+    font-family: "Roboto", sans-serif;
+}
+
+.element-center {
+    margin: 0 auto !important;
+    display: block;
+    text-align: center;
+}
+
+button a {
+    text-decoration: none !important;
+    color: #fff !important;
+}
+
+/*===========================
+        End Common
+============================*/
+
+/*===========================
+        Login Page
+============================*/
+
+.background {
+    background-image: url("../img/eat.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    background-attachment: fixed;;
+}
