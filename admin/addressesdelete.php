@@ -319,9 +319,9 @@ class caddresses_delete extends caddresses {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->CustomerID->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->POBox->SetVisibility();
+		$this->customer_id->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->po_box->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -504,21 +504,21 @@ class caddresses_delete extends caddresses {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->AddressID->setDbValue($row['AddressID']);
-		$this->CustomerID->setDbValue($row['CustomerID']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->POBox->setDbValue($row['POBox']);
+		$this->address_id->setDbValue($row['address_id']);
+		$this->customer_id->setDbValue($row['customer_id']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->po_box->setDbValue($row['po_box']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['AddressID'] = NULL;
-		$row['CustomerID'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['POBox'] = NULL;
+		$row['address_id'] = NULL;
+		$row['customer_id'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['po_box'] = NULL;
 		return $row;
 	}
 
@@ -527,11 +527,11 @@ class caddresses_delete extends caddresses {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->AddressID->DbValue = $row['AddressID'];
-		$this->CustomerID->DbValue = $row['CustomerID'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->POBox->DbValue = $row['POBox'];
+		$this->address_id->DbValue = $row['address_id'];
+		$this->customer_id->DbValue = $row['customer_id'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->po_box->DbValue = $row['po_box'];
 	}
 
 	// Render row values based on field settings
@@ -544,83 +544,83 @@ class caddresses_delete extends caddresses {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// AddressID
+		// address_id
 
-		$this->AddressID->CellCssStyle = "white-space: nowrap;";
+		$this->address_id->CellCssStyle = "white-space: nowrap;";
 
-		// CustomerID
-		// ProvinceID
-		// Address
-		// POBox
+		// customer_id
+		// province_id
+		// address
+		// po_box
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// CustomerID
-		if (strval($this->CustomerID->CurrentValue) <> "") {
-			$sFilterWrk = "`CustomerID`" . ew_SearchString("=", $this->CustomerID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `CustomerID`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+		// customer_id
+		if (strval($this->customer_id->CurrentValue) <> "") {
+			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
 		$sWhereWrk = "";
-		$this->CustomerID->LookupFilters = array();
+		$this->customer_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `FullName`";
+		$sSqlWrk .= " ORDER BY `full_name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->CustomerID->ViewValue = $this->CustomerID->DisplayValue($arwrk);
+				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
 			}
 		} else {
-			$this->CustomerID->ViewValue = NULL;
+			$this->customer_id->ViewValue = NULL;
 		}
-		$this->CustomerID->ViewCustomAttributes = "";
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// POBox
-		$this->POBox->ViewValue = $this->POBox->CurrentValue;
-		$this->POBox->ViewCustomAttributes = "";
+		// po_box
+		$this->po_box->ViewValue = $this->po_box->CurrentValue;
+		$this->po_box->ViewCustomAttributes = "";
 
-			// CustomerID
-			$this->CustomerID->LinkCustomAttributes = "";
-			$this->CustomerID->HrefValue = "";
-			$this->CustomerID->TooltipValue = "";
+			// customer_id
+			$this->customer_id->LinkCustomAttributes = "";
+			$this->customer_id->HrefValue = "";
+			$this->customer_id->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// POBox
-			$this->POBox->LinkCustomAttributes = "";
-			$this->POBox->HrefValue = "";
-			$this->POBox->TooltipValue = "";
+			// po_box
+			$this->po_box->LinkCustomAttributes = "";
+			$this->po_box->HrefValue = "";
+			$this->po_box->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -670,7 +670,7 @@ class caddresses_delete extends caddresses {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['AddressID'];
+				$sThisKey .= $row['address_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -722,11 +722,11 @@ class caddresses_delete extends caddresses {
 			}
 			if ($sMasterTblVar == "customers") {
 				$bValidMaster = TRUE;
-				if (@$_GET["fk_CustomerID"] <> "") {
-					$GLOBALS["customers"]->CustomerID->setQueryStringValue($_GET["fk_CustomerID"]);
-					$this->CustomerID->setQueryStringValue($GLOBALS["customers"]->CustomerID->QueryStringValue);
-					$this->CustomerID->setSessionValue($this->CustomerID->QueryStringValue);
-					if (!is_numeric($GLOBALS["customers"]->CustomerID->QueryStringValue)) $bValidMaster = FALSE;
+				if (@$_GET["fk_customer_id"] <> "") {
+					$GLOBALS["customers"]->customer_id->setQueryStringValue($_GET["fk_customer_id"]);
+					$this->customer_id->setQueryStringValue($GLOBALS["customers"]->customer_id->QueryStringValue);
+					$this->customer_id->setSessionValue($this->customer_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["customers"]->customer_id->QueryStringValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -740,11 +740,11 @@ class caddresses_delete extends caddresses {
 			}
 			if ($sMasterTblVar == "customers") {
 				$bValidMaster = TRUE;
-				if (@$_POST["fk_CustomerID"] <> "") {
-					$GLOBALS["customers"]->CustomerID->setFormValue($_POST["fk_CustomerID"]);
-					$this->CustomerID->setFormValue($GLOBALS["customers"]->CustomerID->FormValue);
-					$this->CustomerID->setSessionValue($this->CustomerID->FormValue);
-					if (!is_numeric($GLOBALS["customers"]->CustomerID->FormValue)) $bValidMaster = FALSE;
+				if (@$_POST["fk_customer_id"] <> "") {
+					$GLOBALS["customers"]->customer_id->setFormValue($_POST["fk_customer_id"]);
+					$this->customer_id->setFormValue($GLOBALS["customers"]->customer_id->FormValue);
+					$this->customer_id->setSessionValue($this->customer_id->FormValue);
+					if (!is_numeric($GLOBALS["customers"]->customer_id->FormValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -763,7 +763,7 @@ class caddresses_delete extends caddresses {
 
 			// Clear previous master key from Session
 			if ($sMasterTblVar <> "customers") {
-				if ($this->CustomerID->CurrentValue == "") $this->CustomerID->setSessionValue("");
+				if ($this->customer_id->CurrentValue == "") $this->customer_id->setSessionValue("");
 			}
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
@@ -894,10 +894,10 @@ faddressesdelete.Form_CustomValidate =
 faddressesdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-faddressesdelete.Lists["x_CustomerID"] = {"LinkField":"x_CustomerID","Ajax":true,"AutoFill":false,"DisplayFields":["x_FullName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-faddressesdelete.Lists["x_CustomerID"].Data = "<?php echo $addresses_delete->CustomerID->LookupFilterQuery(FALSE, "delete") ?>";
-faddressesdelete.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-faddressesdelete.Lists["x_ProvinceID"].Data = "<?php echo $addresses_delete->ProvinceID->LookupFilterQuery(FALSE, "delete") ?>";
+faddressesdelete.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
+faddressesdelete.Lists["x_customer_id"].Data = "<?php echo $addresses_delete->customer_id->LookupFilterQuery(FALSE, "delete") ?>";
+faddressesdelete.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+faddressesdelete.Lists["x_province_id"].Data = "<?php echo $addresses_delete->province_id->LookupFilterQuery(FALSE, "delete") ?>";
 
 // Form object for search
 </script>
@@ -924,14 +924,14 @@ $addresses_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-		<th class="<?php echo $addresses->CustomerID->HeaderCellClass() ?>"><span id="elh_addresses_CustomerID" class="addresses_CustomerID"><?php echo $addresses->CustomerID->FldCaption() ?></span></th>
+<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+		<th class="<?php echo $addresses->customer_id->HeaderCellClass() ?>"><span id="elh_addresses_customer_id" class="addresses_customer_id"><?php echo $addresses->customer_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-		<th class="<?php echo $addresses->ProvinceID->HeaderCellClass() ?>"><span id="elh_addresses_ProvinceID" class="addresses_ProvinceID"><?php echo $addresses->ProvinceID->FldCaption() ?></span></th>
+<?php if ($addresses->province_id->Visible) { // province_id ?>
+		<th class="<?php echo $addresses->province_id->HeaderCellClass() ?>"><span id="elh_addresses_province_id" class="addresses_province_id"><?php echo $addresses->province_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($addresses->POBox->Visible) { // POBox ?>
-		<th class="<?php echo $addresses->POBox->HeaderCellClass() ?>"><span id="elh_addresses_POBox" class="addresses_POBox"><?php echo $addresses->POBox->FldCaption() ?></span></th>
+<?php if ($addresses->po_box->Visible) { // po_box ?>
+		<th class="<?php echo $addresses->po_box->HeaderCellClass() ?>"><span id="elh_addresses_po_box" class="addresses_po_box"><?php echo $addresses->po_box->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -954,27 +954,27 @@ while (!$addresses_delete->Recordset->EOF) {
 	$addresses_delete->RenderRow();
 ?>
 	<tr<?php echo $addresses->RowAttributes() ?>>
-<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-		<td<?php echo $addresses->CustomerID->CellAttributes() ?>>
-<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_CustomerID" class="addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<?php echo $addresses->CustomerID->ListViewValue() ?></span>
+<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+		<td<?php echo $addresses->customer_id->CellAttributes() ?>>
+<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_customer_id" class="addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<?php echo $addresses->customer_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-		<td<?php echo $addresses->ProvinceID->CellAttributes() ?>>
-<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_ProvinceID" class="addresses_ProvinceID">
-<span<?php echo $addresses->ProvinceID->ViewAttributes() ?>>
-<?php echo $addresses->ProvinceID->ListViewValue() ?></span>
+<?php if ($addresses->province_id->Visible) { // province_id ?>
+		<td<?php echo $addresses->province_id->CellAttributes() ?>>
+<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_province_id" class="addresses_province_id">
+<span<?php echo $addresses->province_id->ViewAttributes() ?>>
+<?php echo $addresses->province_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($addresses->POBox->Visible) { // POBox ?>
-		<td<?php echo $addresses->POBox->CellAttributes() ?>>
-<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_POBox" class="addresses_POBox">
-<span<?php echo $addresses->POBox->ViewAttributes() ?>>
-<?php echo $addresses->POBox->ListViewValue() ?></span>
+<?php if ($addresses->po_box->Visible) { // po_box ?>
+		<td<?php echo $addresses->po_box->CellAttributes() ?>>
+<span id="el<?php echo $addresses_delete->RowCnt ?>_addresses_po_box" class="addresses_po_box">
+<span<?php echo $addresses->po_box->ViewAttributes() ?>>
+<?php echo $addresses->po_box->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

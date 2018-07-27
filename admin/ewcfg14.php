@@ -25,7 +25,7 @@ define("EW_CONFIG_FILE_FOLDER", EW_PROJECT_NAME, TRUE); // Config file name
 define("EW_PROJECT_ID", "{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}", TRUE); // Project ID (GUID)
 $EW_RELATED_PROJECT_ID = "";
 $EW_RELATED_LANGUAGE_FOLDER = "";
-define("EW_RANDOM_KEY", '1u0ob047UJ0etw60', TRUE); // Random key for encryption
+define("EW_RANDOM_KEY", 'mdwRxnMjrZuNbtpV', TRUE); // Random key for encryption
 define("EW_PROJECT_STYLESHEET_FILENAME", "phpcss/project6011.css", TRUE); // Project stylesheet file name
 define("EW_CHARSET", "utf-8", TRUE); // Project charset
 define("EW_EMAIL_CHARSET", EW_CHARSET, TRUE); // Email charset
@@ -260,17 +260,17 @@ define("EW_PASSWORD_HASH", FALSE, TRUE); // Use PHP 5.5+ password hashing functi
 // User level definition table/field names
 
 @define("EW_USER_LEVEL_DBID", "DB", TRUE);
-@define("EW_USER_LEVEL_TABLE", "`userlevels`", TRUE);
-@define("EW_USER_LEVEL_ID_FIELD", "`userlevelid`", TRUE);
-@define("EW_USER_LEVEL_NAME_FIELD", "`userlevelname`", TRUE);
+@define("EW_USER_LEVEL_TABLE", "`user_levels`", TRUE);
+@define("EW_USER_LEVEL_ID_FIELD", "`user_level_id`", TRUE);
+@define("EW_USER_LEVEL_NAME_FIELD", "`user_level_name`", TRUE);
 
 // User Level privileges table/field names
 @define("EW_USER_LEVEL_PRIV_DBID", "DB", TRUE);
-@define("EW_USER_LEVEL_PRIV_TABLE", "`userlevelpermissions`", TRUE);
-@define("EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD", "`tablename`", TRUE);
-@define("EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD_2", "tablename", TRUE);
+@define("EW_USER_LEVEL_PRIV_TABLE", "`user_level_permissions`", TRUE);
+@define("EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD", "`table_name`", TRUE);
+@define("EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD_2", "table_name", TRUE);
 @define("EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD_SIZE", 255, TRUE);
-@define("EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD", "`userlevelid`", TRUE);
+@define("EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD", "`user_level_id`", TRUE);
 @define("EW_USER_LEVEL_PRIV_PRIV_FIELD", "`permission`", TRUE);
 
 // User level constants
@@ -300,7 +300,7 @@ define("EW_USER_ID_ALLOW", 104, TRUE);
 // User table filters
 define("EW_USER_TABLE_DBID", "DB", TRUE);
 define("EW_USER_TABLE", "`employees`", TRUE);
-define("EW_USER_NAME_FILTER", "(`UserName` = '%u')", TRUE);
+define("EW_USER_NAME_FILTER", "(`user_name` = '%u')", TRUE);
 define("EW_USER_ID_FILTER", "", TRUE);
 define("EW_USER_EMAIL_FILTER", "", TRUE);
 define("EW_USER_ACTIVATE_FILTER", "", TRUE);

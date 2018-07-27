@@ -399,15 +399,15 @@ class cemployees_list extends cemployees {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->FullName->SetVisibility();
-		$this->UserName->SetVisibility();
-		$this->UserPass->SetVisibility();
-		$this->Phone->SetVisibility();
-		$this->Mobile->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->ZipCode->SetVisibility();
-		$this->Level->SetVisibility();
+		$this->full_name->SetVisibility();
+		$this->user_name->SetVisibility();
+		$this->user_pass->SetVisibility();
+		$this->phone->SetVisibility();
+		$this->mobile->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->zip_code->SetVisibility();
+		$this->level_no->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -739,8 +739,8 @@ class cemployees_list extends cemployees {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->EmployeeID->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->EmployeeID->FormValue))
+			$this->employee_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->employee_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -753,16 +753,16 @@ class cemployees_list extends cemployees {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->EmployeeID->AdvancedSearch->ToJson(), ","); // Field EmployeeID
-		$sFilterList = ew_Concat($sFilterList, $this->FullName->AdvancedSearch->ToJson(), ","); // Field FullName
-		$sFilterList = ew_Concat($sFilterList, $this->UserName->AdvancedSearch->ToJson(), ","); // Field UserName
-		$sFilterList = ew_Concat($sFilterList, $this->UserPass->AdvancedSearch->ToJson(), ","); // Field UserPass
-		$sFilterList = ew_Concat($sFilterList, $this->Phone->AdvancedSearch->ToJson(), ","); // Field Phone
-		$sFilterList = ew_Concat($sFilterList, $this->Mobile->AdvancedSearch->ToJson(), ","); // Field Mobile
-		$sFilterList = ew_Concat($sFilterList, $this->ProvinceID->AdvancedSearch->ToJson(), ","); // Field ProvinceID
-		$sFilterList = ew_Concat($sFilterList, $this->Address->AdvancedSearch->ToJson(), ","); // Field Address
-		$sFilterList = ew_Concat($sFilterList, $this->ZipCode->AdvancedSearch->ToJson(), ","); // Field ZipCode
-		$sFilterList = ew_Concat($sFilterList, $this->Level->AdvancedSearch->ToJson(), ","); // Field Level
+		$sFilterList = ew_Concat($sFilterList, $this->employee_id->AdvancedSearch->ToJson(), ","); // Field employee_id
+		$sFilterList = ew_Concat($sFilterList, $this->full_name->AdvancedSearch->ToJson(), ","); // Field full_name
+		$sFilterList = ew_Concat($sFilterList, $this->user_name->AdvancedSearch->ToJson(), ","); // Field user_name
+		$sFilterList = ew_Concat($sFilterList, $this->user_pass->AdvancedSearch->ToJson(), ","); // Field user_pass
+		$sFilterList = ew_Concat($sFilterList, $this->phone->AdvancedSearch->ToJson(), ","); // Field phone
+		$sFilterList = ew_Concat($sFilterList, $this->mobile->AdvancedSearch->ToJson(), ","); // Field mobile
+		$sFilterList = ew_Concat($sFilterList, $this->province_id->AdvancedSearch->ToJson(), ","); // Field province_id
+		$sFilterList = ew_Concat($sFilterList, $this->address->AdvancedSearch->ToJson(), ","); // Field address
+		$sFilterList = ew_Concat($sFilterList, $this->zip_code->AdvancedSearch->ToJson(), ","); // Field zip_code
+		$sFilterList = ew_Concat($sFilterList, $this->level_no->AdvancedSearch->ToJson(), ","); // Field level_no
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -807,85 +807,85 @@ class cemployees_list extends cemployees {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field EmployeeID
-		$this->EmployeeID->AdvancedSearch->SearchValue = @$filter["x_EmployeeID"];
-		$this->EmployeeID->AdvancedSearch->SearchOperator = @$filter["z_EmployeeID"];
-		$this->EmployeeID->AdvancedSearch->SearchCondition = @$filter["v_EmployeeID"];
-		$this->EmployeeID->AdvancedSearch->SearchValue2 = @$filter["y_EmployeeID"];
-		$this->EmployeeID->AdvancedSearch->SearchOperator2 = @$filter["w_EmployeeID"];
-		$this->EmployeeID->AdvancedSearch->Save();
+		// Field employee_id
+		$this->employee_id->AdvancedSearch->SearchValue = @$filter["x_employee_id"];
+		$this->employee_id->AdvancedSearch->SearchOperator = @$filter["z_employee_id"];
+		$this->employee_id->AdvancedSearch->SearchCondition = @$filter["v_employee_id"];
+		$this->employee_id->AdvancedSearch->SearchValue2 = @$filter["y_employee_id"];
+		$this->employee_id->AdvancedSearch->SearchOperator2 = @$filter["w_employee_id"];
+		$this->employee_id->AdvancedSearch->Save();
 
-		// Field FullName
-		$this->FullName->AdvancedSearch->SearchValue = @$filter["x_FullName"];
-		$this->FullName->AdvancedSearch->SearchOperator = @$filter["z_FullName"];
-		$this->FullName->AdvancedSearch->SearchCondition = @$filter["v_FullName"];
-		$this->FullName->AdvancedSearch->SearchValue2 = @$filter["y_FullName"];
-		$this->FullName->AdvancedSearch->SearchOperator2 = @$filter["w_FullName"];
-		$this->FullName->AdvancedSearch->Save();
+		// Field full_name
+		$this->full_name->AdvancedSearch->SearchValue = @$filter["x_full_name"];
+		$this->full_name->AdvancedSearch->SearchOperator = @$filter["z_full_name"];
+		$this->full_name->AdvancedSearch->SearchCondition = @$filter["v_full_name"];
+		$this->full_name->AdvancedSearch->SearchValue2 = @$filter["y_full_name"];
+		$this->full_name->AdvancedSearch->SearchOperator2 = @$filter["w_full_name"];
+		$this->full_name->AdvancedSearch->Save();
 
-		// Field UserName
-		$this->UserName->AdvancedSearch->SearchValue = @$filter["x_UserName"];
-		$this->UserName->AdvancedSearch->SearchOperator = @$filter["z_UserName"];
-		$this->UserName->AdvancedSearch->SearchCondition = @$filter["v_UserName"];
-		$this->UserName->AdvancedSearch->SearchValue2 = @$filter["y_UserName"];
-		$this->UserName->AdvancedSearch->SearchOperator2 = @$filter["w_UserName"];
-		$this->UserName->AdvancedSearch->Save();
+		// Field user_name
+		$this->user_name->AdvancedSearch->SearchValue = @$filter["x_user_name"];
+		$this->user_name->AdvancedSearch->SearchOperator = @$filter["z_user_name"];
+		$this->user_name->AdvancedSearch->SearchCondition = @$filter["v_user_name"];
+		$this->user_name->AdvancedSearch->SearchValue2 = @$filter["y_user_name"];
+		$this->user_name->AdvancedSearch->SearchOperator2 = @$filter["w_user_name"];
+		$this->user_name->AdvancedSearch->Save();
 
-		// Field UserPass
-		$this->UserPass->AdvancedSearch->SearchValue = @$filter["x_UserPass"];
-		$this->UserPass->AdvancedSearch->SearchOperator = @$filter["z_UserPass"];
-		$this->UserPass->AdvancedSearch->SearchCondition = @$filter["v_UserPass"];
-		$this->UserPass->AdvancedSearch->SearchValue2 = @$filter["y_UserPass"];
-		$this->UserPass->AdvancedSearch->SearchOperator2 = @$filter["w_UserPass"];
-		$this->UserPass->AdvancedSearch->Save();
+		// Field user_pass
+		$this->user_pass->AdvancedSearch->SearchValue = @$filter["x_user_pass"];
+		$this->user_pass->AdvancedSearch->SearchOperator = @$filter["z_user_pass"];
+		$this->user_pass->AdvancedSearch->SearchCondition = @$filter["v_user_pass"];
+		$this->user_pass->AdvancedSearch->SearchValue2 = @$filter["y_user_pass"];
+		$this->user_pass->AdvancedSearch->SearchOperator2 = @$filter["w_user_pass"];
+		$this->user_pass->AdvancedSearch->Save();
 
-		// Field Phone
-		$this->Phone->AdvancedSearch->SearchValue = @$filter["x_Phone"];
-		$this->Phone->AdvancedSearch->SearchOperator = @$filter["z_Phone"];
-		$this->Phone->AdvancedSearch->SearchCondition = @$filter["v_Phone"];
-		$this->Phone->AdvancedSearch->SearchValue2 = @$filter["y_Phone"];
-		$this->Phone->AdvancedSearch->SearchOperator2 = @$filter["w_Phone"];
-		$this->Phone->AdvancedSearch->Save();
+		// Field phone
+		$this->phone->AdvancedSearch->SearchValue = @$filter["x_phone"];
+		$this->phone->AdvancedSearch->SearchOperator = @$filter["z_phone"];
+		$this->phone->AdvancedSearch->SearchCondition = @$filter["v_phone"];
+		$this->phone->AdvancedSearch->SearchValue2 = @$filter["y_phone"];
+		$this->phone->AdvancedSearch->SearchOperator2 = @$filter["w_phone"];
+		$this->phone->AdvancedSearch->Save();
 
-		// Field Mobile
-		$this->Mobile->AdvancedSearch->SearchValue = @$filter["x_Mobile"];
-		$this->Mobile->AdvancedSearch->SearchOperator = @$filter["z_Mobile"];
-		$this->Mobile->AdvancedSearch->SearchCondition = @$filter["v_Mobile"];
-		$this->Mobile->AdvancedSearch->SearchValue2 = @$filter["y_Mobile"];
-		$this->Mobile->AdvancedSearch->SearchOperator2 = @$filter["w_Mobile"];
-		$this->Mobile->AdvancedSearch->Save();
+		// Field mobile
+		$this->mobile->AdvancedSearch->SearchValue = @$filter["x_mobile"];
+		$this->mobile->AdvancedSearch->SearchOperator = @$filter["z_mobile"];
+		$this->mobile->AdvancedSearch->SearchCondition = @$filter["v_mobile"];
+		$this->mobile->AdvancedSearch->SearchValue2 = @$filter["y_mobile"];
+		$this->mobile->AdvancedSearch->SearchOperator2 = @$filter["w_mobile"];
+		$this->mobile->AdvancedSearch->Save();
 
-		// Field ProvinceID
-		$this->ProvinceID->AdvancedSearch->SearchValue = @$filter["x_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchOperator = @$filter["z_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchCondition = @$filter["v_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchValue2 = @$filter["y_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchOperator2 = @$filter["w_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->Save();
+		// Field province_id
+		$this->province_id->AdvancedSearch->SearchValue = @$filter["x_province_id"];
+		$this->province_id->AdvancedSearch->SearchOperator = @$filter["z_province_id"];
+		$this->province_id->AdvancedSearch->SearchCondition = @$filter["v_province_id"];
+		$this->province_id->AdvancedSearch->SearchValue2 = @$filter["y_province_id"];
+		$this->province_id->AdvancedSearch->SearchOperator2 = @$filter["w_province_id"];
+		$this->province_id->AdvancedSearch->Save();
 
-		// Field Address
-		$this->Address->AdvancedSearch->SearchValue = @$filter["x_Address"];
-		$this->Address->AdvancedSearch->SearchOperator = @$filter["z_Address"];
-		$this->Address->AdvancedSearch->SearchCondition = @$filter["v_Address"];
-		$this->Address->AdvancedSearch->SearchValue2 = @$filter["y_Address"];
-		$this->Address->AdvancedSearch->SearchOperator2 = @$filter["w_Address"];
-		$this->Address->AdvancedSearch->Save();
+		// Field address
+		$this->address->AdvancedSearch->SearchValue = @$filter["x_address"];
+		$this->address->AdvancedSearch->SearchOperator = @$filter["z_address"];
+		$this->address->AdvancedSearch->SearchCondition = @$filter["v_address"];
+		$this->address->AdvancedSearch->SearchValue2 = @$filter["y_address"];
+		$this->address->AdvancedSearch->SearchOperator2 = @$filter["w_address"];
+		$this->address->AdvancedSearch->Save();
 
-		// Field ZipCode
-		$this->ZipCode->AdvancedSearch->SearchValue = @$filter["x_ZipCode"];
-		$this->ZipCode->AdvancedSearch->SearchOperator = @$filter["z_ZipCode"];
-		$this->ZipCode->AdvancedSearch->SearchCondition = @$filter["v_ZipCode"];
-		$this->ZipCode->AdvancedSearch->SearchValue2 = @$filter["y_ZipCode"];
-		$this->ZipCode->AdvancedSearch->SearchOperator2 = @$filter["w_ZipCode"];
-		$this->ZipCode->AdvancedSearch->Save();
+		// Field zip_code
+		$this->zip_code->AdvancedSearch->SearchValue = @$filter["x_zip_code"];
+		$this->zip_code->AdvancedSearch->SearchOperator = @$filter["z_zip_code"];
+		$this->zip_code->AdvancedSearch->SearchCondition = @$filter["v_zip_code"];
+		$this->zip_code->AdvancedSearch->SearchValue2 = @$filter["y_zip_code"];
+		$this->zip_code->AdvancedSearch->SearchOperator2 = @$filter["w_zip_code"];
+		$this->zip_code->AdvancedSearch->Save();
 
-		// Field Level
-		$this->Level->AdvancedSearch->SearchValue = @$filter["x_Level"];
-		$this->Level->AdvancedSearch->SearchOperator = @$filter["z_Level"];
-		$this->Level->AdvancedSearch->SearchCondition = @$filter["v_Level"];
-		$this->Level->AdvancedSearch->SearchValue2 = @$filter["y_Level"];
-		$this->Level->AdvancedSearch->SearchOperator2 = @$filter["w_Level"];
-		$this->Level->AdvancedSearch->Save();
+		// Field level_no
+		$this->level_no->AdvancedSearch->SearchValue = @$filter["x_level_no"];
+		$this->level_no->AdvancedSearch->SearchOperator = @$filter["z_level_no"];
+		$this->level_no->AdvancedSearch->SearchCondition = @$filter["v_level_no"];
+		$this->level_no->AdvancedSearch->SearchValue2 = @$filter["y_level_no"];
+		$this->level_no->AdvancedSearch->SearchOperator2 = @$filter["w_level_no"];
+		$this->level_no->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -893,13 +893,13 @@ class cemployees_list extends cemployees {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->FullName, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->UserName, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->UserPass, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->Phone, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->Mobile, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->Address, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->ZipCode, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->full_name, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->user_name, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->user_pass, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->phone, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->mobile, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->address, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->zip_code, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1046,15 +1046,15 @@ class cemployees_list extends cemployees {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->FullName); // FullName
-			$this->UpdateSort($this->UserName); // UserName
-			$this->UpdateSort($this->UserPass); // UserPass
-			$this->UpdateSort($this->Phone); // Phone
-			$this->UpdateSort($this->Mobile); // Mobile
-			$this->UpdateSort($this->ProvinceID); // ProvinceID
-			$this->UpdateSort($this->Address); // Address
-			$this->UpdateSort($this->ZipCode); // ZipCode
-			$this->UpdateSort($this->Level); // Level
+			$this->UpdateSort($this->full_name); // full_name
+			$this->UpdateSort($this->user_name); // user_name
+			$this->UpdateSort($this->user_pass); // user_pass
+			$this->UpdateSort($this->phone); // phone
+			$this->UpdateSort($this->mobile); // mobile
+			$this->UpdateSort($this->province_id); // province_id
+			$this->UpdateSort($this->address); // address
+			$this->UpdateSort($this->zip_code); // zip_code
+			$this->UpdateSort($this->level_no); // level_no
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1087,15 +1087,15 @@ class cemployees_list extends cemployees {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->FullName->setSort("");
-				$this->UserName->setSort("");
-				$this->UserPass->setSort("");
-				$this->Phone->setSort("");
-				$this->Mobile->setSort("");
-				$this->ProvinceID->setSort("");
-				$this->Address->setSort("");
-				$this->ZipCode->setSort("");
-				$this->Level->setSort("");
+				$this->full_name->setSort("");
+				$this->user_name->setSort("");
+				$this->user_pass->setSort("");
+				$this->phone->setSort("");
+				$this->mobile->setSort("");
+				$this->province_id->setSort("");
+				$this->address->setSort("");
+				$this->zip_code->setSort("");
+				$this->level_no->setSort("");
 			}
 
 			// Reset start position
@@ -1244,7 +1244,7 @@ class cemployees_list extends cemployees {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->EmployeeID->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->employee_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1360,7 +1360,7 @@ class cemployees_list extends cemployees {
 				while (!$rs->EOF) {
 					$this->SelectedIndex++;
 					$row = $rs->fields;
-					$user = $row['UserName'];
+					$user = $row['user_name'];
 					if ($userlist <> "") $userlist .= ",";
 					$userlist .= $user;
 					if ($UserAction == "resendregisteremail")
@@ -1562,31 +1562,31 @@ class cemployees_list extends cemployees {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->EmployeeID->setDbValue($row['EmployeeID']);
-		$this->FullName->setDbValue($row['FullName']);
-		$this->UserName->setDbValue($row['UserName']);
-		$this->UserPass->setDbValue($row['UserPass']);
-		$this->Phone->setDbValue($row['Phone']);
-		$this->Mobile->setDbValue($row['Mobile']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->ZipCode->setDbValue($row['ZipCode']);
-		$this->Level->setDbValue($row['Level']);
+		$this->employee_id->setDbValue($row['employee_id']);
+		$this->full_name->setDbValue($row['full_name']);
+		$this->user_name->setDbValue($row['user_name']);
+		$this->user_pass->setDbValue($row['user_pass']);
+		$this->phone->setDbValue($row['phone']);
+		$this->mobile->setDbValue($row['mobile']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->zip_code->setDbValue($row['zip_code']);
+		$this->level_no->setDbValue($row['level_no']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['EmployeeID'] = NULL;
-		$row['FullName'] = NULL;
-		$row['UserName'] = NULL;
-		$row['UserPass'] = NULL;
-		$row['Phone'] = NULL;
-		$row['Mobile'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['ZipCode'] = NULL;
-		$row['Level'] = NULL;
+		$row['employee_id'] = NULL;
+		$row['full_name'] = NULL;
+		$row['user_name'] = NULL;
+		$row['user_pass'] = NULL;
+		$row['phone'] = NULL;
+		$row['mobile'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['zip_code'] = NULL;
+		$row['level_no'] = NULL;
 		return $row;
 	}
 
@@ -1595,16 +1595,16 @@ class cemployees_list extends cemployees {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->EmployeeID->DbValue = $row['EmployeeID'];
-		$this->FullName->DbValue = $row['FullName'];
-		$this->UserName->DbValue = $row['UserName'];
-		$this->UserPass->DbValue = $row['UserPass'];
-		$this->Phone->DbValue = $row['Phone'];
-		$this->Mobile->DbValue = $row['Mobile'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->ZipCode->DbValue = $row['ZipCode'];
-		$this->Level->DbValue = $row['Level'];
+		$this->employee_id->DbValue = $row['employee_id'];
+		$this->full_name->DbValue = $row['full_name'];
+		$this->user_name->DbValue = $row['user_name'];
+		$this->user_pass->DbValue = $row['user_pass'];
+		$this->phone->DbValue = $row['phone'];
+		$this->mobile->DbValue = $row['mobile'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->zip_code->DbValue = $row['zip_code'];
+		$this->level_no->DbValue = $row['level_no'];
 	}
 
 	// Load old record
@@ -1612,8 +1612,8 @@ class cemployees_list extends cemployees {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("EmployeeID")) <> "")
-			$this->EmployeeID->CurrentValue = $this->getKey("EmployeeID"); // EmployeeID
+		if (strval($this->getKey("employee_id")) <> "")
+			$this->employee_id->CurrentValue = $this->getKey("employee_id"); // employee_id
 		else
 			$bValidKey = FALSE;
 
@@ -1645,142 +1645,142 @@ class cemployees_list extends cemployees {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// EmployeeID
-		// FullName
-		// UserName
-		// UserPass
-		// Phone
-		// Mobile
-		// ProvinceID
-		// Address
-		// ZipCode
-		// Level
+		// employee_id
+		// full_name
+		// user_name
+		// user_pass
+		// phone
+		// mobile
+		// province_id
+		// address
+		// zip_code
+		// level_no
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// UserName
-		$this->UserName->ViewValue = $this->UserName->CurrentValue;
-		$this->UserName->ViewCustomAttributes = "";
+		// user_name
+		$this->user_name->ViewValue = $this->user_name->CurrentValue;
+		$this->user_name->ViewCustomAttributes = "";
 
-		// UserPass
-		$this->UserPass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->UserPass->ViewCustomAttributes = "";
+		// user_pass
+		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
+		$this->user_pass->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Mobile
-		$this->Mobile->ViewValue = $this->Mobile->CurrentValue;
-		$this->Mobile->ViewCustomAttributes = "";
+		// mobile
+		$this->mobile->ViewValue = $this->mobile->CurrentValue;
+		$this->mobile->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-		// Level
+		// level_no
 		if ($Security->CanAdmin()) { // System admin
-		if (strval($this->Level->CurrentValue) <> "") {
-			$sFilterWrk = "`userlevelid`" . ew_SearchString("=", $this->Level->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `userlevelid`, `userlevelname` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `userlevels`";
+		if (strval($this->level_no->CurrentValue) <> "") {
+			$sFilterWrk = "`user_level_id`" . ew_SearchString("=", $this->level_no->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `user_level_id`, `user_level_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `user_levels`";
 		$sWhereWrk = "";
-		$this->Level->LookupFilters = array();
+		$this->level_no->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->Level, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->level_no, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->Level->ViewValue = $this->Level->DisplayValue($arwrk);
+				$this->level_no->ViewValue = $this->level_no->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->Level->ViewValue = $this->Level->CurrentValue;
+				$this->level_no->ViewValue = $this->level_no->CurrentValue;
 			}
 		} else {
-			$this->Level->ViewValue = NULL;
+			$this->level_no->ViewValue = NULL;
 		}
 		} else {
-			$this->Level->ViewValue = $Language->Phrase("PasswordMask");
+			$this->level_no->ViewValue = $Language->Phrase("PasswordMask");
 		}
-		$this->Level->ViewCustomAttributes = "";
+		$this->level_no->ViewCustomAttributes = "";
 
-			// FullName
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
-			$this->FullName->TooltipValue = "";
+			// full_name
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
+			$this->full_name->TooltipValue = "";
 
-			// UserName
-			$this->UserName->LinkCustomAttributes = "";
-			$this->UserName->HrefValue = "";
-			$this->UserName->TooltipValue = "";
+			// user_name
+			$this->user_name->LinkCustomAttributes = "";
+			$this->user_name->HrefValue = "";
+			$this->user_name->TooltipValue = "";
 
-			// UserPass
-			$this->UserPass->LinkCustomAttributes = "";
-			$this->UserPass->HrefValue = "";
-			$this->UserPass->TooltipValue = "";
+			// user_pass
+			$this->user_pass->LinkCustomAttributes = "";
+			$this->user_pass->HrefValue = "";
+			$this->user_pass->TooltipValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
-			$this->Phone->TooltipValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
+			$this->phone->TooltipValue = "";
 
-			// Mobile
-			$this->Mobile->LinkCustomAttributes = "";
-			$this->Mobile->HrefValue = "";
-			$this->Mobile->TooltipValue = "";
+			// mobile
+			$this->mobile->LinkCustomAttributes = "";
+			$this->mobile->HrefValue = "";
+			$this->mobile->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
-			$this->ZipCode->TooltipValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
+			$this->zip_code->TooltipValue = "";
 
-			// Level
-			$this->Level->LinkCustomAttributes = "";
-			$this->Level->HrefValue = "";
-			$this->Level->TooltipValue = "";
+			// level_no
+			$this->level_no->LinkCustomAttributes = "";
+			$this->level_no->HrefValue = "";
+			$this->level_no->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1980,10 +1980,10 @@ femployeeslist.Form_CustomValidate =
 femployeeslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-femployeeslist.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-femployeeslist.Lists["x_ProvinceID"].Data = "<?php echo $employees_list->ProvinceID->LookupFilterQuery(FALSE, "list") ?>";
-femployeeslist.Lists["x_Level"] = {"LinkField":"x_userlevelid","Ajax":true,"AutoFill":false,"DisplayFields":["x_userlevelname","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"userlevels"};
-femployeeslist.Lists["x_Level"].Data = "<?php echo $employees_list->Level->LookupFilterQuery(FALSE, "list") ?>";
+femployeeslist.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+femployeeslist.Lists["x_province_id"].Data = "<?php echo $employees_list->province_id->LookupFilterQuery(FALSE, "list") ?>";
+femployeeslist.Lists["x_level_no"] = {"LinkField":"x_user_level_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_user_level_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"user_levels"};
+femployeeslist.Lists["x_level_no"].Data = "<?php echo $employees_list->level_no->LookupFilterQuery(FALSE, "list") ?>";
 
 // Form object for search
 var CurrentSearchForm = femployeeslistsrch = new ew_Form("femployeeslistsrch");
@@ -2157,84 +2157,84 @@ $employees_list->RenderListOptions();
 // Render list options (header, left)
 $employees_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($employees->FullName->Visible) { // FullName ?>
-	<?php if ($employees->SortUrl($employees->FullName) == "") { ?>
-		<th data-name="FullName" class="<?php echo $employees->FullName->HeaderCellClass() ?>"><div id="elh_employees_FullName" class="employees_FullName"><div class="ewTableHeaderCaption"><?php echo $employees->FullName->FldCaption() ?></div></div></th>
+<?php if ($employees->full_name->Visible) { // full_name ?>
+	<?php if ($employees->SortUrl($employees->full_name) == "") { ?>
+		<th data-name="full_name" class="<?php echo $employees->full_name->HeaderCellClass() ?>"><div id="elh_employees_full_name" class="employees_full_name"><div class="ewTableHeaderCaption"><?php echo $employees->full_name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="FullName" class="<?php echo $employees->FullName->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->FullName) ?>',1);"><div id="elh_employees_FullName" class="employees_FullName">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->FullName->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->FullName->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->FullName->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="full_name" class="<?php echo $employees->full_name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->full_name) ?>',1);"><div id="elh_employees_full_name" class="employees_full_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->full_name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->full_name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->full_name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->UserName->Visible) { // UserName ?>
-	<?php if ($employees->SortUrl($employees->UserName) == "") { ?>
-		<th data-name="UserName" class="<?php echo $employees->UserName->HeaderCellClass() ?>"><div id="elh_employees_UserName" class="employees_UserName"><div class="ewTableHeaderCaption"><?php echo $employees->UserName->FldCaption() ?></div></div></th>
+<?php if ($employees->user_name->Visible) { // user_name ?>
+	<?php if ($employees->SortUrl($employees->user_name) == "") { ?>
+		<th data-name="user_name" class="<?php echo $employees->user_name->HeaderCellClass() ?>"><div id="elh_employees_user_name" class="employees_user_name"><div class="ewTableHeaderCaption"><?php echo $employees->user_name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="UserName" class="<?php echo $employees->UserName->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->UserName) ?>',1);"><div id="elh_employees_UserName" class="employees_UserName">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->UserName->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->UserName->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->UserName->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="user_name" class="<?php echo $employees->user_name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->user_name) ?>',1);"><div id="elh_employees_user_name" class="employees_user_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->user_name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->user_name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->user_name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->UserPass->Visible) { // UserPass ?>
-	<?php if ($employees->SortUrl($employees->UserPass) == "") { ?>
-		<th data-name="UserPass" class="<?php echo $employees->UserPass->HeaderCellClass() ?>"><div id="elh_employees_UserPass" class="employees_UserPass"><div class="ewTableHeaderCaption"><?php echo $employees->UserPass->FldCaption() ?></div></div></th>
+<?php if ($employees->user_pass->Visible) { // user_pass ?>
+	<?php if ($employees->SortUrl($employees->user_pass) == "") { ?>
+		<th data-name="user_pass" class="<?php echo $employees->user_pass->HeaderCellClass() ?>"><div id="elh_employees_user_pass" class="employees_user_pass"><div class="ewTableHeaderCaption"><?php echo $employees->user_pass->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="UserPass" class="<?php echo $employees->UserPass->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->UserPass) ?>',1);"><div id="elh_employees_UserPass" class="employees_UserPass">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->UserPass->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->UserPass->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->UserPass->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="user_pass" class="<?php echo $employees->user_pass->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->user_pass) ?>',1);"><div id="elh_employees_user_pass" class="employees_user_pass">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->user_pass->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->user_pass->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->user_pass->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->Phone->Visible) { // Phone ?>
-	<?php if ($employees->SortUrl($employees->Phone) == "") { ?>
-		<th data-name="Phone" class="<?php echo $employees->Phone->HeaderCellClass() ?>"><div id="elh_employees_Phone" class="employees_Phone"><div class="ewTableHeaderCaption"><?php echo $employees->Phone->FldCaption() ?></div></div></th>
+<?php if ($employees->phone->Visible) { // phone ?>
+	<?php if ($employees->SortUrl($employees->phone) == "") { ?>
+		<th data-name="phone" class="<?php echo $employees->phone->HeaderCellClass() ?>"><div id="elh_employees_phone" class="employees_phone"><div class="ewTableHeaderCaption"><?php echo $employees->phone->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Phone" class="<?php echo $employees->Phone->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->Phone) ?>',1);"><div id="elh_employees_Phone" class="employees_Phone">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->Phone->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->Phone->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->Phone->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="phone" class="<?php echo $employees->phone->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->phone) ?>',1);"><div id="elh_employees_phone" class="employees_phone">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->phone->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->phone->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->phone->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->Mobile->Visible) { // Mobile ?>
-	<?php if ($employees->SortUrl($employees->Mobile) == "") { ?>
-		<th data-name="Mobile" class="<?php echo $employees->Mobile->HeaderCellClass() ?>"><div id="elh_employees_Mobile" class="employees_Mobile"><div class="ewTableHeaderCaption"><?php echo $employees->Mobile->FldCaption() ?></div></div></th>
+<?php if ($employees->mobile->Visible) { // mobile ?>
+	<?php if ($employees->SortUrl($employees->mobile) == "") { ?>
+		<th data-name="mobile" class="<?php echo $employees->mobile->HeaderCellClass() ?>"><div id="elh_employees_mobile" class="employees_mobile"><div class="ewTableHeaderCaption"><?php echo $employees->mobile->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Mobile" class="<?php echo $employees->Mobile->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->Mobile) ?>',1);"><div id="elh_employees_Mobile" class="employees_Mobile">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->Mobile->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->Mobile->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->Mobile->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="mobile" class="<?php echo $employees->mobile->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->mobile) ?>',1);"><div id="elh_employees_mobile" class="employees_mobile">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->mobile->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->mobile->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->mobile->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->ProvinceID->Visible) { // ProvinceID ?>
-	<?php if ($employees->SortUrl($employees->ProvinceID) == "") { ?>
-		<th data-name="ProvinceID" class="<?php echo $employees->ProvinceID->HeaderCellClass() ?>"><div id="elh_employees_ProvinceID" class="employees_ProvinceID"><div class="ewTableHeaderCaption"><?php echo $employees->ProvinceID->FldCaption() ?></div></div></th>
+<?php if ($employees->province_id->Visible) { // province_id ?>
+	<?php if ($employees->SortUrl($employees->province_id) == "") { ?>
+		<th data-name="province_id" class="<?php echo $employees->province_id->HeaderCellClass() ?>"><div id="elh_employees_province_id" class="employees_province_id"><div class="ewTableHeaderCaption"><?php echo $employees->province_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="ProvinceID" class="<?php echo $employees->ProvinceID->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->ProvinceID) ?>',1);"><div id="elh_employees_ProvinceID" class="employees_ProvinceID">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->ProvinceID->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->ProvinceID->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->ProvinceID->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="province_id" class="<?php echo $employees->province_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->province_id) ?>',1);"><div id="elh_employees_province_id" class="employees_province_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->province_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->province_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->province_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->Address->Visible) { // Address ?>
-	<?php if ($employees->SortUrl($employees->Address) == "") { ?>
-		<th data-name="Address" class="<?php echo $employees->Address->HeaderCellClass() ?>"><div id="elh_employees_Address" class="employees_Address"><div class="ewTableHeaderCaption"><?php echo $employees->Address->FldCaption() ?></div></div></th>
+<?php if ($employees->address->Visible) { // address ?>
+	<?php if ($employees->SortUrl($employees->address) == "") { ?>
+		<th data-name="address" class="<?php echo $employees->address->HeaderCellClass() ?>"><div id="elh_employees_address" class="employees_address"><div class="ewTableHeaderCaption"><?php echo $employees->address->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Address" class="<?php echo $employees->Address->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->Address) ?>',1);"><div id="elh_employees_Address" class="employees_Address">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->Address->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->Address->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->Address->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="address" class="<?php echo $employees->address->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->address) ?>',1);"><div id="elh_employees_address" class="employees_address">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->address->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->address->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->address->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->ZipCode->Visible) { // ZipCode ?>
-	<?php if ($employees->SortUrl($employees->ZipCode) == "") { ?>
-		<th data-name="ZipCode" class="<?php echo $employees->ZipCode->HeaderCellClass() ?>"><div id="elh_employees_ZipCode" class="employees_ZipCode"><div class="ewTableHeaderCaption"><?php echo $employees->ZipCode->FldCaption() ?></div></div></th>
+<?php if ($employees->zip_code->Visible) { // zip_code ?>
+	<?php if ($employees->SortUrl($employees->zip_code) == "") { ?>
+		<th data-name="zip_code" class="<?php echo $employees->zip_code->HeaderCellClass() ?>"><div id="elh_employees_zip_code" class="employees_zip_code"><div class="ewTableHeaderCaption"><?php echo $employees->zip_code->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="ZipCode" class="<?php echo $employees->ZipCode->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->ZipCode) ?>',1);"><div id="elh_employees_ZipCode" class="employees_ZipCode">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->ZipCode->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->ZipCode->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->ZipCode->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="zip_code" class="<?php echo $employees->zip_code->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->zip_code) ?>',1);"><div id="elh_employees_zip_code" class="employees_zip_code">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->zip_code->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($employees->zip_code->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->zip_code->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($employees->Level->Visible) { // Level ?>
-	<?php if ($employees->SortUrl($employees->Level) == "") { ?>
-		<th data-name="Level" class="<?php echo $employees->Level->HeaderCellClass() ?>"><div id="elh_employees_Level" class="employees_Level"><div class="ewTableHeaderCaption"><?php echo $employees->Level->FldCaption() ?></div></div></th>
+<?php if ($employees->level_no->Visible) { // level_no ?>
+	<?php if ($employees->SortUrl($employees->level_no) == "") { ?>
+		<th data-name="level_no" class="<?php echo $employees->level_no->HeaderCellClass() ?>"><div id="elh_employees_level_no" class="employees_level_no"><div class="ewTableHeaderCaption"><?php echo $employees->level_no->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Level" class="<?php echo $employees->Level->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->Level) ?>',1);"><div id="elh_employees_Level" class="employees_Level">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->Level->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->Level->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->Level->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="level_no" class="<?php echo $employees->level_no->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $employees->SortUrl($employees->level_no) ?>',1);"><div id="elh_employees_level_no" class="employees_level_no">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $employees->level_no->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($employees->level_no->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($employees->level_no->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -2303,75 +2303,75 @@ while ($employees_list->RecCnt < $employees_list->StopRec) {
 // Render list options (body, left)
 $employees_list->ListOptions->Render("body", "left", $employees_list->RowCnt);
 ?>
-	<?php if ($employees->FullName->Visible) { // FullName ?>
-		<td data-name="FullName"<?php echo $employees->FullName->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_FullName" class="employees_FullName">
-<span<?php echo $employees->FullName->ViewAttributes() ?>>
-<?php echo $employees->FullName->ListViewValue() ?></span>
+	<?php if ($employees->full_name->Visible) { // full_name ?>
+		<td data-name="full_name"<?php echo $employees->full_name->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_full_name" class="employees_full_name">
+<span<?php echo $employees->full_name->ViewAttributes() ?>>
+<?php echo $employees->full_name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->UserName->Visible) { // UserName ?>
-		<td data-name="UserName"<?php echo $employees->UserName->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_UserName" class="employees_UserName">
-<span<?php echo $employees->UserName->ViewAttributes() ?>>
-<?php echo $employees->UserName->ListViewValue() ?></span>
+	<?php if ($employees->user_name->Visible) { // user_name ?>
+		<td data-name="user_name"<?php echo $employees->user_name->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_user_name" class="employees_user_name">
+<span<?php echo $employees->user_name->ViewAttributes() ?>>
+<?php echo $employees->user_name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->UserPass->Visible) { // UserPass ?>
-		<td data-name="UserPass"<?php echo $employees->UserPass->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_UserPass" class="employees_UserPass">
-<span<?php echo $employees->UserPass->ViewAttributes() ?>>
-<?php echo $employees->UserPass->ListViewValue() ?></span>
+	<?php if ($employees->user_pass->Visible) { // user_pass ?>
+		<td data-name="user_pass"<?php echo $employees->user_pass->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_user_pass" class="employees_user_pass">
+<span<?php echo $employees->user_pass->ViewAttributes() ?>>
+<?php echo $employees->user_pass->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->Phone->Visible) { // Phone ?>
-		<td data-name="Phone"<?php echo $employees->Phone->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_Phone" class="employees_Phone">
-<span<?php echo $employees->Phone->ViewAttributes() ?>>
-<?php echo $employees->Phone->ListViewValue() ?></span>
+	<?php if ($employees->phone->Visible) { // phone ?>
+		<td data-name="phone"<?php echo $employees->phone->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_phone" class="employees_phone">
+<span<?php echo $employees->phone->ViewAttributes() ?>>
+<?php echo $employees->phone->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->Mobile->Visible) { // Mobile ?>
-		<td data-name="Mobile"<?php echo $employees->Mobile->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_Mobile" class="employees_Mobile">
-<span<?php echo $employees->Mobile->ViewAttributes() ?>>
-<?php echo $employees->Mobile->ListViewValue() ?></span>
+	<?php if ($employees->mobile->Visible) { // mobile ?>
+		<td data-name="mobile"<?php echo $employees->mobile->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_mobile" class="employees_mobile">
+<span<?php echo $employees->mobile->ViewAttributes() ?>>
+<?php echo $employees->mobile->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->ProvinceID->Visible) { // ProvinceID ?>
-		<td data-name="ProvinceID"<?php echo $employees->ProvinceID->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_ProvinceID" class="employees_ProvinceID">
-<span<?php echo $employees->ProvinceID->ViewAttributes() ?>>
-<?php echo $employees->ProvinceID->ListViewValue() ?></span>
+	<?php if ($employees->province_id->Visible) { // province_id ?>
+		<td data-name="province_id"<?php echo $employees->province_id->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_province_id" class="employees_province_id">
+<span<?php echo $employees->province_id->ViewAttributes() ?>>
+<?php echo $employees->province_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->Address->Visible) { // Address ?>
-		<td data-name="Address"<?php echo $employees->Address->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_Address" class="employees_Address">
-<span<?php echo $employees->Address->ViewAttributes() ?>>
-<?php echo $employees->Address->ListViewValue() ?></span>
+	<?php if ($employees->address->Visible) { // address ?>
+		<td data-name="address"<?php echo $employees->address->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_address" class="employees_address">
+<span<?php echo $employees->address->ViewAttributes() ?>>
+<?php echo $employees->address->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->ZipCode->Visible) { // ZipCode ?>
-		<td data-name="ZipCode"<?php echo $employees->ZipCode->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_ZipCode" class="employees_ZipCode">
-<span<?php echo $employees->ZipCode->ViewAttributes() ?>>
-<?php echo $employees->ZipCode->ListViewValue() ?></span>
+	<?php if ($employees->zip_code->Visible) { // zip_code ?>
+		<td data-name="zip_code"<?php echo $employees->zip_code->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_zip_code" class="employees_zip_code">
+<span<?php echo $employees->zip_code->ViewAttributes() ?>>
+<?php echo $employees->zip_code->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($employees->Level->Visible) { // Level ?>
-		<td data-name="Level"<?php echo $employees->Level->CellAttributes() ?>>
-<span id="el<?php echo $employees_list->RowCnt ?>_employees_Level" class="employees_Level">
-<span<?php echo $employees->Level->ViewAttributes() ?>>
-<?php echo $employees->Level->ListViewValue() ?></span>
+	<?php if ($employees->level_no->Visible) { // level_no ?>
+		<td data-name="level_no"<?php echo $employees->level_no->CellAttributes() ?>>
+<span id="el<?php echo $employees_list->RowCnt ?>_employees_level_no" class="employees_level_no">
+<span<?php echo $employees->level_no->ViewAttributes() ?>>
+<?php echo $employees->level_no->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

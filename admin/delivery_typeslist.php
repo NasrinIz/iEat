@@ -5,8 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "addressesinfo.php" ?>
-<?php include_once "customersinfo.php" ?>
+<?php include_once "delivery_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -15,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$addresses_list = NULL; // Initialize page object first
+$delivery_types_list = NULL; // Initialize page object first
 
-class caddresses_list extends caddresses {
+class cdelivery_types_list extends cdelivery_types {
 
 	// Page ID
 	var $PageID = 'list';
@@ -26,13 +25,13 @@ class caddresses_list extends caddresses {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'addresses';
+	var $TableName = 'delivery_types';
 
 	// Page object name
-	var $PageObjName = 'addresses_list';
+	var $PageObjName = 'delivery_types_list';
 
 	// Grid form hidden field names
-	var $FormName = 'faddresseslist';
+	var $FormName = 'fdelivery_typeslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -291,10 +290,10 @@ class caddresses_list extends caddresses {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (addresses)
-		if (!isset($GLOBALS["addresses"]) || get_class($GLOBALS["addresses"]) == "caddresses") {
-			$GLOBALS["addresses"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["addresses"];
+		// Table object (delivery_types)
+		if (!isset($GLOBALS["delivery_types"]) || get_class($GLOBALS["delivery_types"]) == "cdelivery_types") {
+			$GLOBALS["delivery_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["delivery_types"];
 		}
 
 		// Initialize URLs
@@ -305,15 +304,12 @@ class caddresses_list extends caddresses {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "addressesadd.php";
+		$this->AddUrl = "delivery_typesadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "addressesdelete.php";
-		$this->MultiUpdateUrl = "addressesupdate.php";
-
-		// Table object (customers)
-		if (!isset($GLOBALS['customers'])) $GLOBALS['customers'] = new ccustomers();
+		$this->MultiDeleteUrl = "delivery_typesdelete.php";
+		$this->MultiUpdateUrl = "delivery_typesupdate.php";
 
 		// Table object (employees)
 		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
@@ -324,7 +320,7 @@ class caddresses_list extends caddresses {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'addresses', TRUE);
+			define("EW_TABLE_NAME", 'delivery_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -366,7 +362,7 @@ class caddresses_list extends caddresses {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption faddresseslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption fdelivery_typeslistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -407,9 +403,7 @@ class caddresses_list extends caddresses {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->customer_id->SetVisibility();
-		$this->province_id->SetVisibility();
-		$this->po_box->SetVisibility();
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -441,9 +435,6 @@ class caddresses_list extends caddresses {
 		// Create Token
 		$this->CreateToken();
 
-		// Set up master detail parameters
-		$this->SetupMasterParms();
-
 		// Setup other options
 		$this->SetupOtherOptions();
 
@@ -473,13 +464,13 @@ class caddresses_list extends caddresses {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $addresses;
+		global $EW_EXPORT, $delivery_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($addresses);
+				$doc = new $class($delivery_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -665,28 +656,8 @@ class caddresses_list extends caddresses {
 		$sFilter = "";
 		if (!$Security->CanList())
 			$sFilter = "(0=1)"; // Filter all records
-
-		// Restore master/detail filter
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Restore master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Restore detail filter
 		ew_AddFilter($sFilter, $this->DbDetailFilter);
 		ew_AddFilter($sFilter, $this->SearchWhere);
-
-		// Load master record
-		if ($this->CurrentMode <> "add" && $this->GetMasterFilter() <> "" && $this->getCurrentMasterTable() == "customers") {
-			global $customers;
-			$rsmaster = $customers->LoadRs($this->DbMasterFilter);
-			$this->MasterRecordExists = ($rsmaster && !$rsmaster->EOF);
-			if (!$this->MasterRecordExists) {
-				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record found
-				$this->Page_Terminate("customerslist.php"); // Return to master page
-			} else {
-				$customers->LoadListRowValues($rsmaster);
-				$customers->RowType = EW_ROWTYPE_MASTER; // Master row
-				$customers->RenderListRow();
-				$rsmaster->Close();
-			}
-		}
 
 		// Set up filter
 		if ($this->Command == "json") {
@@ -764,8 +735,8 @@ class caddresses_list extends caddresses {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->address_id->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->address_id->FormValue))
+			$this->delivery_type_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->delivery_type_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -778,11 +749,8 @@ class caddresses_list extends caddresses {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->address_id->AdvancedSearch->ToJson(), ","); // Field address_id
-		$sFilterList = ew_Concat($sFilterList, $this->customer_id->AdvancedSearch->ToJson(), ","); // Field customer_id
-		$sFilterList = ew_Concat($sFilterList, $this->province_id->AdvancedSearch->ToJson(), ","); // Field province_id
-		$sFilterList = ew_Concat($sFilterList, $this->address->AdvancedSearch->ToJson(), ","); // Field address
-		$sFilterList = ew_Concat($sFilterList, $this->po_box->AdvancedSearch->ToJson(), ","); // Field po_box
+		$sFilterList = ew_Concat($sFilterList, $this->delivery_type_id->AdvancedSearch->ToJson(), ","); // Field delivery_type_id
+		$sFilterList = ew_Concat($sFilterList, $this->name->AdvancedSearch->ToJson(), ","); // Field name
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -805,7 +773,7 @@ class caddresses_list extends caddresses {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "faddresseslistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "fdelivery_typeslistsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -827,45 +795,21 @@ class caddresses_list extends caddresses {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field address_id
-		$this->address_id->AdvancedSearch->SearchValue = @$filter["x_address_id"];
-		$this->address_id->AdvancedSearch->SearchOperator = @$filter["z_address_id"];
-		$this->address_id->AdvancedSearch->SearchCondition = @$filter["v_address_id"];
-		$this->address_id->AdvancedSearch->SearchValue2 = @$filter["y_address_id"];
-		$this->address_id->AdvancedSearch->SearchOperator2 = @$filter["w_address_id"];
-		$this->address_id->AdvancedSearch->Save();
+		// Field delivery_type_id
+		$this->delivery_type_id->AdvancedSearch->SearchValue = @$filter["x_delivery_type_id"];
+		$this->delivery_type_id->AdvancedSearch->SearchOperator = @$filter["z_delivery_type_id"];
+		$this->delivery_type_id->AdvancedSearch->SearchCondition = @$filter["v_delivery_type_id"];
+		$this->delivery_type_id->AdvancedSearch->SearchValue2 = @$filter["y_delivery_type_id"];
+		$this->delivery_type_id->AdvancedSearch->SearchOperator2 = @$filter["w_delivery_type_id"];
+		$this->delivery_type_id->AdvancedSearch->Save();
 
-		// Field customer_id
-		$this->customer_id->AdvancedSearch->SearchValue = @$filter["x_customer_id"];
-		$this->customer_id->AdvancedSearch->SearchOperator = @$filter["z_customer_id"];
-		$this->customer_id->AdvancedSearch->SearchCondition = @$filter["v_customer_id"];
-		$this->customer_id->AdvancedSearch->SearchValue2 = @$filter["y_customer_id"];
-		$this->customer_id->AdvancedSearch->SearchOperator2 = @$filter["w_customer_id"];
-		$this->customer_id->AdvancedSearch->Save();
-
-		// Field province_id
-		$this->province_id->AdvancedSearch->SearchValue = @$filter["x_province_id"];
-		$this->province_id->AdvancedSearch->SearchOperator = @$filter["z_province_id"];
-		$this->province_id->AdvancedSearch->SearchCondition = @$filter["v_province_id"];
-		$this->province_id->AdvancedSearch->SearchValue2 = @$filter["y_province_id"];
-		$this->province_id->AdvancedSearch->SearchOperator2 = @$filter["w_province_id"];
-		$this->province_id->AdvancedSearch->Save();
-
-		// Field address
-		$this->address->AdvancedSearch->SearchValue = @$filter["x_address"];
-		$this->address->AdvancedSearch->SearchOperator = @$filter["z_address"];
-		$this->address->AdvancedSearch->SearchCondition = @$filter["v_address"];
-		$this->address->AdvancedSearch->SearchValue2 = @$filter["y_address"];
-		$this->address->AdvancedSearch->SearchOperator2 = @$filter["w_address"];
-		$this->address->AdvancedSearch->Save();
-
-		// Field po_box
-		$this->po_box->AdvancedSearch->SearchValue = @$filter["x_po_box"];
-		$this->po_box->AdvancedSearch->SearchOperator = @$filter["z_po_box"];
-		$this->po_box->AdvancedSearch->SearchCondition = @$filter["v_po_box"];
-		$this->po_box->AdvancedSearch->SearchValue2 = @$filter["y_po_box"];
-		$this->po_box->AdvancedSearch->SearchOperator2 = @$filter["w_po_box"];
-		$this->po_box->AdvancedSearch->Save();
+		// Field name
+		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
+		$this->name->AdvancedSearch->SearchOperator = @$filter["z_name"];
+		$this->name->AdvancedSearch->SearchCondition = @$filter["v_name"];
+		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
+		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
+		$this->name->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -873,8 +817,7 @@ class caddresses_list extends caddresses {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->address, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->po_box, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->name, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1021,9 +964,7 @@ class caddresses_list extends caddresses {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->customer_id); // customer_id
-			$this->UpdateSort($this->province_id); // province_id
-			$this->UpdateSort($this->po_box); // po_box
+			$this->UpdateSort($this->name); // name
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1052,21 +993,11 @@ class caddresses_list extends caddresses {
 			if ($this->Command == "reset" || $this->Command == "resetall")
 				$this->ResetSearchParms();
 
-			// Reset master/detail keys
-			if ($this->Command == "resetall") {
-				$this->setCurrentMasterTable(""); // Clear master table
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-				$this->customer_id->setSessionValue("");
-			}
-
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->customer_id->setSort("");
-				$this->province_id->setSort("");
-				$this->po_box->setSort("");
+				$this->name->setSort("");
 			}
 
 			// Reset start position
@@ -1215,7 +1146,7 @@ class caddresses_list extends caddresses {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->address_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->delivery_type_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1251,10 +1182,10 @@ class caddresses_list extends caddresses {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"faddresseslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fdelivery_typeslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"faddresseslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fdelivery_typeslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1278,7 +1209,7 @@ class caddresses_list extends caddresses {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.faddresseslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fdelivery_typeslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1382,7 +1313,7 @@ class caddresses_list extends caddresses {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"faddresseslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fdelivery_typeslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1521,21 +1452,15 @@ class caddresses_list extends caddresses {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->address_id->setDbValue($row['address_id']);
-		$this->customer_id->setDbValue($row['customer_id']);
-		$this->province_id->setDbValue($row['province_id']);
-		$this->address->setDbValue($row['address']);
-		$this->po_box->setDbValue($row['po_box']);
+		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['address_id'] = NULL;
-		$row['customer_id'] = NULL;
-		$row['province_id'] = NULL;
-		$row['address'] = NULL;
-		$row['po_box'] = NULL;
+		$row['delivery_type_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -1544,11 +1469,8 @@ class caddresses_list extends caddresses {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->address_id->DbValue = $row['address_id'];
-		$this->customer_id->DbValue = $row['customer_id'];
-		$this->province_id->DbValue = $row['province_id'];
-		$this->address->DbValue = $row['address'];
-		$this->po_box->DbValue = $row['po_box'];
+		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Load old record
@@ -1556,8 +1478,8 @@ class caddresses_list extends caddresses {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("address_id")) <> "")
-			$this->address_id->CurrentValue = $this->getKey("address_id"); // address_id
+		if (strval($this->getKey("delivery_type_id")) <> "")
+			$this->delivery_type_id->CurrentValue = $this->getKey("delivery_type_id"); // delivery_type_id
 		else
 			$bValidKey = FALSE;
 
@@ -1589,156 +1511,24 @@ class caddresses_list extends caddresses {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// address_id
-
-		$this->address_id->CellCssStyle = "white-space: nowrap;";
-
-		// customer_id
-		// province_id
-		// address
-		// po_box
+		// delivery_type_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// customer_id
-		if (strval($this->customer_id->CurrentValue) <> "") {
-			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
-		$sWhereWrk = "";
-		$this->customer_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `full_name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
-			}
-		} else {
-			$this->customer_id->ViewValue = NULL;
-		}
-		$this->customer_id->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
-			}
-		} else {
-			$this->province_id->ViewValue = NULL;
-		}
-		$this->province_id->ViewCustomAttributes = "";
-
-		// po_box
-		$this->po_box->ViewValue = $this->po_box->CurrentValue;
-		$this->po_box->ViewCustomAttributes = "";
-
-			// customer_id
-			$this->customer_id->LinkCustomAttributes = "";
-			$this->customer_id->HrefValue = "";
-			$this->customer_id->TooltipValue = "";
-
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-			$this->province_id->TooltipValue = "";
-
-			// po_box
-			$this->po_box->LinkCustomAttributes = "";
-			$this->po_box->HrefValue = "";
-			$this->po_box->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
 		if ($this->RowType <> EW_ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
-	}
-
-	// Set up master/detail based on QueryString
-	function SetupMasterParms() {
-		$bValidMaster = FALSE;
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "customers") {
-				$bValidMaster = TRUE;
-				if (@$_GET["fk_customer_id"] <> "") {
-					$GLOBALS["customers"]->customer_id->setQueryStringValue($_GET["fk_customer_id"]);
-					$this->customer_id->setQueryStringValue($GLOBALS["customers"]->customer_id->QueryStringValue);
-					$this->customer_id->setSessionValue($this->customer_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["customers"]->customer_id->QueryStringValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
-			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
-			if ($sMasterTblVar == "") {
-				$bValidMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($sMasterTblVar == "customers") {
-				$bValidMaster = TRUE;
-				if (@$_POST["fk_customer_id"] <> "") {
-					$GLOBALS["customers"]->customer_id->setFormValue($_POST["fk_customer_id"]);
-					$this->customer_id->setFormValue($GLOBALS["customers"]->customer_id->FormValue);
-					$this->customer_id->setSessionValue($this->customer_id->FormValue);
-					if (!is_numeric($GLOBALS["customers"]->customer_id->FormValue)) $bValidMaster = FALSE;
-				} else {
-					$bValidMaster = FALSE;
-				}
-			}
-		}
-		if ($bValidMaster) {
-
-			// Update URL
-			$this->AddUrl = $this->AddMasterUrl($this->AddUrl);
-			$this->InlineAddUrl = $this->AddMasterUrl($this->InlineAddUrl);
-			$this->GridAddUrl = $this->AddMasterUrl($this->GridAddUrl);
-			$this->GridEditUrl = $this->AddMasterUrl($this->GridEditUrl);
-
-			// Save current master table
-			$this->setCurrentMasterTable($sMasterTblVar);
-
-			// Reset start record counter (new master key)
-			if (!$this->IsAddOrEdit()) {
-				$this->StartRec = 1;
-				$this->setStartRecordNumber($this->StartRec);
-			}
-
-			// Clear previous master key from Session
-			if ($sMasterTblVar <> "customers") {
-				if ($this->customer_id->CurrentValue == "") $this->customer_id->setSessionValue("");
-			}
-		}
-		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
-		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -1899,30 +1689,30 @@ class caddresses_list extends caddresses {
 <?php
 
 // Create page object
-if (!isset($addresses_list)) $addresses_list = new caddresses_list();
+if (!isset($delivery_types_list)) $delivery_types_list = new cdelivery_types_list();
 
 // Page init
-$addresses_list->Page_Init();
+$delivery_types_list->Page_Init();
 
 // Page main
-$addresses_list->Page_Main();
+$delivery_types_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$addresses_list->Page_Render();
+$delivery_types_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = faddresseslist = new ew_Form("faddresseslist", "list");
-faddresseslist.FormKeyCountName = '<?php echo $addresses_list->FormKeyCountName ?>';
+var CurrentForm = fdelivery_typeslist = new ew_Form("fdelivery_typeslist", "list");
+fdelivery_typeslist.FormKeyCountName = '<?php echo $delivery_types_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-faddresseslist.Form_CustomValidate = 
+fdelivery_typeslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1930,91 +1720,76 @@ faddresseslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-faddresseslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fdelivery_typeslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-faddresseslist.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-faddresseslist.Lists["x_customer_id"].Data = "<?php echo $addresses_list->customer_id->LookupFilterQuery(FALSE, "list") ?>";
-faddresseslist.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-faddresseslist.Lists["x_province_id"].Data = "<?php echo $addresses_list->province_id->LookupFilterQuery(FALSE, "list") ?>";
-
 // Form object for search
-var CurrentSearchForm = faddresseslistsrch = new ew_Form("faddresseslistsrch");
+
+var CurrentSearchForm = fdelivery_typeslistsrch = new ew_Form("fdelivery_typeslistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <div class="ewToolbar">
-<?php if ($addresses_list->TotalRecs > 0 && $addresses_list->ExportOptions->Visible()) { ?>
-<?php $addresses_list->ExportOptions->Render("body") ?>
+<?php if ($delivery_types_list->TotalRecs > 0 && $delivery_types_list->ExportOptions->Visible()) { ?>
+<?php $delivery_types_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($addresses_list->SearchOptions->Visible()) { ?>
-<?php $addresses_list->SearchOptions->Render("body") ?>
+<?php if ($delivery_types_list->SearchOptions->Visible()) { ?>
+<?php $delivery_types_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($addresses_list->FilterOptions->Visible()) { ?>
-<?php $addresses_list->FilterOptions->Render("body") ?>
+<?php if ($delivery_types_list->FilterOptions->Visible()) { ?>
+<?php $delivery_types_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
-<?php if (($addresses->Export == "") || (EW_EXPORT_MASTER_RECORD && $addresses->Export == "print")) { ?>
 <?php
-if ($addresses_list->DbMasterFilter <> "" && $addresses->getCurrentMasterTable() == "customers") {
-	if ($addresses_list->MasterRecordExists) {
-?>
-<?php include_once "customersmaster.php" ?>
-<?php
-	}
-}
-?>
-<?php } ?>
-<?php
-	$bSelectLimit = $addresses_list->UseSelectLimit;
+	$bSelectLimit = $delivery_types_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($addresses_list->TotalRecs <= 0)
-			$addresses_list->TotalRecs = $addresses->ListRecordCount();
+		if ($delivery_types_list->TotalRecs <= 0)
+			$delivery_types_list->TotalRecs = $delivery_types->ListRecordCount();
 	} else {
-		if (!$addresses_list->Recordset && ($addresses_list->Recordset = $addresses_list->LoadRecordset()))
-			$addresses_list->TotalRecs = $addresses_list->Recordset->RecordCount();
+		if (!$delivery_types_list->Recordset && ($delivery_types_list->Recordset = $delivery_types_list->LoadRecordset()))
+			$delivery_types_list->TotalRecs = $delivery_types_list->Recordset->RecordCount();
 	}
-	$addresses_list->StartRec = 1;
-	if ($addresses_list->DisplayRecs <= 0 || ($addresses->Export <> "" && $addresses->ExportAll)) // Display all records
-		$addresses_list->DisplayRecs = $addresses_list->TotalRecs;
-	if (!($addresses->Export <> "" && $addresses->ExportAll))
-		$addresses_list->SetupStartRec(); // Set up start record position
+	$delivery_types_list->StartRec = 1;
+	if ($delivery_types_list->DisplayRecs <= 0 || ($delivery_types->Export <> "" && $delivery_types->ExportAll)) // Display all records
+		$delivery_types_list->DisplayRecs = $delivery_types_list->TotalRecs;
+	if (!($delivery_types->Export <> "" && $delivery_types->ExportAll))
+		$delivery_types_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$addresses_list->Recordset = $addresses_list->LoadRecordset($addresses_list->StartRec-1, $addresses_list->DisplayRecs);
+		$delivery_types_list->Recordset = $delivery_types_list->LoadRecordset($delivery_types_list->StartRec-1, $delivery_types_list->DisplayRecs);
 
 	// Set no record found message
-	if ($addresses->CurrentAction == "" && $addresses_list->TotalRecs == 0) {
+	if ($delivery_types->CurrentAction == "" && $delivery_types_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$addresses_list->setWarningMessage(ew_DeniedMsg());
-		if ($addresses_list->SearchWhere == "0=101")
-			$addresses_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$delivery_types_list->setWarningMessage(ew_DeniedMsg());
+		if ($delivery_types_list->SearchWhere == "0=101")
+			$delivery_types_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$addresses_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$delivery_types_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
-$addresses_list->RenderOtherOptions();
+$delivery_types_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($addresses->Export == "" && $addresses->CurrentAction == "") { ?>
-<form name="faddresseslistsrch" id="faddresseslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($addresses_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="faddresseslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($delivery_types->Export == "" && $delivery_types->CurrentAction == "") { ?>
+<form name="fdelivery_typeslistsrch" id="fdelivery_typeslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($delivery_types_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="fdelivery_typeslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="addresses">
+<input type="hidden" name="t" value="delivery_types">
 	<div class="ewBasicSearch">
 <div id="xsr_1" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($addresses_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($addresses_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($delivery_types_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($delivery_types_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $addresses_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $delivery_types_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($addresses_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($addresses_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($addresses_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($addresses_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($delivery_types_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($delivery_types_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($delivery_types_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($delivery_types_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -2025,68 +1800,68 @@ $addresses_list->RenderOtherOptions();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $addresses_list->ShowPageHeader(); ?>
+<?php $delivery_types_list->ShowPageHeader(); ?>
 <?php
-$addresses_list->ShowMessage();
+$delivery_types_list->ShowMessage();
 ?>
-<?php if ($addresses_list->TotalRecs > 0 || $addresses->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($addresses_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> addresses">
+<?php if ($delivery_types_list->TotalRecs > 0 || $delivery_types->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($delivery_types_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> delivery_types">
 <div class="box-header ewGridUpperPanel">
-<?php if ($addresses->CurrentAction <> "gridadd" && $addresses->CurrentAction <> "gridedit") { ?>
+<?php if ($delivery_types->CurrentAction <> "gridadd" && $delivery_types->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($addresses_list->Pager)) $addresses_list->Pager = new cPrevNextPager($addresses_list->StartRec, $addresses_list->DisplayRecs, $addresses_list->TotalRecs, $addresses_list->AutoHidePager) ?>
-<?php if ($addresses_list->Pager->RecordCount > 0 && $addresses_list->Pager->Visible) { ?>
+<?php if (!isset($delivery_types_list->Pager)) $delivery_types_list->Pager = new cPrevNextPager($delivery_types_list->StartRec, $delivery_types_list->DisplayRecs, $delivery_types_list->TotalRecs, $delivery_types_list->AutoHidePager) ?>
+<?php if ($delivery_types_list->Pager->RecordCount > 0 && $delivery_types_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($addresses_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($addresses_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $addresses_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $delivery_types_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($addresses_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($addresses_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $addresses_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $delivery_types_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($addresses_list->Pager->RecordCount > 0) { ?>
+<?php if ($delivery_types_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $addresses_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $addresses_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $addresses_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $delivery_types_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $delivery_types_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $delivery_types_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($addresses_list->TotalRecs > 0 && (!$addresses_list->AutoHidePageSizeSelector || $addresses_list->Pager->Visible)) { ?>
+<?php if ($delivery_types_list->TotalRecs > 0 && (!$delivery_types_list->AutoHidePageSizeSelector || $delivery_types_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="addresses">
+<input type="hidden" name="t" value="delivery_types">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($addresses_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($addresses_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($addresses_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($addresses->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($delivery_types_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($delivery_types_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($delivery_types_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($delivery_types->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2094,169 +1869,131 @@ $addresses_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($addresses_list->OtherOptions as &$option)
+	foreach ($delivery_types_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
-<form name="faddresseslist" id="faddresseslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($addresses_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $addresses_list->Token ?>">
+<form name="fdelivery_typeslist" id="fdelivery_typeslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($delivery_types_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $delivery_types_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="addresses">
-<?php if ($addresses->getCurrentMasterTable() == "customers" && $addresses->CurrentAction <> "") { ?>
-<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="customers">
-<input type="hidden" name="fk_customer_id" value="<?php echo $addresses->customer_id->getSessionValue() ?>">
-<?php } ?>
-<div id="gmp_addresses" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($addresses_list->TotalRecs > 0 || $addresses->CurrentAction == "gridedit") { ?>
-<table id="tbl_addresseslist" class="table ewTable">
+<input type="hidden" name="t" value="delivery_types">
+<div id="gmp_delivery_types" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($delivery_types_list->TotalRecs > 0 || $delivery_types->CurrentAction == "gridedit") { ?>
+<table id="tbl_delivery_typeslist" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$addresses_list->RowType = EW_ROWTYPE_HEADER;
+$delivery_types_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$addresses_list->RenderListOptions();
+$delivery_types_list->RenderListOptions();
 
 // Render list options (header, left)
-$addresses_list->ListOptions->Render("header", "left");
+$delivery_types_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($addresses->customer_id->Visible) { // customer_id ?>
-	<?php if ($addresses->SortUrl($addresses->customer_id) == "") { ?>
-		<th data-name="customer_id" class="<?php echo $addresses->customer_id->HeaderCellClass() ?>"><div id="elh_addresses_customer_id" class="addresses_customer_id"><div class="ewTableHeaderCaption"><?php echo $addresses->customer_id->FldCaption() ?></div></div></th>
+<?php if ($delivery_types->name->Visible) { // name ?>
+	<?php if ($delivery_types->SortUrl($delivery_types->name) == "") { ?>
+		<th data-name="name" class="<?php echo $delivery_types->name->HeaderCellClass() ?>"><div id="elh_delivery_types_name" class="delivery_types_name"><div class="ewTableHeaderCaption"><?php echo $delivery_types->name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="customer_id" class="<?php echo $addresses->customer_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $addresses->SortUrl($addresses->customer_id) ?>',1);"><div id="elh_addresses_customer_id" class="addresses_customer_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->customer_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->customer_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->customer_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($addresses->province_id->Visible) { // province_id ?>
-	<?php if ($addresses->SortUrl($addresses->province_id) == "") { ?>
-		<th data-name="province_id" class="<?php echo $addresses->province_id->HeaderCellClass() ?>"><div id="elh_addresses_province_id" class="addresses_province_id"><div class="ewTableHeaderCaption"><?php echo $addresses->province_id->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="province_id" class="<?php echo $addresses->province_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $addresses->SortUrl($addresses->province_id) ?>',1);"><div id="elh_addresses_province_id" class="addresses_province_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->province_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->province_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->province_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($addresses->po_box->Visible) { // po_box ?>
-	<?php if ($addresses->SortUrl($addresses->po_box) == "") { ?>
-		<th data-name="po_box" class="<?php echo $addresses->po_box->HeaderCellClass() ?>"><div id="elh_addresses_po_box" class="addresses_po_box"><div class="ewTableHeaderCaption"><?php echo $addresses->po_box->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="po_box" class="<?php echo $addresses->po_box->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $addresses->SortUrl($addresses->po_box) ?>',1);"><div id="elh_addresses_po_box" class="addresses_po_box">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->po_box->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($addresses->po_box->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->po_box->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="name" class="<?php echo $delivery_types->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $delivery_types->SortUrl($delivery_types->name) ?>',1);"><div id="elh_delivery_types_name" class="delivery_types_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $delivery_types->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($delivery_types->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($delivery_types->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$addresses_list->ListOptions->Render("header", "right");
+$delivery_types_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($addresses->ExportAll && $addresses->Export <> "") {
-	$addresses_list->StopRec = $addresses_list->TotalRecs;
+if ($delivery_types->ExportAll && $delivery_types->Export <> "") {
+	$delivery_types_list->StopRec = $delivery_types_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($addresses_list->TotalRecs > $addresses_list->StartRec + $addresses_list->DisplayRecs - 1)
-		$addresses_list->StopRec = $addresses_list->StartRec + $addresses_list->DisplayRecs - 1;
+	if ($delivery_types_list->TotalRecs > $delivery_types_list->StartRec + $delivery_types_list->DisplayRecs - 1)
+		$delivery_types_list->StopRec = $delivery_types_list->StartRec + $delivery_types_list->DisplayRecs - 1;
 	else
-		$addresses_list->StopRec = $addresses_list->TotalRecs;
+		$delivery_types_list->StopRec = $delivery_types_list->TotalRecs;
 }
-$addresses_list->RecCnt = $addresses_list->StartRec - 1;
-if ($addresses_list->Recordset && !$addresses_list->Recordset->EOF) {
-	$addresses_list->Recordset->MoveFirst();
-	$bSelectLimit = $addresses_list->UseSelectLimit;
-	if (!$bSelectLimit && $addresses_list->StartRec > 1)
-		$addresses_list->Recordset->Move($addresses_list->StartRec - 1);
-} elseif (!$addresses->AllowAddDeleteRow && $addresses_list->StopRec == 0) {
-	$addresses_list->StopRec = $addresses->GridAddRowCount;
+$delivery_types_list->RecCnt = $delivery_types_list->StartRec - 1;
+if ($delivery_types_list->Recordset && !$delivery_types_list->Recordset->EOF) {
+	$delivery_types_list->Recordset->MoveFirst();
+	$bSelectLimit = $delivery_types_list->UseSelectLimit;
+	if (!$bSelectLimit && $delivery_types_list->StartRec > 1)
+		$delivery_types_list->Recordset->Move($delivery_types_list->StartRec - 1);
+} elseif (!$delivery_types->AllowAddDeleteRow && $delivery_types_list->StopRec == 0) {
+	$delivery_types_list->StopRec = $delivery_types->GridAddRowCount;
 }
 
 // Initialize aggregate
-$addresses->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$addresses->ResetAttrs();
-$addresses_list->RenderRow();
-while ($addresses_list->RecCnt < $addresses_list->StopRec) {
-	$addresses_list->RecCnt++;
-	if (intval($addresses_list->RecCnt) >= intval($addresses_list->StartRec)) {
-		$addresses_list->RowCnt++;
+$delivery_types->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$delivery_types->ResetAttrs();
+$delivery_types_list->RenderRow();
+while ($delivery_types_list->RecCnt < $delivery_types_list->StopRec) {
+	$delivery_types_list->RecCnt++;
+	if (intval($delivery_types_list->RecCnt) >= intval($delivery_types_list->StartRec)) {
+		$delivery_types_list->RowCnt++;
 
 		// Set up key count
-		$addresses_list->KeyCount = $addresses_list->RowIndex;
+		$delivery_types_list->KeyCount = $delivery_types_list->RowIndex;
 
 		// Init row class and style
-		$addresses->ResetAttrs();
-		$addresses->CssClass = "";
-		if ($addresses->CurrentAction == "gridadd") {
+		$delivery_types->ResetAttrs();
+		$delivery_types->CssClass = "";
+		if ($delivery_types->CurrentAction == "gridadd") {
 		} else {
-			$addresses_list->LoadRowValues($addresses_list->Recordset); // Load row values
+			$delivery_types_list->LoadRowValues($delivery_types_list->Recordset); // Load row values
 		}
-		$addresses->RowType = EW_ROWTYPE_VIEW; // Render view
+		$delivery_types->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$addresses->RowAttrs = array_merge($addresses->RowAttrs, array('data-rowindex'=>$addresses_list->RowCnt, 'id'=>'r' . $addresses_list->RowCnt . '_addresses', 'data-rowtype'=>$addresses->RowType));
+		$delivery_types->RowAttrs = array_merge($delivery_types->RowAttrs, array('data-rowindex'=>$delivery_types_list->RowCnt, 'id'=>'r' . $delivery_types_list->RowCnt . '_delivery_types', 'data-rowtype'=>$delivery_types->RowType));
 
 		// Render row
-		$addresses_list->RenderRow();
+		$delivery_types_list->RenderRow();
 
 		// Render list options
-		$addresses_list->RenderListOptions();
+		$delivery_types_list->RenderListOptions();
 ?>
-	<tr<?php echo $addresses->RowAttributes() ?>>
+	<tr<?php echo $delivery_types->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$addresses_list->ListOptions->Render("body", "left", $addresses_list->RowCnt);
+$delivery_types_list->ListOptions->Render("body", "left", $delivery_types_list->RowCnt);
 ?>
-	<?php if ($addresses->customer_id->Visible) { // customer_id ?>
-		<td data-name="customer_id"<?php echo $addresses->customer_id->CellAttributes() ?>>
-<span id="el<?php echo $addresses_list->RowCnt ?>_addresses_customer_id" class="addresses_customer_id">
-<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
-<?php echo $addresses->customer_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($addresses->province_id->Visible) { // province_id ?>
-		<td data-name="province_id"<?php echo $addresses->province_id->CellAttributes() ?>>
-<span id="el<?php echo $addresses_list->RowCnt ?>_addresses_province_id" class="addresses_province_id">
-<span<?php echo $addresses->province_id->ViewAttributes() ?>>
-<?php echo $addresses->province_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($addresses->po_box->Visible) { // po_box ?>
-		<td data-name="po_box"<?php echo $addresses->po_box->CellAttributes() ?>>
-<span id="el<?php echo $addresses_list->RowCnt ?>_addresses_po_box" class="addresses_po_box">
-<span<?php echo $addresses->po_box->ViewAttributes() ?>>
-<?php echo $addresses->po_box->ListViewValue() ?></span>
+	<?php if ($delivery_types->name->Visible) { // name ?>
+		<td data-name="name"<?php echo $delivery_types->name->CellAttributes() ?>>
+<span id="el<?php echo $delivery_types_list->RowCnt ?>_delivery_types_name" class="delivery_types_name">
+<span<?php echo $delivery_types->name->ViewAttributes() ?>>
+<?php echo $delivery_types->name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$addresses_list->ListOptions->Render("body", "right", $addresses_list->RowCnt);
+$delivery_types_list->ListOptions->Render("body", "right", $delivery_types_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($addresses->CurrentAction <> "gridadd")
-		$addresses_list->Recordset->MoveNext();
+	if ($delivery_types->CurrentAction <> "gridadd")
+		$delivery_types_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($addresses->CurrentAction == "") { ?>
+<?php if ($delivery_types->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2264,65 +2001,65 @@ $addresses_list->ListOptions->Render("body", "right", $addresses_list->RowCnt);
 <?php
 
 // Close recordset
-if ($addresses_list->Recordset)
-	$addresses_list->Recordset->Close();
+if ($delivery_types_list->Recordset)
+	$delivery_types_list->Recordset->Close();
 ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($addresses->CurrentAction <> "gridadd" && $addresses->CurrentAction <> "gridedit") { ?>
+<?php if ($delivery_types->CurrentAction <> "gridadd" && $delivery_types->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($addresses_list->Pager)) $addresses_list->Pager = new cPrevNextPager($addresses_list->StartRec, $addresses_list->DisplayRecs, $addresses_list->TotalRecs, $addresses_list->AutoHidePager) ?>
-<?php if ($addresses_list->Pager->RecordCount > 0 && $addresses_list->Pager->Visible) { ?>
+<?php if (!isset($delivery_types_list->Pager)) $delivery_types_list->Pager = new cPrevNextPager($delivery_types_list->StartRec, $delivery_types_list->DisplayRecs, $delivery_types_list->TotalRecs, $delivery_types_list->AutoHidePager) ?>
+<?php if ($delivery_types_list->Pager->RecordCount > 0 && $delivery_types_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($addresses_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($addresses_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $addresses_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $delivery_types_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($addresses_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($addresses_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $addresses_list->PageUrl() ?>start=<?php echo $addresses_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($delivery_types_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $delivery_types_list->PageUrl() ?>start=<?php echo $delivery_types_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $addresses_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $delivery_types_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($addresses_list->Pager->RecordCount > 0) { ?>
+<?php if ($delivery_types_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $addresses_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $addresses_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $addresses_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $delivery_types_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $delivery_types_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $delivery_types_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($addresses_list->TotalRecs > 0 && (!$addresses_list->AutoHidePageSizeSelector || $addresses_list->Pager->Visible)) { ?>
+<?php if ($delivery_types_list->TotalRecs > 0 && (!$delivery_types_list->AutoHidePageSizeSelector || $delivery_types_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="addresses">
+<input type="hidden" name="t" value="delivery_types">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($addresses_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($addresses_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($addresses_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($addresses->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($delivery_types_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($delivery_types_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($delivery_types_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($delivery_types->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2330,7 +2067,7 @@ if ($addresses_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($addresses_list->OtherOptions as &$option)
+	foreach ($delivery_types_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2338,10 +2075,10 @@ if ($addresses_list->Recordset)
 </div>
 </div>
 <?php } ?>
-<?php if ($addresses_list->TotalRecs == 0 && $addresses->CurrentAction == "") { // Show other options ?>
+<?php if ($delivery_types_list->TotalRecs == 0 && $delivery_types->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($addresses_list->OtherOptions as &$option) {
+	foreach ($delivery_types_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2350,12 +2087,12 @@ if ($addresses_list->Recordset)
 <div class="clearfix"></div>
 <?php } ?>
 <script type="text/javascript">
-faddresseslistsrch.FilterList = <?php echo $addresses_list->GetFilterList() ?>;
-faddresseslistsrch.Init();
-faddresseslist.Init();
+fdelivery_typeslistsrch.FilterList = <?php echo $delivery_types_list->GetFilterList() ?>;
+fdelivery_typeslistsrch.Init();
+fdelivery_typeslist.Init();
 </script>
 <?php
-$addresses_list->ShowPageFooter();
+$delivery_types_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -2367,5 +2104,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$addresses_list->Page_Terminate();
+$delivery_types_list->Page_Terminate();
 ?>

@@ -305,10 +305,10 @@ class cdefault {
 		$Security->LoadUserLevel(); // Load User Level
 		if ($Security->AllowList(CurrentProjectID() . 'orders'))
 		$this->Page_Terminate("orderslist.php"); // Exit and go to default page
-		if ($Security->AllowList(CurrentProjectID() . 'orderdetails'))
-			$this->Page_Terminate("orderdetailslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'deliverytypes'))
-			$this->Page_Terminate("deliverytypeslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'order_details'))
+			$this->Page_Terminate("order_detailslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'delivery_types'))
+			$this->Page_Terminate("delivery_typeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'customers'))
 			$this->Page_Terminate("customerslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'employees'))
@@ -317,16 +317,16 @@ class cdefault {
 			$this->Page_Terminate("menuslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'sub_menus'))
 			$this->Page_Terminate("sub_menuslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'paymenttypes'))
-			$this->Page_Terminate("paymenttypeslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'payment_types'))
+			$this->Page_Terminate("payment_typeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'provinces'))
 			$this->Page_Terminate("provinceslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'stores'))
 			$this->Page_Terminate("storeslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'timings'))
 			$this->Page_Terminate("timingslist.php");
-		if ($Security->AllowList(CurrentProjectID() . 'userlevels'))
-			$this->Page_Terminate("userlevelslist.php");
+		if ($Security->AllowList(CurrentProjectID() . 'user_levels'))
+			$this->Page_Terminate("user_levelslist.php");
 		if ($Security->AllowList(CurrentProjectID() . 'addresses'))
 			$this->Page_Terminate("addresseslist.php");
 		if ($Security->IsLoggedIn()) {

@@ -289,9 +289,9 @@ class ccustomers_view extends ccustomers {
 			$GLOBALS["Table"] = &$GLOBALS["customers"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["CustomerID"] <> "") {
-			$this->RecKey["CustomerID"] = $_GET["CustomerID"];
-			$KeyUrl .= "&amp;CustomerID=" . urlencode($this->RecKey["CustomerID"]);
+		if (@$_GET["customer_id"] <> "") {
+			$this->RecKey["customer_id"] = $_GET["customer_id"];
+			$KeyUrl .= "&amp;customer_id=" . urlencode($this->RecKey["customer_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -393,9 +393,9 @@ class ccustomers_view extends ccustomers {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["CustomerID"] <> "") {
+		if (@$_GET["customer_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["CustomerID"];
+			$gsExportFile .= $_GET["customer_id"];
 		}
 
 		// Get custom export parameters
@@ -421,16 +421,16 @@ class ccustomers_view extends ccustomers {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->CustomerID->SetVisibility();
+		$this->customer_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->CustomerID->Visible = FALSE;
-		$this->FullName->SetVisibility();
-		$this->Phone->SetVisibility();
-		$this->Mobile->SetVisibility();
-		$this->Reward->SetVisibility();
-		$this->UserName->SetVisibility();
-		$this->UserPass->SetVisibility();
-		$this->ActivityStatus->SetVisibility();
+			$this->customer_id->Visible = FALSE;
+		$this->full_name->SetVisibility();
+		$this->phone->SetVisibility();
+		$this->mobile->SetVisibility();
+		$this->reward->SetVisibility();
+		$this->user_name->SetVisibility();
+		$this->user_pass->SetVisibility();
+		$this->activity_status->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -539,12 +539,12 @@ class ccustomers_view extends ccustomers {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["CustomerID"] <> "") {
-				$this->CustomerID->setQueryStringValue($_GET["CustomerID"]);
-				$this->RecKey["CustomerID"] = $this->CustomerID->QueryStringValue;
-			} elseif (@$_POST["CustomerID"] <> "") {
-				$this->CustomerID->setFormValue($_POST["CustomerID"]);
-				$this->RecKey["CustomerID"] = $this->CustomerID->FormValue;
+			if (@$_GET["customer_id"] <> "") {
+				$this->customer_id->setQueryStringValue($_GET["customer_id"]);
+				$this->RecKey["customer_id"] = $this->customer_id->QueryStringValue;
+			} elseif (@$_POST["customer_id"] <> "") {
+				$this->customer_id->setFormValue($_POST["customer_id"]);
+				$this->RecKey["customer_id"] = $this->customer_id->FormValue;
 			} else {
 				$sReturnUrl = "customerslist.php"; // Return to list
 			}
@@ -635,7 +635,7 @@ class ccustomers_view extends ccustomers {
 		$item = &$option->Add("detail_addresses");
 		$body = $Language->Phrase("ViewPageDetailLink") . $Language->TablePhrase("addresses", "TblCaption");
 		$body .= str_replace("%c", $this->addresses_Count, $Language->Phrase("DetailCount"));
-		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("addresseslist.php?" . EW_TABLE_SHOW_MASTER . "=customers&fk_CustomerID=" . urlencode(strval($this->CustomerID->CurrentValue)) . "") . "\">" . $body . "</a>";
+		$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("addresseslist.php?" . EW_TABLE_SHOW_MASTER . "=customers&fk_customer_id=" . urlencode(strval($this->customer_id->CurrentValue)) . "") . "\">" . $body . "</a>";
 		$links = "";
 		if ($GLOBALS["addresses_grid"] && $GLOBALS["addresses_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 'addresses')) {
 			$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=addresses")) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
@@ -808,17 +808,17 @@ class ccustomers_view extends ccustomers {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->CustomerID->setDbValue($row['CustomerID']);
-		$this->FullName->setDbValue($row['FullName']);
-		$this->Phone->setDbValue($row['Phone']);
-		$this->Mobile->setDbValue($row['Mobile']);
-		$this->Reward->setDbValue($row['Reward']);
-		$this->UserName->setDbValue($row['UserName']);
-		$this->UserPass->setDbValue($row['UserPass']);
-		$this->ActivityStatus->setDbValue($row['ActivityStatus']);
+		$this->customer_id->setDbValue($row['customer_id']);
+		$this->full_name->setDbValue($row['full_name']);
+		$this->phone->setDbValue($row['phone']);
+		$this->mobile->setDbValue($row['mobile']);
+		$this->reward->setDbValue($row['reward']);
+		$this->user_name->setDbValue($row['user_name']);
+		$this->user_pass->setDbValue($row['user_pass']);
+		$this->activity_status->setDbValue($row['activity_status']);
 		if (!isset($GLOBALS["addresses_grid"])) $GLOBALS["addresses_grid"] = new caddresses_grid;
 		$sDetailFilter = $GLOBALS["addresses"]->SqlDetailFilter_customers();
-		$sDetailFilter = str_replace("@CustomerID@", ew_AdjustSql($this->CustomerID->DbValue, "DB"), $sDetailFilter);
+		$sDetailFilter = str_replace("@customer_id@", ew_AdjustSql($this->customer_id->DbValue, "DB"), $sDetailFilter);
 		$GLOBALS["addresses"]->setCurrentMasterTable("customers");
 		$sDetailFilter = $GLOBALS["addresses"]->ApplyUserIDFilters($sDetailFilter);
 		$this->addresses_Count = $GLOBALS["addresses"]->LoadRecordCount($sDetailFilter);
@@ -827,14 +827,14 @@ class ccustomers_view extends ccustomers {
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['CustomerID'] = NULL;
-		$row['FullName'] = NULL;
-		$row['Phone'] = NULL;
-		$row['Mobile'] = NULL;
-		$row['Reward'] = NULL;
-		$row['UserName'] = NULL;
-		$row['UserPass'] = NULL;
-		$row['ActivityStatus'] = NULL;
+		$row['customer_id'] = NULL;
+		$row['full_name'] = NULL;
+		$row['phone'] = NULL;
+		$row['mobile'] = NULL;
+		$row['reward'] = NULL;
+		$row['user_name'] = NULL;
+		$row['user_pass'] = NULL;
+		$row['activity_status'] = NULL;
 		return $row;
 	}
 
@@ -843,14 +843,14 @@ class ccustomers_view extends ccustomers {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->CustomerID->DbValue = $row['CustomerID'];
-		$this->FullName->DbValue = $row['FullName'];
-		$this->Phone->DbValue = $row['Phone'];
-		$this->Mobile->DbValue = $row['Mobile'];
-		$this->Reward->DbValue = $row['Reward'];
-		$this->UserName->DbValue = $row['UserName'];
-		$this->UserPass->DbValue = $row['UserPass'];
-		$this->ActivityStatus->DbValue = $row['ActivityStatus'];
+		$this->customer_id->DbValue = $row['customer_id'];
+		$this->full_name->DbValue = $row['full_name'];
+		$this->phone->DbValue = $row['phone'];
+		$this->mobile->DbValue = $row['mobile'];
+		$this->reward->DbValue = $row['reward'];
+		$this->user_name->DbValue = $row['user_name'];
+		$this->user_pass->DbValue = $row['user_pass'];
+		$this->activity_status->DbValue = $row['activity_status'];
 	}
 
 	// Render row values based on field settings
@@ -869,92 +869,92 @@ class ccustomers_view extends ccustomers {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// CustomerID
-		// FullName
-		// Phone
-		// Mobile
-		// Reward
-		// UserName
-		// UserPass
-		// ActivityStatus
+		// customer_id
+		// full_name
+		// phone
+		// mobile
+		// reward
+		// user_name
+		// user_pass
+		// activity_status
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// CustomerID
-		$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
-		$this->CustomerID->ViewCustomAttributes = "";
+		// customer_id
+		$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Mobile
-		$this->Mobile->ViewValue = $this->Mobile->CurrentValue;
-		$this->Mobile->ViewCustomAttributes = "";
+		// mobile
+		$this->mobile->ViewValue = $this->mobile->CurrentValue;
+		$this->mobile->ViewCustomAttributes = "";
 
-		// Reward
-		$this->Reward->ViewValue = $this->Reward->CurrentValue;
-		$this->Reward->ViewCustomAttributes = "";
+		// reward
+		$this->reward->ViewValue = $this->reward->CurrentValue;
+		$this->reward->ViewCustomAttributes = "";
 
-		// UserName
-		$this->UserName->ViewValue = $this->UserName->CurrentValue;
-		$this->UserName->ViewCustomAttributes = "";
+		// user_name
+		$this->user_name->ViewValue = $this->user_name->CurrentValue;
+		$this->user_name->ViewCustomAttributes = "";
 
-		// UserPass
-		$this->UserPass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->UserPass->ViewCustomAttributes = "";
+		// user_pass
+		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
+		$this->user_pass->ViewCustomAttributes = "";
 
-		// ActivityStatus
-		if (strval($this->ActivityStatus->CurrentValue) <> "") {
-			$this->ActivityStatus->ViewValue = $this->ActivityStatus->OptionCaption($this->ActivityStatus->CurrentValue);
+		// activity_status
+		if (strval($this->activity_status->CurrentValue) <> "") {
+			$this->activity_status->ViewValue = $this->activity_status->OptionCaption($this->activity_status->CurrentValue);
 		} else {
-			$this->ActivityStatus->ViewValue = NULL;
+			$this->activity_status->ViewValue = NULL;
 		}
-		$this->ActivityStatus->ViewCustomAttributes = "";
+		$this->activity_status->ViewCustomAttributes = "";
 
-			// CustomerID
-			$this->CustomerID->LinkCustomAttributes = "";
-			$this->CustomerID->HrefValue = "";
-			$this->CustomerID->TooltipValue = "";
+			// customer_id
+			$this->customer_id->LinkCustomAttributes = "";
+			$this->customer_id->HrefValue = "";
+			$this->customer_id->TooltipValue = "";
 
-			// FullName
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
-			$this->FullName->TooltipValue = "";
+			// full_name
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
+			$this->full_name->TooltipValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
-			$this->Phone->TooltipValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
+			$this->phone->TooltipValue = "";
 
-			// Mobile
-			$this->Mobile->LinkCustomAttributes = "";
-			$this->Mobile->HrefValue = "";
-			$this->Mobile->TooltipValue = "";
+			// mobile
+			$this->mobile->LinkCustomAttributes = "";
+			$this->mobile->HrefValue = "";
+			$this->mobile->TooltipValue = "";
 
-			// Reward
-			$this->Reward->LinkCustomAttributes = "";
-			$this->Reward->HrefValue = "";
-			$this->Reward->TooltipValue = "";
+			// reward
+			$this->reward->LinkCustomAttributes = "";
+			$this->reward->HrefValue = "";
+			$this->reward->TooltipValue = "";
 
-			// UserName
-			$this->UserName->LinkCustomAttributes = "";
-			$this->UserName->HrefValue = "";
-			$this->UserName->TooltipValue = "";
+			// user_name
+			$this->user_name->LinkCustomAttributes = "";
+			$this->user_name->HrefValue = "";
+			$this->user_name->TooltipValue = "";
 
-			// UserPass
-			$this->UserPass->LinkCustomAttributes = "";
-			$this->UserPass->HrefValue = "";
-			$this->UserPass->TooltipValue = "";
+			// user_pass
+			$this->user_pass->LinkCustomAttributes = "";
+			$this->user_pass->HrefValue = "";
+			$this->user_pass->TooltipValue = "";
 
-			// ActivityStatus
-			$this->ActivityStatus->LinkCustomAttributes = "";
-			$this->ActivityStatus->HrefValue = "";
-			$this->ActivityStatus->TooltipValue = "";
+			// activity_status
+			$this->activity_status->LinkCustomAttributes = "";
+			$this->activity_status->HrefValue = "";
+			$this->activity_status->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1141,9 +1141,9 @@ class ccustomers_view extends ccustomers {
 					// Save current master table to detail table
 					$GLOBALS["addresses_grid"]->setCurrentMasterTable($this->TableVar);
 					$GLOBALS["addresses_grid"]->setStartRecordNumber(1);
-					$GLOBALS["addresses_grid"]->CustomerID->FldIsDetailKey = TRUE;
-					$GLOBALS["addresses_grid"]->CustomerID->CurrentValue = $this->CustomerID->CurrentValue;
-					$GLOBALS["addresses_grid"]->CustomerID->setSessionValue($GLOBALS["addresses_grid"]->CustomerID->CurrentValue);
+					$GLOBALS["addresses_grid"]->customer_id->FldIsDetailKey = TRUE;
+					$GLOBALS["addresses_grid"]->customer_id->CurrentValue = $this->customer_id->CurrentValue;
+					$GLOBALS["addresses_grid"]->customer_id->setSessionValue($GLOBALS["addresses_grid"]->customer_id->CurrentValue);
 				}
 			}
 		}
@@ -1300,8 +1300,8 @@ fcustomersview.Form_CustomValidate =
 fcustomersview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fcustomersview.Lists["x_ActivityStatus"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-fcustomersview.Lists["x_ActivityStatus"].Options = <?php echo json_encode($customers_view->ActivityStatus->Options()) ?>;
+fcustomersview.Lists["x_activity_status"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fcustomersview.Lists["x_activity_status"].Options = <?php echo json_encode($customers_view->activity_status->Options()) ?>;
 
 // Form object for search
 </script>
@@ -1331,90 +1331,90 @@ $customers_view->ShowMessage();
 <input type="hidden" name="t" value="customers">
 <input type="hidden" name="modal" value="<?php echo intval($customers_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($customers->CustomerID->Visible) { // CustomerID ?>
-	<tr id="r_CustomerID">
-		<td class="col-sm-2"><span id="elh_customers_CustomerID"><?php echo $customers->CustomerID->FldCaption() ?></span></td>
-		<td data-name="CustomerID"<?php echo $customers->CustomerID->CellAttributes() ?>>
-<span id="el_customers_CustomerID">
-<span<?php echo $customers->CustomerID->ViewAttributes() ?>>
-<?php echo $customers->CustomerID->ViewValue ?></span>
+<?php if ($customers->customer_id->Visible) { // customer_id ?>
+	<tr id="r_customer_id">
+		<td class="col-sm-2"><span id="elh_customers_customer_id"><?php echo $customers->customer_id->FldCaption() ?></span></td>
+		<td data-name="customer_id"<?php echo $customers->customer_id->CellAttributes() ?>>
+<span id="el_customers_customer_id">
+<span<?php echo $customers->customer_id->ViewAttributes() ?>>
+<?php echo $customers->customer_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->FullName->Visible) { // FullName ?>
-	<tr id="r_FullName">
-		<td class="col-sm-2"><span id="elh_customers_FullName"><?php echo $customers->FullName->FldCaption() ?></span></td>
-		<td data-name="FullName"<?php echo $customers->FullName->CellAttributes() ?>>
-<span id="el_customers_FullName">
-<span<?php echo $customers->FullName->ViewAttributes() ?>>
-<?php echo $customers->FullName->ViewValue ?></span>
+<?php if ($customers->full_name->Visible) { // full_name ?>
+	<tr id="r_full_name">
+		<td class="col-sm-2"><span id="elh_customers_full_name"><?php echo $customers->full_name->FldCaption() ?></span></td>
+		<td data-name="full_name"<?php echo $customers->full_name->CellAttributes() ?>>
+<span id="el_customers_full_name">
+<span<?php echo $customers->full_name->ViewAttributes() ?>>
+<?php echo $customers->full_name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->Phone->Visible) { // Phone ?>
-	<tr id="r_Phone">
-		<td class="col-sm-2"><span id="elh_customers_Phone"><?php echo $customers->Phone->FldCaption() ?></span></td>
-		<td data-name="Phone"<?php echo $customers->Phone->CellAttributes() ?>>
-<span id="el_customers_Phone">
-<span<?php echo $customers->Phone->ViewAttributes() ?>>
-<?php echo $customers->Phone->ViewValue ?></span>
+<?php if ($customers->phone->Visible) { // phone ?>
+	<tr id="r_phone">
+		<td class="col-sm-2"><span id="elh_customers_phone"><?php echo $customers->phone->FldCaption() ?></span></td>
+		<td data-name="phone"<?php echo $customers->phone->CellAttributes() ?>>
+<span id="el_customers_phone">
+<span<?php echo $customers->phone->ViewAttributes() ?>>
+<?php echo $customers->phone->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->Mobile->Visible) { // Mobile ?>
-	<tr id="r_Mobile">
-		<td class="col-sm-2"><span id="elh_customers_Mobile"><?php echo $customers->Mobile->FldCaption() ?></span></td>
-		<td data-name="Mobile"<?php echo $customers->Mobile->CellAttributes() ?>>
-<span id="el_customers_Mobile">
-<span<?php echo $customers->Mobile->ViewAttributes() ?>>
-<?php echo $customers->Mobile->ViewValue ?></span>
+<?php if ($customers->mobile->Visible) { // mobile ?>
+	<tr id="r_mobile">
+		<td class="col-sm-2"><span id="elh_customers_mobile"><?php echo $customers->mobile->FldCaption() ?></span></td>
+		<td data-name="mobile"<?php echo $customers->mobile->CellAttributes() ?>>
+<span id="el_customers_mobile">
+<span<?php echo $customers->mobile->ViewAttributes() ?>>
+<?php echo $customers->mobile->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->Reward->Visible) { // Reward ?>
-	<tr id="r_Reward">
-		<td class="col-sm-2"><span id="elh_customers_Reward"><?php echo $customers->Reward->FldCaption() ?></span></td>
-		<td data-name="Reward"<?php echo $customers->Reward->CellAttributes() ?>>
-<span id="el_customers_Reward">
-<span<?php echo $customers->Reward->ViewAttributes() ?>>
-<?php echo $customers->Reward->ViewValue ?></span>
+<?php if ($customers->reward->Visible) { // reward ?>
+	<tr id="r_reward">
+		<td class="col-sm-2"><span id="elh_customers_reward"><?php echo $customers->reward->FldCaption() ?></span></td>
+		<td data-name="reward"<?php echo $customers->reward->CellAttributes() ?>>
+<span id="el_customers_reward">
+<span<?php echo $customers->reward->ViewAttributes() ?>>
+<?php echo $customers->reward->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->UserName->Visible) { // UserName ?>
-	<tr id="r_UserName">
-		<td class="col-sm-2"><span id="elh_customers_UserName"><?php echo $customers->UserName->FldCaption() ?></span></td>
-		<td data-name="UserName"<?php echo $customers->UserName->CellAttributes() ?>>
-<span id="el_customers_UserName">
-<span<?php echo $customers->UserName->ViewAttributes() ?>>
-<?php echo $customers->UserName->ViewValue ?></span>
+<?php if ($customers->user_name->Visible) { // user_name ?>
+	<tr id="r_user_name">
+		<td class="col-sm-2"><span id="elh_customers_user_name"><?php echo $customers->user_name->FldCaption() ?></span></td>
+		<td data-name="user_name"<?php echo $customers->user_name->CellAttributes() ?>>
+<span id="el_customers_user_name">
+<span<?php echo $customers->user_name->ViewAttributes() ?>>
+<?php echo $customers->user_name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->UserPass->Visible) { // UserPass ?>
-	<tr id="r_UserPass">
-		<td class="col-sm-2"><span id="elh_customers_UserPass"><?php echo $customers->UserPass->FldCaption() ?></span></td>
-		<td data-name="UserPass"<?php echo $customers->UserPass->CellAttributes() ?>>
-<span id="el_customers_UserPass">
-<span<?php echo $customers->UserPass->ViewAttributes() ?>>
-<?php echo $customers->UserPass->ViewValue ?></span>
+<?php if ($customers->user_pass->Visible) { // user_pass ?>
+	<tr id="r_user_pass">
+		<td class="col-sm-2"><span id="elh_customers_user_pass"><?php echo $customers->user_pass->FldCaption() ?></span></td>
+		<td data-name="user_pass"<?php echo $customers->user_pass->CellAttributes() ?>>
+<span id="el_customers_user_pass">
+<span<?php echo $customers->user_pass->ViewAttributes() ?>>
+<?php echo $customers->user_pass->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($customers->ActivityStatus->Visible) { // ActivityStatus ?>
-	<tr id="r_ActivityStatus">
-		<td class="col-sm-2"><span id="elh_customers_ActivityStatus"><?php echo $customers->ActivityStatus->FldCaption() ?></span></td>
-		<td data-name="ActivityStatus"<?php echo $customers->ActivityStatus->CellAttributes() ?>>
-<span id="el_customers_ActivityStatus">
-<span<?php echo $customers->ActivityStatus->ViewAttributes() ?>>
-<?php echo $customers->ActivityStatus->ViewValue ?></span>
+<?php if ($customers->activity_status->Visible) { // activity_status ?>
+	<tr id="r_activity_status">
+		<td class="col-sm-2"><span id="elh_customers_activity_status"><?php echo $customers->activity_status->FldCaption() ?></span></td>
+		<td data-name="activity_status"<?php echo $customers->activity_status->CellAttributes() ?>>
+<span id="el_customers_activity_status">
+<span<?php echo $customers->activity_status->ViewAttributes() ?>>
+<?php echo $customers->activity_status->ViewValue ?></span>
 </span>
 </td>
 	</tr>

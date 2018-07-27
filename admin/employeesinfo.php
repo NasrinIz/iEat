@@ -7,16 +7,16 @@ $employees = NULL;
 // Table class for employees
 //
 class cemployees extends cTable {
-	var $EmployeeID;
-	var $FullName;
-	var $UserName;
-	var $UserPass;
-	var $Phone;
-	var $Mobile;
-	var $ProvinceID;
-	var $Address;
-	var $ZipCode;
-	var $Level;
+	var $employee_id;
+	var $full_name;
+	var $user_name;
+	var $user_pass;
+	var $phone;
+	var $mobile;
+	var $province_id;
+	var $address;
+	var $zip_code;
+	var $level_no;
 
 	//
 	// Table class constructor
@@ -50,62 +50,62 @@ class cemployees extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// EmployeeID
-		$this->EmployeeID = new cField('employees', 'employees', 'x_EmployeeID', 'EmployeeID', '`EmployeeID`', '`EmployeeID`', 3, -1, FALSE, '`EmployeeID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->EmployeeID->Sortable = FALSE; // Allow sort
-		$this->EmployeeID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['EmployeeID'] = &$this->EmployeeID;
+		// employee_id
+		$this->employee_id = new cField('employees', 'employees', 'x_employee_id', 'employee_id', '`employee_id`', '`employee_id`', 3, -1, FALSE, '`employee_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->employee_id->Sortable = FALSE; // Allow sort
+		$this->employee_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['employee_id'] = &$this->employee_id;
 
-		// FullName
-		$this->FullName = new cField('employees', 'employees', 'x_FullName', 'FullName', '`FullName`', '`FullName`', 200, -1, FALSE, '`FullName`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->FullName->Sortable = TRUE; // Allow sort
-		$this->fields['FullName'] = &$this->FullName;
+		// full_name
+		$this->full_name = new cField('employees', 'employees', 'x_full_name', 'full_name', '`full_name`', '`full_name`', 200, -1, FALSE, '`full_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->full_name->Sortable = TRUE; // Allow sort
+		$this->fields['full_name'] = &$this->full_name;
 
-		// UserName
-		$this->UserName = new cField('employees', 'employees', 'x_UserName', 'UserName', '`UserName`', '`UserName`', 200, -1, FALSE, '`UserName`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->UserName->Sortable = TRUE; // Allow sort
-		$this->fields['UserName'] = &$this->UserName;
+		// user_name
+		$this->user_name = new cField('employees', 'employees', 'x_user_name', 'user_name', '`user_name`', '`user_name`', 200, -1, FALSE, '`user_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->user_name->Sortable = TRUE; // Allow sort
+		$this->fields['user_name'] = &$this->user_name;
 
-		// UserPass
-		$this->UserPass = new cField('employees', 'employees', 'x_UserPass', 'UserPass', '`UserPass`', '`UserPass`', 200, -1, FALSE, '`UserPass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'PASSWORD');
-		$this->UserPass->Sortable = TRUE; // Allow sort
-		$this->fields['UserPass'] = &$this->UserPass;
+		// user_pass
+		$this->user_pass = new cField('employees', 'employees', 'x_user_pass', 'user_pass', '`user_pass`', '`user_pass`', 200, -1, FALSE, '`user_pass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'PASSWORD');
+		$this->user_pass->Sortable = TRUE; // Allow sort
+		$this->fields['user_pass'] = &$this->user_pass;
 
-		// Phone
-		$this->Phone = new cField('employees', 'employees', 'x_Phone', 'Phone', '`Phone`', '`Phone`', 200, -1, FALSE, '`Phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Phone->Sortable = TRUE; // Allow sort
-		$this->fields['Phone'] = &$this->Phone;
+		// phone
+		$this->phone = new cField('employees', 'employees', 'x_phone', 'phone', '`phone`', '`phone`', 200, -1, FALSE, '`phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->phone->Sortable = TRUE; // Allow sort
+		$this->fields['phone'] = &$this->phone;
 
-		// Mobile
-		$this->Mobile = new cField('employees', 'employees', 'x_Mobile', 'Mobile', '`Mobile`', '`Mobile`', 200, -1, FALSE, '`Mobile`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Mobile->Sortable = TRUE; // Allow sort
-		$this->fields['Mobile'] = &$this->Mobile;
+		// mobile
+		$this->mobile = new cField('employees', 'employees', 'x_mobile', 'mobile', '`mobile`', '`mobile`', 200, -1, FALSE, '`mobile`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->mobile->Sortable = TRUE; // Allow sort
+		$this->fields['mobile'] = &$this->mobile;
 
-		// ProvinceID
-		$this->ProvinceID = new cField('employees', 'employees', 'x_ProvinceID', 'ProvinceID', '`ProvinceID`', '`ProvinceID`', 3, -1, FALSE, '`ProvinceID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->ProvinceID->Sortable = TRUE; // Allow sort
-		$this->ProvinceID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->ProvinceID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->ProvinceID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['ProvinceID'] = &$this->ProvinceID;
+		// province_id
+		$this->province_id = new cField('employees', 'employees', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->province_id->Sortable = TRUE; // Allow sort
+		$this->province_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->province_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['province_id'] = &$this->province_id;
 
-		// Address
-		$this->Address = new cField('employees', 'employees', 'x_Address', 'Address', '`Address`', '`Address`', 200, -1, FALSE, '`Address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Address->Sortable = TRUE; // Allow sort
-		$this->fields['Address'] = &$this->Address;
+		// address
+		$this->address = new cField('employees', 'employees', 'x_address', 'address', '`address`', '`address`', 200, -1, FALSE, '`address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->address->Sortable = TRUE; // Allow sort
+		$this->fields['address'] = &$this->address;
 
-		// ZipCode
-		$this->ZipCode = new cField('employees', 'employees', 'x_ZipCode', 'ZipCode', '`ZipCode`', '`ZipCode`', 200, -1, FALSE, '`ZipCode`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->ZipCode->Sortable = TRUE; // Allow sort
-		$this->fields['ZipCode'] = &$this->ZipCode;
+		// zip_code
+		$this->zip_code = new cField('employees', 'employees', 'x_zip_code', 'zip_code', '`zip_code`', '`zip_code`', 200, -1, FALSE, '`zip_code`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->zip_code->Sortable = TRUE; // Allow sort
+		$this->fields['zip_code'] = &$this->zip_code;
 
-		// Level
-		$this->Level = new cField('employees', 'employees', 'x_Level', 'Level', '`Level`', '`Level`', 3, -1, FALSE, '`Level`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->Level->Sortable = TRUE; // Allow sort
-		$this->Level->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->Level->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->Level->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['Level'] = &$this->Level;
+		// level_no
+		$this->level_no = new cField('employees', 'employees', 'x_level_no', 'level_no', '`level_no`', '`level_no`', 3, -1, FALSE, '`level_no`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->level_no->Sortable = TRUE; // Allow sort
+		$this->level_no->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->level_no->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->level_no->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['level_no'] = &$this->level_no;
 	}
 
 	// Field Visibility
@@ -362,7 +362,7 @@ class cemployees extends cTable {
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->FldIsCustom)
 				continue;
-			if (EW_ENCRYPTED_PASSWORD && $name == 'UserPass')
+			if (EW_ENCRYPTED_PASSWORD && $name == 'user_pass')
 				$value = (EW_CASE_SENSITIVE_PASSWORD) ? ew_EncryptPassword($value) : ew_EncryptPassword(strtolower($value));
 			$names .= $this->fields[$name]->FldExpression . ",";
 			$values .= ew_QuotedValue($value, $this->fields[$name]->FldDataType, $this->DBID) . ",";
@@ -379,8 +379,8 @@ class cemployees extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->EmployeeID->setDbValue($conn->Insert_ID());
-			$rs['EmployeeID'] = $this->EmployeeID->DbValue;
+			$this->employee_id->setDbValue($conn->Insert_ID());
+			$rs['employee_id'] = $this->employee_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -391,7 +391,7 @@ class cemployees extends cTable {
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->FldIsCustom)
 				continue;
-			if (EW_ENCRYPTED_PASSWORD && $name == 'UserPass') {
+			if (EW_ENCRYPTED_PASSWORD && $name == 'user_pass') {
 				if ($value == $this->fields[$name]->OldValue) // No need to update hashed password if not changed
 					continue;
 				$value = (EW_CASE_SENSITIVE_PASSWORD) ? ew_EncryptPassword($value) : ew_EncryptPassword(strtolower($value));
@@ -421,8 +421,8 @@ class cemployees extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('EmployeeID', $rs))
-				ew_AddFilter($where, ew_QuotedName('EmployeeID', $this->DBID) . '=' . ew_QuotedValue($rs['EmployeeID'], $this->EmployeeID->FldDataType, $this->DBID));
+			if (array_key_exists('employee_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('employee_id', $this->DBID) . '=' . ew_QuotedValue($rs['employee_id'], $this->employee_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -444,18 +444,18 @@ class cemployees extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`EmployeeID` = @EmployeeID@";
+		return "`employee_id` = @employee_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->EmployeeID->CurrentValue))
+		if (!is_numeric($this->employee_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->EmployeeID->CurrentValue))
+		if (is_null($this->employee_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@EmployeeID@", ew_AdjustSql($this->EmployeeID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@employee_id@", ew_AdjustSql($this->employee_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -549,7 +549,7 @@ class cemployees extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "EmployeeID:" . ew_VarToJson($this->EmployeeID->CurrentValue, "number", "'");
+		$json .= "employee_id:" . ew_VarToJson($this->employee_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -557,8 +557,8 @@ class cemployees extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->EmployeeID->CurrentValue)) {
-			$sUrl .= "EmployeeID=" . urlencode($this->EmployeeID->CurrentValue);
+		if (!is_null($this->employee_id->CurrentValue)) {
+			$sUrl .= "employee_id=" . urlencode($this->employee_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -591,10 +591,10 @@ class cemployees extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["EmployeeID"]))
-				$arKeys[] = $_POST["EmployeeID"];
-			elseif (isset($_GET["EmployeeID"]))
-				$arKeys[] = $_GET["EmployeeID"];
+			if ($isPost && isset($_POST["employee_id"]))
+				$arKeys[] = $_POST["employee_id"];
+			elseif (isset($_GET["employee_id"]))
+				$arKeys[] = $_GET["employee_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -619,7 +619,7 @@ class cemployees extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->EmployeeID->CurrentValue = $key;
+			$this->employee_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -640,16 +640,16 @@ class cemployees extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->EmployeeID->setDbValue($rs->fields('EmployeeID'));
-		$this->FullName->setDbValue($rs->fields('FullName'));
-		$this->UserName->setDbValue($rs->fields('UserName'));
-		$this->UserPass->setDbValue($rs->fields('UserPass'));
-		$this->Phone->setDbValue($rs->fields('Phone'));
-		$this->Mobile->setDbValue($rs->fields('Mobile'));
-		$this->ProvinceID->setDbValue($rs->fields('ProvinceID'));
-		$this->Address->setDbValue($rs->fields('Address'));
-		$this->ZipCode->setDbValue($rs->fields('ZipCode'));
-		$this->Level->setDbValue($rs->fields('Level'));
+		$this->employee_id->setDbValue($rs->fields('employee_id'));
+		$this->full_name->setDbValue($rs->fields('full_name'));
+		$this->user_name->setDbValue($rs->fields('user_name'));
+		$this->user_pass->setDbValue($rs->fields('user_pass'));
+		$this->phone->setDbValue($rs->fields('phone'));
+		$this->mobile->setDbValue($rs->fields('mobile'));
+		$this->province_id->setDbValue($rs->fields('province_id'));
+		$this->address->setDbValue($rs->fields('address'));
+		$this->zip_code->setDbValue($rs->fields('zip_code'));
+		$this->level_no->setDbValue($rs->fields('level_no'));
 	}
 
 	// Render list row values
@@ -660,149 +660,149 @@ class cemployees extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// EmployeeID
-		// FullName
-		// UserName
-		// UserPass
-		// Phone
-		// Mobile
-		// ProvinceID
-		// Address
-		// ZipCode
-		// Level
-		// EmployeeID
+		// employee_id
+		// full_name
+		// user_name
+		// user_pass
+		// phone
+		// mobile
+		// province_id
+		// address
+		// zip_code
+		// level_no
+		// employee_id
 
-		$this->EmployeeID->ViewValue = $this->EmployeeID->CurrentValue;
-		$this->EmployeeID->ViewCustomAttributes = "";
+		$this->employee_id->ViewValue = $this->employee_id->CurrentValue;
+		$this->employee_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// UserName
-		$this->UserName->ViewValue = $this->UserName->CurrentValue;
-		$this->UserName->ViewCustomAttributes = "";
+		// user_name
+		$this->user_name->ViewValue = $this->user_name->CurrentValue;
+		$this->user_name->ViewCustomAttributes = "";
 
-		// UserPass
-		$this->UserPass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->UserPass->ViewCustomAttributes = "";
+		// user_pass
+		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
+		$this->user_pass->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Mobile
-		$this->Mobile->ViewValue = $this->Mobile->CurrentValue;
-		$this->Mobile->ViewCustomAttributes = "";
+		// mobile
+		$this->mobile->ViewValue = $this->mobile->CurrentValue;
+		$this->mobile->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-		// Level
+		// level_no
 		if ($Security->CanAdmin()) { // System admin
-		if (strval($this->Level->CurrentValue) <> "") {
-			$sFilterWrk = "`userlevelid`" . ew_SearchString("=", $this->Level->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `userlevelid`, `userlevelname` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `userlevels`";
+		if (strval($this->level_no->CurrentValue) <> "") {
+			$sFilterWrk = "`user_level_id`" . ew_SearchString("=", $this->level_no->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `user_level_id`, `user_level_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `user_levels`";
 		$sWhereWrk = "";
-		$this->Level->LookupFilters = array();
+		$this->level_no->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->Level, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->level_no, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->Level->ViewValue = $this->Level->DisplayValue($arwrk);
+				$this->level_no->ViewValue = $this->level_no->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->Level->ViewValue = $this->Level->CurrentValue;
+				$this->level_no->ViewValue = $this->level_no->CurrentValue;
 			}
 		} else {
-			$this->Level->ViewValue = NULL;
+			$this->level_no->ViewValue = NULL;
 		}
 		} else {
-			$this->Level->ViewValue = $Language->Phrase("PasswordMask");
+			$this->level_no->ViewValue = $Language->Phrase("PasswordMask");
 		}
-		$this->Level->ViewCustomAttributes = "";
+		$this->level_no->ViewCustomAttributes = "";
 
-		// EmployeeID
-		$this->EmployeeID->LinkCustomAttributes = "";
-		$this->EmployeeID->HrefValue = "";
-		$this->EmployeeID->TooltipValue = "";
+		// employee_id
+		$this->employee_id->LinkCustomAttributes = "";
+		$this->employee_id->HrefValue = "";
+		$this->employee_id->TooltipValue = "";
 
-		// FullName
-		$this->FullName->LinkCustomAttributes = "";
-		$this->FullName->HrefValue = "";
-		$this->FullName->TooltipValue = "";
+		// full_name
+		$this->full_name->LinkCustomAttributes = "";
+		$this->full_name->HrefValue = "";
+		$this->full_name->TooltipValue = "";
 
-		// UserName
-		$this->UserName->LinkCustomAttributes = "";
-		$this->UserName->HrefValue = "";
-		$this->UserName->TooltipValue = "";
+		// user_name
+		$this->user_name->LinkCustomAttributes = "";
+		$this->user_name->HrefValue = "";
+		$this->user_name->TooltipValue = "";
 
-		// UserPass
-		$this->UserPass->LinkCustomAttributes = "";
-		$this->UserPass->HrefValue = "";
-		$this->UserPass->TooltipValue = "";
+		// user_pass
+		$this->user_pass->LinkCustomAttributes = "";
+		$this->user_pass->HrefValue = "";
+		$this->user_pass->TooltipValue = "";
 
-		// Phone
-		$this->Phone->LinkCustomAttributes = "";
-		$this->Phone->HrefValue = "";
-		$this->Phone->TooltipValue = "";
+		// phone
+		$this->phone->LinkCustomAttributes = "";
+		$this->phone->HrefValue = "";
+		$this->phone->TooltipValue = "";
 
-		// Mobile
-		$this->Mobile->LinkCustomAttributes = "";
-		$this->Mobile->HrefValue = "";
-		$this->Mobile->TooltipValue = "";
+		// mobile
+		$this->mobile->LinkCustomAttributes = "";
+		$this->mobile->HrefValue = "";
+		$this->mobile->TooltipValue = "";
 
-		// ProvinceID
-		$this->ProvinceID->LinkCustomAttributes = "";
-		$this->ProvinceID->HrefValue = "";
-		$this->ProvinceID->TooltipValue = "";
+		// province_id
+		$this->province_id->LinkCustomAttributes = "";
+		$this->province_id->HrefValue = "";
+		$this->province_id->TooltipValue = "";
 
-		// Address
-		$this->Address->LinkCustomAttributes = "";
-		$this->Address->HrefValue = "";
-		$this->Address->TooltipValue = "";
+		// address
+		$this->address->LinkCustomAttributes = "";
+		$this->address->HrefValue = "";
+		$this->address->TooltipValue = "";
 
-		// ZipCode
-		$this->ZipCode->LinkCustomAttributes = "";
-		$this->ZipCode->HrefValue = "";
-		$this->ZipCode->TooltipValue = "";
+		// zip_code
+		$this->zip_code->LinkCustomAttributes = "";
+		$this->zip_code->HrefValue = "";
+		$this->zip_code->TooltipValue = "";
 
-		// Level
-		$this->Level->LinkCustomAttributes = "";
-		$this->Level->HrefValue = "";
-		$this->Level->TooltipValue = "";
+		// level_no
+		$this->level_no->LinkCustomAttributes = "";
+		$this->level_no->HrefValue = "";
+		$this->level_no->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -818,63 +818,63 @@ class cemployees extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// EmployeeID
-		$this->EmployeeID->EditAttrs["class"] = "form-control";
-		$this->EmployeeID->EditCustomAttributes = "";
-		$this->EmployeeID->EditValue = $this->EmployeeID->CurrentValue;
-		$this->EmployeeID->ViewCustomAttributes = "";
+		// employee_id
+		$this->employee_id->EditAttrs["class"] = "form-control";
+		$this->employee_id->EditCustomAttributes = "";
+		$this->employee_id->EditValue = $this->employee_id->CurrentValue;
+		$this->employee_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->EditAttrs["class"] = "form-control";
-		$this->FullName->EditCustomAttributes = "";
-		$this->FullName->EditValue = $this->FullName->CurrentValue;
-		$this->FullName->PlaceHolder = ew_RemoveHtml($this->FullName->FldCaption());
+		// full_name
+		$this->full_name->EditAttrs["class"] = "form-control";
+		$this->full_name->EditCustomAttributes = "";
+		$this->full_name->EditValue = $this->full_name->CurrentValue;
+		$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
 
-		// UserName
-		$this->UserName->EditAttrs["class"] = "form-control";
-		$this->UserName->EditCustomAttributes = "";
-		$this->UserName->EditValue = $this->UserName->CurrentValue;
-		$this->UserName->PlaceHolder = ew_RemoveHtml($this->UserName->FldCaption());
+		// user_name
+		$this->user_name->EditAttrs["class"] = "form-control";
+		$this->user_name->EditCustomAttributes = "";
+		$this->user_name->EditValue = $this->user_name->CurrentValue;
+		$this->user_name->PlaceHolder = ew_RemoveHtml($this->user_name->FldCaption());
 
-		// UserPass
-		$this->UserPass->EditAttrs["class"] = "form-control";
-		$this->UserPass->EditCustomAttributes = "";
-		$this->UserPass->EditValue = $this->UserPass->CurrentValue;
-		$this->UserPass->PlaceHolder = ew_RemoveHtml($this->UserPass->FldCaption());
+		// user_pass
+		$this->user_pass->EditAttrs["class"] = "form-control";
+		$this->user_pass->EditCustomAttributes = "";
+		$this->user_pass->EditValue = $this->user_pass->CurrentValue;
+		$this->user_pass->PlaceHolder = ew_RemoveHtml($this->user_pass->FldCaption());
 
-		// Phone
-		$this->Phone->EditAttrs["class"] = "form-control";
-		$this->Phone->EditCustomAttributes = "";
-		$this->Phone->EditValue = $this->Phone->CurrentValue;
-		$this->Phone->PlaceHolder = ew_RemoveHtml($this->Phone->FldCaption());
+		// phone
+		$this->phone->EditAttrs["class"] = "form-control";
+		$this->phone->EditCustomAttributes = "";
+		$this->phone->EditValue = $this->phone->CurrentValue;
+		$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
 
-		// Mobile
-		$this->Mobile->EditAttrs["class"] = "form-control";
-		$this->Mobile->EditCustomAttributes = "";
-		$this->Mobile->EditValue = $this->Mobile->CurrentValue;
-		$this->Mobile->PlaceHolder = ew_RemoveHtml($this->Mobile->FldCaption());
+		// mobile
+		$this->mobile->EditAttrs["class"] = "form-control";
+		$this->mobile->EditCustomAttributes = "";
+		$this->mobile->EditValue = $this->mobile->CurrentValue;
+		$this->mobile->PlaceHolder = ew_RemoveHtml($this->mobile->FldCaption());
 
-		// ProvinceID
-		$this->ProvinceID->EditAttrs["class"] = "form-control";
-		$this->ProvinceID->EditCustomAttributes = "";
+		// province_id
+		$this->province_id->EditAttrs["class"] = "form-control";
+		$this->province_id->EditCustomAttributes = "";
 
-		// Address
-		$this->Address->EditAttrs["class"] = "form-control";
-		$this->Address->EditCustomAttributes = "";
-		$this->Address->EditValue = $this->Address->CurrentValue;
-		$this->Address->PlaceHolder = ew_RemoveHtml($this->Address->FldCaption());
+		// address
+		$this->address->EditAttrs["class"] = "form-control";
+		$this->address->EditCustomAttributes = "";
+		$this->address->EditValue = $this->address->CurrentValue;
+		$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
 
-		// ZipCode
-		$this->ZipCode->EditAttrs["class"] = "form-control";
-		$this->ZipCode->EditCustomAttributes = "";
-		$this->ZipCode->EditValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->PlaceHolder = ew_RemoveHtml($this->ZipCode->FldCaption());
+		// zip_code
+		$this->zip_code->EditAttrs["class"] = "form-control";
+		$this->zip_code->EditCustomAttributes = "";
+		$this->zip_code->EditValue = $this->zip_code->CurrentValue;
+		$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
 
-		// Level
-		$this->Level->EditAttrs["class"] = "form-control";
-		$this->Level->EditCustomAttributes = "";
+		// level_no
+		$this->level_no->EditAttrs["class"] = "form-control";
+		$this->level_no->EditCustomAttributes = "";
 		if (!$Security->CanAdmin()) { // System admin
-			$this->Level->EditValue = $Language->Phrase("PasswordMask");
+			$this->level_no->EditValue = $Language->Phrase("PasswordMask");
 		} else {
 		}
 
@@ -905,26 +905,26 @@ class cemployees extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->EmployeeID->Exportable) $Doc->ExportCaption($this->EmployeeID);
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->UserName->Exportable) $Doc->ExportCaption($this->UserName);
-					if ($this->UserPass->Exportable) $Doc->ExportCaption($this->UserPass);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Mobile->Exportable) $Doc->ExportCaption($this->Mobile);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->Address->Exportable) $Doc->ExportCaption($this->Address);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
-					if ($this->Level->Exportable) $Doc->ExportCaption($this->Level);
+					if ($this->employee_id->Exportable) $Doc->ExportCaption($this->employee_id);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->user_name->Exportable) $Doc->ExportCaption($this->user_name);
+					if ($this->user_pass->Exportable) $Doc->ExportCaption($this->user_pass);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->mobile->Exportable) $Doc->ExportCaption($this->mobile);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
+					if ($this->level_no->Exportable) $Doc->ExportCaption($this->level_no);
 				} else {
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->UserName->Exportable) $Doc->ExportCaption($this->UserName);
-					if ($this->UserPass->Exportable) $Doc->ExportCaption($this->UserPass);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Mobile->Exportable) $Doc->ExportCaption($this->Mobile);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->Address->Exportable) $Doc->ExportCaption($this->Address);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
-					if ($this->Level->Exportable) $Doc->ExportCaption($this->Level);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->user_name->Exportable) $Doc->ExportCaption($this->user_name);
+					if ($this->user_pass->Exportable) $Doc->ExportCaption($this->user_pass);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->mobile->Exportable) $Doc->ExportCaption($this->mobile);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
+					if ($this->level_no->Exportable) $Doc->ExportCaption($this->level_no);
 				}
 				$Doc->EndExportRow();
 			}
@@ -956,26 +956,26 @@ class cemployees extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->EmployeeID->Exportable) $Doc->ExportField($this->EmployeeID);
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->UserName->Exportable) $Doc->ExportField($this->UserName);
-						if ($this->UserPass->Exportable) $Doc->ExportField($this->UserPass);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Mobile->Exportable) $Doc->ExportField($this->Mobile);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->Address->Exportable) $Doc->ExportField($this->Address);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
-						if ($this->Level->Exportable) $Doc->ExportField($this->Level);
+						if ($this->employee_id->Exportable) $Doc->ExportField($this->employee_id);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->user_name->Exportable) $Doc->ExportField($this->user_name);
+						if ($this->user_pass->Exportable) $Doc->ExportField($this->user_pass);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->mobile->Exportable) $Doc->ExportField($this->mobile);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->address->Exportable) $Doc->ExportField($this->address);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
+						if ($this->level_no->Exportable) $Doc->ExportField($this->level_no);
 					} else {
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->UserName->Exportable) $Doc->ExportField($this->UserName);
-						if ($this->UserPass->Exportable) $Doc->ExportField($this->UserPass);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Mobile->Exportable) $Doc->ExportField($this->Mobile);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->Address->Exportable) $Doc->ExportField($this->Address);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
-						if ($this->Level->Exportable) $Doc->ExportField($this->Level);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->user_name->Exportable) $Doc->ExportField($this->user_name);
+						if ($this->user_pass->Exportable) $Doc->ExportField($this->user_pass);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->mobile->Exportable) $Doc->ExportField($this->mobile);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->address->Exportable) $Doc->ExportField($this->address);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
+						if ($this->level_no->Exportable) $Doc->ExportField($this->level_no);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "customersinfo.php" ?>
+<?php include_once "delivery_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$customers_delete = NULL; // Initialize page object first
+$delivery_types_delete = NULL; // Initialize page object first
 
-class ccustomers_delete extends ccustomers {
+class cdelivery_types_delete extends cdelivery_types {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +25,10 @@ class ccustomers_delete extends ccustomers {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'customers';
+	var $TableName = 'delivery_types';
 
 	// Page object name
-	var $PageObjName = 'customers_delete';
+	var $PageObjName = 'delivery_types_delete';
 
 	// Page headings
 	var $Heading = '';
@@ -250,10 +250,10 @@ class ccustomers_delete extends ccustomers {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (customers)
-		if (!isset($GLOBALS["customers"]) || get_class($GLOBALS["customers"]) == "ccustomers") {
-			$GLOBALS["customers"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["customers"];
+		// Table object (delivery_types)
+		if (!isset($GLOBALS["delivery_types"]) || get_class($GLOBALS["delivery_types"]) == "cdelivery_types") {
+			$GLOBALS["delivery_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["delivery_types"];
 		}
 
 		// Table object (employees)
@@ -265,7 +265,7 @@ class ccustomers_delete extends ccustomers {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'customers', TRUE);
+			define("EW_TABLE_NAME", 'delivery_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -304,7 +304,7 @@ class ccustomers_delete extends ccustomers {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("customerslist.php"));
+				$this->Page_Terminate(ew_GetUrl("delivery_typeslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -315,13 +315,7 @@ class ccustomers_delete extends ccustomers {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->full_name->SetVisibility();
-		$this->phone->SetVisibility();
-		$this->mobile->SetVisibility();
-		$this->reward->SetVisibility();
-		$this->user_name->SetVisibility();
-		$this->user_pass->SetVisibility();
-		$this->activity_status->SetVisibility();
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -353,13 +347,13 @@ class ccustomers_delete extends ccustomers {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $customers;
+		global $EW_EXPORT, $delivery_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($customers);
+				$doc = new $class($delivery_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -406,10 +400,10 @@ class ccustomers_delete extends ccustomers {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("customerslist.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("delivery_typeslist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in customers class, customersinfo.php
+		// SQL constructor in delivery_types class, delivery_typesinfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -437,7 +431,7 @@ class ccustomers_delete extends ccustomers {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("customerslist.php"); // Return to list
+				$this->Page_Terminate("delivery_typeslist.php"); // Return to list
 			}
 		}
 	}
@@ -501,27 +495,15 @@ class ccustomers_delete extends ccustomers {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->customer_id->setDbValue($row['customer_id']);
-		$this->full_name->setDbValue($row['full_name']);
-		$this->phone->setDbValue($row['phone']);
-		$this->mobile->setDbValue($row['mobile']);
-		$this->reward->setDbValue($row['reward']);
-		$this->user_name->setDbValue($row['user_name']);
-		$this->user_pass->setDbValue($row['user_pass']);
-		$this->activity_status->setDbValue($row['activity_status']);
+		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['customer_id'] = NULL;
-		$row['full_name'] = NULL;
-		$row['phone'] = NULL;
-		$row['mobile'] = NULL;
-		$row['reward'] = NULL;
-		$row['user_name'] = NULL;
-		$row['user_pass'] = NULL;
-		$row['activity_status'] = NULL;
+		$row['delivery_type_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -530,14 +512,8 @@ class ccustomers_delete extends ccustomers {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->customer_id->DbValue = $row['customer_id'];
-		$this->full_name->DbValue = $row['full_name'];
-		$this->phone->DbValue = $row['phone'];
-		$this->mobile->DbValue = $row['mobile'];
-		$this->reward->DbValue = $row['reward'];
-		$this->user_name->DbValue = $row['user_name'];
-		$this->user_pass->DbValue = $row['user_pass'];
-		$this->activity_status->DbValue = $row['activity_status'];
+		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Render row values based on field settings
@@ -550,83 +526,19 @@ class ccustomers_delete extends ccustomers {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// customer_id
-		// full_name
-		// phone
-		// mobile
-		// reward
-		// user_name
-		// user_pass
-		// activity_status
+		// delivery_type_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// full_name
-		$this->full_name->ViewValue = $this->full_name->CurrentValue;
-		$this->full_name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// phone
-		$this->phone->ViewValue = $this->phone->CurrentValue;
-		$this->phone->ViewCustomAttributes = "";
-
-		// mobile
-		$this->mobile->ViewValue = $this->mobile->CurrentValue;
-		$this->mobile->ViewCustomAttributes = "";
-
-		// reward
-		$this->reward->ViewValue = $this->reward->CurrentValue;
-		$this->reward->ViewCustomAttributes = "";
-
-		// user_name
-		$this->user_name->ViewValue = $this->user_name->CurrentValue;
-		$this->user_name->ViewCustomAttributes = "";
-
-		// user_pass
-		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->user_pass->ViewCustomAttributes = "";
-
-		// activity_status
-		if (strval($this->activity_status->CurrentValue) <> "") {
-			$this->activity_status->ViewValue = $this->activity_status->OptionCaption($this->activity_status->CurrentValue);
-		} else {
-			$this->activity_status->ViewValue = NULL;
-		}
-		$this->activity_status->ViewCustomAttributes = "";
-
-			// full_name
-			$this->full_name->LinkCustomAttributes = "";
-			$this->full_name->HrefValue = "";
-			$this->full_name->TooltipValue = "";
-
-			// phone
-			$this->phone->LinkCustomAttributes = "";
-			$this->phone->HrefValue = "";
-			$this->phone->TooltipValue = "";
-
-			// mobile
-			$this->mobile->LinkCustomAttributes = "";
-			$this->mobile->HrefValue = "";
-			$this->mobile->TooltipValue = "";
-
-			// reward
-			$this->reward->LinkCustomAttributes = "";
-			$this->reward->HrefValue = "";
-			$this->reward->TooltipValue = "";
-
-			// user_name
-			$this->user_name->LinkCustomAttributes = "";
-			$this->user_name->HrefValue = "";
-			$this->user_name->TooltipValue = "";
-
-			// user_pass
-			$this->user_pass->LinkCustomAttributes = "";
-			$this->user_pass->HrefValue = "";
-			$this->user_pass->TooltipValue = "";
-
-			// activity_status
-			$this->activity_status->LinkCustomAttributes = "";
-			$this->activity_status->HrefValue = "";
-			$this->activity_status->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -676,7 +588,7 @@ class ccustomers_delete extends ccustomers {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['customer_id'];
+				$sThisKey .= $row['delivery_type_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -719,7 +631,7 @@ class ccustomers_delete extends ccustomers {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("customerslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("delivery_typeslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -805,29 +717,29 @@ class ccustomers_delete extends ccustomers {
 <?php
 
 // Create page object
-if (!isset($customers_delete)) $customers_delete = new ccustomers_delete();
+if (!isset($delivery_types_delete)) $delivery_types_delete = new cdelivery_types_delete();
 
 // Page init
-$customers_delete->Page_Init();
+$delivery_types_delete->Page_Init();
 
 // Page main
-$customers_delete->Page_Main();
+$delivery_types_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$customers_delete->Page_Render();
+$delivery_types_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = fcustomersdelete = new ew_Form("fcustomersdelete", "delete");
+var CurrentForm = fdelivery_typesdelete = new ew_Form("fdelivery_typesdelete", "delete");
 
 // Form_CustomValidate event
-fcustomersdelete.Form_CustomValidate = 
+fdelivery_typesdelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -835,29 +747,27 @@ fcustomersdelete.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fcustomersdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fdelivery_typesdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fcustomersdelete.Lists["x_activity_status"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-fcustomersdelete.Lists["x_activity_status"].Options = <?php echo json_encode($customers_delete->activity_status->Options()) ?>;
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $customers_delete->ShowPageHeader(); ?>
+<?php $delivery_types_delete->ShowPageHeader(); ?>
 <?php
-$customers_delete->ShowMessage();
+$delivery_types_delete->ShowMessage();
 ?>
-<form name="fcustomersdelete" id="fcustomersdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($customers_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $customers_delete->Token ?>">
+<form name="fdelivery_typesdelete" id="fdelivery_typesdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($delivery_types_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $delivery_types_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="customers">
+<input type="hidden" name="t" value="delivery_types">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($customers_delete->RecKeys as $key) { ?>
+<?php foreach ($delivery_types_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
@@ -866,109 +776,43 @@ $customers_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($customers->full_name->Visible) { // full_name ?>
-		<th class="<?php echo $customers->full_name->HeaderCellClass() ?>"><span id="elh_customers_full_name" class="customers_full_name"><?php echo $customers->full_name->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->phone->Visible) { // phone ?>
-		<th class="<?php echo $customers->phone->HeaderCellClass() ?>"><span id="elh_customers_phone" class="customers_phone"><?php echo $customers->phone->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->mobile->Visible) { // mobile ?>
-		<th class="<?php echo $customers->mobile->HeaderCellClass() ?>"><span id="elh_customers_mobile" class="customers_mobile"><?php echo $customers->mobile->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->reward->Visible) { // reward ?>
-		<th class="<?php echo $customers->reward->HeaderCellClass() ?>"><span id="elh_customers_reward" class="customers_reward"><?php echo $customers->reward->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->user_name->Visible) { // user_name ?>
-		<th class="<?php echo $customers->user_name->HeaderCellClass() ?>"><span id="elh_customers_user_name" class="customers_user_name"><?php echo $customers->user_name->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->user_pass->Visible) { // user_pass ?>
-		<th class="<?php echo $customers->user_pass->HeaderCellClass() ?>"><span id="elh_customers_user_pass" class="customers_user_pass"><?php echo $customers->user_pass->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($customers->activity_status->Visible) { // activity_status ?>
-		<th class="<?php echo $customers->activity_status->HeaderCellClass() ?>"><span id="elh_customers_activity_status" class="customers_activity_status"><?php echo $customers->activity_status->FldCaption() ?></span></th>
+<?php if ($delivery_types->name->Visible) { // name ?>
+		<th class="<?php echo $delivery_types->name->HeaderCellClass() ?>"><span id="elh_delivery_types_name" class="delivery_types_name"><?php echo $delivery_types->name->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$customers_delete->RecCnt = 0;
+$delivery_types_delete->RecCnt = 0;
 $i = 0;
-while (!$customers_delete->Recordset->EOF) {
-	$customers_delete->RecCnt++;
-	$customers_delete->RowCnt++;
+while (!$delivery_types_delete->Recordset->EOF) {
+	$delivery_types_delete->RecCnt++;
+	$delivery_types_delete->RowCnt++;
 
 	// Set row properties
-	$customers->ResetAttrs();
-	$customers->RowType = EW_ROWTYPE_VIEW; // View
+	$delivery_types->ResetAttrs();
+	$delivery_types->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$customers_delete->LoadRowValues($customers_delete->Recordset);
+	$delivery_types_delete->LoadRowValues($delivery_types_delete->Recordset);
 
 	// Render row
-	$customers_delete->RenderRow();
+	$delivery_types_delete->RenderRow();
 ?>
-	<tr<?php echo $customers->RowAttributes() ?>>
-<?php if ($customers->full_name->Visible) { // full_name ?>
-		<td<?php echo $customers->full_name->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_full_name" class="customers_full_name">
-<span<?php echo $customers->full_name->ViewAttributes() ?>>
-<?php echo $customers->full_name->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->phone->Visible) { // phone ?>
-		<td<?php echo $customers->phone->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_phone" class="customers_phone">
-<span<?php echo $customers->phone->ViewAttributes() ?>>
-<?php echo $customers->phone->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->mobile->Visible) { // mobile ?>
-		<td<?php echo $customers->mobile->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_mobile" class="customers_mobile">
-<span<?php echo $customers->mobile->ViewAttributes() ?>>
-<?php echo $customers->mobile->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->reward->Visible) { // reward ?>
-		<td<?php echo $customers->reward->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_reward" class="customers_reward">
-<span<?php echo $customers->reward->ViewAttributes() ?>>
-<?php echo $customers->reward->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->user_name->Visible) { // user_name ?>
-		<td<?php echo $customers->user_name->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_user_name" class="customers_user_name">
-<span<?php echo $customers->user_name->ViewAttributes() ?>>
-<?php echo $customers->user_name->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->user_pass->Visible) { // user_pass ?>
-		<td<?php echo $customers->user_pass->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_user_pass" class="customers_user_pass">
-<span<?php echo $customers->user_pass->ViewAttributes() ?>>
-<?php echo $customers->user_pass->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($customers->activity_status->Visible) { // activity_status ?>
-		<td<?php echo $customers->activity_status->CellAttributes() ?>>
-<span id="el<?php echo $customers_delete->RowCnt ?>_customers_activity_status" class="customers_activity_status">
-<span<?php echo $customers->activity_status->ViewAttributes() ?>>
-<?php echo $customers->activity_status->ListViewValue() ?></span>
+	<tr<?php echo $delivery_types->RowAttributes() ?>>
+<?php if ($delivery_types->name->Visible) { // name ?>
+		<td<?php echo $delivery_types->name->CellAttributes() ?>>
+<span id="el<?php echo $delivery_types_delete->RowCnt ?>_delivery_types_name" class="delivery_types_name">
+<span<?php echo $delivery_types->name->ViewAttributes() ?>>
+<?php echo $delivery_types->name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$customers_delete->Recordset->MoveNext();
+	$delivery_types_delete->Recordset->MoveNext();
 }
-$customers_delete->Recordset->Close();
+$delivery_types_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -976,14 +820,14 @@ $customers_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $customers_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $delivery_types_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-fcustomersdelete.Init();
+fdelivery_typesdelete.Init();
 </script>
 <?php
-$customers_delete->ShowPageFooter();
+$delivery_types_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -995,5 +839,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$customers_delete->Page_Terminate();
+$delivery_types_delete->Page_Terminate();
 ?>

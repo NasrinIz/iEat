@@ -5,6 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
+<?php include_once "delivery_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -13,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$employees_view = NULL; // Initialize page object first
+$delivery_types_view = NULL; // Initialize page object first
 
-class cemployees_view extends cemployees {
+class cdelivery_types_view extends cdelivery_types {
 
 	// Page ID
 	var $PageID = 'view';
@@ -24,10 +25,10 @@ class cemployees_view extends cemployees {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'employees';
+	var $TableName = 'delivery_types';
 
 	// Page object name
-	var $PageObjName = 'employees_view';
+	var $PageObjName = 'delivery_types_view';
 
 	// Page headings
 	var $Heading = '';
@@ -281,15 +282,15 @@ class cemployees_view extends cemployees {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (employees)
-		if (!isset($GLOBALS["employees"]) || get_class($GLOBALS["employees"]) == "cemployees") {
-			$GLOBALS["employees"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["employees"];
+		// Table object (delivery_types)
+		if (!isset($GLOBALS["delivery_types"]) || get_class($GLOBALS["delivery_types"]) == "cdelivery_types") {
+			$GLOBALS["delivery_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["delivery_types"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["employee_id"] <> "") {
-			$this->RecKey["employee_id"] = $_GET["employee_id"];
-			$KeyUrl .= "&amp;employee_id=" . urlencode($this->RecKey["employee_id"]);
+		if (@$_GET["delivery_type_id"] <> "") {
+			$this->RecKey["delivery_type_id"] = $_GET["delivery_type_id"];
+			$KeyUrl .= "&amp;delivery_type_id=" . urlencode($this->RecKey["delivery_type_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -299,13 +300,16 @@ class cemployees_view extends cemployees {
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv" . $KeyUrl;
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf" . $KeyUrl;
 
+		// Table object (employees)
+		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
+
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
 			define("EW_PAGE_ID", 'view', TRUE);
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'employees', TRUE);
+			define("EW_TABLE_NAME", 'delivery_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -360,7 +364,7 @@ class cemployees_view extends cemployees {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("employeeslist.php"));
+				$this->Page_Terminate(ew_GetUrl("delivery_typeslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -388,9 +392,9 @@ class cemployees_view extends cemployees {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["employee_id"] <> "") {
+		if (@$_GET["delivery_type_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["employee_id"];
+			$gsExportFile .= $_GET["delivery_type_id"];
 		}
 
 		// Get custom export parameters
@@ -416,18 +420,10 @@ class cemployees_view extends cemployees {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->employee_id->SetVisibility();
+		$this->delivery_type_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->employee_id->Visible = FALSE;
-		$this->full_name->SetVisibility();
-		$this->user_name->SetVisibility();
-		$this->user_pass->SetVisibility();
-		$this->phone->SetVisibility();
-		$this->mobile->SetVisibility();
-		$this->province_id->SetVisibility();
-		$this->address->SetVisibility();
-		$this->zip_code->SetVisibility();
-		$this->level_no->SetVisibility();
+			$this->delivery_type_id->Visible = FALSE;
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -459,13 +455,13 @@ class cemployees_view extends cemployees {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $employees;
+		global $EW_EXPORT, $delivery_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($employees);
+				$doc = new $class($delivery_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -491,7 +487,7 @@ class cemployees_view extends cemployees {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "employeesview.php")
+					if ($pageName == "delivery_typesview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -535,14 +531,14 @@ class cemployees_view extends cemployees {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["employee_id"] <> "") {
-				$this->employee_id->setQueryStringValue($_GET["employee_id"]);
-				$this->RecKey["employee_id"] = $this->employee_id->QueryStringValue;
-			} elseif (@$_POST["employee_id"] <> "") {
-				$this->employee_id->setFormValue($_POST["employee_id"]);
-				$this->RecKey["employee_id"] = $this->employee_id->FormValue;
+			if (@$_GET["delivery_type_id"] <> "") {
+				$this->delivery_type_id->setQueryStringValue($_GET["delivery_type_id"]);
+				$this->RecKey["delivery_type_id"] = $this->delivery_type_id->QueryStringValue;
+			} elseif (@$_POST["delivery_type_id"] <> "") {
+				$this->delivery_type_id->setFormValue($_POST["delivery_type_id"]);
+				$this->RecKey["delivery_type_id"] = $this->delivery_type_id->FormValue;
 			} else {
-				$sReturnUrl = "employeeslist.php"; // Return to list
+				$sReturnUrl = "delivery_typeslist.php"; // Return to list
 			}
 
 			// Get action
@@ -552,7 +548,7 @@ class cemployees_view extends cemployees {
 					if (!$this->LoadRow()) { // Load record based on key
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "employeeslist.php"; // No matching record, return to list
+						$sReturnUrl = "delivery_typeslist.php"; // No matching record, return to list
 					}
 			}
 
@@ -563,7 +559,7 @@ class cemployees_view extends cemployees {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "employeeslist.php"; // Not page request, return to list
+			$sReturnUrl = "delivery_typeslist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -725,31 +721,15 @@ class cemployees_view extends cemployees {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->employee_id->setDbValue($row['employee_id']);
-		$this->full_name->setDbValue($row['full_name']);
-		$this->user_name->setDbValue($row['user_name']);
-		$this->user_pass->setDbValue($row['user_pass']);
-		$this->phone->setDbValue($row['phone']);
-		$this->mobile->setDbValue($row['mobile']);
-		$this->province_id->setDbValue($row['province_id']);
-		$this->address->setDbValue($row['address']);
-		$this->zip_code->setDbValue($row['zip_code']);
-		$this->level_no->setDbValue($row['level_no']);
+		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['employee_id'] = NULL;
-		$row['full_name'] = NULL;
-		$row['user_name'] = NULL;
-		$row['user_pass'] = NULL;
-		$row['phone'] = NULL;
-		$row['mobile'] = NULL;
-		$row['province_id'] = NULL;
-		$row['address'] = NULL;
-		$row['zip_code'] = NULL;
-		$row['level_no'] = NULL;
+		$row['delivery_type_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -758,16 +738,8 @@ class cemployees_view extends cemployees {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->employee_id->DbValue = $row['employee_id'];
-		$this->full_name->DbValue = $row['full_name'];
-		$this->user_name->DbValue = $row['user_name'];
-		$this->user_pass->DbValue = $row['user_pass'];
-		$this->phone->DbValue = $row['phone'];
-		$this->mobile->DbValue = $row['mobile'];
-		$this->province_id->DbValue = $row['province_id'];
-		$this->address->DbValue = $row['address'];
-		$this->zip_code->DbValue = $row['zip_code'];
-		$this->level_no->DbValue = $row['level_no'];
+		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Render row values based on field settings
@@ -786,151 +758,28 @@ class cemployees_view extends cemployees {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// employee_id
-		// full_name
-		// user_name
-		// user_pass
-		// phone
-		// mobile
-		// province_id
-		// address
-		// zip_code
-		// level_no
+		// delivery_type_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// employee_id
-		$this->employee_id->ViewValue = $this->employee_id->CurrentValue;
-		$this->employee_id->ViewCustomAttributes = "";
+		// delivery_type_id
+		$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// full_name
-		$this->full_name->ViewValue = $this->full_name->CurrentValue;
-		$this->full_name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// user_name
-		$this->user_name->ViewValue = $this->user_name->CurrentValue;
-		$this->user_name->ViewCustomAttributes = "";
+			// delivery_type_id
+			$this->delivery_type_id->LinkCustomAttributes = "";
+			$this->delivery_type_id->HrefValue = "";
+			$this->delivery_type_id->TooltipValue = "";
 
-		// user_pass
-		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->user_pass->ViewCustomAttributes = "";
-
-		// phone
-		$this->phone->ViewValue = $this->phone->CurrentValue;
-		$this->phone->ViewCustomAttributes = "";
-
-		// mobile
-		$this->mobile->ViewValue = $this->mobile->CurrentValue;
-		$this->mobile->ViewCustomAttributes = "";
-
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
-			}
-		} else {
-			$this->province_id->ViewValue = NULL;
-		}
-		$this->province_id->ViewCustomAttributes = "";
-
-		// address
-		$this->address->ViewValue = $this->address->CurrentValue;
-		$this->address->ViewCustomAttributes = "";
-
-		// zip_code
-		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
-		$this->zip_code->ViewCustomAttributes = "";
-
-		// level_no
-		if ($Security->CanAdmin()) { // System admin
-		if (strval($this->level_no->CurrentValue) <> "") {
-			$sFilterWrk = "`user_level_id`" . ew_SearchString("=", $this->level_no->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `user_level_id`, `user_level_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `user_levels`";
-		$sWhereWrk = "";
-		$this->level_no->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->level_no, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->level_no->ViewValue = $this->level_no->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->level_no->ViewValue = $this->level_no->CurrentValue;
-			}
-		} else {
-			$this->level_no->ViewValue = NULL;
-		}
-		} else {
-			$this->level_no->ViewValue = $Language->Phrase("PasswordMask");
-		}
-		$this->level_no->ViewCustomAttributes = "";
-
-			// employee_id
-			$this->employee_id->LinkCustomAttributes = "";
-			$this->employee_id->HrefValue = "";
-			$this->employee_id->TooltipValue = "";
-
-			// full_name
-			$this->full_name->LinkCustomAttributes = "";
-			$this->full_name->HrefValue = "";
-			$this->full_name->TooltipValue = "";
-
-			// user_name
-			$this->user_name->LinkCustomAttributes = "";
-			$this->user_name->HrefValue = "";
-			$this->user_name->TooltipValue = "";
-
-			// user_pass
-			$this->user_pass->LinkCustomAttributes = "";
-			$this->user_pass->HrefValue = "";
-			$this->user_pass->TooltipValue = "";
-
-			// phone
-			$this->phone->LinkCustomAttributes = "";
-			$this->phone->HrefValue = "";
-			$this->phone->TooltipValue = "";
-
-			// mobile
-			$this->mobile->LinkCustomAttributes = "";
-			$this->mobile->HrefValue = "";
-			$this->mobile->TooltipValue = "";
-
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-			$this->province_id->TooltipValue = "";
-
-			// address
-			$this->address->LinkCustomAttributes = "";
-			$this->address->HrefValue = "";
-			$this->address->TooltipValue = "";
-
-			// zip_code
-			$this->zip_code->LinkCustomAttributes = "";
-			$this->zip_code->HrefValue = "";
-			$this->zip_code->TooltipValue = "";
-
-			// level_no
-			$this->level_no->LinkCustomAttributes = "";
-			$this->level_no->HrefValue = "";
-			$this->level_no->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -980,7 +829,7 @@ class cemployees_view extends cemployees {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_employees\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_employees',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.femployeesview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_delivery_types\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_delivery_types',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fdelivery_typesview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -1080,7 +929,7 @@ class cemployees_view extends cemployees {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("employeeslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("delivery_typeslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1192,30 +1041,30 @@ class cemployees_view extends cemployees {
 <?php
 
 // Create page object
-if (!isset($employees_view)) $employees_view = new cemployees_view();
+if (!isset($delivery_types_view)) $delivery_types_view = new cdelivery_types_view();
 
 // Page init
-$employees_view->Page_Init();
+$delivery_types_view->Page_Init();
 
 // Page main
-$employees_view->Page_Main();
+$delivery_types_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$employees_view->Page_Render();
+$delivery_types_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($employees->Export == "") { ?>
+<?php if ($delivery_types->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = femployeesview = new ew_Form("femployeesview", "view");
+var CurrentForm = fdelivery_typesview = new ew_Form("fdelivery_typesview", "view");
 
 // Form_CustomValidate event
-femployeesview.Form_CustomValidate = 
+fdelivery_typesview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1223,165 +1072,73 @@ femployeesview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-femployeesview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fdelivery_typesview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-femployeesview.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-femployeesview.Lists["x_province_id"].Data = "<?php echo $employees_view->province_id->LookupFilterQuery(FALSE, "view") ?>";
-femployeesview.Lists["x_level_no"] = {"LinkField":"x_user_level_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_user_level_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"user_levels"};
-femployeesview.Lists["x_level_no"].Data = "<?php echo $employees_view->level_no->LookupFilterQuery(FALSE, "view") ?>";
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($employees->Export == "") { ?>
+<?php if ($delivery_types->Export == "") { ?>
 <div class="ewToolbar">
-<?php $employees_view->ExportOptions->Render("body") ?>
+<?php $delivery_types_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($employees_view->OtherOptions as &$option)
+	foreach ($delivery_types_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $employees_view->ShowPageHeader(); ?>
+<?php $delivery_types_view->ShowPageHeader(); ?>
 <?php
-$employees_view->ShowMessage();
+$delivery_types_view->ShowMessage();
 ?>
-<form name="femployeesview" id="femployeesview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($employees_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $employees_view->Token ?>">
+<form name="fdelivery_typesview" id="fdelivery_typesview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($delivery_types_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $delivery_types_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="employees">
-<input type="hidden" name="modal" value="<?php echo intval($employees_view->IsModal) ?>">
+<input type="hidden" name="t" value="delivery_types">
+<input type="hidden" name="modal" value="<?php echo intval($delivery_types_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($employees->employee_id->Visible) { // employee_id ?>
-	<tr id="r_employee_id">
-		<td class="col-sm-2"><span id="elh_employees_employee_id"><?php echo $employees->employee_id->FldCaption() ?></span></td>
-		<td data-name="employee_id"<?php echo $employees->employee_id->CellAttributes() ?>>
-<span id="el_employees_employee_id">
-<span<?php echo $employees->employee_id->ViewAttributes() ?>>
-<?php echo $employees->employee_id->ViewValue ?></span>
+<?php if ($delivery_types->delivery_type_id->Visible) { // delivery_type_id ?>
+	<tr id="r_delivery_type_id">
+		<td class="col-sm-2"><span id="elh_delivery_types_delivery_type_id"><?php echo $delivery_types->delivery_type_id->FldCaption() ?></span></td>
+		<td data-name="delivery_type_id"<?php echo $delivery_types->delivery_type_id->CellAttributes() ?>>
+<span id="el_delivery_types_delivery_type_id">
+<span<?php echo $delivery_types->delivery_type_id->ViewAttributes() ?>>
+<?php echo $delivery_types->delivery_type_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($employees->full_name->Visible) { // full_name ?>
-	<tr id="r_full_name">
-		<td class="col-sm-2"><span id="elh_employees_full_name"><?php echo $employees->full_name->FldCaption() ?></span></td>
-		<td data-name="full_name"<?php echo $employees->full_name->CellAttributes() ?>>
-<span id="el_employees_full_name">
-<span<?php echo $employees->full_name->ViewAttributes() ?>>
-<?php echo $employees->full_name->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->user_name->Visible) { // user_name ?>
-	<tr id="r_user_name">
-		<td class="col-sm-2"><span id="elh_employees_user_name"><?php echo $employees->user_name->FldCaption() ?></span></td>
-		<td data-name="user_name"<?php echo $employees->user_name->CellAttributes() ?>>
-<span id="el_employees_user_name">
-<span<?php echo $employees->user_name->ViewAttributes() ?>>
-<?php echo $employees->user_name->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->user_pass->Visible) { // user_pass ?>
-	<tr id="r_user_pass">
-		<td class="col-sm-2"><span id="elh_employees_user_pass"><?php echo $employees->user_pass->FldCaption() ?></span></td>
-		<td data-name="user_pass"<?php echo $employees->user_pass->CellAttributes() ?>>
-<span id="el_employees_user_pass">
-<span<?php echo $employees->user_pass->ViewAttributes() ?>>
-<?php echo $employees->user_pass->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->phone->Visible) { // phone ?>
-	<tr id="r_phone">
-		<td class="col-sm-2"><span id="elh_employees_phone"><?php echo $employees->phone->FldCaption() ?></span></td>
-		<td data-name="phone"<?php echo $employees->phone->CellAttributes() ?>>
-<span id="el_employees_phone">
-<span<?php echo $employees->phone->ViewAttributes() ?>>
-<?php echo $employees->phone->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->mobile->Visible) { // mobile ?>
-	<tr id="r_mobile">
-		<td class="col-sm-2"><span id="elh_employees_mobile"><?php echo $employees->mobile->FldCaption() ?></span></td>
-		<td data-name="mobile"<?php echo $employees->mobile->CellAttributes() ?>>
-<span id="el_employees_mobile">
-<span<?php echo $employees->mobile->ViewAttributes() ?>>
-<?php echo $employees->mobile->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->province_id->Visible) { // province_id ?>
-	<tr id="r_province_id">
-		<td class="col-sm-2"><span id="elh_employees_province_id"><?php echo $employees->province_id->FldCaption() ?></span></td>
-		<td data-name="province_id"<?php echo $employees->province_id->CellAttributes() ?>>
-<span id="el_employees_province_id">
-<span<?php echo $employees->province_id->ViewAttributes() ?>>
-<?php echo $employees->province_id->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->address->Visible) { // address ?>
-	<tr id="r_address">
-		<td class="col-sm-2"><span id="elh_employees_address"><?php echo $employees->address->FldCaption() ?></span></td>
-		<td data-name="address"<?php echo $employees->address->CellAttributes() ?>>
-<span id="el_employees_address">
-<span<?php echo $employees->address->ViewAttributes() ?>>
-<?php echo $employees->address->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->zip_code->Visible) { // zip_code ?>
-	<tr id="r_zip_code">
-		<td class="col-sm-2"><span id="elh_employees_zip_code"><?php echo $employees->zip_code->FldCaption() ?></span></td>
-		<td data-name="zip_code"<?php echo $employees->zip_code->CellAttributes() ?>>
-<span id="el_employees_zip_code">
-<span<?php echo $employees->zip_code->ViewAttributes() ?>>
-<?php echo $employees->zip_code->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($employees->level_no->Visible) { // level_no ?>
-	<tr id="r_level_no">
-		<td class="col-sm-2"><span id="elh_employees_level_no"><?php echo $employees->level_no->FldCaption() ?></span></td>
-		<td data-name="level_no"<?php echo $employees->level_no->CellAttributes() ?>>
-<span id="el_employees_level_no">
-<span<?php echo $employees->level_no->ViewAttributes() ?>>
-<?php echo $employees->level_no->ViewValue ?></span>
+<?php if ($delivery_types->name->Visible) { // name ?>
+	<tr id="r_name">
+		<td class="col-sm-2"><span id="elh_delivery_types_name"><?php echo $delivery_types->name->FldCaption() ?></span></td>
+		<td data-name="name"<?php echo $delivery_types->name->CellAttributes() ?>>
+<span id="el_delivery_types_name">
+<span<?php echo $delivery_types->name->ViewAttributes() ?>>
+<?php echo $delivery_types->name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
 </form>
-<?php if ($employees->Export == "") { ?>
+<?php if ($delivery_types->Export == "") { ?>
 <script type="text/javascript">
-femployeesview.Init();
+fdelivery_typesview.Init();
 </script>
 <?php } ?>
 <?php
-$employees_view->ShowPageFooter();
+$delivery_types_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($employees->Export == "") { ?>
+<?php if ($delivery_types->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1391,5 +1148,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$employees_view->Page_Terminate();
+$delivery_types_view->Page_Terminate();
 ?>

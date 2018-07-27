@@ -7,14 +7,14 @@ $customers = NULL;
 // Table class for customers
 //
 class ccustomers extends cTable {
-	var $CustomerID;
-	var $FullName;
-	var $Phone;
-	var $Mobile;
-	var $Reward;
-	var $UserName;
-	var $UserPass;
-	var $ActivityStatus;
+	var $customer_id;
+	var $full_name;
+	var $phone;
+	var $mobile;
+	var $reward;
+	var $user_name;
+	var $user_pass;
+	var $activity_status;
 
 	//
 	// Table class constructor
@@ -48,49 +48,49 @@ class ccustomers extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// CustomerID
-		$this->CustomerID = new cField('customers', 'customers', 'x_CustomerID', 'CustomerID', '`CustomerID`', '`CustomerID`', 3, -1, FALSE, '`CustomerID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->CustomerID->Sortable = FALSE; // Allow sort
-		$this->CustomerID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['CustomerID'] = &$this->CustomerID;
+		// customer_id
+		$this->customer_id = new cField('customers', 'customers', 'x_customer_id', 'customer_id', '`customer_id`', '`customer_id`', 3, -1, FALSE, '`customer_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->customer_id->Sortable = FALSE; // Allow sort
+		$this->customer_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['customer_id'] = &$this->customer_id;
 
-		// FullName
-		$this->FullName = new cField('customers', 'customers', 'x_FullName', 'FullName', '`FullName`', '`FullName`', 200, -1, FALSE, '`FullName`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->FullName->Sortable = TRUE; // Allow sort
-		$this->fields['FullName'] = &$this->FullName;
+		// full_name
+		$this->full_name = new cField('customers', 'customers', 'x_full_name', 'full_name', '`full_name`', '`full_name`', 200, -1, FALSE, '`full_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->full_name->Sortable = TRUE; // Allow sort
+		$this->fields['full_name'] = &$this->full_name;
 
-		// Phone
-		$this->Phone = new cField('customers', 'customers', 'x_Phone', 'Phone', '`Phone`', '`Phone`', 200, -1, FALSE, '`Phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Phone->Sortable = TRUE; // Allow sort
-		$this->fields['Phone'] = &$this->Phone;
+		// phone
+		$this->phone = new cField('customers', 'customers', 'x_phone', 'phone', '`phone`', '`phone`', 200, -1, FALSE, '`phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->phone->Sortable = TRUE; // Allow sort
+		$this->fields['phone'] = &$this->phone;
 
-		// Mobile
-		$this->Mobile = new cField('customers', 'customers', 'x_Mobile', 'Mobile', '`Mobile`', '`Mobile`', 200, -1, FALSE, '`Mobile`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Mobile->Sortable = TRUE; // Allow sort
-		$this->fields['Mobile'] = &$this->Mobile;
+		// mobile
+		$this->mobile = new cField('customers', 'customers', 'x_mobile', 'mobile', '`mobile`', '`mobile`', 200, -1, FALSE, '`mobile`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->mobile->Sortable = TRUE; // Allow sort
+		$this->fields['mobile'] = &$this->mobile;
 
-		// Reward
-		$this->Reward = new cField('customers', 'customers', 'x_Reward', 'Reward', '`Reward`', '`Reward`', 3, -1, FALSE, '`Reward`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Reward->Sortable = TRUE; // Allow sort
-		$this->Reward->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['Reward'] = &$this->Reward;
+		// reward
+		$this->reward = new cField('customers', 'customers', 'x_reward', 'reward', '`reward`', '`reward`', 3, -1, FALSE, '`reward`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->reward->Sortable = TRUE; // Allow sort
+		$this->reward->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['reward'] = &$this->reward;
 
-		// UserName
-		$this->UserName = new cField('customers', 'customers', 'x_UserName', 'UserName', '`UserName`', '`UserName`', 200, -1, FALSE, '`UserName`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->UserName->Sortable = TRUE; // Allow sort
-		$this->fields['UserName'] = &$this->UserName;
+		// user_name
+		$this->user_name = new cField('customers', 'customers', 'x_user_name', 'user_name', '`user_name`', '`user_name`', 200, -1, FALSE, '`user_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->user_name->Sortable = TRUE; // Allow sort
+		$this->fields['user_name'] = &$this->user_name;
 
-		// UserPass
-		$this->UserPass = new cField('customers', 'customers', 'x_UserPass', 'UserPass', '`UserPass`', '`UserPass`', 200, -1, FALSE, '`UserPass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'PASSWORD');
-		$this->UserPass->Sortable = TRUE; // Allow sort
-		$this->fields['UserPass'] = &$this->UserPass;
+		// user_pass
+		$this->user_pass = new cField('customers', 'customers', 'x_user_pass', 'user_pass', '`user_pass`', '`user_pass`', 200, -1, FALSE, '`user_pass`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'PASSWORD');
+		$this->user_pass->Sortable = TRUE; // Allow sort
+		$this->fields['user_pass'] = &$this->user_pass;
 
-		// ActivityStatus
-		$this->ActivityStatus = new cField('customers', 'customers', 'x_ActivityStatus', 'ActivityStatus', '`ActivityStatus`', '`ActivityStatus`', 3, -1, FALSE, '`ActivityStatus`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
-		$this->ActivityStatus->Sortable = TRUE; // Allow sort
-		$this->ActivityStatus->OptionCount = 2;
-		$this->ActivityStatus->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['ActivityStatus'] = &$this->ActivityStatus;
+		// activity_status
+		$this->activity_status = new cField('customers', 'customers', 'x_activity_status', 'activity_status', '`activity_status`', '`activity_status`', 3, -1, FALSE, '`activity_status`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
+		$this->activity_status->Sortable = TRUE; // Allow sort
+		$this->activity_status->OptionCount = 2;
+		$this->activity_status->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['activity_status'] = &$this->activity_status;
 	}
 
 	// Field Visibility
@@ -146,7 +146,7 @@ class ccustomers extends cTable {
 		$sDetailUrl = "";
 		if ($this->getCurrentDetailTable() == "addresses") {
 			$sDetailUrl = $GLOBALS["addresses"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
-			$sDetailUrl .= "&fk_CustomerID=" . urlencode($this->CustomerID->CurrentValue);
+			$sDetailUrl .= "&fk_customer_id=" . urlencode($this->customer_id->CurrentValue);
 		}
 		if ($sDetailUrl == "") {
 			$sDetailUrl = "customerslist.php";
@@ -386,8 +386,8 @@ class ccustomers extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->CustomerID->setDbValue($conn->Insert_ID());
-			$rs['CustomerID'] = $this->CustomerID->DbValue;
+			$this->customer_id->setDbValue($conn->Insert_ID());
+			$rs['customer_id'] = $this->customer_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -423,8 +423,8 @@ class ccustomers extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('CustomerID', $rs))
-				ew_AddFilter($where, ew_QuotedName('CustomerID', $this->DBID) . '=' . ew_QuotedValue($rs['CustomerID'], $this->CustomerID->FldDataType, $this->DBID));
+			if (array_key_exists('customer_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('customer_id', $this->DBID) . '=' . ew_QuotedValue($rs['customer_id'], $this->customer_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -446,18 +446,18 @@ class ccustomers extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`CustomerID` = @CustomerID@";
+		return "`customer_id` = @customer_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->CustomerID->CurrentValue))
+		if (!is_numeric($this->customer_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->CustomerID->CurrentValue))
+		if (is_null($this->customer_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@CustomerID@", ew_AdjustSql($this->CustomerID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@customer_id@", ew_AdjustSql($this->customer_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -557,7 +557,7 @@ class ccustomers extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "CustomerID:" . ew_VarToJson($this->CustomerID->CurrentValue, "number", "'");
+		$json .= "customer_id:" . ew_VarToJson($this->customer_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -565,8 +565,8 @@ class ccustomers extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->CustomerID->CurrentValue)) {
-			$sUrl .= "CustomerID=" . urlencode($this->CustomerID->CurrentValue);
+		if (!is_null($this->customer_id->CurrentValue)) {
+			$sUrl .= "customer_id=" . urlencode($this->customer_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -599,10 +599,10 @@ class ccustomers extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["CustomerID"]))
-				$arKeys[] = $_POST["CustomerID"];
-			elseif (isset($_GET["CustomerID"]))
-				$arKeys[] = $_GET["CustomerID"];
+			if ($isPost && isset($_POST["customer_id"]))
+				$arKeys[] = $_POST["customer_id"];
+			elseif (isset($_GET["customer_id"]))
+				$arKeys[] = $_GET["customer_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -627,7 +627,7 @@ class ccustomers extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->CustomerID->CurrentValue = $key;
+			$this->customer_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -648,14 +648,14 @@ class ccustomers extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->CustomerID->setDbValue($rs->fields('CustomerID'));
-		$this->FullName->setDbValue($rs->fields('FullName'));
-		$this->Phone->setDbValue($rs->fields('Phone'));
-		$this->Mobile->setDbValue($rs->fields('Mobile'));
-		$this->Reward->setDbValue($rs->fields('Reward'));
-		$this->UserName->setDbValue($rs->fields('UserName'));
-		$this->UserPass->setDbValue($rs->fields('UserPass'));
-		$this->ActivityStatus->setDbValue($rs->fields('ActivityStatus'));
+		$this->customer_id->setDbValue($rs->fields('customer_id'));
+		$this->full_name->setDbValue($rs->fields('full_name'));
+		$this->phone->setDbValue($rs->fields('phone'));
+		$this->mobile->setDbValue($rs->fields('mobile'));
+		$this->reward->setDbValue($rs->fields('reward'));
+		$this->user_name->setDbValue($rs->fields('user_name'));
+		$this->user_pass->setDbValue($rs->fields('user_pass'));
+		$this->activity_status->setDbValue($rs->fields('activity_status'));
 	}
 
 	// Render list row values
@@ -666,90 +666,90 @@ class ccustomers extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// CustomerID
-		// FullName
-		// Phone
-		// Mobile
-		// Reward
-		// UserName
-		// UserPass
-		// ActivityStatus
-		// CustomerID
+		// customer_id
+		// full_name
+		// phone
+		// mobile
+		// reward
+		// user_name
+		// user_pass
+		// activity_status
+		// customer_id
 
-		$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
-		$this->CustomerID->ViewCustomAttributes = "";
+		$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Mobile
-		$this->Mobile->ViewValue = $this->Mobile->CurrentValue;
-		$this->Mobile->ViewCustomAttributes = "";
+		// mobile
+		$this->mobile->ViewValue = $this->mobile->CurrentValue;
+		$this->mobile->ViewCustomAttributes = "";
 
-		// Reward
-		$this->Reward->ViewValue = $this->Reward->CurrentValue;
-		$this->Reward->ViewCustomAttributes = "";
+		// reward
+		$this->reward->ViewValue = $this->reward->CurrentValue;
+		$this->reward->ViewCustomAttributes = "";
 
-		// UserName
-		$this->UserName->ViewValue = $this->UserName->CurrentValue;
-		$this->UserName->ViewCustomAttributes = "";
+		// user_name
+		$this->user_name->ViewValue = $this->user_name->CurrentValue;
+		$this->user_name->ViewCustomAttributes = "";
 
-		// UserPass
-		$this->UserPass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->UserPass->ViewCustomAttributes = "";
+		// user_pass
+		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
+		$this->user_pass->ViewCustomAttributes = "";
 
-		// ActivityStatus
-		if (strval($this->ActivityStatus->CurrentValue) <> "") {
-			$this->ActivityStatus->ViewValue = $this->ActivityStatus->OptionCaption($this->ActivityStatus->CurrentValue);
+		// activity_status
+		if (strval($this->activity_status->CurrentValue) <> "") {
+			$this->activity_status->ViewValue = $this->activity_status->OptionCaption($this->activity_status->CurrentValue);
 		} else {
-			$this->ActivityStatus->ViewValue = NULL;
+			$this->activity_status->ViewValue = NULL;
 		}
-		$this->ActivityStatus->ViewCustomAttributes = "";
+		$this->activity_status->ViewCustomAttributes = "";
 
-		// CustomerID
-		$this->CustomerID->LinkCustomAttributes = "";
-		$this->CustomerID->HrefValue = "";
-		$this->CustomerID->TooltipValue = "";
+		// customer_id
+		$this->customer_id->LinkCustomAttributes = "";
+		$this->customer_id->HrefValue = "";
+		$this->customer_id->TooltipValue = "";
 
-		// FullName
-		$this->FullName->LinkCustomAttributes = "";
-		$this->FullName->HrefValue = "";
-		$this->FullName->TooltipValue = "";
+		// full_name
+		$this->full_name->LinkCustomAttributes = "";
+		$this->full_name->HrefValue = "";
+		$this->full_name->TooltipValue = "";
 
-		// Phone
-		$this->Phone->LinkCustomAttributes = "";
-		$this->Phone->HrefValue = "";
-		$this->Phone->TooltipValue = "";
+		// phone
+		$this->phone->LinkCustomAttributes = "";
+		$this->phone->HrefValue = "";
+		$this->phone->TooltipValue = "";
 
-		// Mobile
-		$this->Mobile->LinkCustomAttributes = "";
-		$this->Mobile->HrefValue = "";
-		$this->Mobile->TooltipValue = "";
+		// mobile
+		$this->mobile->LinkCustomAttributes = "";
+		$this->mobile->HrefValue = "";
+		$this->mobile->TooltipValue = "";
 
-		// Reward
-		$this->Reward->LinkCustomAttributes = "";
-		$this->Reward->HrefValue = "";
-		$this->Reward->TooltipValue = "";
+		// reward
+		$this->reward->LinkCustomAttributes = "";
+		$this->reward->HrefValue = "";
+		$this->reward->TooltipValue = "";
 
-		// UserName
-		$this->UserName->LinkCustomAttributes = "";
-		$this->UserName->HrefValue = "";
-		$this->UserName->TooltipValue = "";
+		// user_name
+		$this->user_name->LinkCustomAttributes = "";
+		$this->user_name->HrefValue = "";
+		$this->user_name->TooltipValue = "";
 
-		// UserPass
-		$this->UserPass->LinkCustomAttributes = "";
-		$this->UserPass->HrefValue = "";
-		$this->UserPass->TooltipValue = "";
+		// user_pass
+		$this->user_pass->LinkCustomAttributes = "";
+		$this->user_pass->HrefValue = "";
+		$this->user_pass->TooltipValue = "";
 
-		// ActivityStatus
-		$this->ActivityStatus->LinkCustomAttributes = "";
-		$this->ActivityStatus->HrefValue = "";
-		$this->ActivityStatus->TooltipValue = "";
+		// activity_status
+		$this->activity_status->LinkCustomAttributes = "";
+		$this->activity_status->HrefValue = "";
+		$this->activity_status->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -765,51 +765,51 @@ class ccustomers extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// CustomerID
-		$this->CustomerID->EditAttrs["class"] = "form-control";
-		$this->CustomerID->EditCustomAttributes = "";
-		$this->CustomerID->EditValue = $this->CustomerID->CurrentValue;
-		$this->CustomerID->ViewCustomAttributes = "";
+		// customer_id
+		$this->customer_id->EditAttrs["class"] = "form-control";
+		$this->customer_id->EditCustomAttributes = "";
+		$this->customer_id->EditValue = $this->customer_id->CurrentValue;
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->EditAttrs["class"] = "form-control";
-		$this->FullName->EditCustomAttributes = "";
-		$this->FullName->EditValue = $this->FullName->CurrentValue;
-		$this->FullName->PlaceHolder = ew_RemoveHtml($this->FullName->FldCaption());
+		// full_name
+		$this->full_name->EditAttrs["class"] = "form-control";
+		$this->full_name->EditCustomAttributes = "";
+		$this->full_name->EditValue = $this->full_name->CurrentValue;
+		$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
 
-		// Phone
-		$this->Phone->EditAttrs["class"] = "form-control";
-		$this->Phone->EditCustomAttributes = "";
-		$this->Phone->EditValue = $this->Phone->CurrentValue;
-		$this->Phone->PlaceHolder = ew_RemoveHtml($this->Phone->FldCaption());
+		// phone
+		$this->phone->EditAttrs["class"] = "form-control";
+		$this->phone->EditCustomAttributes = "";
+		$this->phone->EditValue = $this->phone->CurrentValue;
+		$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
 
-		// Mobile
-		$this->Mobile->EditAttrs["class"] = "form-control";
-		$this->Mobile->EditCustomAttributes = "";
-		$this->Mobile->EditValue = $this->Mobile->CurrentValue;
-		$this->Mobile->PlaceHolder = ew_RemoveHtml($this->Mobile->FldCaption());
+		// mobile
+		$this->mobile->EditAttrs["class"] = "form-control";
+		$this->mobile->EditCustomAttributes = "";
+		$this->mobile->EditValue = $this->mobile->CurrentValue;
+		$this->mobile->PlaceHolder = ew_RemoveHtml($this->mobile->FldCaption());
 
-		// Reward
-		$this->Reward->EditAttrs["class"] = "form-control";
-		$this->Reward->EditCustomAttributes = "";
-		$this->Reward->EditValue = $this->Reward->CurrentValue;
-		$this->Reward->PlaceHolder = ew_RemoveHtml($this->Reward->FldCaption());
+		// reward
+		$this->reward->EditAttrs["class"] = "form-control";
+		$this->reward->EditCustomAttributes = "";
+		$this->reward->EditValue = $this->reward->CurrentValue;
+		$this->reward->PlaceHolder = ew_RemoveHtml($this->reward->FldCaption());
 
-		// UserName
-		$this->UserName->EditAttrs["class"] = "form-control";
-		$this->UserName->EditCustomAttributes = "";
-		$this->UserName->EditValue = $this->UserName->CurrentValue;
-		$this->UserName->PlaceHolder = ew_RemoveHtml($this->UserName->FldCaption());
+		// user_name
+		$this->user_name->EditAttrs["class"] = "form-control";
+		$this->user_name->EditCustomAttributes = "";
+		$this->user_name->EditValue = $this->user_name->CurrentValue;
+		$this->user_name->PlaceHolder = ew_RemoveHtml($this->user_name->FldCaption());
 
-		// UserPass
-		$this->UserPass->EditAttrs["class"] = "form-control";
-		$this->UserPass->EditCustomAttributes = "";
-		$this->UserPass->EditValue = $this->UserPass->CurrentValue;
-		$this->UserPass->PlaceHolder = ew_RemoveHtml($this->UserPass->FldCaption());
+		// user_pass
+		$this->user_pass->EditAttrs["class"] = "form-control";
+		$this->user_pass->EditCustomAttributes = "";
+		$this->user_pass->EditValue = $this->user_pass->CurrentValue;
+		$this->user_pass->PlaceHolder = ew_RemoveHtml($this->user_pass->FldCaption());
 
-		// ActivityStatus
-		$this->ActivityStatus->EditCustomAttributes = "";
-		$this->ActivityStatus->EditValue = $this->ActivityStatus->Options(FALSE);
+		// activity_status
+		$this->activity_status->EditCustomAttributes = "";
+		$this->activity_status->EditValue = $this->activity_status->Options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -838,22 +838,22 @@ class ccustomers extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->CustomerID->Exportable) $Doc->ExportCaption($this->CustomerID);
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Mobile->Exportable) $Doc->ExportCaption($this->Mobile);
-					if ($this->Reward->Exportable) $Doc->ExportCaption($this->Reward);
-					if ($this->UserName->Exportable) $Doc->ExportCaption($this->UserName);
-					if ($this->UserPass->Exportable) $Doc->ExportCaption($this->UserPass);
-					if ($this->ActivityStatus->Exportable) $Doc->ExportCaption($this->ActivityStatus);
+					if ($this->customer_id->Exportable) $Doc->ExportCaption($this->customer_id);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->mobile->Exportable) $Doc->ExportCaption($this->mobile);
+					if ($this->reward->Exportable) $Doc->ExportCaption($this->reward);
+					if ($this->user_name->Exportable) $Doc->ExportCaption($this->user_name);
+					if ($this->user_pass->Exportable) $Doc->ExportCaption($this->user_pass);
+					if ($this->activity_status->Exportable) $Doc->ExportCaption($this->activity_status);
 				} else {
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Mobile->Exportable) $Doc->ExportCaption($this->Mobile);
-					if ($this->Reward->Exportable) $Doc->ExportCaption($this->Reward);
-					if ($this->UserName->Exportable) $Doc->ExportCaption($this->UserName);
-					if ($this->UserPass->Exportable) $Doc->ExportCaption($this->UserPass);
-					if ($this->ActivityStatus->Exportable) $Doc->ExportCaption($this->ActivityStatus);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->mobile->Exportable) $Doc->ExportCaption($this->mobile);
+					if ($this->reward->Exportable) $Doc->ExportCaption($this->reward);
+					if ($this->user_name->Exportable) $Doc->ExportCaption($this->user_name);
+					if ($this->user_pass->Exportable) $Doc->ExportCaption($this->user_pass);
+					if ($this->activity_status->Exportable) $Doc->ExportCaption($this->activity_status);
 				}
 				$Doc->EndExportRow();
 			}
@@ -885,22 +885,22 @@ class ccustomers extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->CustomerID->Exportable) $Doc->ExportField($this->CustomerID);
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Mobile->Exportable) $Doc->ExportField($this->Mobile);
-						if ($this->Reward->Exportable) $Doc->ExportField($this->Reward);
-						if ($this->UserName->Exportable) $Doc->ExportField($this->UserName);
-						if ($this->UserPass->Exportable) $Doc->ExportField($this->UserPass);
-						if ($this->ActivityStatus->Exportable) $Doc->ExportField($this->ActivityStatus);
+						if ($this->customer_id->Exportable) $Doc->ExportField($this->customer_id);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->mobile->Exportable) $Doc->ExportField($this->mobile);
+						if ($this->reward->Exportable) $Doc->ExportField($this->reward);
+						if ($this->user_name->Exportable) $Doc->ExportField($this->user_name);
+						if ($this->user_pass->Exportable) $Doc->ExportField($this->user_pass);
+						if ($this->activity_status->Exportable) $Doc->ExportField($this->activity_status);
 					} else {
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Mobile->Exportable) $Doc->ExportField($this->Mobile);
-						if ($this->Reward->Exportable) $Doc->ExportField($this->Reward);
-						if ($this->UserName->Exportable) $Doc->ExportField($this->UserName);
-						if ($this->UserPass->Exportable) $Doc->ExportField($this->UserPass);
-						if ($this->ActivityStatus->Exportable) $Doc->ExportField($this->ActivityStatus);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->mobile->Exportable) $Doc->ExportField($this->mobile);
+						if ($this->reward->Exportable) $Doc->ExportField($this->reward);
+						if ($this->user_name->Exportable) $Doc->ExportField($this->user_name);
+						if ($this->user_pass->Exportable) $Doc->ExportField($this->user_pass);
+						if ($this->activity_status->Exportable) $Doc->ExportField($this->activity_status);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

@@ -1,12 +1,12 @@
 <?php
 
-// FullName
-// Phone
-// Mobile
-// Reward
-// UserName
-// UserPass
-// ActivityStatus
+// full_name
+// phone
+// mobile
+// reward
+// user_name
+// user_pass
+// activity_status
 
 ?>
 <?php if ($customers->Visible) { ?>
@@ -14,84 +14,84 @@
 <table id="tbl_customersmaster" class="table ewTable ewMasterTable ewHorizontal">
 	<thead>
 		<tr class="ewTableHeader">
-<?php if ($customers->FullName->Visible) { // FullName ?>
-			<th class="<?php echo $customers->FullName->HeaderCellClass() ?>"><?php echo $customers->FullName->FldCaption() ?></th>
+<?php if ($customers->full_name->Visible) { // full_name ?>
+			<th class="<?php echo $customers->full_name->HeaderCellClass() ?>"><?php echo $customers->full_name->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->Phone->Visible) { // Phone ?>
-			<th class="<?php echo $customers->Phone->HeaderCellClass() ?>"><?php echo $customers->Phone->FldCaption() ?></th>
+<?php if ($customers->phone->Visible) { // phone ?>
+			<th class="<?php echo $customers->phone->HeaderCellClass() ?>"><?php echo $customers->phone->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->Mobile->Visible) { // Mobile ?>
-			<th class="<?php echo $customers->Mobile->HeaderCellClass() ?>"><?php echo $customers->Mobile->FldCaption() ?></th>
+<?php if ($customers->mobile->Visible) { // mobile ?>
+			<th class="<?php echo $customers->mobile->HeaderCellClass() ?>"><?php echo $customers->mobile->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->Reward->Visible) { // Reward ?>
-			<th class="<?php echo $customers->Reward->HeaderCellClass() ?>"><?php echo $customers->Reward->FldCaption() ?></th>
+<?php if ($customers->reward->Visible) { // reward ?>
+			<th class="<?php echo $customers->reward->HeaderCellClass() ?>"><?php echo $customers->reward->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->UserName->Visible) { // UserName ?>
-			<th class="<?php echo $customers->UserName->HeaderCellClass() ?>"><?php echo $customers->UserName->FldCaption() ?></th>
+<?php if ($customers->user_name->Visible) { // user_name ?>
+			<th class="<?php echo $customers->user_name->HeaderCellClass() ?>"><?php echo $customers->user_name->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->UserPass->Visible) { // UserPass ?>
-			<th class="<?php echo $customers->UserPass->HeaderCellClass() ?>"><?php echo $customers->UserPass->FldCaption() ?></th>
+<?php if ($customers->user_pass->Visible) { // user_pass ?>
+			<th class="<?php echo $customers->user_pass->HeaderCellClass() ?>"><?php echo $customers->user_pass->FldCaption() ?></th>
 <?php } ?>
-<?php if ($customers->ActivityStatus->Visible) { // ActivityStatus ?>
-			<th class="<?php echo $customers->ActivityStatus->HeaderCellClass() ?>"><?php echo $customers->ActivityStatus->FldCaption() ?></th>
+<?php if ($customers->activity_status->Visible) { // activity_status ?>
+			<th class="<?php echo $customers->activity_status->HeaderCellClass() ?>"><?php echo $customers->activity_status->FldCaption() ?></th>
 <?php } ?>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-<?php if ($customers->FullName->Visible) { // FullName ?>
-			<td<?php echo $customers->FullName->CellAttributes() ?>>
-<span id="el_customers_FullName">
-<span<?php echo $customers->FullName->ViewAttributes() ?>>
-<?php echo $customers->FullName->ListViewValue() ?></span>
+<?php if ($customers->full_name->Visible) { // full_name ?>
+			<td<?php echo $customers->full_name->CellAttributes() ?>>
+<span id="el_customers_full_name">
+<span<?php echo $customers->full_name->ViewAttributes() ?>>
+<?php echo $customers->full_name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->Phone->Visible) { // Phone ?>
-			<td<?php echo $customers->Phone->CellAttributes() ?>>
-<span id="el_customers_Phone">
-<span<?php echo $customers->Phone->ViewAttributes() ?>>
-<?php echo $customers->Phone->ListViewValue() ?></span>
+<?php if ($customers->phone->Visible) { // phone ?>
+			<td<?php echo $customers->phone->CellAttributes() ?>>
+<span id="el_customers_phone">
+<span<?php echo $customers->phone->ViewAttributes() ?>>
+<?php echo $customers->phone->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->Mobile->Visible) { // Mobile ?>
-			<td<?php echo $customers->Mobile->CellAttributes() ?>>
-<span id="el_customers_Mobile">
-<span<?php echo $customers->Mobile->ViewAttributes() ?>>
-<?php echo $customers->Mobile->ListViewValue() ?></span>
+<?php if ($customers->mobile->Visible) { // mobile ?>
+			<td<?php echo $customers->mobile->CellAttributes() ?>>
+<span id="el_customers_mobile">
+<span<?php echo $customers->mobile->ViewAttributes() ?>>
+<?php echo $customers->mobile->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->Reward->Visible) { // Reward ?>
-			<td<?php echo $customers->Reward->CellAttributes() ?>>
-<span id="el_customers_Reward">
-<span<?php echo $customers->Reward->ViewAttributes() ?>>
-<?php echo $customers->Reward->ListViewValue() ?></span>
+<?php if ($customers->reward->Visible) { // reward ?>
+			<td<?php echo $customers->reward->CellAttributes() ?>>
+<span id="el_customers_reward">
+<span<?php echo $customers->reward->ViewAttributes() ?>>
+<?php echo $customers->reward->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->UserName->Visible) { // UserName ?>
-			<td<?php echo $customers->UserName->CellAttributes() ?>>
-<span id="el_customers_UserName">
-<span<?php echo $customers->UserName->ViewAttributes() ?>>
-<?php echo $customers->UserName->ListViewValue() ?></span>
+<?php if ($customers->user_name->Visible) { // user_name ?>
+			<td<?php echo $customers->user_name->CellAttributes() ?>>
+<span id="el_customers_user_name">
+<span<?php echo $customers->user_name->ViewAttributes() ?>>
+<?php echo $customers->user_name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->UserPass->Visible) { // UserPass ?>
-			<td<?php echo $customers->UserPass->CellAttributes() ?>>
-<span id="el_customers_UserPass">
-<span<?php echo $customers->UserPass->ViewAttributes() ?>>
-<?php echo $customers->UserPass->ListViewValue() ?></span>
+<?php if ($customers->user_pass->Visible) { // user_pass ?>
+			<td<?php echo $customers->user_pass->CellAttributes() ?>>
+<span id="el_customers_user_pass">
+<span<?php echo $customers->user_pass->ViewAttributes() ?>>
+<?php echo $customers->user_pass->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($customers->ActivityStatus->Visible) { // ActivityStatus ?>
-			<td<?php echo $customers->ActivityStatus->CellAttributes() ?>>
-<span id="el_customers_ActivityStatus">
-<span<?php echo $customers->ActivityStatus->ViewAttributes() ?>>
-<?php echo $customers->ActivityStatus->ListViewValue() ?></span>
+<?php if ($customers->activity_status->Visible) { // activity_status ?>
+			<td<?php echo $customers->activity_status->CellAttributes() ?>>
+<span id="el_customers_activity_status">
+<span<?php echo $customers->activity_status->ViewAttributes() ?>>
+<?php echo $customers->activity_status->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

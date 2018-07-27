@@ -42,12 +42,12 @@ faddressesgrid.Validate = function() {
 		var checkrow = (gridinsert) ? !this.EmptyRow(infix) : true;
 		if (checkrow) {
 			addcnt++;
-			elm = this.GetElements("x" + infix + "_CustomerID");
+			elm = this.GetElements("x" + infix + "_customer_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $addresses->CustomerID->FldCaption(), $addresses->CustomerID->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_ProvinceID");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $addresses->customer_id->FldCaption(), $addresses->customer_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_province_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $addresses->ProvinceID->FldCaption(), $addresses->ProvinceID->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $addresses->province_id->FldCaption(), $addresses->province_id->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -60,9 +60,9 @@ faddressesgrid.Validate = function() {
 // Check empty row
 faddressesgrid.EmptyRow = function(infix) {
 	var fobj = this.Form;
-	if (ew_ValueChanged(fobj, infix, "CustomerID", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "ProvinceID", false)) return false;
-	if (ew_ValueChanged(fobj, infix, "POBox", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "customer_id", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "province_id", false)) return false;
+	if (ew_ValueChanged(fobj, infix, "po_box", false)) return false;
 	return true;
 }
 
@@ -78,10 +78,10 @@ faddressesgrid.Form_CustomValidate =
 faddressesgrid.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-faddressesgrid.Lists["x_CustomerID"] = {"LinkField":"x_CustomerID","Ajax":true,"AutoFill":false,"DisplayFields":["x_FullName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-faddressesgrid.Lists["x_CustomerID"].Data = "<?php echo $addresses_grid->CustomerID->LookupFilterQuery(FALSE, "grid") ?>";
-faddressesgrid.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-faddressesgrid.Lists["x_ProvinceID"].Data = "<?php echo $addresses_grid->ProvinceID->LookupFilterQuery(FALSE, "grid") ?>";
+faddressesgrid.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
+faddressesgrid.Lists["x_customer_id"].Data = "<?php echo $addresses_grid->customer_id->LookupFilterQuery(FALSE, "grid") ?>";
+faddressesgrid.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+faddressesgrid.Lists["x_province_id"].Data = "<?php echo $addresses_grid->province_id->LookupFilterQuery(FALSE, "grid") ?>";
 
 // Form object for search
 </script>
@@ -163,30 +163,30 @@ $addresses_grid->RenderListOptions();
 // Render list options (header, left)
 $addresses_grid->ListOptions->Render("header", "left");
 ?>
-<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-	<?php if ($addresses->SortUrl($addresses->CustomerID) == "") { ?>
-		<th data-name="CustomerID" class="<?php echo $addresses->CustomerID->HeaderCellClass() ?>"><div id="elh_addresses_CustomerID" class="addresses_CustomerID"><div class="ewTableHeaderCaption"><?php echo $addresses->CustomerID->FldCaption() ?></div></div></th>
+<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+	<?php if ($addresses->SortUrl($addresses->customer_id) == "") { ?>
+		<th data-name="customer_id" class="<?php echo $addresses->customer_id->HeaderCellClass() ?>"><div id="elh_addresses_customer_id" class="addresses_customer_id"><div class="ewTableHeaderCaption"><?php echo $addresses->customer_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="CustomerID" class="<?php echo $addresses->CustomerID->HeaderCellClass() ?>"><div><div id="elh_addresses_CustomerID" class="addresses_CustomerID">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->CustomerID->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->CustomerID->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->CustomerID->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="customer_id" class="<?php echo $addresses->customer_id->HeaderCellClass() ?>"><div><div id="elh_addresses_customer_id" class="addresses_customer_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->customer_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->customer_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->customer_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-	<?php if ($addresses->SortUrl($addresses->ProvinceID) == "") { ?>
-		<th data-name="ProvinceID" class="<?php echo $addresses->ProvinceID->HeaderCellClass() ?>"><div id="elh_addresses_ProvinceID" class="addresses_ProvinceID"><div class="ewTableHeaderCaption"><?php echo $addresses->ProvinceID->FldCaption() ?></div></div></th>
+<?php if ($addresses->province_id->Visible) { // province_id ?>
+	<?php if ($addresses->SortUrl($addresses->province_id) == "") { ?>
+		<th data-name="province_id" class="<?php echo $addresses->province_id->HeaderCellClass() ?>"><div id="elh_addresses_province_id" class="addresses_province_id"><div class="ewTableHeaderCaption"><?php echo $addresses->province_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="ProvinceID" class="<?php echo $addresses->ProvinceID->HeaderCellClass() ?>"><div><div id="elh_addresses_ProvinceID" class="addresses_ProvinceID">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->ProvinceID->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->ProvinceID->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->ProvinceID->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="province_id" class="<?php echo $addresses->province_id->HeaderCellClass() ?>"><div><div id="elh_addresses_province_id" class="addresses_province_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->province_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->province_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->province_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($addresses->POBox->Visible) { // POBox ?>
-	<?php if ($addresses->SortUrl($addresses->POBox) == "") { ?>
-		<th data-name="POBox" class="<?php echo $addresses->POBox->HeaderCellClass() ?>"><div id="elh_addresses_POBox" class="addresses_POBox"><div class="ewTableHeaderCaption"><?php echo $addresses->POBox->FldCaption() ?></div></div></th>
+<?php if ($addresses->po_box->Visible) { // po_box ?>
+	<?php if ($addresses->SortUrl($addresses->po_box) == "") { ?>
+		<th data-name="po_box" class="<?php echo $addresses->po_box->HeaderCellClass() ?>"><div id="elh_addresses_po_box" class="addresses_po_box"><div class="ewTableHeaderCaption"><?php echo $addresses->po_box->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="POBox" class="<?php echo $addresses->POBox->HeaderCellClass() ?>"><div><div id="elh_addresses_POBox" class="addresses_POBox">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->POBox->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->POBox->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->POBox->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="po_box" class="<?php echo $addresses->po_box->HeaderCellClass() ?>"><div><div id="elh_addresses_po_box" class="addresses_po_box">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $addresses->po_box->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($addresses->po_box->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($addresses->po_box->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -299,117 +299,117 @@ while ($addresses_grid->RecCnt < $addresses_grid->StopRec) {
 // Render list options (body, left)
 $addresses_grid->ListOptions->Render("body", "left", $addresses_grid->RowCnt);
 ?>
-	<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-		<td data-name="CustomerID"<?php echo $addresses->CustomerID->CellAttributes() ?>>
+	<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+		<td data-name="customer_id"<?php echo $addresses->customer_id->CellAttributes() ?>>
 <?php if ($addresses->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<?php if ($addresses->CustomerID->getSessionValue() <> "") { ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_CustomerID" class="form-group addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->CustomerID->ViewValue ?></p></span>
+<?php if ($addresses->customer_id->getSessionValue() <> "") { ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_customer_id" class="form-group addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->customer_id->ViewValue ?></p></span>
 </span>
-<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->CurrentValue) ?>">
+<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->CurrentValue) ?>">
 <?php } else { ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_CustomerID" class="form-group addresses_CustomerID">
-<select data-table="addresses" data-field="x_CustomerID" data-value-separator="<?php echo $addresses->CustomerID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID"<?php echo $addresses->CustomerID->EditAttributes() ?>>
-<?php echo $addresses->CustomerID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_CustomerID") ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_customer_id" class="form-group addresses_customer_id">
+<select data-table="addresses" data-field="x_customer_id" data-value-separator="<?php echo $addresses->customer_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id"<?php echo $addresses->customer_id->EditAttributes() ?>>
+<?php echo $addresses->customer_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_customer_id") ?>
 </select>
 </span>
 <?php } ?>
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="o<?php echo $addresses_grid->RowIndex ?>_customer_id" id="o<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->OldValue) ?>">
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<?php if ($addresses->CustomerID->getSessionValue() <> "") { ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_CustomerID" class="form-group addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->CustomerID->ViewValue ?></p></span>
+<?php if ($addresses->customer_id->getSessionValue() <> "") { ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_customer_id" class="form-group addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->customer_id->ViewValue ?></p></span>
 </span>
-<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->CurrentValue) ?>">
+<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->CurrentValue) ?>">
 <?php } else { ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_CustomerID" class="form-group addresses_CustomerID">
-<select data-table="addresses" data-field="x_CustomerID" data-value-separator="<?php echo $addresses->CustomerID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID"<?php echo $addresses->CustomerID->EditAttributes() ?>>
-<?php echo $addresses->CustomerID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_CustomerID") ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_customer_id" class="form-group addresses_customer_id">
+<select data-table="addresses" data-field="x_customer_id" data-value-separator="<?php echo $addresses->customer_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id"<?php echo $addresses->customer_id->EditAttributes() ?>>
+<?php echo $addresses->customer_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_customer_id") ?>
 </select>
 </span>
 <?php } ?>
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_CustomerID" class="addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<?php echo $addresses->CustomerID->ListViewValue() ?></span>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_customer_id" class="addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<?php echo $addresses->customer_id->ListViewValue() ?></span>
 </span>
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="o<?php echo $addresses_grid->RowIndex ?>_customer_id" id="o<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->OldValue) ?>">
 <?php } else { ?>
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_customer_id" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_customer_id" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
 	<?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<input type="hidden" data-table="addresses" data-field="x_AddressID" name="x<?php echo $addresses_grid->RowIndex ?>_AddressID" id="x<?php echo $addresses_grid->RowIndex ?>_AddressID" value="<?php echo ew_HtmlEncode($addresses->AddressID->CurrentValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_AddressID" name="o<?php echo $addresses_grid->RowIndex ?>_AddressID" id="o<?php echo $addresses_grid->RowIndex ?>_AddressID" value="<?php echo ew_HtmlEncode($addresses->AddressID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_address_id" name="x<?php echo $addresses_grid->RowIndex ?>_address_id" id="x<?php echo $addresses_grid->RowIndex ?>_address_id" value="<?php echo ew_HtmlEncode($addresses->address_id->CurrentValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_address_id" name="o<?php echo $addresses_grid->RowIndex ?>_address_id" id="o<?php echo $addresses_grid->RowIndex ?>_address_id" value="<?php echo ew_HtmlEncode($addresses->address_id->OldValue) ?>">
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_EDIT || $addresses->CurrentMode == "edit") { ?>
-<input type="hidden" data-table="addresses" data-field="x_AddressID" name="x<?php echo $addresses_grid->RowIndex ?>_AddressID" id="x<?php echo $addresses_grid->RowIndex ?>_AddressID" value="<?php echo ew_HtmlEncode($addresses->AddressID->CurrentValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_address_id" name="x<?php echo $addresses_grid->RowIndex ?>_address_id" id="x<?php echo $addresses_grid->RowIndex ?>_address_id" value="<?php echo ew_HtmlEncode($addresses->address_id->CurrentValue) ?>">
 <?php } ?>
-	<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-		<td data-name="ProvinceID"<?php echo $addresses->ProvinceID->CellAttributes() ?>>
+	<?php if ($addresses->province_id->Visible) { // province_id ?>
+		<td data-name="province_id"<?php echo $addresses->province_id->CellAttributes() ?>>
 <?php if ($addresses->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_ProvinceID" class="form-group addresses_ProvinceID">
-<select data-table="addresses" data-field="x_ProvinceID" data-value-separator="<?php echo $addresses->ProvinceID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" name="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID"<?php echo $addresses->ProvinceID->EditAttributes() ?>>
-<?php echo $addresses->ProvinceID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_ProvinceID") ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_province_id" class="form-group addresses_province_id">
+<select data-table="addresses" data-field="x_province_id" data-value-separator="<?php echo $addresses->province_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_province_id" name="x<?php echo $addresses_grid->RowIndex ?>_province_id"<?php echo $addresses->province_id->EditAttributes() ?>>
+<?php echo $addresses->province_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_province_id") ?>
 </select>
 </span>
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="o<?php echo $addresses_grid->RowIndex ?>_province_id" id="o<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->OldValue) ?>">
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_ProvinceID" class="form-group addresses_ProvinceID">
-<select data-table="addresses" data-field="x_ProvinceID" data-value-separator="<?php echo $addresses->ProvinceID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" name="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID"<?php echo $addresses->ProvinceID->EditAttributes() ?>>
-<?php echo $addresses->ProvinceID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_ProvinceID") ?>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_province_id" class="form-group addresses_province_id">
+<select data-table="addresses" data-field="x_province_id" data-value-separator="<?php echo $addresses->province_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_province_id" name="x<?php echo $addresses_grid->RowIndex ?>_province_id"<?php echo $addresses->province_id->EditAttributes() ?>>
+<?php echo $addresses->province_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_province_id") ?>
 </select>
 </span>
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_ProvinceID" class="addresses_ProvinceID">
-<span<?php echo $addresses->ProvinceID->ViewAttributes() ?>>
-<?php echo $addresses->ProvinceID->ListViewValue() ?></span>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_province_id" class="addresses_province_id">
+<span<?php echo $addresses->province_id->ViewAttributes() ?>>
+<?php echo $addresses->province_id->ListViewValue() ?></span>
 </span>
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="x<?php echo $addresses_grid->RowIndex ?>_province_id" id="x<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="o<?php echo $addresses_grid->RowIndex ?>_province_id" id="o<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->OldValue) ?>">
 <?php } else { ?>
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_province_id" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_province_id" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
 	<?php } ?>
-	<?php if ($addresses->POBox->Visible) { // POBox ?>
-		<td data-name="POBox"<?php echo $addresses->POBox->CellAttributes() ?>>
+	<?php if ($addresses->po_box->Visible) { // po_box ?>
+		<td data-name="po_box"<?php echo $addresses->po_box->CellAttributes() ?>>
 <?php if ($addresses->RowType == EW_ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_POBox" class="form-group addresses_POBox">
-<input type="text" data-table="addresses" data-field="x_POBox" name="x<?php echo $addresses_grid->RowIndex ?>_POBox" id="x<?php echo $addresses_grid->RowIndex ?>_POBox" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->POBox->getPlaceHolder()) ?>" value="<?php echo $addresses->POBox->EditValue ?>"<?php echo $addresses->POBox->EditAttributes() ?>>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_po_box" class="form-group addresses_po_box">
+<input type="text" data-table="addresses" data-field="x_po_box" name="x<?php echo $addresses_grid->RowIndex ?>_po_box" id="x<?php echo $addresses_grid->RowIndex ?>_po_box" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->po_box->getPlaceHolder()) ?>" value="<?php echo $addresses->po_box->EditValue ?>"<?php echo $addresses->po_box->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="o<?php echo $addresses_grid->RowIndex ?>_POBox" id="o<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="o<?php echo $addresses_grid->RowIndex ?>_po_box" id="o<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->OldValue) ?>">
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_POBox" class="form-group addresses_POBox">
-<input type="text" data-table="addresses" data-field="x_POBox" name="x<?php echo $addresses_grid->RowIndex ?>_POBox" id="x<?php echo $addresses_grid->RowIndex ?>_POBox" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->POBox->getPlaceHolder()) ?>" value="<?php echo $addresses->POBox->EditValue ?>"<?php echo $addresses->POBox->EditAttributes() ?>>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_po_box" class="form-group addresses_po_box">
+<input type="text" data-table="addresses" data-field="x_po_box" name="x<?php echo $addresses_grid->RowIndex ?>_po_box" id="x<?php echo $addresses_grid->RowIndex ?>_po_box" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->po_box->getPlaceHolder()) ?>" value="<?php echo $addresses->po_box->EditValue ?>"<?php echo $addresses->po_box->EditAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($addresses->RowType == EW_ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_POBox" class="addresses_POBox">
-<span<?php echo $addresses->POBox->ViewAttributes() ?>>
-<?php echo $addresses->POBox->ListViewValue() ?></span>
+<span id="el<?php echo $addresses_grid->RowCnt ?>_addresses_po_box" class="addresses_po_box">
+<span<?php echo $addresses->po_box->ViewAttributes() ?>>
+<?php echo $addresses->po_box->ListViewValue() ?></span>
 </span>
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="x<?php echo $addresses_grid->RowIndex ?>_POBox" id="x<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="o<?php echo $addresses_grid->RowIndex ?>_POBox" id="o<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="x<?php echo $addresses_grid->RowIndex ?>_po_box" id="x<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="o<?php echo $addresses_grid->RowIndex ?>_po_box" id="o<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->OldValue) ?>">
 <?php } else { ?>
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_POBox" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->FormValue) ?>">
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_POBox" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_po_box" id="faddressesgrid$x<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_po_box" id="faddressesgrid$o<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->OldValue) ?>">
 <?php } ?>
 <?php } ?>
 </td>
@@ -456,64 +456,64 @@ faddressesgrid.UpdateOpts(<?php echo $addresses_grid->RowIndex ?>);
 // Render list options (body, left)
 $addresses_grid->ListOptions->Render("body", "left", $addresses_grid->RowIndex);
 ?>
-	<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-		<td data-name="CustomerID">
+	<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+		<td data-name="customer_id">
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<?php if ($addresses->CustomerID->getSessionValue() <> "") { ?>
-<span id="el$rowindex$_addresses_CustomerID" class="form-group addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->CustomerID->ViewValue ?></p></span>
+<?php if ($addresses->customer_id->getSessionValue() <> "") { ?>
+<span id="el$rowindex$_addresses_customer_id" class="form-group addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->customer_id->ViewValue ?></p></span>
 </span>
-<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->CurrentValue) ?>">
+<input type="hidden" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->CurrentValue) ?>">
 <?php } else { ?>
-<span id="el$rowindex$_addresses_CustomerID" class="form-group addresses_CustomerID">
-<select data-table="addresses" data-field="x_CustomerID" data-value-separator="<?php echo $addresses->CustomerID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID"<?php echo $addresses->CustomerID->EditAttributes() ?>>
-<?php echo $addresses->CustomerID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_CustomerID") ?>
+<span id="el$rowindex$_addresses_customer_id" class="form-group addresses_customer_id">
+<select data-table="addresses" data-field="x_customer_id" data-value-separator="<?php echo $addresses->customer_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id"<?php echo $addresses->customer_id->EditAttributes() ?>>
+<?php echo $addresses->customer_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_customer_id") ?>
 </select>
 </span>
 <?php } ?>
 <?php } else { ?>
-<span id="el$rowindex$_addresses_CustomerID" class="form-group addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->CustomerID->ViewValue ?></p></span>
+<span id="el$rowindex$_addresses_customer_id" class="form-group addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->customer_id->ViewValue ?></p></span>
 </span>
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="x<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="x<?php echo $addresses_grid->RowIndex ?>_customer_id" id="x<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="addresses" data-field="x_CustomerID" name="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" id="o<?php echo $addresses_grid->RowIndex ?>_CustomerID" value="<?php echo ew_HtmlEncode($addresses->CustomerID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_customer_id" name="o<?php echo $addresses_grid->RowIndex ?>_customer_id" id="o<?php echo $addresses_grid->RowIndex ?>_customer_id" value="<?php echo ew_HtmlEncode($addresses->customer_id->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-		<td data-name="ProvinceID">
+	<?php if ($addresses->province_id->Visible) { // province_id ?>
+		<td data-name="province_id">
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<span id="el$rowindex$_addresses_ProvinceID" class="form-group addresses_ProvinceID">
-<select data-table="addresses" data-field="x_ProvinceID" data-value-separator="<?php echo $addresses->ProvinceID->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" name="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID"<?php echo $addresses->ProvinceID->EditAttributes() ?>>
-<?php echo $addresses->ProvinceID->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_ProvinceID") ?>
+<span id="el$rowindex$_addresses_province_id" class="form-group addresses_province_id">
+<select data-table="addresses" data-field="x_province_id" data-value-separator="<?php echo $addresses->province_id->DisplayValueSeparatorAttribute() ?>" id="x<?php echo $addresses_grid->RowIndex ?>_province_id" name="x<?php echo $addresses_grid->RowIndex ?>_province_id"<?php echo $addresses->province_id->EditAttributes() ?>>
+<?php echo $addresses->province_id->SelectOptionListHtml("x<?php echo $addresses_grid->RowIndex ?>_province_id") ?>
 </select>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_addresses_ProvinceID" class="form-group addresses_ProvinceID">
-<span<?php echo $addresses->ProvinceID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->ProvinceID->ViewValue ?></p></span>
+<span id="el$rowindex$_addresses_province_id" class="form-group addresses_province_id">
+<span<?php echo $addresses->province_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->province_id->ViewValue ?></p></span>
 </span>
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="x<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="x<?php echo $addresses_grid->RowIndex ?>_province_id" id="x<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="addresses" data-field="x_ProvinceID" name="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" id="o<?php echo $addresses_grid->RowIndex ?>_ProvinceID" value="<?php echo ew_HtmlEncode($addresses->ProvinceID->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_province_id" name="o<?php echo $addresses_grid->RowIndex ?>_province_id" id="o<?php echo $addresses_grid->RowIndex ?>_province_id" value="<?php echo ew_HtmlEncode($addresses->province_id->OldValue) ?>">
 </td>
 	<?php } ?>
-	<?php if ($addresses->POBox->Visible) { // POBox ?>
-		<td data-name="POBox">
+	<?php if ($addresses->po_box->Visible) { // po_box ?>
+		<td data-name="po_box">
 <?php if ($addresses->CurrentAction <> "F") { ?>
-<span id="el$rowindex$_addresses_POBox" class="form-group addresses_POBox">
-<input type="text" data-table="addresses" data-field="x_POBox" name="x<?php echo $addresses_grid->RowIndex ?>_POBox" id="x<?php echo $addresses_grid->RowIndex ?>_POBox" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->POBox->getPlaceHolder()) ?>" value="<?php echo $addresses->POBox->EditValue ?>"<?php echo $addresses->POBox->EditAttributes() ?>>
+<span id="el$rowindex$_addresses_po_box" class="form-group addresses_po_box">
+<input type="text" data-table="addresses" data-field="x_po_box" name="x<?php echo $addresses_grid->RowIndex ?>_po_box" id="x<?php echo $addresses_grid->RowIndex ?>_po_box" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($addresses->po_box->getPlaceHolder()) ?>" value="<?php echo $addresses->po_box->EditValue ?>"<?php echo $addresses->po_box->EditAttributes() ?>>
 </span>
 <?php } else { ?>
-<span id="el$rowindex$_addresses_POBox" class="form-group addresses_POBox">
-<span<?php echo $addresses->POBox->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $addresses->POBox->ViewValue ?></p></span>
+<span id="el$rowindex$_addresses_po_box" class="form-group addresses_po_box">
+<span<?php echo $addresses->po_box->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $addresses->po_box->ViewValue ?></p></span>
 </span>
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="x<?php echo $addresses_grid->RowIndex ?>_POBox" id="x<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->FormValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="x<?php echo $addresses_grid->RowIndex ?>_po_box" id="x<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->FormValue) ?>">
 <?php } ?>
-<input type="hidden" data-table="addresses" data-field="x_POBox" name="o<?php echo $addresses_grid->RowIndex ?>_POBox" id="o<?php echo $addresses_grid->RowIndex ?>_POBox" value="<?php echo ew_HtmlEncode($addresses->POBox->OldValue) ?>">
+<input type="hidden" data-table="addresses" data-field="x_po_box" name="o<?php echo $addresses_grid->RowIndex ?>_po_box" id="o<?php echo $addresses_grid->RowIndex ?>_po_box" value="<?php echo ew_HtmlEncode($addresses->po_box->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php

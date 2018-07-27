@@ -289,9 +289,9 @@ class caddresses_view extends caddresses {
 			$GLOBALS["Table"] = &$GLOBALS["addresses"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["AddressID"] <> "") {
-			$this->RecKey["AddressID"] = $_GET["AddressID"];
-			$KeyUrl .= "&amp;AddressID=" . urlencode($this->RecKey["AddressID"]);
+		if (@$_GET["address_id"] <> "") {
+			$this->RecKey["address_id"] = $_GET["address_id"];
+			$KeyUrl .= "&amp;address_id=" . urlencode($this->RecKey["address_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -396,9 +396,9 @@ class caddresses_view extends caddresses {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["AddressID"] <> "") {
+		if (@$_GET["address_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["AddressID"];
+			$gsExportFile .= $_GET["address_id"];
 		}
 
 		// Get custom export parameters
@@ -424,13 +424,13 @@ class caddresses_view extends caddresses {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->AddressID->SetVisibility();
+		$this->address_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->AddressID->Visible = FALSE;
-		$this->CustomerID->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->POBox->SetVisibility();
+			$this->address_id->Visible = FALSE;
+		$this->customer_id->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->po_box->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -541,12 +541,12 @@ class caddresses_view extends caddresses {
 		// Set up master/detail parameters
 		$this->SetupMasterParms();
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["AddressID"] <> "") {
-				$this->AddressID->setQueryStringValue($_GET["AddressID"]);
-				$this->RecKey["AddressID"] = $this->AddressID->QueryStringValue;
-			} elseif (@$_POST["AddressID"] <> "") {
-				$this->AddressID->setFormValue($_POST["AddressID"]);
-				$this->RecKey["AddressID"] = $this->AddressID->FormValue;
+			if (@$_GET["address_id"] <> "") {
+				$this->address_id->setQueryStringValue($_GET["address_id"]);
+				$this->RecKey["address_id"] = $this->address_id->QueryStringValue;
+			} elseif (@$_POST["address_id"] <> "") {
+				$this->address_id->setFormValue($_POST["address_id"]);
+				$this->RecKey["address_id"] = $this->address_id->FormValue;
 			} else {
 				$sReturnUrl = "addresseslist.php"; // Return to list
 			}
@@ -731,21 +731,21 @@ class caddresses_view extends caddresses {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->AddressID->setDbValue($row['AddressID']);
-		$this->CustomerID->setDbValue($row['CustomerID']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->POBox->setDbValue($row['POBox']);
+		$this->address_id->setDbValue($row['address_id']);
+		$this->customer_id->setDbValue($row['customer_id']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->po_box->setDbValue($row['po_box']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['AddressID'] = NULL;
-		$row['CustomerID'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['POBox'] = NULL;
+		$row['address_id'] = NULL;
+		$row['customer_id'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['po_box'] = NULL;
 		return $row;
 	}
 
@@ -754,11 +754,11 @@ class caddresses_view extends caddresses {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->AddressID->DbValue = $row['AddressID'];
-		$this->CustomerID->DbValue = $row['CustomerID'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->POBox->DbValue = $row['POBox'];
+		$this->address_id->DbValue = $row['address_id'];
+		$this->customer_id->DbValue = $row['customer_id'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->po_box->DbValue = $row['po_box'];
 	}
 
 	// Render row values based on field settings
@@ -777,98 +777,98 @@ class caddresses_view extends caddresses {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// AddressID
-		// CustomerID
-		// ProvinceID
-		// Address
-		// POBox
+		// address_id
+		// customer_id
+		// province_id
+		// address
+		// po_box
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// AddressID
-		$this->AddressID->ViewValue = $this->AddressID->CurrentValue;
-		$this->AddressID->ViewCustomAttributes = "";
+		// address_id
+		$this->address_id->ViewValue = $this->address_id->CurrentValue;
+		$this->address_id->ViewCustomAttributes = "";
 
-		// CustomerID
-		if (strval($this->CustomerID->CurrentValue) <> "") {
-			$sFilterWrk = "`CustomerID`" . ew_SearchString("=", $this->CustomerID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `CustomerID`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+		// customer_id
+		if (strval($this->customer_id->CurrentValue) <> "") {
+			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
 		$sWhereWrk = "";
-		$this->CustomerID->LookupFilters = array();
+		$this->customer_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `FullName`";
+		$sSqlWrk .= " ORDER BY `full_name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->CustomerID->ViewValue = $this->CustomerID->DisplayValue($arwrk);
+				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
 			}
 		} else {
-			$this->CustomerID->ViewValue = NULL;
+			$this->customer_id->ViewValue = NULL;
 		}
-		$this->CustomerID->ViewCustomAttributes = "";
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// POBox
-		$this->POBox->ViewValue = $this->POBox->CurrentValue;
-		$this->POBox->ViewCustomAttributes = "";
+		// po_box
+		$this->po_box->ViewValue = $this->po_box->CurrentValue;
+		$this->po_box->ViewCustomAttributes = "";
 
-			// AddressID
-			$this->AddressID->LinkCustomAttributes = "";
-			$this->AddressID->HrefValue = "";
-			$this->AddressID->TooltipValue = "";
+			// address_id
+			$this->address_id->LinkCustomAttributes = "";
+			$this->address_id->HrefValue = "";
+			$this->address_id->TooltipValue = "";
 
-			// CustomerID
-			$this->CustomerID->LinkCustomAttributes = "";
-			$this->CustomerID->HrefValue = "";
-			$this->CustomerID->TooltipValue = "";
+			// customer_id
+			$this->customer_id->LinkCustomAttributes = "";
+			$this->customer_id->HrefValue = "";
+			$this->customer_id->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// POBox
-			$this->POBox->LinkCustomAttributes = "";
-			$this->POBox->HrefValue = "";
-			$this->POBox->TooltipValue = "";
+			// po_box
+			$this->po_box->LinkCustomAttributes = "";
+			$this->po_box->HrefValue = "";
+			$this->po_box->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1027,11 +1027,11 @@ class caddresses_view extends caddresses {
 			}
 			if ($sMasterTblVar == "customers") {
 				$bValidMaster = TRUE;
-				if (@$_GET["fk_CustomerID"] <> "") {
-					$GLOBALS["customers"]->CustomerID->setQueryStringValue($_GET["fk_CustomerID"]);
-					$this->CustomerID->setQueryStringValue($GLOBALS["customers"]->CustomerID->QueryStringValue);
-					$this->CustomerID->setSessionValue($this->CustomerID->QueryStringValue);
-					if (!is_numeric($GLOBALS["customers"]->CustomerID->QueryStringValue)) $bValidMaster = FALSE;
+				if (@$_GET["fk_customer_id"] <> "") {
+					$GLOBALS["customers"]->customer_id->setQueryStringValue($_GET["fk_customer_id"]);
+					$this->customer_id->setQueryStringValue($GLOBALS["customers"]->customer_id->QueryStringValue);
+					$this->customer_id->setSessionValue($this->customer_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["customers"]->customer_id->QueryStringValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -1045,11 +1045,11 @@ class caddresses_view extends caddresses {
 			}
 			if ($sMasterTblVar == "customers") {
 				$bValidMaster = TRUE;
-				if (@$_POST["fk_CustomerID"] <> "") {
-					$GLOBALS["customers"]->CustomerID->setFormValue($_POST["fk_CustomerID"]);
-					$this->CustomerID->setFormValue($GLOBALS["customers"]->CustomerID->FormValue);
-					$this->CustomerID->setSessionValue($this->CustomerID->FormValue);
-					if (!is_numeric($GLOBALS["customers"]->CustomerID->FormValue)) $bValidMaster = FALSE;
+				if (@$_POST["fk_customer_id"] <> "") {
+					$GLOBALS["customers"]->customer_id->setFormValue($_POST["fk_customer_id"]);
+					$this->customer_id->setFormValue($GLOBALS["customers"]->customer_id->FormValue);
+					$this->customer_id->setSessionValue($this->customer_id->FormValue);
+					if (!is_numeric($GLOBALS["customers"]->customer_id->FormValue)) $bValidMaster = FALSE;
 				} else {
 					$bValidMaster = FALSE;
 				}
@@ -1069,7 +1069,7 @@ class caddresses_view extends caddresses {
 
 			// Clear previous master key from Session
 			if ($sMasterTblVar <> "customers") {
-				if ($this->CustomerID->CurrentValue == "") $this->CustomerID->setSessionValue("");
+				if ($this->customer_id->CurrentValue == "") $this->customer_id->setSessionValue("");
 			}
 		}
 		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
@@ -1227,10 +1227,10 @@ faddressesview.Form_CustomValidate =
 faddressesview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-faddressesview.Lists["x_CustomerID"] = {"LinkField":"x_CustomerID","Ajax":true,"AutoFill":false,"DisplayFields":["x_FullName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-faddressesview.Lists["x_CustomerID"].Data = "<?php echo $addresses_view->CustomerID->LookupFilterQuery(FALSE, "view") ?>";
-faddressesview.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-faddressesview.Lists["x_ProvinceID"].Data = "<?php echo $addresses_view->ProvinceID->LookupFilterQuery(FALSE, "view") ?>";
+faddressesview.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
+faddressesview.Lists["x_customer_id"].Data = "<?php echo $addresses_view->customer_id->LookupFilterQuery(FALSE, "view") ?>";
+faddressesview.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+faddressesview.Lists["x_province_id"].Data = "<?php echo $addresses_view->province_id->LookupFilterQuery(FALSE, "view") ?>";
 
 // Form object for search
 </script>
@@ -1260,57 +1260,57 @@ $addresses_view->ShowMessage();
 <input type="hidden" name="t" value="addresses">
 <input type="hidden" name="modal" value="<?php echo intval($addresses_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($addresses->AddressID->Visible) { // AddressID ?>
-	<tr id="r_AddressID">
-		<td class="col-sm-2"><span id="elh_addresses_AddressID"><?php echo $addresses->AddressID->FldCaption() ?></span></td>
-		<td data-name="AddressID"<?php echo $addresses->AddressID->CellAttributes() ?>>
-<span id="el_addresses_AddressID">
-<span<?php echo $addresses->AddressID->ViewAttributes() ?>>
-<?php echo $addresses->AddressID->ViewValue ?></span>
+<?php if ($addresses->address_id->Visible) { // address_id ?>
+	<tr id="r_address_id">
+		<td class="col-sm-2"><span id="elh_addresses_address_id"><?php echo $addresses->address_id->FldCaption() ?></span></td>
+		<td data-name="address_id"<?php echo $addresses->address_id->CellAttributes() ?>>
+<span id="el_addresses_address_id">
+<span<?php echo $addresses->address_id->ViewAttributes() ?>>
+<?php echo $addresses->address_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($addresses->CustomerID->Visible) { // CustomerID ?>
-	<tr id="r_CustomerID">
-		<td class="col-sm-2"><span id="elh_addresses_CustomerID"><?php echo $addresses->CustomerID->FldCaption() ?></span></td>
-		<td data-name="CustomerID"<?php echo $addresses->CustomerID->CellAttributes() ?>>
-<span id="el_addresses_CustomerID">
-<span<?php echo $addresses->CustomerID->ViewAttributes() ?>>
-<?php echo $addresses->CustomerID->ViewValue ?></span>
+<?php if ($addresses->customer_id->Visible) { // customer_id ?>
+	<tr id="r_customer_id">
+		<td class="col-sm-2"><span id="elh_addresses_customer_id"><?php echo $addresses->customer_id->FldCaption() ?></span></td>
+		<td data-name="customer_id"<?php echo $addresses->customer_id->CellAttributes() ?>>
+<span id="el_addresses_customer_id">
+<span<?php echo $addresses->customer_id->ViewAttributes() ?>>
+<?php echo $addresses->customer_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($addresses->ProvinceID->Visible) { // ProvinceID ?>
-	<tr id="r_ProvinceID">
-		<td class="col-sm-2"><span id="elh_addresses_ProvinceID"><?php echo $addresses->ProvinceID->FldCaption() ?></span></td>
-		<td data-name="ProvinceID"<?php echo $addresses->ProvinceID->CellAttributes() ?>>
-<span id="el_addresses_ProvinceID">
-<span<?php echo $addresses->ProvinceID->ViewAttributes() ?>>
-<?php echo $addresses->ProvinceID->ViewValue ?></span>
+<?php if ($addresses->province_id->Visible) { // province_id ?>
+	<tr id="r_province_id">
+		<td class="col-sm-2"><span id="elh_addresses_province_id"><?php echo $addresses->province_id->FldCaption() ?></span></td>
+		<td data-name="province_id"<?php echo $addresses->province_id->CellAttributes() ?>>
+<span id="el_addresses_province_id">
+<span<?php echo $addresses->province_id->ViewAttributes() ?>>
+<?php echo $addresses->province_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($addresses->Address->Visible) { // Address ?>
-	<tr id="r_Address">
-		<td class="col-sm-2"><span id="elh_addresses_Address"><?php echo $addresses->Address->FldCaption() ?></span></td>
-		<td data-name="Address"<?php echo $addresses->Address->CellAttributes() ?>>
-<span id="el_addresses_Address">
-<span<?php echo $addresses->Address->ViewAttributes() ?>>
-<?php echo $addresses->Address->ViewValue ?></span>
+<?php if ($addresses->address->Visible) { // address ?>
+	<tr id="r_address">
+		<td class="col-sm-2"><span id="elh_addresses_address"><?php echo $addresses->address->FldCaption() ?></span></td>
+		<td data-name="address"<?php echo $addresses->address->CellAttributes() ?>>
+<span id="el_addresses_address">
+<span<?php echo $addresses->address->ViewAttributes() ?>>
+<?php echo $addresses->address->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($addresses->POBox->Visible) { // POBox ?>
-	<tr id="r_POBox">
-		<td class="col-sm-2"><span id="elh_addresses_POBox"><?php echo $addresses->POBox->FldCaption() ?></span></td>
-		<td data-name="POBox"<?php echo $addresses->POBox->CellAttributes() ?>>
-<span id="el_addresses_POBox">
-<span<?php echo $addresses->POBox->ViewAttributes() ?>>
-<?php echo $addresses->POBox->ViewValue ?></span>
+<?php if ($addresses->po_box->Visible) { // po_box ?>
+	<tr id="r_po_box">
+		<td class="col-sm-2"><span id="elh_addresses_po_box"><?php echo $addresses->po_box->FldCaption() ?></span></td>
+		<td data-name="po_box"<?php echo $addresses->po_box->CellAttributes() ?>>
+<span id="el_addresses_po_box">
+<span<?php echo $addresses->po_box->ViewAttributes() ?>>
+<?php echo $addresses->po_box->ViewValue ?></span>
 </span>
 </td>
 	</tr>

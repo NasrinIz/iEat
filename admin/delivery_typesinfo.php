@@ -1,17 +1,14 @@
 <?php
 
 // Global variable for table object
-$addresses = NULL;
+$delivery_types = NULL;
 
 //
-// Table class for addresses
+// Table class for delivery_types
 //
-class caddresses extends cTable {
-	var $address_id;
-	var $customer_id;
-	var $province_id;
-	var $address;
-	var $po_box;
+class cdelivery_types extends cTable {
+	var $delivery_type_id;
+	var $name;
 
 	//
 	// Table class constructor
@@ -21,12 +18,12 @@ class caddresses extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 'addresses';
-		$this->TableName = 'addresses';
+		$this->TableVar = 'delivery_types';
+		$this->TableName = 'delivery_types';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`addresses`";
+		$this->UpdateTable = "`delivery_types`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -45,37 +42,16 @@ class caddresses extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// address_id
-		$this->address_id = new cField('addresses', 'addresses', 'x_address_id', 'address_id', '`address_id`', '`address_id`', 3, -1, FALSE, '`address_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->address_id->Sortable = FALSE; // Allow sort
-		$this->address_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['address_id'] = &$this->address_id;
+		// delivery_type_id
+		$this->delivery_type_id = new cField('delivery_types', 'delivery_types', 'x_delivery_type_id', 'delivery_type_id', '`delivery_type_id`', '`delivery_type_id`', 3, -1, FALSE, '`delivery_type_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->delivery_type_id->Sortable = FALSE; // Allow sort
+		$this->delivery_type_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['delivery_type_id'] = &$this->delivery_type_id;
 
-		// customer_id
-		$this->customer_id = new cField('addresses', 'addresses', 'x_customer_id', 'customer_id', '`customer_id`', '`customer_id`', 3, -1, FALSE, '`customer_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->customer_id->Sortable = TRUE; // Allow sort
-		$this->customer_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->customer_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->customer_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['customer_id'] = &$this->customer_id;
-
-		// province_id
-		$this->province_id = new cField('addresses', 'addresses', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->province_id->Sortable = TRUE; // Allow sort
-		$this->province_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->province_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['province_id'] = &$this->province_id;
-
-		// address
-		$this->address = new cField('addresses', 'addresses', 'x_address', 'address', '`address`', '`address`', 201, -1, FALSE, '`address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->address->Sortable = TRUE; // Allow sort
-		$this->fields['address'] = &$this->address;
-
-		// po_box
-		$this->po_box = new cField('addresses', 'addresses', 'x_po_box', 'po_box', '`po_box`', '`po_box`', 200, -1, FALSE, '`po_box`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->po_box->Sortable = TRUE; // Allow sort
-		$this->fields['po_box'] = &$this->po_box;
+		// name
+		$this->name = new cField('delivery_types', 'delivery_types', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->name->Sortable = TRUE; // Allow sort
+		$this->fields['name'] = &$this->name;
 	}
 
 	// Field Visibility
@@ -115,58 +91,11 @@ class caddresses extends cTable {
 		}
 	}
 
-	// Current master table name
-	function getCurrentMasterTable() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
-	}
-
-	function setCurrentMasterTable($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
-	}
-
-	// Session master WHERE clause
-	function GetMasterFilter() {
-
-		// Master filter
-		$sMasterFilter = "";
-		if ($this->getCurrentMasterTable() == "customers") {
-			if ($this->customer_id->getSessionValue() <> "")
-				$sMasterFilter .= "`customer_id`=" . ew_QuotedValue($this->customer_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sMasterFilter;
-	}
-
-	// Session detail WHERE clause
-	function GetDetailFilter() {
-
-		// Detail filter
-		$sDetailFilter = "";
-		if ($this->getCurrentMasterTable() == "customers") {
-			if ($this->customer_id->getSessionValue() <> "")
-				$sDetailFilter .= "`customer_id`=" . ew_QuotedValue($this->customer_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sDetailFilter;
-	}
-
-	// Master filter
-	function SqlMasterFilter_customers() {
-		return "`customer_id`=@customer_id@";
-	}
-
-	// Detail filter
-	function SqlDetailFilter_customers() {
-		return "`customer_id`=@customer_id@";
-	}
-
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`addresses`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`delivery_types`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -394,8 +323,8 @@ class caddresses extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->address_id->setDbValue($conn->Insert_ID());
-			$rs['address_id'] = $this->address_id->DbValue;
+			$this->delivery_type_id->setDbValue($conn->Insert_ID());
+			$rs['delivery_type_id'] = $this->delivery_type_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -431,8 +360,8 @@ class caddresses extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('address_id', $rs))
-				ew_AddFilter($where, ew_QuotedName('address_id', $this->DBID) . '=' . ew_QuotedValue($rs['address_id'], $this->address_id->FldDataType, $this->DBID));
+			if (array_key_exists('delivery_type_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('delivery_type_id', $this->DBID) . '=' . ew_QuotedValue($rs['delivery_type_id'], $this->delivery_type_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -454,18 +383,18 @@ class caddresses extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`address_id` = @address_id@";
+		return "`delivery_type_id` = @delivery_type_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->address_id->CurrentValue))
+		if (!is_numeric($this->delivery_type_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->address_id->CurrentValue))
+		if (is_null($this->delivery_type_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@address_id@", ew_AdjustSql($this->address_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@delivery_type_id@", ew_AdjustSql($this->delivery_type_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -479,7 +408,7 @@ class caddresses extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "addresseslist.php";
+			return "delivery_typeslist.php";
 		}
 	}
 
@@ -490,11 +419,11 @@ class caddresses extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "addressesview.php")
+		if ($pageName == "delivery_typesview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "addressesedit.php")
+		elseif ($pageName == "delivery_typesedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "addressesadd.php")
+		elseif ($pageName == "delivery_typesadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -502,30 +431,30 @@ class caddresses extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "addresseslist.php";
+		return "delivery_typeslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("addressesview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("delivery_typesview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("addressesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("delivery_typesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "addressesadd.php?" . $this->UrlParm($parm);
+			$url = "delivery_typesadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "addressesadd.php";
+			$url = "delivery_typesadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("addressesedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("delivery_typesedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -537,7 +466,7 @@ class caddresses extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("addressesadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("delivery_typesadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -549,21 +478,17 @@ class caddresses extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("addressesdelete.php", $this->UrlParm());
+		return $this->KeyUrl("delivery_typesdelete.php", $this->UrlParm());
 	}
 
 	// Add master url
 	function AddMasterUrl($url) {
-		if ($this->getCurrentMasterTable() == "customers" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
-			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
-			$url .= "&fk_customer_id=" . urlencode($this->customer_id->CurrentValue);
-		}
 		return $url;
 	}
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "address_id:" . ew_VarToJson($this->address_id->CurrentValue, "number", "'");
+		$json .= "delivery_type_id:" . ew_VarToJson($this->delivery_type_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -571,8 +496,8 @@ class caddresses extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->address_id->CurrentValue)) {
-			$sUrl .= "address_id=" . urlencode($this->address_id->CurrentValue);
+		if (!is_null($this->delivery_type_id->CurrentValue)) {
+			$sUrl .= "delivery_type_id=" . urlencode($this->delivery_type_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -605,10 +530,10 @@ class caddresses extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["address_id"]))
-				$arKeys[] = $_POST["address_id"];
-			elseif (isset($_GET["address_id"]))
-				$arKeys[] = $_GET["address_id"];
+			if ($isPost && isset($_POST["delivery_type_id"]))
+				$arKeys[] = $_POST["delivery_type_id"];
+			elseif (isset($_GET["delivery_type_id"]))
+				$arKeys[] = $_GET["delivery_type_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -633,7 +558,7 @@ class caddresses extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->address_id->CurrentValue = $key;
+			$this->delivery_type_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -654,11 +579,8 @@ class caddresses extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->address_id->setDbValue($rs->fields('address_id'));
-		$this->customer_id->setDbValue($rs->fields('customer_id'));
-		$this->province_id->setDbValue($rs->fields('province_id'));
-		$this->address->setDbValue($rs->fields('address'));
-		$this->po_box->setDbValue($rs->fields('po_box'));
+		$this->delivery_type_id->setDbValue($rs->fields('delivery_type_id'));
+		$this->name->setDbValue($rs->fields('name'));
 	}
 
 	// Render list row values
@@ -669,99 +591,26 @@ class caddresses extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// address_id
+		// delivery_type_id
+		// name
+		// delivery_type_id
 
-		$this->address_id->CellCssStyle = "white-space: nowrap;";
+		$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// customer_id
-		// province_id
-		// address
-		// po_box
-		// address_id
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		$this->address_id->ViewValue = $this->address_id->CurrentValue;
-		$this->address_id->ViewCustomAttributes = "";
+		// delivery_type_id
+		$this->delivery_type_id->LinkCustomAttributes = "";
+		$this->delivery_type_id->HrefValue = "";
+		$this->delivery_type_id->TooltipValue = "";
 
-		// customer_id
-		if (strval($this->customer_id->CurrentValue) <> "") {
-			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
-		$sWhereWrk = "";
-		$this->customer_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `full_name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
-			}
-		} else {
-			$this->customer_id->ViewValue = NULL;
-		}
-		$this->customer_id->ViewCustomAttributes = "";
-
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
-			}
-		} else {
-			$this->province_id->ViewValue = NULL;
-		}
-		$this->province_id->ViewCustomAttributes = "";
-
-		// address
-		$this->address->ViewValue = $this->address->CurrentValue;
-		$this->address->ViewCustomAttributes = "";
-
-		// po_box
-		$this->po_box->ViewValue = $this->po_box->CurrentValue;
-		$this->po_box->ViewCustomAttributes = "";
-
-		// address_id
-		$this->address_id->LinkCustomAttributes = "";
-		$this->address_id->HrefValue = "";
-		$this->address_id->TooltipValue = "";
-
-		// customer_id
-		$this->customer_id->LinkCustomAttributes = "";
-		$this->customer_id->HrefValue = "";
-		$this->customer_id->TooltipValue = "";
-
-		// province_id
-		$this->province_id->LinkCustomAttributes = "";
-		$this->province_id->HrefValue = "";
-		$this->province_id->TooltipValue = "";
-
-		// address
-		$this->address->LinkCustomAttributes = "";
-		$this->address->HrefValue = "";
-		$this->address->TooltipValue = "";
-
-		// po_box
-		$this->po_box->LinkCustomAttributes = "";
-		$this->po_box->HrefValue = "";
-		$this->po_box->TooltipValue = "";
+		// name
+		$this->name->LinkCustomAttributes = "";
+		$this->name->HrefValue = "";
+		$this->name->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -777,57 +626,17 @@ class caddresses extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// address_id
-		$this->address_id->EditAttrs["class"] = "form-control";
-		$this->address_id->EditCustomAttributes = "";
-		$this->address_id->EditValue = $this->address_id->CurrentValue;
-		$this->address_id->ViewCustomAttributes = "";
+		// delivery_type_id
+		$this->delivery_type_id->EditAttrs["class"] = "form-control";
+		$this->delivery_type_id->EditCustomAttributes = "";
+		$this->delivery_type_id->EditValue = $this->delivery_type_id->CurrentValue;
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// customer_id
-		$this->customer_id->EditAttrs["class"] = "form-control";
-		$this->customer_id->EditCustomAttributes = "";
-		if ($this->customer_id->getSessionValue() <> "") {
-			$this->customer_id->CurrentValue = $this->customer_id->getSessionValue();
-		if (strval($this->customer_id->CurrentValue) <> "") {
-			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
-		$sWhereWrk = "";
-		$this->customer_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `full_name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
-			}
-		} else {
-			$this->customer_id->ViewValue = NULL;
-		}
-		$this->customer_id->ViewCustomAttributes = "";
-		} else {
-		}
-
-		// province_id
-		$this->province_id->EditAttrs["class"] = "form-control";
-		$this->province_id->EditCustomAttributes = "";
-
-		// address
-		$this->address->EditAttrs["class"] = "form-control";
-		$this->address->EditCustomAttributes = "";
-		$this->address->EditValue = $this->address->CurrentValue;
-		$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
-
-		// po_box
-		$this->po_box->EditAttrs["class"] = "form-control";
-		$this->po_box->EditCustomAttributes = "";
-		$this->po_box->EditValue = $this->po_box->CurrentValue;
-		$this->po_box->PlaceHolder = ew_RemoveHtml($this->po_box->FldCaption());
+		// name
+		$this->name->EditAttrs["class"] = "form-control";
+		$this->name->EditCustomAttributes = "";
+		$this->name->EditValue = $this->name->CurrentValue;
+		$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -856,15 +665,10 @@ class caddresses extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->address_id->Exportable) $Doc->ExportCaption($this->address_id);
-					if ($this->customer_id->Exportable) $Doc->ExportCaption($this->customer_id);
-					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
-					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
-					if ($this->po_box->Exportable) $Doc->ExportCaption($this->po_box);
+					if ($this->delivery_type_id->Exportable) $Doc->ExportCaption($this->delivery_type_id);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
 				} else {
-					if ($this->customer_id->Exportable) $Doc->ExportCaption($this->customer_id);
-					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
-					if ($this->po_box->Exportable) $Doc->ExportCaption($this->po_box);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
 				}
 				$Doc->EndExportRow();
 			}
@@ -896,15 +700,10 @@ class caddresses extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->address_id->Exportable) $Doc->ExportField($this->address_id);
-						if ($this->customer_id->Exportable) $Doc->ExportField($this->customer_id);
-						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
-						if ($this->address->Exportable) $Doc->ExportField($this->address);
-						if ($this->po_box->Exportable) $Doc->ExportField($this->po_box);
+						if ($this->delivery_type_id->Exportable) $Doc->ExportField($this->delivery_type_id);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
 					} else {
-						if ($this->customer_id->Exportable) $Doc->ExportField($this->customer_id);
-						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
-						if ($this->po_box->Exportable) $Doc->ExportField($this->po_box);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

@@ -321,13 +321,13 @@ class ccustomers_add extends ccustomers {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->FullName->SetVisibility();
-		$this->Phone->SetVisibility();
-		$this->Mobile->SetVisibility();
-		$this->Reward->SetVisibility();
-		$this->UserName->SetVisibility();
-		$this->UserPass->SetVisibility();
-		$this->ActivityStatus->SetVisibility();
+		$this->full_name->SetVisibility();
+		$this->phone->SetVisibility();
+		$this->mobile->SetVisibility();
+		$this->reward->SetVisibility();
+		$this->user_name->SetVisibility();
+		$this->user_pass->SetVisibility();
+		$this->activity_status->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -466,11 +466,11 @@ class ccustomers_add extends ccustomers {
 
 			// Load key values from QueryString
 			$this->CopyRecord = TRUE;
-			if (@$_GET["CustomerID"] != "") {
-				$this->CustomerID->setQueryStringValue($_GET["CustomerID"]);
-				$this->setKey("CustomerID", $this->CustomerID->CurrentValue); // Set up key
+			if (@$_GET["customer_id"] != "") {
+				$this->customer_id->setQueryStringValue($_GET["customer_id"]);
+				$this->setKey("customer_id", $this->customer_id->CurrentValue); // Set up key
 			} else {
-				$this->setKey("CustomerID", ""); // Clear key
+				$this->setKey("customer_id", ""); // Clear key
 				$this->CopyRecord = FALSE;
 			}
 			if ($this->CopyRecord) {
@@ -557,21 +557,21 @@ class ccustomers_add extends ccustomers {
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->CustomerID->CurrentValue = NULL;
-		$this->CustomerID->OldValue = $this->CustomerID->CurrentValue;
-		$this->FullName->CurrentValue = NULL;
-		$this->FullName->OldValue = $this->FullName->CurrentValue;
-		$this->Phone->CurrentValue = NULL;
-		$this->Phone->OldValue = $this->Phone->CurrentValue;
-		$this->Mobile->CurrentValue = NULL;
-		$this->Mobile->OldValue = $this->Mobile->CurrentValue;
-		$this->Reward->CurrentValue = NULL;
-		$this->Reward->OldValue = $this->Reward->CurrentValue;
-		$this->UserName->CurrentValue = NULL;
-		$this->UserName->OldValue = $this->UserName->CurrentValue;
-		$this->UserPass->CurrentValue = NULL;
-		$this->UserPass->OldValue = $this->UserPass->CurrentValue;
-		$this->ActivityStatus->CurrentValue = 1;
+		$this->customer_id->CurrentValue = NULL;
+		$this->customer_id->OldValue = $this->customer_id->CurrentValue;
+		$this->full_name->CurrentValue = NULL;
+		$this->full_name->OldValue = $this->full_name->CurrentValue;
+		$this->phone->CurrentValue = NULL;
+		$this->phone->OldValue = $this->phone->CurrentValue;
+		$this->mobile->CurrentValue = NULL;
+		$this->mobile->OldValue = $this->mobile->CurrentValue;
+		$this->reward->CurrentValue = NULL;
+		$this->reward->OldValue = $this->reward->CurrentValue;
+		$this->user_name->CurrentValue = NULL;
+		$this->user_name->OldValue = $this->user_name->CurrentValue;
+		$this->user_pass->CurrentValue = NULL;
+		$this->user_pass->OldValue = $this->user_pass->CurrentValue;
+		$this->activity_status->CurrentValue = 1;
 	}
 
 	// Load form values
@@ -579,39 +579,39 @@ class ccustomers_add extends ccustomers {
 
 		// Load from form
 		global $objForm;
-		if (!$this->FullName->FldIsDetailKey) {
-			$this->FullName->setFormValue($objForm->GetValue("x_FullName"));
+		if (!$this->full_name->FldIsDetailKey) {
+			$this->full_name->setFormValue($objForm->GetValue("x_full_name"));
 		}
-		if (!$this->Phone->FldIsDetailKey) {
-			$this->Phone->setFormValue($objForm->GetValue("x_Phone"));
+		if (!$this->phone->FldIsDetailKey) {
+			$this->phone->setFormValue($objForm->GetValue("x_phone"));
 		}
-		if (!$this->Mobile->FldIsDetailKey) {
-			$this->Mobile->setFormValue($objForm->GetValue("x_Mobile"));
+		if (!$this->mobile->FldIsDetailKey) {
+			$this->mobile->setFormValue($objForm->GetValue("x_mobile"));
 		}
-		if (!$this->Reward->FldIsDetailKey) {
-			$this->Reward->setFormValue($objForm->GetValue("x_Reward"));
+		if (!$this->reward->FldIsDetailKey) {
+			$this->reward->setFormValue($objForm->GetValue("x_reward"));
 		}
-		if (!$this->UserName->FldIsDetailKey) {
-			$this->UserName->setFormValue($objForm->GetValue("x_UserName"));
+		if (!$this->user_name->FldIsDetailKey) {
+			$this->user_name->setFormValue($objForm->GetValue("x_user_name"));
 		}
-		if (!$this->UserPass->FldIsDetailKey) {
-			$this->UserPass->setFormValue($objForm->GetValue("x_UserPass"));
+		if (!$this->user_pass->FldIsDetailKey) {
+			$this->user_pass->setFormValue($objForm->GetValue("x_user_pass"));
 		}
-		if (!$this->ActivityStatus->FldIsDetailKey) {
-			$this->ActivityStatus->setFormValue($objForm->GetValue("x_ActivityStatus"));
+		if (!$this->activity_status->FldIsDetailKey) {
+			$this->activity_status->setFormValue($objForm->GetValue("x_activity_status"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->FullName->CurrentValue = $this->FullName->FormValue;
-		$this->Phone->CurrentValue = $this->Phone->FormValue;
-		$this->Mobile->CurrentValue = $this->Mobile->FormValue;
-		$this->Reward->CurrentValue = $this->Reward->FormValue;
-		$this->UserName->CurrentValue = $this->UserName->FormValue;
-		$this->UserPass->CurrentValue = $this->UserPass->FormValue;
-		$this->ActivityStatus->CurrentValue = $this->ActivityStatus->FormValue;
+		$this->full_name->CurrentValue = $this->full_name->FormValue;
+		$this->phone->CurrentValue = $this->phone->FormValue;
+		$this->mobile->CurrentValue = $this->mobile->FormValue;
+		$this->reward->CurrentValue = $this->reward->FormValue;
+		$this->user_name->CurrentValue = $this->user_name->FormValue;
+		$this->user_pass->CurrentValue = $this->user_pass->FormValue;
+		$this->activity_status->CurrentValue = $this->activity_status->FormValue;
 	}
 
 	// Load row based on key values
@@ -647,28 +647,28 @@ class ccustomers_add extends ccustomers {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->CustomerID->setDbValue($row['CustomerID']);
-		$this->FullName->setDbValue($row['FullName']);
-		$this->Phone->setDbValue($row['Phone']);
-		$this->Mobile->setDbValue($row['Mobile']);
-		$this->Reward->setDbValue($row['Reward']);
-		$this->UserName->setDbValue($row['UserName']);
-		$this->UserPass->setDbValue($row['UserPass']);
-		$this->ActivityStatus->setDbValue($row['ActivityStatus']);
+		$this->customer_id->setDbValue($row['customer_id']);
+		$this->full_name->setDbValue($row['full_name']);
+		$this->phone->setDbValue($row['phone']);
+		$this->mobile->setDbValue($row['mobile']);
+		$this->reward->setDbValue($row['reward']);
+		$this->user_name->setDbValue($row['user_name']);
+		$this->user_pass->setDbValue($row['user_pass']);
+		$this->activity_status->setDbValue($row['activity_status']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$this->LoadDefaultValues();
 		$row = array();
-		$row['CustomerID'] = $this->CustomerID->CurrentValue;
-		$row['FullName'] = $this->FullName->CurrentValue;
-		$row['Phone'] = $this->Phone->CurrentValue;
-		$row['Mobile'] = $this->Mobile->CurrentValue;
-		$row['Reward'] = $this->Reward->CurrentValue;
-		$row['UserName'] = $this->UserName->CurrentValue;
-		$row['UserPass'] = $this->UserPass->CurrentValue;
-		$row['ActivityStatus'] = $this->ActivityStatus->CurrentValue;
+		$row['customer_id'] = $this->customer_id->CurrentValue;
+		$row['full_name'] = $this->full_name->CurrentValue;
+		$row['phone'] = $this->phone->CurrentValue;
+		$row['mobile'] = $this->mobile->CurrentValue;
+		$row['reward'] = $this->reward->CurrentValue;
+		$row['user_name'] = $this->user_name->CurrentValue;
+		$row['user_pass'] = $this->user_pass->CurrentValue;
+		$row['activity_status'] = $this->activity_status->CurrentValue;
 		return $row;
 	}
 
@@ -677,14 +677,14 @@ class ccustomers_add extends ccustomers {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->CustomerID->DbValue = $row['CustomerID'];
-		$this->FullName->DbValue = $row['FullName'];
-		$this->Phone->DbValue = $row['Phone'];
-		$this->Mobile->DbValue = $row['Mobile'];
-		$this->Reward->DbValue = $row['Reward'];
-		$this->UserName->DbValue = $row['UserName'];
-		$this->UserPass->DbValue = $row['UserPass'];
-		$this->ActivityStatus->DbValue = $row['ActivityStatus'];
+		$this->customer_id->DbValue = $row['customer_id'];
+		$this->full_name->DbValue = $row['full_name'];
+		$this->phone->DbValue = $row['phone'];
+		$this->mobile->DbValue = $row['mobile'];
+		$this->reward->DbValue = $row['reward'];
+		$this->user_name->DbValue = $row['user_name'];
+		$this->user_pass->DbValue = $row['user_pass'];
+		$this->activity_status->DbValue = $row['activity_status'];
 	}
 
 	// Load old record
@@ -692,8 +692,8 @@ class ccustomers_add extends ccustomers {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("CustomerID")) <> "")
-			$this->CustomerID->CurrentValue = $this->getKey("CustomerID"); // CustomerID
+		if (strval($this->getKey("customer_id")) <> "")
+			$this->customer_id->CurrentValue = $this->getKey("customer_id"); // customer_id
 		else
 			$bValidKey = FALSE;
 
@@ -719,154 +719,154 @@ class ccustomers_add extends ccustomers {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// CustomerID
-		// FullName
-		// Phone
-		// Mobile
-		// Reward
-		// UserName
-		// UserPass
-		// ActivityStatus
+		// customer_id
+		// full_name
+		// phone
+		// mobile
+		// reward
+		// user_name
+		// user_pass
+		// activity_status
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Mobile
-		$this->Mobile->ViewValue = $this->Mobile->CurrentValue;
-		$this->Mobile->ViewCustomAttributes = "";
+		// mobile
+		$this->mobile->ViewValue = $this->mobile->CurrentValue;
+		$this->mobile->ViewCustomAttributes = "";
 
-		// Reward
-		$this->Reward->ViewValue = $this->Reward->CurrentValue;
-		$this->Reward->ViewCustomAttributes = "";
+		// reward
+		$this->reward->ViewValue = $this->reward->CurrentValue;
+		$this->reward->ViewCustomAttributes = "";
 
-		// UserName
-		$this->UserName->ViewValue = $this->UserName->CurrentValue;
-		$this->UserName->ViewCustomAttributes = "";
+		// user_name
+		$this->user_name->ViewValue = $this->user_name->CurrentValue;
+		$this->user_name->ViewCustomAttributes = "";
 
-		// UserPass
-		$this->UserPass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->UserPass->ViewCustomAttributes = "";
+		// user_pass
+		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
+		$this->user_pass->ViewCustomAttributes = "";
 
-		// ActivityStatus
-		if (strval($this->ActivityStatus->CurrentValue) <> "") {
-			$this->ActivityStatus->ViewValue = $this->ActivityStatus->OptionCaption($this->ActivityStatus->CurrentValue);
+		// activity_status
+		if (strval($this->activity_status->CurrentValue) <> "") {
+			$this->activity_status->ViewValue = $this->activity_status->OptionCaption($this->activity_status->CurrentValue);
 		} else {
-			$this->ActivityStatus->ViewValue = NULL;
+			$this->activity_status->ViewValue = NULL;
 		}
-		$this->ActivityStatus->ViewCustomAttributes = "";
+		$this->activity_status->ViewCustomAttributes = "";
 
-			// FullName
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
-			$this->FullName->TooltipValue = "";
+			// full_name
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
+			$this->full_name->TooltipValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
-			$this->Phone->TooltipValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
+			$this->phone->TooltipValue = "";
 
-			// Mobile
-			$this->Mobile->LinkCustomAttributes = "";
-			$this->Mobile->HrefValue = "";
-			$this->Mobile->TooltipValue = "";
+			// mobile
+			$this->mobile->LinkCustomAttributes = "";
+			$this->mobile->HrefValue = "";
+			$this->mobile->TooltipValue = "";
 
-			// Reward
-			$this->Reward->LinkCustomAttributes = "";
-			$this->Reward->HrefValue = "";
-			$this->Reward->TooltipValue = "";
+			// reward
+			$this->reward->LinkCustomAttributes = "";
+			$this->reward->HrefValue = "";
+			$this->reward->TooltipValue = "";
 
-			// UserName
-			$this->UserName->LinkCustomAttributes = "";
-			$this->UserName->HrefValue = "";
-			$this->UserName->TooltipValue = "";
+			// user_name
+			$this->user_name->LinkCustomAttributes = "";
+			$this->user_name->HrefValue = "";
+			$this->user_name->TooltipValue = "";
 
-			// UserPass
-			$this->UserPass->LinkCustomAttributes = "";
-			$this->UserPass->HrefValue = "";
-			$this->UserPass->TooltipValue = "";
+			// user_pass
+			$this->user_pass->LinkCustomAttributes = "";
+			$this->user_pass->HrefValue = "";
+			$this->user_pass->TooltipValue = "";
 
-			// ActivityStatus
-			$this->ActivityStatus->LinkCustomAttributes = "";
-			$this->ActivityStatus->HrefValue = "";
-			$this->ActivityStatus->TooltipValue = "";
+			// activity_status
+			$this->activity_status->LinkCustomAttributes = "";
+			$this->activity_status->HrefValue = "";
+			$this->activity_status->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// FullName
-			$this->FullName->EditAttrs["class"] = "form-control";
-			$this->FullName->EditCustomAttributes = "";
-			$this->FullName->EditValue = ew_HtmlEncode($this->FullName->CurrentValue);
-			$this->FullName->PlaceHolder = ew_RemoveHtml($this->FullName->FldCaption());
+			// full_name
+			$this->full_name->EditAttrs["class"] = "form-control";
+			$this->full_name->EditCustomAttributes = "";
+			$this->full_name->EditValue = ew_HtmlEncode($this->full_name->CurrentValue);
+			$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
 
-			// Phone
-			$this->Phone->EditAttrs["class"] = "form-control";
-			$this->Phone->EditCustomAttributes = "";
-			$this->Phone->EditValue = ew_HtmlEncode($this->Phone->CurrentValue);
-			$this->Phone->PlaceHolder = ew_RemoveHtml($this->Phone->FldCaption());
+			// phone
+			$this->phone->EditAttrs["class"] = "form-control";
+			$this->phone->EditCustomAttributes = "";
+			$this->phone->EditValue = ew_HtmlEncode($this->phone->CurrentValue);
+			$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
 
-			// Mobile
-			$this->Mobile->EditAttrs["class"] = "form-control";
-			$this->Mobile->EditCustomAttributes = "";
-			$this->Mobile->EditValue = ew_HtmlEncode($this->Mobile->CurrentValue);
-			$this->Mobile->PlaceHolder = ew_RemoveHtml($this->Mobile->FldCaption());
+			// mobile
+			$this->mobile->EditAttrs["class"] = "form-control";
+			$this->mobile->EditCustomAttributes = "";
+			$this->mobile->EditValue = ew_HtmlEncode($this->mobile->CurrentValue);
+			$this->mobile->PlaceHolder = ew_RemoveHtml($this->mobile->FldCaption());
 
-			// Reward
-			$this->Reward->EditAttrs["class"] = "form-control";
-			$this->Reward->EditCustomAttributes = "";
-			$this->Reward->EditValue = ew_HtmlEncode($this->Reward->CurrentValue);
-			$this->Reward->PlaceHolder = ew_RemoveHtml($this->Reward->FldCaption());
+			// reward
+			$this->reward->EditAttrs["class"] = "form-control";
+			$this->reward->EditCustomAttributes = "";
+			$this->reward->EditValue = ew_HtmlEncode($this->reward->CurrentValue);
+			$this->reward->PlaceHolder = ew_RemoveHtml($this->reward->FldCaption());
 
-			// UserName
-			$this->UserName->EditAttrs["class"] = "form-control";
-			$this->UserName->EditCustomAttributes = "";
-			$this->UserName->EditValue = ew_HtmlEncode($this->UserName->CurrentValue);
-			$this->UserName->PlaceHolder = ew_RemoveHtml($this->UserName->FldCaption());
+			// user_name
+			$this->user_name->EditAttrs["class"] = "form-control";
+			$this->user_name->EditCustomAttributes = "";
+			$this->user_name->EditValue = ew_HtmlEncode($this->user_name->CurrentValue);
+			$this->user_name->PlaceHolder = ew_RemoveHtml($this->user_name->FldCaption());
 
-			// UserPass
-			$this->UserPass->EditAttrs["class"] = "form-control";
-			$this->UserPass->EditCustomAttributes = "";
-			$this->UserPass->EditValue = ew_HtmlEncode($this->UserPass->CurrentValue);
-			$this->UserPass->PlaceHolder = ew_RemoveHtml($this->UserPass->FldCaption());
+			// user_pass
+			$this->user_pass->EditAttrs["class"] = "form-control";
+			$this->user_pass->EditCustomAttributes = "";
+			$this->user_pass->EditValue = ew_HtmlEncode($this->user_pass->CurrentValue);
+			$this->user_pass->PlaceHolder = ew_RemoveHtml($this->user_pass->FldCaption());
 
-			// ActivityStatus
-			$this->ActivityStatus->EditCustomAttributes = "";
-			$this->ActivityStatus->EditValue = $this->ActivityStatus->Options(FALSE);
+			// activity_status
+			$this->activity_status->EditCustomAttributes = "";
+			$this->activity_status->EditValue = $this->activity_status->Options(FALSE);
 
 			// Add refer script
-			// FullName
+			// full_name
 
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
 
-			// Mobile
-			$this->Mobile->LinkCustomAttributes = "";
-			$this->Mobile->HrefValue = "";
+			// mobile
+			$this->mobile->LinkCustomAttributes = "";
+			$this->mobile->HrefValue = "";
 
-			// Reward
-			$this->Reward->LinkCustomAttributes = "";
-			$this->Reward->HrefValue = "";
+			// reward
+			$this->reward->LinkCustomAttributes = "";
+			$this->reward->HrefValue = "";
 
-			// UserName
-			$this->UserName->LinkCustomAttributes = "";
-			$this->UserName->HrefValue = "";
+			// user_name
+			$this->user_name->LinkCustomAttributes = "";
+			$this->user_name->HrefValue = "";
 
-			// UserPass
-			$this->UserPass->LinkCustomAttributes = "";
-			$this->UserPass->HrefValue = "";
+			// user_pass
+			$this->user_pass->LinkCustomAttributes = "";
+			$this->user_pass->HrefValue = "";
 
-			// ActivityStatus
-			$this->ActivityStatus->LinkCustomAttributes = "";
-			$this->ActivityStatus->HrefValue = "";
+			// activity_status
+			$this->activity_status->LinkCustomAttributes = "";
+			$this->activity_status->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -886,8 +886,8 @@ class ccustomers_add extends ccustomers {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ew_CheckInteger($this->Reward->FormValue)) {
-			ew_AddMessage($gsFormError, $this->Reward->FldErrMsg());
+		if (!ew_CheckInteger($this->reward->FormValue)) {
+			ew_AddMessage($gsFormError, $this->reward->FldErrMsg());
 		}
 
 		// Validate detail grid
@@ -924,26 +924,26 @@ class ccustomers_add extends ccustomers {
 		}
 		$rsnew = array();
 
-		// FullName
-		$this->FullName->SetDbValueDef($rsnew, $this->FullName->CurrentValue, NULL, FALSE);
+		// full_name
+		$this->full_name->SetDbValueDef($rsnew, $this->full_name->CurrentValue, NULL, FALSE);
 
-		// Phone
-		$this->Phone->SetDbValueDef($rsnew, $this->Phone->CurrentValue, NULL, FALSE);
+		// phone
+		$this->phone->SetDbValueDef($rsnew, $this->phone->CurrentValue, NULL, FALSE);
 
-		// Mobile
-		$this->Mobile->SetDbValueDef($rsnew, $this->Mobile->CurrentValue, NULL, FALSE);
+		// mobile
+		$this->mobile->SetDbValueDef($rsnew, $this->mobile->CurrentValue, NULL, FALSE);
 
-		// Reward
-		$this->Reward->SetDbValueDef($rsnew, $this->Reward->CurrentValue, NULL, FALSE);
+		// reward
+		$this->reward->SetDbValueDef($rsnew, $this->reward->CurrentValue, NULL, FALSE);
 
-		// UserName
-		$this->UserName->SetDbValueDef($rsnew, $this->UserName->CurrentValue, NULL, FALSE);
+		// user_name
+		$this->user_name->SetDbValueDef($rsnew, $this->user_name->CurrentValue, NULL, FALSE);
 
-		// UserPass
-		$this->UserPass->SetDbValueDef($rsnew, $this->UserPass->CurrentValue, NULL, FALSE);
+		// user_pass
+		$this->user_pass->SetDbValueDef($rsnew, $this->user_pass->CurrentValue, NULL, FALSE);
 
-		// ActivityStatus
-		$this->ActivityStatus->SetDbValueDef($rsnew, $this->ActivityStatus->CurrentValue, NULL, strval($this->ActivityStatus->CurrentValue) == "");
+		// activity_status
+		$this->activity_status->SetDbValueDef($rsnew, $this->activity_status->CurrentValue, NULL, strval($this->activity_status->CurrentValue) == "");
 
 		// Call Row Inserting event
 		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
@@ -971,13 +971,13 @@ class ccustomers_add extends ccustomers {
 		if ($AddRow) {
 			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
 			if (in_array("addresses", $DetailTblVar) && $GLOBALS["addresses"]->DetailAdd) {
-				$GLOBALS["addresses"]->CustomerID->setSessionValue($this->CustomerID->CurrentValue); // Set master key
+				$GLOBALS["addresses"]->customer_id->setSessionValue($this->customer_id->CurrentValue); // Set master key
 				if (!isset($GLOBALS["addresses_grid"])) $GLOBALS["addresses_grid"] = new caddresses_grid(); // Get detail page object
 				$Security->LoadCurrentUserLevel($this->ProjectID . "addresses"); // Load user level of detail table
 				$AddRow = $GLOBALS["addresses_grid"]->GridInsert();
 				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
 				if (!$AddRow)
-					$GLOBALS["addresses"]->CustomerID->setSessionValue(""); // Clear master key if insert failed
+					$GLOBALS["addresses"]->customer_id->setSessionValue(""); // Clear master key if insert failed
 			}
 		}
 
@@ -1023,9 +1023,9 @@ class ccustomers_add extends ccustomers {
 					// Save current master table to detail table
 					$GLOBALS["addresses_grid"]->setCurrentMasterTable($this->TableVar);
 					$GLOBALS["addresses_grid"]->setStartRecordNumber(1);
-					$GLOBALS["addresses_grid"]->CustomerID->FldIsDetailKey = TRUE;
-					$GLOBALS["addresses_grid"]->CustomerID->CurrentValue = $this->CustomerID->CurrentValue;
-					$GLOBALS["addresses_grid"]->CustomerID->setSessionValue($GLOBALS["addresses_grid"]->CustomerID->CurrentValue);
+					$GLOBALS["addresses_grid"]->customer_id->FldIsDetailKey = TRUE;
+					$GLOBALS["addresses_grid"]->customer_id->CurrentValue = $this->customer_id->CurrentValue;
+					$GLOBALS["addresses_grid"]->customer_id->setSessionValue($GLOBALS["addresses_grid"]->customer_id->CurrentValue);
 				}
 			}
 		}
@@ -1165,9 +1165,9 @@ fcustomersadd.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_Reward");
+			elm = this.GetElements("x" + infix + "_reward");
 			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($customers->Reward->FldErrMsg()) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($customers->reward->FldErrMsg()) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1197,8 +1197,8 @@ fcustomersadd.Form_CustomValidate =
 fcustomersadd.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fcustomersadd.Lists["x_ActivityStatus"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-fcustomersadd.Lists["x_ActivityStatus"].Options = <?php echo json_encode($customers_add->ActivityStatus->Options()) ?>;
+fcustomersadd.Lists["x_activity_status"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+fcustomersadd.Lists["x_activity_status"].Options = <?php echo json_encode($customers_add->activity_status->Options()) ?>;
 
 // Form object for search
 </script>
@@ -1218,77 +1218,77 @@ $customers_add->ShowMessage();
 <input type="hidden" name="a_add" id="a_add" value="A">
 <input type="hidden" name="modal" value="<?php echo intval($customers_add->IsModal) ?>">
 <div class="ewAddDiv"><!-- page* -->
-<?php if ($customers->FullName->Visible) { // FullName ?>
-	<div id="r_FullName" class="form-group">
-		<label id="elh_customers_FullName" for="x_FullName" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->FullName->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->FullName->CellAttributes() ?>>
-<span id="el_customers_FullName">
-<input type="text" data-table="customers" data-field="x_FullName" name="x_FullName" id="x_FullName" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->FullName->getPlaceHolder()) ?>" value="<?php echo $customers->FullName->EditValue ?>"<?php echo $customers->FullName->EditAttributes() ?>>
+<?php if ($customers->full_name->Visible) { // full_name ?>
+	<div id="r_full_name" class="form-group">
+		<label id="elh_customers_full_name" for="x_full_name" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->full_name->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->full_name->CellAttributes() ?>>
+<span id="el_customers_full_name">
+<input type="text" data-table="customers" data-field="x_full_name" name="x_full_name" id="x_full_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->full_name->getPlaceHolder()) ?>" value="<?php echo $customers->full_name->EditValue ?>"<?php echo $customers->full_name->EditAttributes() ?>>
 </span>
-<?php echo $customers->FullName->CustomMsg ?></div></div>
+<?php echo $customers->full_name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->Phone->Visible) { // Phone ?>
-	<div id="r_Phone" class="form-group">
-		<label id="elh_customers_Phone" for="x_Phone" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->Phone->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->Phone->CellAttributes() ?>>
-<span id="el_customers_Phone">
-<input type="text" data-table="customers" data-field="x_Phone" name="x_Phone" id="x_Phone" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->Phone->getPlaceHolder()) ?>" value="<?php echo $customers->Phone->EditValue ?>"<?php echo $customers->Phone->EditAttributes() ?>>
+<?php if ($customers->phone->Visible) { // phone ?>
+	<div id="r_phone" class="form-group">
+		<label id="elh_customers_phone" for="x_phone" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->phone->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->phone->CellAttributes() ?>>
+<span id="el_customers_phone">
+<input type="text" data-table="customers" data-field="x_phone" name="x_phone" id="x_phone" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->phone->getPlaceHolder()) ?>" value="<?php echo $customers->phone->EditValue ?>"<?php echo $customers->phone->EditAttributes() ?>>
 </span>
-<?php echo $customers->Phone->CustomMsg ?></div></div>
+<?php echo $customers->phone->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->Mobile->Visible) { // Mobile ?>
-	<div id="r_Mobile" class="form-group">
-		<label id="elh_customers_Mobile" for="x_Mobile" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->Mobile->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->Mobile->CellAttributes() ?>>
-<span id="el_customers_Mobile">
-<input type="text" data-table="customers" data-field="x_Mobile" name="x_Mobile" id="x_Mobile" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->Mobile->getPlaceHolder()) ?>" value="<?php echo $customers->Mobile->EditValue ?>"<?php echo $customers->Mobile->EditAttributes() ?>>
+<?php if ($customers->mobile->Visible) { // mobile ?>
+	<div id="r_mobile" class="form-group">
+		<label id="elh_customers_mobile" for="x_mobile" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->mobile->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->mobile->CellAttributes() ?>>
+<span id="el_customers_mobile">
+<input type="text" data-table="customers" data-field="x_mobile" name="x_mobile" id="x_mobile" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->mobile->getPlaceHolder()) ?>" value="<?php echo $customers->mobile->EditValue ?>"<?php echo $customers->mobile->EditAttributes() ?>>
 </span>
-<?php echo $customers->Mobile->CustomMsg ?></div></div>
+<?php echo $customers->mobile->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->Reward->Visible) { // Reward ?>
-	<div id="r_Reward" class="form-group">
-		<label id="elh_customers_Reward" for="x_Reward" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->Reward->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->Reward->CellAttributes() ?>>
-<span id="el_customers_Reward">
-<input type="text" data-table="customers" data-field="x_Reward" name="x_Reward" id="x_Reward" size="30" placeholder="<?php echo ew_HtmlEncode($customers->Reward->getPlaceHolder()) ?>" value="<?php echo $customers->Reward->EditValue ?>"<?php echo $customers->Reward->EditAttributes() ?>>
+<?php if ($customers->reward->Visible) { // reward ?>
+	<div id="r_reward" class="form-group">
+		<label id="elh_customers_reward" for="x_reward" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->reward->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->reward->CellAttributes() ?>>
+<span id="el_customers_reward">
+<input type="text" data-table="customers" data-field="x_reward" name="x_reward" id="x_reward" size="30" placeholder="<?php echo ew_HtmlEncode($customers->reward->getPlaceHolder()) ?>" value="<?php echo $customers->reward->EditValue ?>"<?php echo $customers->reward->EditAttributes() ?>>
 </span>
-<?php echo $customers->Reward->CustomMsg ?></div></div>
+<?php echo $customers->reward->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->UserName->Visible) { // UserName ?>
-	<div id="r_UserName" class="form-group">
-		<label id="elh_customers_UserName" for="x_UserName" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->UserName->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->UserName->CellAttributes() ?>>
-<span id="el_customers_UserName">
-<input type="text" data-table="customers" data-field="x_UserName" name="x_UserName" id="x_UserName" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->UserName->getPlaceHolder()) ?>" value="<?php echo $customers->UserName->EditValue ?>"<?php echo $customers->UserName->EditAttributes() ?>>
+<?php if ($customers->user_name->Visible) { // user_name ?>
+	<div id="r_user_name" class="form-group">
+		<label id="elh_customers_user_name" for="x_user_name" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->user_name->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->user_name->CellAttributes() ?>>
+<span id="el_customers_user_name">
+<input type="text" data-table="customers" data-field="x_user_name" name="x_user_name" id="x_user_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->user_name->getPlaceHolder()) ?>" value="<?php echo $customers->user_name->EditValue ?>"<?php echo $customers->user_name->EditAttributes() ?>>
 </span>
-<?php echo $customers->UserName->CustomMsg ?></div></div>
+<?php echo $customers->user_name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->UserPass->Visible) { // UserPass ?>
-	<div id="r_UserPass" class="form-group">
-		<label id="elh_customers_UserPass" for="x_UserPass" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->UserPass->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->UserPass->CellAttributes() ?>>
-<span id="el_customers_UserPass">
-<input type="password" data-field="x_UserPass" name="x_UserPass" id="x_UserPass" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->UserPass->getPlaceHolder()) ?>"<?php echo $customers->UserPass->EditAttributes() ?>>
+<?php if ($customers->user_pass->Visible) { // user_pass ?>
+	<div id="r_user_pass" class="form-group">
+		<label id="elh_customers_user_pass" for="x_user_pass" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->user_pass->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->user_pass->CellAttributes() ?>>
+<span id="el_customers_user_pass">
+<input type="password" data-field="x_user_pass" name="x_user_pass" id="x_user_pass" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->user_pass->getPlaceHolder()) ?>"<?php echo $customers->user_pass->EditAttributes() ?>>
 </span>
-<?php echo $customers->UserPass->CustomMsg ?></div></div>
+<?php echo $customers->user_pass->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->ActivityStatus->Visible) { // ActivityStatus ?>
-	<div id="r_ActivityStatus" class="form-group">
-		<label id="elh_customers_ActivityStatus" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->ActivityStatus->FldCaption() ?></label>
-		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->ActivityStatus->CellAttributes() ?>>
-<span id="el_customers_ActivityStatus">
-<div id="tp_x_ActivityStatus" class="ewTemplate"><input type="radio" data-table="customers" data-field="x_ActivityStatus" data-value-separator="<?php echo $customers->ActivityStatus->DisplayValueSeparatorAttribute() ?>" name="x_ActivityStatus" id="x_ActivityStatus" value="{value}"<?php echo $customers->ActivityStatus->EditAttributes() ?>></div>
-<div id="dsl_x_ActivityStatus" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
-<?php echo $customers->ActivityStatus->RadioButtonListHtml(FALSE, "x_ActivityStatus") ?>
+<?php if ($customers->activity_status->Visible) { // activity_status ?>
+	<div id="r_activity_status" class="form-group">
+		<label id="elh_customers_activity_status" class="<?php echo $customers_add->LeftColumnClass ?>"><?php echo $customers->activity_status->FldCaption() ?></label>
+		<div class="<?php echo $customers_add->RightColumnClass ?>"><div<?php echo $customers->activity_status->CellAttributes() ?>>
+<span id="el_customers_activity_status">
+<div id="tp_x_activity_status" class="ewTemplate"><input type="radio" data-table="customers" data-field="x_activity_status" data-value-separator="<?php echo $customers->activity_status->DisplayValueSeparatorAttribute() ?>" name="x_activity_status" id="x_activity_status" value="{value}"<?php echo $customers->activity_status->EditAttributes() ?>></div>
+<div id="dsl_x_activity_status" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
+<?php echo $customers->activity_status->RadioButtonListHtml(FALSE, "x_activity_status") ?>
 </div></div>
 </span>
-<?php echo $customers->ActivityStatus->CustomMsg ?></div></div>
+<?php echo $customers->activity_status->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->

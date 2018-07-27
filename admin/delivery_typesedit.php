@@ -5,9 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "customersinfo.php" ?>
+<?php include_once "delivery_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
-<?php include_once "addressesgridcls.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
 
@@ -15,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$customers_edit = NULL; // Initialize page object first
+$delivery_types_edit = NULL; // Initialize page object first
 
-class ccustomers_edit extends ccustomers {
+class cdelivery_types_edit extends cdelivery_types {
 
 	// Page ID
 	var $PageID = 'edit';
@@ -26,10 +25,10 @@ class ccustomers_edit extends ccustomers {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'customers';
+	var $TableName = 'delivery_types';
 
 	// Page object name
-	var $PageObjName = 'customers_edit';
+	var $PageObjName = 'delivery_types_edit';
 
 	// Page headings
 	var $Heading = '';
@@ -251,10 +250,10 @@ class ccustomers_edit extends ccustomers {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (customers)
-		if (!isset($GLOBALS["customers"]) || get_class($GLOBALS["customers"]) == "ccustomers") {
-			$GLOBALS["customers"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["customers"];
+		// Table object (delivery_types)
+		if (!isset($GLOBALS["delivery_types"]) || get_class($GLOBALS["delivery_types"]) == "cdelivery_types") {
+			$GLOBALS["delivery_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["delivery_types"];
 		}
 
 		// Table object (employees)
@@ -266,7 +265,7 @@ class ccustomers_edit extends ccustomers {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'customers', TRUE);
+			define("EW_TABLE_NAME", 'delivery_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -308,7 +307,7 @@ class ccustomers_edit extends ccustomers {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("customerslist.php"));
+				$this->Page_Terminate(ew_GetUrl("delivery_typeslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -321,16 +320,10 @@ class ccustomers_edit extends ccustomers {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->customer_id->SetVisibility();
+		$this->delivery_type_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->customer_id->Visible = FALSE;
-		$this->full_name->SetVisibility();
-		$this->phone->SetVisibility();
-		$this->mobile->SetVisibility();
-		$this->reward->SetVisibility();
-		$this->user_name->SetVisibility();
-		$this->user_pass->SetVisibility();
-		$this->activity_status->SetVisibility();
+			$this->delivery_type_id->Visible = FALSE;
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -347,22 +340,6 @@ class ccustomers_edit extends ccustomers {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
-
-			// Get the keys for master table
-			$sDetailTblVar = $this->getCurrentDetailTable();
-			if ($sDetailTblVar <> "") {
-				$DetailTblVar = explode(",", $sDetailTblVar);
-				if (in_array("addresses", $DetailTblVar)) {
-
-					// Process auto fill for detail table 'addresses'
-					if (preg_match('/^faddresses(grid|add|addopt|edit|update|search)$/', @$_POST["form"])) {
-						if (!isset($GLOBALS["addresses_grid"])) $GLOBALS["addresses_grid"] = new caddresses_grid;
-						$GLOBALS["addresses_grid"]->Page_Init();
-						$this->Page_Terminate();
-						exit();
-					}
-				}
-			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -392,13 +369,13 @@ class ccustomers_edit extends ccustomers {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $customers;
+		global $EW_EXPORT, $delivery_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($customers);
+				$doc = new $class($delivery_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -424,7 +401,7 @@ class ccustomers_edit extends ccustomers {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "customersview.php")
+					if ($pageName == "delivery_typesview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -467,19 +444,19 @@ class ccustomers_edit extends ccustomers {
 				$postBack = TRUE;
 
 			// Load key from Form
-			if ($objForm->HasValue("x_customer_id")) {
-				$this->customer_id->setFormValue($objForm->GetValue("x_customer_id"));
+			if ($objForm->HasValue("x_delivery_type_id")) {
+				$this->delivery_type_id->setFormValue($objForm->GetValue("x_delivery_type_id"));
 			}
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 
 			// Load key from QueryString
 			$loadByQuery = FALSE;
-			if (isset($_GET["customer_id"])) {
-				$this->customer_id->setQueryStringValue($_GET["customer_id"]);
+			if (isset($_GET["delivery_type_id"])) {
+				$this->delivery_type_id->setQueryStringValue($_GET["delivery_type_id"]);
 				$loadByQuery = TRUE;
 			} else {
-				$this->customer_id->CurrentValue = NULL;
+				$this->delivery_type_id->CurrentValue = NULL;
 			}
 		}
 
@@ -489,9 +466,6 @@ class ccustomers_edit extends ccustomers {
 		// Process form if post back
 		if ($postBack) {
 			$this->LoadFormValues(); // Get form values
-
-			// Set up detail parameters
-			$this->SetupDetailParms();
 		}
 
 		// Validate form if post back
@@ -509,18 +483,12 @@ class ccustomers_edit extends ccustomers {
 			case "I": // Get a record to display
 				if (!$loaded) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("customerslist.php"); // No matching record, return to list
+					$this->Page_Terminate("delivery_typeslist.php"); // No matching record, return to list
 				}
-
-				// Set up detail parameters
-				$this->SetupDetailParms();
 				break;
 			Case "U": // Update
-				if ($this->getCurrentDetailTable() <> "") // Master/detail edit
-					$sReturnUrl = $this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
-				else
-					$sReturnUrl = $this->getReturnUrl();
-				if (ew_GetPageName($sReturnUrl) == "customerslist.php")
+				$sReturnUrl = $this->getReturnUrl();
+				if (ew_GetPageName($sReturnUrl) == "delivery_typeslist.php")
 					$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to List page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
 				if ($this->EditRow()) { // Update record based on key
@@ -532,9 +500,6 @@ class ccustomers_edit extends ccustomers {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Restore form values if update failed
-
-					// Set up detail parameters
-					$this->SetupDetailParms();
 				}
 		}
 
@@ -595,42 +560,18 @@ class ccustomers_edit extends ccustomers {
 
 		// Load from form
 		global $objForm;
-		if (!$this->customer_id->FldIsDetailKey)
-			$this->customer_id->setFormValue($objForm->GetValue("x_customer_id"));
-		if (!$this->full_name->FldIsDetailKey) {
-			$this->full_name->setFormValue($objForm->GetValue("x_full_name"));
-		}
-		if (!$this->phone->FldIsDetailKey) {
-			$this->phone->setFormValue($objForm->GetValue("x_phone"));
-		}
-		if (!$this->mobile->FldIsDetailKey) {
-			$this->mobile->setFormValue($objForm->GetValue("x_mobile"));
-		}
-		if (!$this->reward->FldIsDetailKey) {
-			$this->reward->setFormValue($objForm->GetValue("x_reward"));
-		}
-		if (!$this->user_name->FldIsDetailKey) {
-			$this->user_name->setFormValue($objForm->GetValue("x_user_name"));
-		}
-		if (!$this->user_pass->FldIsDetailKey) {
-			$this->user_pass->setFormValue($objForm->GetValue("x_user_pass"));
-		}
-		if (!$this->activity_status->FldIsDetailKey) {
-			$this->activity_status->setFormValue($objForm->GetValue("x_activity_status"));
+		if (!$this->delivery_type_id->FldIsDetailKey)
+			$this->delivery_type_id->setFormValue($objForm->GetValue("x_delivery_type_id"));
+		if (!$this->name->FldIsDetailKey) {
+			$this->name->setFormValue($objForm->GetValue("x_name"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->customer_id->CurrentValue = $this->customer_id->FormValue;
-		$this->full_name->CurrentValue = $this->full_name->FormValue;
-		$this->phone->CurrentValue = $this->phone->FormValue;
-		$this->mobile->CurrentValue = $this->mobile->FormValue;
-		$this->reward->CurrentValue = $this->reward->FormValue;
-		$this->user_name->CurrentValue = $this->user_name->FormValue;
-		$this->user_pass->CurrentValue = $this->user_pass->FormValue;
-		$this->activity_status->CurrentValue = $this->activity_status->FormValue;
+		$this->delivery_type_id->CurrentValue = $this->delivery_type_id->FormValue;
+		$this->name->CurrentValue = $this->name->FormValue;
 	}
 
 	// Load row based on key values
@@ -666,27 +607,15 @@ class ccustomers_edit extends ccustomers {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->customer_id->setDbValue($row['customer_id']);
-		$this->full_name->setDbValue($row['full_name']);
-		$this->phone->setDbValue($row['phone']);
-		$this->mobile->setDbValue($row['mobile']);
-		$this->reward->setDbValue($row['reward']);
-		$this->user_name->setDbValue($row['user_name']);
-		$this->user_pass->setDbValue($row['user_pass']);
-		$this->activity_status->setDbValue($row['activity_status']);
+		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['customer_id'] = NULL;
-		$row['full_name'] = NULL;
-		$row['phone'] = NULL;
-		$row['mobile'] = NULL;
-		$row['reward'] = NULL;
-		$row['user_name'] = NULL;
-		$row['user_pass'] = NULL;
-		$row['activity_status'] = NULL;
+		$row['delivery_type_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -695,14 +624,8 @@ class ccustomers_edit extends ccustomers {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->customer_id->DbValue = $row['customer_id'];
-		$this->full_name->DbValue = $row['full_name'];
-		$this->phone->DbValue = $row['phone'];
-		$this->mobile->DbValue = $row['mobile'];
-		$this->reward->DbValue = $row['reward'];
-		$this->user_name->DbValue = $row['user_name'];
-		$this->user_pass->DbValue = $row['user_pass'];
-		$this->activity_status->DbValue = $row['activity_status'];
+		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Load old record
@@ -710,8 +633,8 @@ class ccustomers_edit extends ccustomers {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("customer_id")) <> "")
-			$this->customer_id->CurrentValue = $this->getKey("customer_id"); // customer_id
+		if (strval($this->getKey("delivery_type_id")) <> "")
+			$this->delivery_type_id->CurrentValue = $this->getKey("delivery_type_id"); // delivery_type_id
 		else
 			$bValidKey = FALSE;
 
@@ -737,173 +660,51 @@ class ccustomers_edit extends ccustomers {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// customer_id
-		// full_name
-		// phone
-		// mobile
-		// reward
-		// user_name
-		// user_pass
-		// activity_status
+		// delivery_type_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// customer_id
-		$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
-		$this->customer_id->ViewCustomAttributes = "";
+		// delivery_type_id
+		$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// full_name
-		$this->full_name->ViewValue = $this->full_name->CurrentValue;
-		$this->full_name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// phone
-		$this->phone->ViewValue = $this->phone->CurrentValue;
-		$this->phone->ViewCustomAttributes = "";
+			// delivery_type_id
+			$this->delivery_type_id->LinkCustomAttributes = "";
+			$this->delivery_type_id->HrefValue = "";
+			$this->delivery_type_id->TooltipValue = "";
 
-		// mobile
-		$this->mobile->ViewValue = $this->mobile->CurrentValue;
-		$this->mobile->ViewCustomAttributes = "";
-
-		// reward
-		$this->reward->ViewValue = $this->reward->CurrentValue;
-		$this->reward->ViewCustomAttributes = "";
-
-		// user_name
-		$this->user_name->ViewValue = $this->user_name->CurrentValue;
-		$this->user_name->ViewCustomAttributes = "";
-
-		// user_pass
-		$this->user_pass->ViewValue = $Language->Phrase("PasswordMask");
-		$this->user_pass->ViewCustomAttributes = "";
-
-		// activity_status
-		if (strval($this->activity_status->CurrentValue) <> "") {
-			$this->activity_status->ViewValue = $this->activity_status->OptionCaption($this->activity_status->CurrentValue);
-		} else {
-			$this->activity_status->ViewValue = NULL;
-		}
-		$this->activity_status->ViewCustomAttributes = "";
-
-			// customer_id
-			$this->customer_id->LinkCustomAttributes = "";
-			$this->customer_id->HrefValue = "";
-			$this->customer_id->TooltipValue = "";
-
-			// full_name
-			$this->full_name->LinkCustomAttributes = "";
-			$this->full_name->HrefValue = "";
-			$this->full_name->TooltipValue = "";
-
-			// phone
-			$this->phone->LinkCustomAttributes = "";
-			$this->phone->HrefValue = "";
-			$this->phone->TooltipValue = "";
-
-			// mobile
-			$this->mobile->LinkCustomAttributes = "";
-			$this->mobile->HrefValue = "";
-			$this->mobile->TooltipValue = "";
-
-			// reward
-			$this->reward->LinkCustomAttributes = "";
-			$this->reward->HrefValue = "";
-			$this->reward->TooltipValue = "";
-
-			// user_name
-			$this->user_name->LinkCustomAttributes = "";
-			$this->user_name->HrefValue = "";
-			$this->user_name->TooltipValue = "";
-
-			// user_pass
-			$this->user_pass->LinkCustomAttributes = "";
-			$this->user_pass->HrefValue = "";
-			$this->user_pass->TooltipValue = "";
-
-			// activity_status
-			$this->activity_status->LinkCustomAttributes = "";
-			$this->activity_status->HrefValue = "";
-			$this->activity_status->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// customer_id
-			$this->customer_id->EditAttrs["class"] = "form-control";
-			$this->customer_id->EditCustomAttributes = "";
-			$this->customer_id->EditValue = $this->customer_id->CurrentValue;
-			$this->customer_id->ViewCustomAttributes = "";
+			// delivery_type_id
+			$this->delivery_type_id->EditAttrs["class"] = "form-control";
+			$this->delivery_type_id->EditCustomAttributes = "";
+			$this->delivery_type_id->EditValue = $this->delivery_type_id->CurrentValue;
+			$this->delivery_type_id->ViewCustomAttributes = "";
 
-			// full_name
-			$this->full_name->EditAttrs["class"] = "form-control";
-			$this->full_name->EditCustomAttributes = "";
-			$this->full_name->EditValue = ew_HtmlEncode($this->full_name->CurrentValue);
-			$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
-
-			// phone
-			$this->phone->EditAttrs["class"] = "form-control";
-			$this->phone->EditCustomAttributes = "";
-			$this->phone->EditValue = ew_HtmlEncode($this->phone->CurrentValue);
-			$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
-
-			// mobile
-			$this->mobile->EditAttrs["class"] = "form-control";
-			$this->mobile->EditCustomAttributes = "";
-			$this->mobile->EditValue = ew_HtmlEncode($this->mobile->CurrentValue);
-			$this->mobile->PlaceHolder = ew_RemoveHtml($this->mobile->FldCaption());
-
-			// reward
-			$this->reward->EditAttrs["class"] = "form-control";
-			$this->reward->EditCustomAttributes = "";
-			$this->reward->EditValue = ew_HtmlEncode($this->reward->CurrentValue);
-			$this->reward->PlaceHolder = ew_RemoveHtml($this->reward->FldCaption());
-
-			// user_name
-			$this->user_name->EditAttrs["class"] = "form-control";
-			$this->user_name->EditCustomAttributes = "";
-			$this->user_name->EditValue = ew_HtmlEncode($this->user_name->CurrentValue);
-			$this->user_name->PlaceHolder = ew_RemoveHtml($this->user_name->FldCaption());
-
-			// user_pass
-			$this->user_pass->EditAttrs["class"] = "form-control";
-			$this->user_pass->EditCustomAttributes = "";
-			$this->user_pass->EditValue = ew_HtmlEncode($this->user_pass->CurrentValue);
-			$this->user_pass->PlaceHolder = ew_RemoveHtml($this->user_pass->FldCaption());
-
-			// activity_status
-			$this->activity_status->EditCustomAttributes = "";
-			$this->activity_status->EditValue = $this->activity_status->Options(FALSE);
+			// name
+			$this->name->EditAttrs["class"] = "form-control";
+			$this->name->EditCustomAttributes = "";
+			$this->name->EditValue = ew_HtmlEncode($this->name->CurrentValue);
+			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
 			// Edit refer script
-			// customer_id
+			// delivery_type_id
 
-			$this->customer_id->LinkCustomAttributes = "";
-			$this->customer_id->HrefValue = "";
+			$this->delivery_type_id->LinkCustomAttributes = "";
+			$this->delivery_type_id->HrefValue = "";
 
-			// full_name
-			$this->full_name->LinkCustomAttributes = "";
-			$this->full_name->HrefValue = "";
-
-			// phone
-			$this->phone->LinkCustomAttributes = "";
-			$this->phone->HrefValue = "";
-
-			// mobile
-			$this->mobile->LinkCustomAttributes = "";
-			$this->mobile->HrefValue = "";
-
-			// reward
-			$this->reward->LinkCustomAttributes = "";
-			$this->reward->HrefValue = "";
-
-			// user_name
-			$this->user_name->LinkCustomAttributes = "";
-			$this->user_name->HrefValue = "";
-
-			// user_pass
-			$this->user_pass->LinkCustomAttributes = "";
-			$this->user_pass->HrefValue = "";
-
-			// activity_status
-			$this->activity_status->LinkCustomAttributes = "";
-			$this->activity_status->HrefValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -923,15 +724,8 @@ class ccustomers_edit extends ccustomers {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!ew_CheckInteger($this->reward->FormValue)) {
-			ew_AddMessage($gsFormError, $this->reward->FldErrMsg());
-		}
-
-		// Validate detail grid
-		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("addresses", $DetailTblVar) && $GLOBALS["addresses"]->DetailEdit) {
-			if (!isset($GLOBALS["addresses_grid"])) $GLOBALS["addresses_grid"] = new caddresses_grid(); // get detail page object
-			$GLOBALS["addresses_grid"]->ValidateGridForm();
+		if (!$this->name->FldIsDetailKey && !is_null($this->name->FormValue) && $this->name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->name->FldCaption(), $this->name->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -964,35 +758,13 @@ class ccustomers_edit extends ccustomers {
 			$EditRow = FALSE; // Update Failed
 		} else {
 
-			// Begin transaction
-			if ($this->getCurrentDetailTable() <> "")
-				$conn->BeginTrans();
-
 			// Save old values
 			$rsold = &$rs->fields;
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// full_name
-			$this->full_name->SetDbValueDef($rsnew, $this->full_name->CurrentValue, NULL, $this->full_name->ReadOnly);
-
-			// phone
-			$this->phone->SetDbValueDef($rsnew, $this->phone->CurrentValue, NULL, $this->phone->ReadOnly);
-
-			// mobile
-			$this->mobile->SetDbValueDef($rsnew, $this->mobile->CurrentValue, NULL, $this->mobile->ReadOnly);
-
-			// reward
-			$this->reward->SetDbValueDef($rsnew, $this->reward->CurrentValue, NULL, $this->reward->ReadOnly);
-
-			// user_name
-			$this->user_name->SetDbValueDef($rsnew, $this->user_name->CurrentValue, NULL, $this->user_name->ReadOnly);
-
-			// user_pass
-			$this->user_pass->SetDbValueDef($rsnew, $this->user_pass->CurrentValue, NULL, $this->user_pass->ReadOnly);
-
-			// activity_status
-			$this->activity_status->SetDbValueDef($rsnew, $this->activity_status->CurrentValue, NULL, $this->activity_status->ReadOnly);
+			// name
+			$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", $this->name->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -1004,26 +776,6 @@ class ccustomers_edit extends ccustomers {
 					$EditRow = TRUE; // No field to update
 				$conn->raiseErrorFn = '';
 				if ($EditRow) {
-				}
-
-				// Update detail records
-				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-				if ($EditRow) {
-					if (in_array("addresses", $DetailTblVar) && $GLOBALS["addresses"]->DetailEdit) {
-						if (!isset($GLOBALS["addresses_grid"])) $GLOBALS["addresses_grid"] = new caddresses_grid(); // Get detail page object
-						$Security->LoadCurrentUserLevel($this->ProjectID . "addresses"); // Load user level of detail table
-						$EditRow = $GLOBALS["addresses_grid"]->GridUpdate();
-						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-					}
-				}
-
-				// Commit/Rollback transaction
-				if ($this->getCurrentDetailTable() <> "") {
-					if ($EditRow) {
-						$conn->CommitTrans(); // Commit transaction
-					} else {
-						$conn->RollbackTrans(); // Rollback transaction
-					}
 				}
 			} else {
 				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
@@ -1046,42 +798,12 @@ class ccustomers_edit extends ccustomers {
 		return $EditRow;
 	}
 
-	// Set up detail parms based on QueryString
-	function SetupDetailParms() {
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
-			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
-			$this->setCurrentDetailTable($sDetailTblVar);
-		} else {
-			$sDetailTblVar = $this->getCurrentDetailTable();
-		}
-		if ($sDetailTblVar <> "") {
-			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("addresses", $DetailTblVar)) {
-				if (!isset($GLOBALS["addresses_grid"]))
-					$GLOBALS["addresses_grid"] = new caddresses_grid;
-				if ($GLOBALS["addresses_grid"]->DetailEdit) {
-					$GLOBALS["addresses_grid"]->CurrentMode = "edit";
-					$GLOBALS["addresses_grid"]->CurrentAction = "gridedit";
-
-					// Save current master table to detail table
-					$GLOBALS["addresses_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["addresses_grid"]->setStartRecordNumber(1);
-					$GLOBALS["addresses_grid"]->customer_id->FldIsDetailKey = TRUE;
-					$GLOBALS["addresses_grid"]->customer_id->CurrentValue = $this->customer_id->CurrentValue;
-					$GLOBALS["addresses_grid"]->customer_id->setSessionValue($GLOBALS["addresses_grid"]->customer_id->CurrentValue);
-				}
-			}
-		}
-	}
-
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("customerslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("delivery_typeslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "edit";
 		$Breadcrumb->Add("edit", $PageId, $url);
 	}
@@ -1174,29 +896,29 @@ class ccustomers_edit extends ccustomers {
 <?php
 
 // Create page object
-if (!isset($customers_edit)) $customers_edit = new ccustomers_edit();
+if (!isset($delivery_types_edit)) $delivery_types_edit = new cdelivery_types_edit();
 
 // Page init
-$customers_edit->Page_Init();
+$delivery_types_edit->Page_Init();
 
 // Page main
-$customers_edit->Page_Main();
+$delivery_types_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$customers_edit->Page_Render();
+$delivery_types_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "edit";
-var CurrentForm = fcustomersedit = new ew_Form("fcustomersedit", "edit");
+var CurrentForm = fdelivery_typesedit = new ew_Form("fdelivery_typesedit", "edit");
 
 // Validate form
-fcustomersedit.Validate = function() {
+fdelivery_typesedit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -1210,9 +932,9 @@ fcustomersedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_reward");
-			if (elm && !ew_CheckInteger(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($customers->reward->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_name");
+			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $delivery_types->name->FldCaption(), $delivery_types->name->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1231,7 +953,7 @@ fcustomersedit.Validate = function() {
 }
 
 // Form_CustomValidate event
-fcustomersedit.Form_CustomValidate = 
+fdelivery_typesedit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1239,138 +961,65 @@ fcustomersedit.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fcustomersedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fdelivery_typesedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fcustomersedit.Lists["x_activity_status"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-fcustomersedit.Lists["x_activity_status"].Options = <?php echo json_encode($customers_edit->activity_status->Options()) ?>;
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $customers_edit->ShowPageHeader(); ?>
+<?php $delivery_types_edit->ShowPageHeader(); ?>
 <?php
-$customers_edit->ShowMessage();
+$delivery_types_edit->ShowMessage();
 ?>
-<form name="fcustomersedit" id="fcustomersedit" class="<?php echo $customers_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($customers_edit->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $customers_edit->Token ?>">
+<form name="fdelivery_typesedit" id="fdelivery_typesedit" class="<?php echo $delivery_types_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($delivery_types_edit->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $delivery_types_edit->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="customers">
+<input type="hidden" name="t" value="delivery_types">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
-<input type="hidden" name="modal" value="<?php echo intval($customers_edit->IsModal) ?>">
+<input type="hidden" name="modal" value="<?php echo intval($delivery_types_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
-<?php if ($customers->customer_id->Visible) { // customer_id ?>
-	<div id="r_customer_id" class="form-group">
-		<label id="elh_customers_customer_id" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->customer_id->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->customer_id->CellAttributes() ?>>
-<span id="el_customers_customer_id">
-<span<?php echo $customers->customer_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $customers->customer_id->EditValue ?></p></span>
+<?php if ($delivery_types->delivery_type_id->Visible) { // delivery_type_id ?>
+	<div id="r_delivery_type_id" class="form-group">
+		<label id="elh_delivery_types_delivery_type_id" class="<?php echo $delivery_types_edit->LeftColumnClass ?>"><?php echo $delivery_types->delivery_type_id->FldCaption() ?></label>
+		<div class="<?php echo $delivery_types_edit->RightColumnClass ?>"><div<?php echo $delivery_types->delivery_type_id->CellAttributes() ?>>
+<span id="el_delivery_types_delivery_type_id">
+<span<?php echo $delivery_types->delivery_type_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $delivery_types->delivery_type_id->EditValue ?></p></span>
 </span>
-<input type="hidden" data-table="customers" data-field="x_customer_id" name="x_customer_id" id="x_customer_id" value="<?php echo ew_HtmlEncode($customers->customer_id->CurrentValue) ?>">
-<?php echo $customers->customer_id->CustomMsg ?></div></div>
+<input type="hidden" data-table="delivery_types" data-field="x_delivery_type_id" name="x_delivery_type_id" id="x_delivery_type_id" value="<?php echo ew_HtmlEncode($delivery_types->delivery_type_id->CurrentValue) ?>">
+<?php echo $delivery_types->delivery_type_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($customers->full_name->Visible) { // full_name ?>
-	<div id="r_full_name" class="form-group">
-		<label id="elh_customers_full_name" for="x_full_name" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->full_name->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->full_name->CellAttributes() ?>>
-<span id="el_customers_full_name">
-<input type="text" data-table="customers" data-field="x_full_name" name="x_full_name" id="x_full_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->full_name->getPlaceHolder()) ?>" value="<?php echo $customers->full_name->EditValue ?>"<?php echo $customers->full_name->EditAttributes() ?>>
+<?php if ($delivery_types->name->Visible) { // name ?>
+	<div id="r_name" class="form-group">
+		<label id="elh_delivery_types_name" for="x_name" class="<?php echo $delivery_types_edit->LeftColumnClass ?>"><?php echo $delivery_types->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $delivery_types_edit->RightColumnClass ?>"><div<?php echo $delivery_types->name->CellAttributes() ?>>
+<span id="el_delivery_types_name">
+<input type="text" data-table="delivery_types" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($delivery_types->name->getPlaceHolder()) ?>" value="<?php echo $delivery_types->name->EditValue ?>"<?php echo $delivery_types->name->EditAttributes() ?>>
 </span>
-<?php echo $customers->full_name->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->phone->Visible) { // phone ?>
-	<div id="r_phone" class="form-group">
-		<label id="elh_customers_phone" for="x_phone" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->phone->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->phone->CellAttributes() ?>>
-<span id="el_customers_phone">
-<input type="text" data-table="customers" data-field="x_phone" name="x_phone" id="x_phone" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->phone->getPlaceHolder()) ?>" value="<?php echo $customers->phone->EditValue ?>"<?php echo $customers->phone->EditAttributes() ?>>
-</span>
-<?php echo $customers->phone->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->mobile->Visible) { // mobile ?>
-	<div id="r_mobile" class="form-group">
-		<label id="elh_customers_mobile" for="x_mobile" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->mobile->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->mobile->CellAttributes() ?>>
-<span id="el_customers_mobile">
-<input type="text" data-table="customers" data-field="x_mobile" name="x_mobile" id="x_mobile" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($customers->mobile->getPlaceHolder()) ?>" value="<?php echo $customers->mobile->EditValue ?>"<?php echo $customers->mobile->EditAttributes() ?>>
-</span>
-<?php echo $customers->mobile->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->reward->Visible) { // reward ?>
-	<div id="r_reward" class="form-group">
-		<label id="elh_customers_reward" for="x_reward" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->reward->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->reward->CellAttributes() ?>>
-<span id="el_customers_reward">
-<input type="text" data-table="customers" data-field="x_reward" name="x_reward" id="x_reward" size="30" placeholder="<?php echo ew_HtmlEncode($customers->reward->getPlaceHolder()) ?>" value="<?php echo $customers->reward->EditValue ?>"<?php echo $customers->reward->EditAttributes() ?>>
-</span>
-<?php echo $customers->reward->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->user_name->Visible) { // user_name ?>
-	<div id="r_user_name" class="form-group">
-		<label id="elh_customers_user_name" for="x_user_name" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->user_name->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->user_name->CellAttributes() ?>>
-<span id="el_customers_user_name">
-<input type="text" data-table="customers" data-field="x_user_name" name="x_user_name" id="x_user_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->user_name->getPlaceHolder()) ?>" value="<?php echo $customers->user_name->EditValue ?>"<?php echo $customers->user_name->EditAttributes() ?>>
-</span>
-<?php echo $customers->user_name->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->user_pass->Visible) { // user_pass ?>
-	<div id="r_user_pass" class="form-group">
-		<label id="elh_customers_user_pass" for="x_user_pass" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->user_pass->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->user_pass->CellAttributes() ?>>
-<span id="el_customers_user_pass">
-<input type="password" data-field="x_user_pass" name="x_user_pass" id="x_user_pass" value="<?php echo $customers->user_pass->EditValue ?>" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($customers->user_pass->getPlaceHolder()) ?>"<?php echo $customers->user_pass->EditAttributes() ?>>
-</span>
-<?php echo $customers->user_pass->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($customers->activity_status->Visible) { // activity_status ?>
-	<div id="r_activity_status" class="form-group">
-		<label id="elh_customers_activity_status" class="<?php echo $customers_edit->LeftColumnClass ?>"><?php echo $customers->activity_status->FldCaption() ?></label>
-		<div class="<?php echo $customers_edit->RightColumnClass ?>"><div<?php echo $customers->activity_status->CellAttributes() ?>>
-<span id="el_customers_activity_status">
-<div id="tp_x_activity_status" class="ewTemplate"><input type="radio" data-table="customers" data-field="x_activity_status" data-value-separator="<?php echo $customers->activity_status->DisplayValueSeparatorAttribute() ?>" name="x_activity_status" id="x_activity_status" value="{value}"<?php echo $customers->activity_status->EditAttributes() ?>></div>
-<div id="dsl_x_activity_status" data-repeatcolumn="5" class="ewItemList" style="display: none;"><div>
-<?php echo $customers->activity_status->RadioButtonListHtml(FALSE, "x_activity_status") ?>
-</div></div>
-</span>
-<?php echo $customers->activity_status->CustomMsg ?></div></div>
+<?php echo $delivery_types->name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->
-<?php
-	if (in_array("addresses", explode(",", $customers->getCurrentDetailTable())) && $addresses->DetailEdit) {
-?>
-<?php if ($customers->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("addresses", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "addressesgrid.php" ?>
-<?php } ?>
-<?php if (!$customers_edit->IsModal) { ?>
+<?php if (!$delivery_types_edit->IsModal) { ?>
 <div class="form-group"><!-- buttons .form-group -->
-	<div class="<?php echo $customers_edit->OffsetColumnClass ?>"><!-- buttons offset -->
+	<div class="<?php echo $delivery_types_edit->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("SaveBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $customers_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $delivery_types_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>
 </form>
 <script type="text/javascript">
-fcustomersedit.Init();
+fdelivery_typesedit.Init();
 </script>
 <?php
-$customers_edit->ShowPageFooter();
+$delivery_types_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1382,5 +1031,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$customers_edit->Page_Terminate();
+$delivery_types_edit->Page_Terminate();
 ?>
