@@ -1,16 +1,16 @@
 <?php
 
-// OrderID
-// CustomerID
-// FullName
-// ProvinceID
-// ZipCode
-// Phone
-// Discount
-// TotalPrice
-// PaymentTypeID
-// DeliveryTypeID
-// OrderDateTime
+// order_id
+// customer_id
+// full_name
+// province_id
+// zip_code
+// phone
+// discount
+// total_price
+// payment_type_id
+// delivery_type_id
+// order_date_time
 
 ?>
 <?php if ($orders->Visible) { ?>
@@ -18,128 +18,128 @@
 <table id="tbl_ordersmaster" class="table ewTable ewMasterTable ewHorizontal">
 	<thead>
 		<tr class="ewTableHeader">
-<?php if ($orders->OrderID->Visible) { // OrderID ?>
-			<th class="<?php echo $orders->OrderID->HeaderCellClass() ?>"><?php echo $orders->OrderID->FldCaption() ?></th>
+<?php if ($orders->order_id->Visible) { // order_id ?>
+			<th class="<?php echo $orders->order_id->HeaderCellClass() ?>"><?php echo $orders->order_id->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->CustomerID->Visible) { // CustomerID ?>
-			<th class="<?php echo $orders->CustomerID->HeaderCellClass() ?>"><?php echo $orders->CustomerID->FldCaption() ?></th>
+<?php if ($orders->customer_id->Visible) { // customer_id ?>
+			<th class="<?php echo $orders->customer_id->HeaderCellClass() ?>"><?php echo $orders->customer_id->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->FullName->Visible) { // FullName ?>
-			<th class="<?php echo $orders->FullName->HeaderCellClass() ?>"><?php echo $orders->FullName->FldCaption() ?></th>
+<?php if ($orders->full_name->Visible) { // full_name ?>
+			<th class="<?php echo $orders->full_name->HeaderCellClass() ?>"><?php echo $orders->full_name->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->ProvinceID->Visible) { // ProvinceID ?>
-			<th class="<?php echo $orders->ProvinceID->HeaderCellClass() ?>"><?php echo $orders->ProvinceID->FldCaption() ?></th>
+<?php if ($orders->province_id->Visible) { // province_id ?>
+			<th class="<?php echo $orders->province_id->HeaderCellClass() ?>"><?php echo $orders->province_id->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->ZipCode->Visible) { // ZipCode ?>
-			<th class="<?php echo $orders->ZipCode->HeaderCellClass() ?>"><?php echo $orders->ZipCode->FldCaption() ?></th>
+<?php if ($orders->zip_code->Visible) { // zip_code ?>
+			<th class="<?php echo $orders->zip_code->HeaderCellClass() ?>"><?php echo $orders->zip_code->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->Phone->Visible) { // Phone ?>
-			<th class="<?php echo $orders->Phone->HeaderCellClass() ?>"><?php echo $orders->Phone->FldCaption() ?></th>
+<?php if ($orders->phone->Visible) { // phone ?>
+			<th class="<?php echo $orders->phone->HeaderCellClass() ?>"><?php echo $orders->phone->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->Discount->Visible) { // Discount ?>
-			<th class="<?php echo $orders->Discount->HeaderCellClass() ?>"><?php echo $orders->Discount->FldCaption() ?></th>
+<?php if ($orders->discount->Visible) { // discount ?>
+			<th class="<?php echo $orders->discount->HeaderCellClass() ?>"><?php echo $orders->discount->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->TotalPrice->Visible) { // TotalPrice ?>
-			<th class="<?php echo $orders->TotalPrice->HeaderCellClass() ?>"><?php echo $orders->TotalPrice->FldCaption() ?></th>
+<?php if ($orders->total_price->Visible) { // total_price ?>
+			<th class="<?php echo $orders->total_price->HeaderCellClass() ?>"><?php echo $orders->total_price->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->PaymentTypeID->Visible) { // PaymentTypeID ?>
-			<th class="<?php echo $orders->PaymentTypeID->HeaderCellClass() ?>"><?php echo $orders->PaymentTypeID->FldCaption() ?></th>
+<?php if ($orders->payment_type_id->Visible) { // payment_type_id ?>
+			<th class="<?php echo $orders->payment_type_id->HeaderCellClass() ?>"><?php echo $orders->payment_type_id->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->DeliveryTypeID->Visible) { // DeliveryTypeID ?>
-			<th class="<?php echo $orders->DeliveryTypeID->HeaderCellClass() ?>"><?php echo $orders->DeliveryTypeID->FldCaption() ?></th>
+<?php if ($orders->delivery_type_id->Visible) { // delivery_type_id ?>
+			<th class="<?php echo $orders->delivery_type_id->HeaderCellClass() ?>"><?php echo $orders->delivery_type_id->FldCaption() ?></th>
 <?php } ?>
-<?php if ($orders->OrderDateTime->Visible) { // OrderDateTime ?>
-			<th class="<?php echo $orders->OrderDateTime->HeaderCellClass() ?>"><?php echo $orders->OrderDateTime->FldCaption() ?></th>
+<?php if ($orders->order_date_time->Visible) { // order_date_time ?>
+			<th class="<?php echo $orders->order_date_time->HeaderCellClass() ?>"><?php echo $orders->order_date_time->FldCaption() ?></th>
 <?php } ?>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-<?php if ($orders->OrderID->Visible) { // OrderID ?>
-			<td<?php echo $orders->OrderID->CellAttributes() ?>>
-<span id="el_orders_OrderID">
-<span<?php echo $orders->OrderID->ViewAttributes() ?>>
-<?php echo $orders->OrderID->ListViewValue() ?></span>
+<?php if ($orders->order_id->Visible) { // order_id ?>
+			<td<?php echo $orders->order_id->CellAttributes() ?>>
+<span id="el_orders_order_id">
+<span<?php echo $orders->order_id->ViewAttributes() ?>>
+<?php echo $orders->order_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->CustomerID->Visible) { // CustomerID ?>
-			<td<?php echo $orders->CustomerID->CellAttributes() ?>>
-<span id="el_orders_CustomerID">
-<span<?php echo $orders->CustomerID->ViewAttributes() ?>>
-<?php echo $orders->CustomerID->ListViewValue() ?></span>
+<?php if ($orders->customer_id->Visible) { // customer_id ?>
+			<td<?php echo $orders->customer_id->CellAttributes() ?>>
+<span id="el_orders_customer_id">
+<span<?php echo $orders->customer_id->ViewAttributes() ?>>
+<?php echo $orders->customer_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->FullName->Visible) { // FullName ?>
-			<td<?php echo $orders->FullName->CellAttributes() ?>>
-<span id="el_orders_FullName">
-<span<?php echo $orders->FullName->ViewAttributes() ?>>
-<?php echo $orders->FullName->ListViewValue() ?></span>
+<?php if ($orders->full_name->Visible) { // full_name ?>
+			<td<?php echo $orders->full_name->CellAttributes() ?>>
+<span id="el_orders_full_name">
+<span<?php echo $orders->full_name->ViewAttributes() ?>>
+<?php echo $orders->full_name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->ProvinceID->Visible) { // ProvinceID ?>
-			<td<?php echo $orders->ProvinceID->CellAttributes() ?>>
-<span id="el_orders_ProvinceID">
-<span<?php echo $orders->ProvinceID->ViewAttributes() ?>>
-<?php echo $orders->ProvinceID->ListViewValue() ?></span>
+<?php if ($orders->province_id->Visible) { // province_id ?>
+			<td<?php echo $orders->province_id->CellAttributes() ?>>
+<span id="el_orders_province_id">
+<span<?php echo $orders->province_id->ViewAttributes() ?>>
+<?php echo $orders->province_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->ZipCode->Visible) { // ZipCode ?>
-			<td<?php echo $orders->ZipCode->CellAttributes() ?>>
-<span id="el_orders_ZipCode">
-<span<?php echo $orders->ZipCode->ViewAttributes() ?>>
-<?php echo $orders->ZipCode->ListViewValue() ?></span>
+<?php if ($orders->zip_code->Visible) { // zip_code ?>
+			<td<?php echo $orders->zip_code->CellAttributes() ?>>
+<span id="el_orders_zip_code">
+<span<?php echo $orders->zip_code->ViewAttributes() ?>>
+<?php echo $orders->zip_code->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->Phone->Visible) { // Phone ?>
-			<td<?php echo $orders->Phone->CellAttributes() ?>>
-<span id="el_orders_Phone">
-<span<?php echo $orders->Phone->ViewAttributes() ?>>
-<?php echo $orders->Phone->ListViewValue() ?></span>
+<?php if ($orders->phone->Visible) { // phone ?>
+			<td<?php echo $orders->phone->CellAttributes() ?>>
+<span id="el_orders_phone">
+<span<?php echo $orders->phone->ViewAttributes() ?>>
+<?php echo $orders->phone->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->Discount->Visible) { // Discount ?>
-			<td<?php echo $orders->Discount->CellAttributes() ?>>
-<span id="el_orders_Discount">
-<span<?php echo $orders->Discount->ViewAttributes() ?>>
-<?php echo $orders->Discount->ListViewValue() ?></span>
+<?php if ($orders->discount->Visible) { // discount ?>
+			<td<?php echo $orders->discount->CellAttributes() ?>>
+<span id="el_orders_discount">
+<span<?php echo $orders->discount->ViewAttributes() ?>>
+<?php echo $orders->discount->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->TotalPrice->Visible) { // TotalPrice ?>
-			<td<?php echo $orders->TotalPrice->CellAttributes() ?>>
-<span id="el_orders_TotalPrice">
-<span<?php echo $orders->TotalPrice->ViewAttributes() ?>>
-<?php echo $orders->TotalPrice->ListViewValue() ?></span>
+<?php if ($orders->total_price->Visible) { // total_price ?>
+			<td<?php echo $orders->total_price->CellAttributes() ?>>
+<span id="el_orders_total_price">
+<span<?php echo $orders->total_price->ViewAttributes() ?>>
+<?php echo $orders->total_price->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->PaymentTypeID->Visible) { // PaymentTypeID ?>
-			<td<?php echo $orders->PaymentTypeID->CellAttributes() ?>>
-<span id="el_orders_PaymentTypeID">
-<span<?php echo $orders->PaymentTypeID->ViewAttributes() ?>>
-<?php echo $orders->PaymentTypeID->ListViewValue() ?></span>
+<?php if ($orders->payment_type_id->Visible) { // payment_type_id ?>
+			<td<?php echo $orders->payment_type_id->CellAttributes() ?>>
+<span id="el_orders_payment_type_id">
+<span<?php echo $orders->payment_type_id->ViewAttributes() ?>>
+<?php echo $orders->payment_type_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->DeliveryTypeID->Visible) { // DeliveryTypeID ?>
-			<td<?php echo $orders->DeliveryTypeID->CellAttributes() ?>>
-<span id="el_orders_DeliveryTypeID">
-<span<?php echo $orders->DeliveryTypeID->ViewAttributes() ?>>
-<?php echo $orders->DeliveryTypeID->ListViewValue() ?></span>
+<?php if ($orders->delivery_type_id->Visible) { // delivery_type_id ?>
+			<td<?php echo $orders->delivery_type_id->CellAttributes() ?>>
+<span id="el_orders_delivery_type_id">
+<span<?php echo $orders->delivery_type_id->ViewAttributes() ?>>
+<?php echo $orders->delivery_type_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->OrderDateTime->Visible) { // OrderDateTime ?>
-			<td<?php echo $orders->OrderDateTime->CellAttributes() ?>>
-<span id="el_orders_OrderDateTime">
-<span<?php echo $orders->OrderDateTime->ViewAttributes() ?>>
-<?php echo $orders->OrderDateTime->ListViewValue() ?></span>
+<?php if ($orders->order_date_time->Visible) { // order_date_time ?>
+			<td<?php echo $orders->order_date_time->CellAttributes() ?>>
+<span id="el_orders_order_date_time">
+<span<?php echo $orders->order_date_time->ViewAttributes() ?>>
+<?php echo $orders->order_date_time->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

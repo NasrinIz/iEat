@@ -288,9 +288,9 @@ class cstores_view extends cstores {
 			$GLOBALS["Table"] = &$GLOBALS["stores"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["StoreID"] <> "") {
-			$this->RecKey["StoreID"] = $_GET["StoreID"];
-			$KeyUrl .= "&amp;StoreID=" . urlencode($this->RecKey["StoreID"]);
+		if (@$_GET["store_id"] <> "") {
+			$this->RecKey["store_id"] = $_GET["store_id"];
+			$KeyUrl .= "&amp;store_id=" . urlencode($this->RecKey["store_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -392,9 +392,9 @@ class cstores_view extends cstores {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["StoreID"] <> "") {
+		if (@$_GET["store_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["StoreID"];
+			$gsExportFile .= $_GET["store_id"];
 		}
 
 		// Get custom export parameters
@@ -420,13 +420,13 @@ class cstores_view extends cstores {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->StoreID->SetVisibility();
+		$this->store_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->StoreID->Visible = FALSE;
-		$this->Name->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->ZipCode->SetVisibility();
+			$this->store_id->Visible = FALSE;
+		$this->name->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->zip_code->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -534,12 +534,12 @@ class cstores_view extends cstores {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["StoreID"] <> "") {
-				$this->StoreID->setQueryStringValue($_GET["StoreID"]);
-				$this->RecKey["StoreID"] = $this->StoreID->QueryStringValue;
-			} elseif (@$_POST["StoreID"] <> "") {
-				$this->StoreID->setFormValue($_POST["StoreID"]);
-				$this->RecKey["StoreID"] = $this->StoreID->FormValue;
+			if (@$_GET["store_id"] <> "") {
+				$this->store_id->setQueryStringValue($_GET["store_id"]);
+				$this->RecKey["store_id"] = $this->store_id->QueryStringValue;
+			} elseif (@$_POST["store_id"] <> "") {
+				$this->store_id->setFormValue($_POST["store_id"]);
+				$this->RecKey["store_id"] = $this->store_id->FormValue;
 			} else {
 				$sReturnUrl = "storeslist.php"; // Return to list
 			}
@@ -724,21 +724,21 @@ class cstores_view extends cstores {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->StoreID->setDbValue($row['StoreID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->ZipCode->setDbValue($row['ZipCode']);
+		$this->store_id->setDbValue($row['store_id']);
+		$this->name->setDbValue($row['name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->zip_code->setDbValue($row['zip_code']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['StoreID'] = NULL;
-		$row['Name'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['ZipCode'] = NULL;
+		$row['store_id'] = NULL;
+		$row['name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['zip_code'] = NULL;
 		return $row;
 	}
 
@@ -747,11 +747,11 @@ class cstores_view extends cstores {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->StoreID->DbValue = $row['StoreID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->ZipCode->DbValue = $row['ZipCode'];
+		$this->store_id->DbValue = $row['store_id'];
+		$this->name->DbValue = $row['name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->zip_code->DbValue = $row['zip_code'];
 	}
 
 	// Render row values based on field settings
@@ -770,78 +770,78 @@ class cstores_view extends cstores {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// StoreID
-		// Name
-		// ProvinceID
-		// Address
-		// ZipCode
+		// store_id
+		// name
+		// province_id
+		// address
+		// zip_code
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// StoreID
-		$this->StoreID->ViewValue = $this->StoreID->CurrentValue;
-		$this->StoreID->ViewCustomAttributes = "";
+		// store_id
+		$this->store_id->ViewValue = $this->store_id->CurrentValue;
+		$this->store_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-			// StoreID
-			$this->StoreID->LinkCustomAttributes = "";
-			$this->StoreID->HrefValue = "";
-			$this->StoreID->TooltipValue = "";
+			// store_id
+			$this->store_id->LinkCustomAttributes = "";
+			$this->store_id->HrefValue = "";
+			$this->store_id->TooltipValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
-			$this->ZipCode->TooltipValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
+			$this->zip_code->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1137,8 +1137,8 @@ fstoresview.Form_CustomValidate =
 fstoresview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fstoresview.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fstoresview.Lists["x_ProvinceID"].Data = "<?php echo $stores_view->ProvinceID->LookupFilterQuery(FALSE, "view") ?>";
+fstoresview.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+fstoresview.Lists["x_province_id"].Data = "<?php echo $stores_view->province_id->LookupFilterQuery(FALSE, "view") ?>";
 
 // Form object for search
 </script>
@@ -1168,57 +1168,57 @@ $stores_view->ShowMessage();
 <input type="hidden" name="t" value="stores">
 <input type="hidden" name="modal" value="<?php echo intval($stores_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($stores->StoreID->Visible) { // StoreID ?>
-	<tr id="r_StoreID">
-		<td class="col-sm-2"><span id="elh_stores_StoreID"><?php echo $stores->StoreID->FldCaption() ?></span></td>
-		<td data-name="StoreID"<?php echo $stores->StoreID->CellAttributes() ?>>
-<span id="el_stores_StoreID">
-<span<?php echo $stores->StoreID->ViewAttributes() ?>>
-<?php echo $stores->StoreID->ViewValue ?></span>
+<?php if ($stores->store_id->Visible) { // store_id ?>
+	<tr id="r_store_id">
+		<td class="col-sm-2"><span id="elh_stores_store_id"><?php echo $stores->store_id->FldCaption() ?></span></td>
+		<td data-name="store_id"<?php echo $stores->store_id->CellAttributes() ?>>
+<span id="el_stores_store_id">
+<span<?php echo $stores->store_id->ViewAttributes() ?>>
+<?php echo $stores->store_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($stores->Name->Visible) { // Name ?>
-	<tr id="r_Name">
-		<td class="col-sm-2"><span id="elh_stores_Name"><?php echo $stores->Name->FldCaption() ?></span></td>
-		<td data-name="Name"<?php echo $stores->Name->CellAttributes() ?>>
-<span id="el_stores_Name">
-<span<?php echo $stores->Name->ViewAttributes() ?>>
-<?php echo $stores->Name->ViewValue ?></span>
+<?php if ($stores->name->Visible) { // name ?>
+	<tr id="r_name">
+		<td class="col-sm-2"><span id="elh_stores_name"><?php echo $stores->name->FldCaption() ?></span></td>
+		<td data-name="name"<?php echo $stores->name->CellAttributes() ?>>
+<span id="el_stores_name">
+<span<?php echo $stores->name->ViewAttributes() ?>>
+<?php echo $stores->name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($stores->ProvinceID->Visible) { // ProvinceID ?>
-	<tr id="r_ProvinceID">
-		<td class="col-sm-2"><span id="elh_stores_ProvinceID"><?php echo $stores->ProvinceID->FldCaption() ?></span></td>
-		<td data-name="ProvinceID"<?php echo $stores->ProvinceID->CellAttributes() ?>>
-<span id="el_stores_ProvinceID">
-<span<?php echo $stores->ProvinceID->ViewAttributes() ?>>
-<?php echo $stores->ProvinceID->ViewValue ?></span>
+<?php if ($stores->province_id->Visible) { // province_id ?>
+	<tr id="r_province_id">
+		<td class="col-sm-2"><span id="elh_stores_province_id"><?php echo $stores->province_id->FldCaption() ?></span></td>
+		<td data-name="province_id"<?php echo $stores->province_id->CellAttributes() ?>>
+<span id="el_stores_province_id">
+<span<?php echo $stores->province_id->ViewAttributes() ?>>
+<?php echo $stores->province_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($stores->Address->Visible) { // Address ?>
-	<tr id="r_Address">
-		<td class="col-sm-2"><span id="elh_stores_Address"><?php echo $stores->Address->FldCaption() ?></span></td>
-		<td data-name="Address"<?php echo $stores->Address->CellAttributes() ?>>
-<span id="el_stores_Address">
-<span<?php echo $stores->Address->ViewAttributes() ?>>
-<?php echo $stores->Address->ViewValue ?></span>
+<?php if ($stores->address->Visible) { // address ?>
+	<tr id="r_address">
+		<td class="col-sm-2"><span id="elh_stores_address"><?php echo $stores->address->FldCaption() ?></span></td>
+		<td data-name="address"<?php echo $stores->address->CellAttributes() ?>>
+<span id="el_stores_address">
+<span<?php echo $stores->address->ViewAttributes() ?>>
+<?php echo $stores->address->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($stores->ZipCode->Visible) { // ZipCode ?>
-	<tr id="r_ZipCode">
-		<td class="col-sm-2"><span id="elh_stores_ZipCode"><?php echo $stores->ZipCode->FldCaption() ?></span></td>
-		<td data-name="ZipCode"<?php echo $stores->ZipCode->CellAttributes() ?>>
-<span id="el_stores_ZipCode">
-<span<?php echo $stores->ZipCode->ViewAttributes() ?>>
-<?php echo $stores->ZipCode->ViewValue ?></span>
+<?php if ($stores->zip_code->Visible) { // zip_code ?>
+	<tr id="r_zip_code">
+		<td class="col-sm-2"><span id="elh_stores_zip_code"><?php echo $stores->zip_code->FldCaption() ?></span></td>
+		<td data-name="zip_code"<?php echo $stores->zip_code->CellAttributes() ?>>
+<span id="el_stores_zip_code">
+<span<?php echo $stores->zip_code->ViewAttributes() ?>>
+<?php echo $stores->zip_code->ViewValue ?></span>
 </span>
 </td>
 	</tr>

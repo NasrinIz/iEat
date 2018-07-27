@@ -7,12 +7,12 @@ $sub_menus = NULL;
 // Table class for sub_menus
 //
 class csub_menus extends cTable {
-	var $SubMenuID;
-	var $MenuID;
-	var $Name;
-	var $Picture;
-	var $Price;
-	var $Description;
+	var $sub_menu_id;
+	var $menu_id;
+	var $name;
+	var $picture;
+	var $price;
+	var $description;
 
 	//
 	// Table class constructor
@@ -46,40 +46,40 @@ class csub_menus extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// SubMenuID
-		$this->SubMenuID = new cField('sub_menus', 'sub_menus', 'x_SubMenuID', 'SubMenuID', '`SubMenuID`', '`SubMenuID`', 3, -1, FALSE, '`SubMenuID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->SubMenuID->Sortable = FALSE; // Allow sort
-		$this->SubMenuID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['SubMenuID'] = &$this->SubMenuID;
+		// sub_menu_id
+		$this->sub_menu_id = new cField('sub_menus', 'sub_menus', 'x_sub_menu_id', 'sub_menu_id', '`sub_menu_id`', '`sub_menu_id`', 3, -1, FALSE, '`sub_menu_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->sub_menu_id->Sortable = FALSE; // Allow sort
+		$this->sub_menu_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['sub_menu_id'] = &$this->sub_menu_id;
 
-		// MenuID
-		$this->MenuID = new cField('sub_menus', 'sub_menus', 'x_MenuID', 'MenuID', '`MenuID`', '`MenuID`', 3, -1, FALSE, '`MenuID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->MenuID->Sortable = TRUE; // Allow sort
-		$this->MenuID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->MenuID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->MenuID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['MenuID'] = &$this->MenuID;
+		// menu_id
+		$this->menu_id = new cField('sub_menus', 'sub_menus', 'x_menu_id', 'menu_id', '`menu_id`', '`menu_id`', 3, -1, FALSE, '`menu_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->menu_id->Sortable = TRUE; // Allow sort
+		$this->menu_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->menu_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->menu_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['menu_id'] = &$this->menu_id;
 
-		// Name
-		$this->Name = new cField('sub_menus', 'sub_menus', 'x_Name', 'Name', '`Name`', '`Name`', 200, -1, FALSE, '`Name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Name->Sortable = TRUE; // Allow sort
-		$this->fields['Name'] = &$this->Name;
+		// name
+		$this->name = new cField('sub_menus', 'sub_menus', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->name->Sortable = TRUE; // Allow sort
+		$this->fields['name'] = &$this->name;
 
-		// Picture
-		$this->Picture = new cField('sub_menus', 'sub_menus', 'x_Picture', 'Picture', '`Picture`', '`Picture`', 200, -1, TRUE, '`Picture`', FALSE, FALSE, FALSE, 'IMAGE', 'FILE');
-		$this->Picture->Sortable = TRUE; // Allow sort
-		$this->fields['Picture'] = &$this->Picture;
+		// picture
+		$this->picture = new cField('sub_menus', 'sub_menus', 'x_picture', 'picture', '`picture`', '`picture`', 200, -1, TRUE, '`picture`', FALSE, FALSE, FALSE, 'IMAGE', 'FILE');
+		$this->picture->Sortable = TRUE; // Allow sort
+		$this->fields['picture'] = &$this->picture;
 
-		// Price
-		$this->Price = new cField('sub_menus', 'sub_menus', 'x_Price', 'Price', '`Price`', '`Price`', 5, -1, FALSE, '`Price`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Price->Sortable = TRUE; // Allow sort
-		$this->Price->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['Price'] = &$this->Price;
+		// price
+		$this->price = new cField('sub_menus', 'sub_menus', 'x_price', 'price', '`price`', '`price`', 5, -1, FALSE, '`price`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->price->Sortable = TRUE; // Allow sort
+		$this->price->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['price'] = &$this->price;
 
-		// Description
-		$this->Description = new cField('sub_menus', 'sub_menus', 'x_Description', 'Description', '`Description`', '`Description`', 201, -1, FALSE, '`Description`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->Description->Sortable = TRUE; // Allow sort
-		$this->fields['Description'] = &$this->Description;
+		// description
+		$this->description = new cField('sub_menus', 'sub_menus', 'x_description', 'description', '`description`', '`description`', 201, -1, FALSE, '`description`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
+		$this->description->Sortable = TRUE; // Allow sort
+		$this->fields['description'] = &$this->description;
 	}
 
 	// Field Visibility
@@ -117,53 +117,6 @@ class csub_menus extends cTable {
 		} else {
 			$ofld->setSort("");
 		}
-	}
-
-	// Current master table name
-	function getCurrentMasterTable() {
-		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
-	}
-
-	function setCurrentMasterTable($v) {
-		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
-	}
-
-	// Session master WHERE clause
-	function GetMasterFilter() {
-
-		// Master filter
-		$sMasterFilter = "";
-		if ($this->getCurrentMasterTable() == "menus") {
-			if ($this->MenuID->getSessionValue() <> "")
-				$sMasterFilter .= "`MenuID`=" . ew_QuotedValue($this->MenuID->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sMasterFilter;
-	}
-
-	// Session detail WHERE clause
-	function GetDetailFilter() {
-
-		// Detail filter
-		$sDetailFilter = "";
-		if ($this->getCurrentMasterTable() == "menus") {
-			if ($this->MenuID->getSessionValue() <> "")
-				$sDetailFilter .= "`MenuID`=" . ew_QuotedValue($this->MenuID->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
-			else
-				return "";
-		}
-		return $sDetailFilter;
-	}
-
-	// Master filter
-	function SqlMasterFilter_menus() {
-		return "`MenuID`=@MenuID@";
-	}
-
-	// Detail filter
-	function SqlDetailFilter_menus() {
-		return "`MenuID`=@MenuID@";
 	}
 
 	// Table level SQL
@@ -398,8 +351,8 @@ class csub_menus extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->SubMenuID->setDbValue($conn->Insert_ID());
-			$rs['SubMenuID'] = $this->SubMenuID->DbValue;
+			$this->sub_menu_id->setDbValue($conn->Insert_ID());
+			$rs['sub_menu_id'] = $this->sub_menu_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -435,8 +388,8 @@ class csub_menus extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('SubMenuID', $rs))
-				ew_AddFilter($where, ew_QuotedName('SubMenuID', $this->DBID) . '=' . ew_QuotedValue($rs['SubMenuID'], $this->SubMenuID->FldDataType, $this->DBID));
+			if (array_key_exists('sub_menu_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('sub_menu_id', $this->DBID) . '=' . ew_QuotedValue($rs['sub_menu_id'], $this->sub_menu_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -458,18 +411,18 @@ class csub_menus extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`SubMenuID` = @SubMenuID@";
+		return "`sub_menu_id` = @sub_menu_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->SubMenuID->CurrentValue))
+		if (!is_numeric($this->sub_menu_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->SubMenuID->CurrentValue))
+		if (is_null($this->sub_menu_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@SubMenuID@", ew_AdjustSql($this->SubMenuID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@sub_menu_id@", ew_AdjustSql($this->sub_menu_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -558,16 +511,12 @@ class csub_menus extends cTable {
 
 	// Add master url
 	function AddMasterUrl($url) {
-		if ($this->getCurrentMasterTable() == "menus" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
-			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
-			$url .= "&fk_MenuID=" . urlencode($this->MenuID->CurrentValue);
-		}
 		return $url;
 	}
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "SubMenuID:" . ew_VarToJson($this->SubMenuID->CurrentValue, "number", "'");
+		$json .= "sub_menu_id:" . ew_VarToJson($this->sub_menu_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -575,8 +524,8 @@ class csub_menus extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->SubMenuID->CurrentValue)) {
-			$sUrl .= "SubMenuID=" . urlencode($this->SubMenuID->CurrentValue);
+		if (!is_null($this->sub_menu_id->CurrentValue)) {
+			$sUrl .= "sub_menu_id=" . urlencode($this->sub_menu_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -609,10 +558,10 @@ class csub_menus extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["SubMenuID"]))
-				$arKeys[] = $_POST["SubMenuID"];
-			elseif (isset($_GET["SubMenuID"]))
-				$arKeys[] = $_GET["SubMenuID"];
+			if ($isPost && isset($_POST["sub_menu_id"]))
+				$arKeys[] = $_POST["sub_menu_id"];
+			elseif (isset($_GET["sub_menu_id"]))
+				$arKeys[] = $_GET["sub_menu_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -637,7 +586,7 @@ class csub_menus extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->SubMenuID->CurrentValue = $key;
+			$this->sub_menu_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -658,12 +607,12 @@ class csub_menus extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->SubMenuID->setDbValue($rs->fields('SubMenuID'));
-		$this->MenuID->setDbValue($rs->fields('MenuID'));
-		$this->Name->setDbValue($rs->fields('Name'));
-		$this->Picture->Upload->DbValue = $rs->fields('Picture');
-		$this->Price->setDbValue($rs->fields('Price'));
-		$this->Description->setDbValue($rs->fields('Description'));
+		$this->sub_menu_id->setDbValue($rs->fields('sub_menu_id'));
+		$this->menu_id->setDbValue($rs->fields('menu_id'));
+		$this->name->setDbValue($rs->fields('name'));
+		$this->picture->Upload->DbValue = $rs->fields('picture');
+		$this->price->setDbValue($rs->fields('price'));
+		$this->description->setDbValue($rs->fields('description'));
 	}
 
 	// Render list row values
@@ -674,107 +623,107 @@ class csub_menus extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// SubMenuID
-		// MenuID
-		// Name
-		// Picture
-		// Price
-		// Description
-		// SubMenuID
+		// sub_menu_id
+		// menu_id
+		// name
+		// picture
+		// price
+		// description
+		// sub_menu_id
 
-		$this->SubMenuID->ViewValue = $this->SubMenuID->CurrentValue;
-		$this->SubMenuID->ViewCustomAttributes = "";
+		$this->sub_menu_id->ViewValue = $this->sub_menu_id->CurrentValue;
+		$this->sub_menu_id->ViewCustomAttributes = "";
 
-		// MenuID
-		if (strval($this->MenuID->CurrentValue) <> "") {
-			$sFilterWrk = "`MenuID`" . ew_SearchString("=", $this->MenuID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `MenuID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
+		// menu_id
+		if (strval($this->menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
 		$sWhereWrk = "";
-		$this->MenuID->LookupFilters = array();
+		$this->menu_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->MenuID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->MenuID->ViewValue = $this->MenuID->DisplayValue($arwrk);
+				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->MenuID->ViewValue = $this->MenuID->CurrentValue;
+				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
 			}
 		} else {
-			$this->MenuID->ViewValue = NULL;
+			$this->menu_id->ViewValue = NULL;
 		}
-		$this->MenuID->ViewCustomAttributes = "";
+		$this->menu_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// Picture
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->ImageWidth = 100;
-			$this->Picture->ImageHeight = 100;
-			$this->Picture->ImageAlt = $this->Picture->FldAlt();
-			$this->Picture->ViewValue = $this->Picture->Upload->DbValue;
+		// picture
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->ImageWidth = 100;
+			$this->picture->ImageHeight = 100;
+			$this->picture->ImageAlt = $this->picture->FldAlt();
+			$this->picture->ViewValue = $this->picture->Upload->DbValue;
 		} else {
-			$this->Picture->ViewValue = "";
+			$this->picture->ViewValue = "";
 		}
-		$this->Picture->ViewCustomAttributes = "";
+		$this->picture->ViewCustomAttributes = "";
 
-		// Price
-		$this->Price->ViewValue = $this->Price->CurrentValue;
-		$this->Price->ViewValue = ew_FormatCurrency($this->Price->ViewValue, 0, -2, -2, -2);
-		$this->Price->ViewCustomAttributes = "";
+		// price
+		$this->price->ViewValue = $this->price->CurrentValue;
+		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+		$this->price->ViewCustomAttributes = "";
 
-		// Description
-		$this->Description->ViewValue = $this->Description->CurrentValue;
-		$this->Description->ViewCustomAttributes = "";
+		// description
+		$this->description->ViewValue = $this->description->CurrentValue;
+		$this->description->ViewCustomAttributes = "";
 
-		// SubMenuID
-		$this->SubMenuID->LinkCustomAttributes = "";
-		$this->SubMenuID->HrefValue = "";
-		$this->SubMenuID->TooltipValue = "";
+		// sub_menu_id
+		$this->sub_menu_id->LinkCustomAttributes = "";
+		$this->sub_menu_id->HrefValue = "";
+		$this->sub_menu_id->TooltipValue = "";
 
-		// MenuID
-		$this->MenuID->LinkCustomAttributes = "";
-		$this->MenuID->HrefValue = "";
-		$this->MenuID->TooltipValue = "";
+		// menu_id
+		$this->menu_id->LinkCustomAttributes = "";
+		$this->menu_id->HrefValue = "";
+		$this->menu_id->TooltipValue = "";
 
-		// Name
-		$this->Name->LinkCustomAttributes = "";
-		$this->Name->HrefValue = "";
-		$this->Name->TooltipValue = "";
+		// name
+		$this->name->LinkCustomAttributes = "";
+		$this->name->HrefValue = "";
+		$this->name->TooltipValue = "";
 
-		// Picture
-		$this->Picture->LinkCustomAttributes = "";
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->HrefValue = ew_GetFileUploadUrl($this->Picture, $this->Picture->Upload->DbValue); // Add prefix/suffix
-			$this->Picture->LinkAttrs["target"] = ""; // Add target
-			if ($this->Export <> "") $this->Picture->HrefValue = ew_FullUrl($this->Picture->HrefValue, "href");
+		// picture
+		$this->picture->LinkCustomAttributes = "";
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
+			$this->picture->LinkAttrs["target"] = ""; // Add target
+			if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
 		} else {
-			$this->Picture->HrefValue = "";
+			$this->picture->HrefValue = "";
 		}
-		$this->Picture->HrefValue2 = $this->Picture->UploadPath . $this->Picture->Upload->DbValue;
-		$this->Picture->TooltipValue = "";
-		if ($this->Picture->UseColorbox) {
-			if (ew_Empty($this->Picture->TooltipValue))
-				$this->Picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-			$this->Picture->LinkAttrs["data-rel"] = "sub_menus_x_Picture";
-			ew_AppendClass($this->Picture->LinkAttrs["class"], "ewLightbox");
+		$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
+		$this->picture->TooltipValue = "";
+		if ($this->picture->UseColorbox) {
+			if (ew_Empty($this->picture->TooltipValue))
+				$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
+			$this->picture->LinkAttrs["data-rel"] = "sub_menus_x_picture";
+			ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
 		}
 
-		// Price
-		$this->Price->LinkCustomAttributes = "";
-		$this->Price->HrefValue = "";
-		$this->Price->TooltipValue = "";
+		// price
+		$this->price->LinkCustomAttributes = "";
+		$this->price->HrefValue = "";
+		$this->price->TooltipValue = "";
 
-		// Description
-		$this->Description->LinkCustomAttributes = "";
-		$this->Description->HrefValue = "";
-		$this->Description->TooltipValue = "";
+		// description
+		$this->description->LinkCustomAttributes = "";
+		$this->description->HrefValue = "";
+		$this->description->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -790,74 +739,48 @@ class csub_menus extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// SubMenuID
-		$this->SubMenuID->EditAttrs["class"] = "form-control";
-		$this->SubMenuID->EditCustomAttributes = "";
-		$this->SubMenuID->EditValue = $this->SubMenuID->CurrentValue;
-		$this->SubMenuID->ViewCustomAttributes = "";
+		// sub_menu_id
+		$this->sub_menu_id->EditAttrs["class"] = "form-control";
+		$this->sub_menu_id->EditCustomAttributes = "";
+		$this->sub_menu_id->EditValue = $this->sub_menu_id->CurrentValue;
+		$this->sub_menu_id->ViewCustomAttributes = "";
 
-		// MenuID
-		$this->MenuID->EditAttrs["class"] = "form-control";
-		$this->MenuID->EditCustomAttributes = "";
-		if ($this->MenuID->getSessionValue() <> "") {
-			$this->MenuID->CurrentValue = $this->MenuID->getSessionValue();
-		if (strval($this->MenuID->CurrentValue) <> "") {
-			$sFilterWrk = "`MenuID`" . ew_SearchString("=", $this->MenuID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `MenuID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
-		$sWhereWrk = "";
-		$this->MenuID->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->MenuID, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->MenuID->ViewValue = $this->MenuID->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->MenuID->ViewValue = $this->MenuID->CurrentValue;
-			}
+		// menu_id
+		$this->menu_id->EditAttrs["class"] = "form-control";
+		$this->menu_id->EditCustomAttributes = "";
+
+		// name
+		$this->name->EditAttrs["class"] = "form-control";
+		$this->name->EditCustomAttributes = "";
+		$this->name->EditValue = $this->name->CurrentValue;
+		$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
+
+		// picture
+		$this->picture->EditAttrs["class"] = "form-control";
+		$this->picture->EditCustomAttributes = "";
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->ImageWidth = 100;
+			$this->picture->ImageHeight = 100;
+			$this->picture->ImageAlt = $this->picture->FldAlt();
+			$this->picture->EditValue = $this->picture->Upload->DbValue;
 		} else {
-			$this->MenuID->ViewValue = NULL;
+			$this->picture->EditValue = "";
 		}
-		$this->MenuID->ViewCustomAttributes = "";
-		} else {
-		}
+		if (!ew_Empty($this->picture->CurrentValue))
+				$this->picture->Upload->FileName = $this->picture->CurrentValue;
 
-		// Name
-		$this->Name->EditAttrs["class"] = "form-control";
-		$this->Name->EditCustomAttributes = "";
-		$this->Name->EditValue = $this->Name->CurrentValue;
-		$this->Name->PlaceHolder = ew_RemoveHtml($this->Name->FldCaption());
+		// price
+		$this->price->EditAttrs["class"] = "form-control";
+		$this->price->EditCustomAttributes = "";
+		$this->price->EditValue = $this->price->CurrentValue;
+		$this->price->PlaceHolder = ew_RemoveHtml($this->price->FldCaption());
+		if (strval($this->price->EditValue) <> "" && is_numeric($this->price->EditValue)) $this->price->EditValue = ew_FormatNumber($this->price->EditValue, -2, -2, -2, -2);
 
-		// Picture
-		$this->Picture->EditAttrs["class"] = "form-control";
-		$this->Picture->EditCustomAttributes = "";
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->ImageWidth = 100;
-			$this->Picture->ImageHeight = 100;
-			$this->Picture->ImageAlt = $this->Picture->FldAlt();
-			$this->Picture->EditValue = $this->Picture->Upload->DbValue;
-		} else {
-			$this->Picture->EditValue = "";
-		}
-		if (!ew_Empty($this->Picture->CurrentValue))
-				$this->Picture->Upload->FileName = $this->Picture->CurrentValue;
-
-		// Price
-		$this->Price->EditAttrs["class"] = "form-control";
-		$this->Price->EditCustomAttributes = "";
-		$this->Price->EditValue = $this->Price->CurrentValue;
-		$this->Price->PlaceHolder = ew_RemoveHtml($this->Price->FldCaption());
-		if (strval($this->Price->EditValue) <> "" && is_numeric($this->Price->EditValue)) $this->Price->EditValue = ew_FormatNumber($this->Price->EditValue, -2, -2, -2, -2);
-
-		// Description
-		$this->Description->EditAttrs["class"] = "form-control";
-		$this->Description->EditCustomAttributes = "";
-		$this->Description->EditValue = $this->Description->CurrentValue;
-		$this->Description->PlaceHolder = ew_RemoveHtml($this->Description->FldCaption());
+		// description
+		$this->description->EditAttrs["class"] = "form-control";
+		$this->description->EditCustomAttributes = "";
+		$this->description->EditValue = $this->description->CurrentValue;
+		$this->description->PlaceHolder = ew_RemoveHtml($this->description->FldCaption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -886,17 +809,17 @@ class csub_menus extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->SubMenuID->Exportable) $Doc->ExportCaption($this->SubMenuID);
-					if ($this->MenuID->Exportable) $Doc->ExportCaption($this->MenuID);
-					if ($this->Name->Exportable) $Doc->ExportCaption($this->Name);
-					if ($this->Picture->Exportable) $Doc->ExportCaption($this->Picture);
-					if ($this->Price->Exportable) $Doc->ExportCaption($this->Price);
-					if ($this->Description->Exportable) $Doc->ExportCaption($this->Description);
+					if ($this->sub_menu_id->Exportable) $Doc->ExportCaption($this->sub_menu_id);
+					if ($this->menu_id->Exportable) $Doc->ExportCaption($this->menu_id);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->picture->Exportable) $Doc->ExportCaption($this->picture);
+					if ($this->price->Exportable) $Doc->ExportCaption($this->price);
+					if ($this->description->Exportable) $Doc->ExportCaption($this->description);
 				} else {
-					if ($this->MenuID->Exportable) $Doc->ExportCaption($this->MenuID);
-					if ($this->Name->Exportable) $Doc->ExportCaption($this->Name);
-					if ($this->Picture->Exportable) $Doc->ExportCaption($this->Picture);
-					if ($this->Price->Exportable) $Doc->ExportCaption($this->Price);
+					if ($this->menu_id->Exportable) $Doc->ExportCaption($this->menu_id);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->picture->Exportable) $Doc->ExportCaption($this->picture);
+					if ($this->price->Exportable) $Doc->ExportCaption($this->price);
 				}
 				$Doc->EndExportRow();
 			}
@@ -928,17 +851,17 @@ class csub_menus extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->SubMenuID->Exportable) $Doc->ExportField($this->SubMenuID);
-						if ($this->MenuID->Exportable) $Doc->ExportField($this->MenuID);
-						if ($this->Name->Exportable) $Doc->ExportField($this->Name);
-						if ($this->Picture->Exportable) $Doc->ExportField($this->Picture);
-						if ($this->Price->Exportable) $Doc->ExportField($this->Price);
-						if ($this->Description->Exportable) $Doc->ExportField($this->Description);
+						if ($this->sub_menu_id->Exportable) $Doc->ExportField($this->sub_menu_id);
+						if ($this->menu_id->Exportable) $Doc->ExportField($this->menu_id);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->picture->Exportable) $Doc->ExportField($this->picture);
+						if ($this->price->Exportable) $Doc->ExportField($this->price);
+						if ($this->description->Exportable) $Doc->ExportField($this->description);
 					} else {
-						if ($this->MenuID->Exportable) $Doc->ExportField($this->MenuID);
-						if ($this->Name->Exportable) $Doc->ExportField($this->Name);
-						if ($this->Picture->Exportable) $Doc->ExportField($this->Picture);
-						if ($this->Price->Exportable) $Doc->ExportField($this->Price);
+						if ($this->menu_id->Exportable) $Doc->ExportField($this->menu_id);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->picture->Exportable) $Doc->ExportField($this->picture);
+						if ($this->price->Exportable) $Doc->ExportField($this->price);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

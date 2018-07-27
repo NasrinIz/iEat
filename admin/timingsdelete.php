@@ -315,9 +315,9 @@ class ctimings_delete extends ctimings {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->DayoftheWeek->SetVisibility();
-		$this->OrderTimeFrom->SetVisibility();
-		$this->OrderTimeTo->SetVisibility();
+		$this->day_of_the_week->SetVisibility();
+		$this->order_time_from->SetVisibility();
+		$this->order_time_to->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -497,19 +497,19 @@ class ctimings_delete extends ctimings {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->StoreID->setDbValue($row['StoreID']);
-		$this->DayoftheWeek->setDbValue($row['DayoftheWeek']);
-		$this->OrderTimeFrom->setDbValue($row['OrderTimeFrom']);
-		$this->OrderTimeTo->setDbValue($row['OrderTimeTo']);
+		$this->store_id->setDbValue($row['store_id']);
+		$this->day_of_the_week->setDbValue($row['day_of_the_week']);
+		$this->order_time_from->setDbValue($row['order_time_from']);
+		$this->order_time_to->setDbValue($row['order_time_to']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['StoreID'] = NULL;
-		$row['DayoftheWeek'] = NULL;
-		$row['OrderTimeFrom'] = NULL;
-		$row['OrderTimeTo'] = NULL;
+		$row['store_id'] = NULL;
+		$row['day_of_the_week'] = NULL;
+		$row['order_time_from'] = NULL;
+		$row['order_time_to'] = NULL;
 		return $row;
 	}
 
@@ -518,10 +518,10 @@ class ctimings_delete extends ctimings {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->StoreID->DbValue = $row['StoreID'];
-		$this->DayoftheWeek->DbValue = $row['DayoftheWeek'];
-		$this->OrderTimeFrom->DbValue = $row['OrderTimeFrom'];
-		$this->OrderTimeTo->DbValue = $row['OrderTimeTo'];
+		$this->store_id->DbValue = $row['store_id'];
+		$this->day_of_the_week->DbValue = $row['day_of_the_week'];
+		$this->order_time_from->DbValue = $row['order_time_from'];
+		$this->order_time_to->DbValue = $row['order_time_to'];
 	}
 
 	// Render row values based on field settings
@@ -534,45 +534,45 @@ class ctimings_delete extends ctimings {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// StoreID
-		// DayoftheWeek
-		// OrderTimeFrom
-		// OrderTimeTo
+		// store_id
+		// day_of_the_week
+		// order_time_from
+		// order_time_to
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// DayoftheWeek
-		if (strval($this->DayoftheWeek->CurrentValue) <> "") {
-			$this->DayoftheWeek->ViewValue = $this->DayoftheWeek->OptionCaption($this->DayoftheWeek->CurrentValue);
+		// day_of_the_week
+		if (strval($this->day_of_the_week->CurrentValue) <> "") {
+			$this->day_of_the_week->ViewValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
 		} else {
-			$this->DayoftheWeek->ViewValue = NULL;
+			$this->day_of_the_week->ViewValue = NULL;
 		}
-		$this->DayoftheWeek->ViewCustomAttributes = "";
+		$this->day_of_the_week->ViewCustomAttributes = "";
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom->ViewValue = $this->OrderTimeFrom->CurrentValue;
-		$this->OrderTimeFrom->ViewValue = ew_FormatDateTime($this->OrderTimeFrom->ViewValue, 4);
-		$this->OrderTimeFrom->ViewCustomAttributes = "";
+		// order_time_from
+		$this->order_time_from->ViewValue = $this->order_time_from->CurrentValue;
+		$this->order_time_from->ViewValue = ew_FormatDateTime($this->order_time_from->ViewValue, 4);
+		$this->order_time_from->ViewCustomAttributes = "";
 
-		// OrderTimeTo
-		$this->OrderTimeTo->ViewValue = $this->OrderTimeTo->CurrentValue;
-		$this->OrderTimeTo->ViewValue = ew_FormatDateTime($this->OrderTimeTo->ViewValue, 4);
-		$this->OrderTimeTo->ViewCustomAttributes = "";
+		// order_time_to
+		$this->order_time_to->ViewValue = $this->order_time_to->CurrentValue;
+		$this->order_time_to->ViewValue = ew_FormatDateTime($this->order_time_to->ViewValue, 4);
+		$this->order_time_to->ViewCustomAttributes = "";
 
-			// DayoftheWeek
-			$this->DayoftheWeek->LinkCustomAttributes = "";
-			$this->DayoftheWeek->HrefValue = "";
-			$this->DayoftheWeek->TooltipValue = "";
+			// day_of_the_week
+			$this->day_of_the_week->LinkCustomAttributes = "";
+			$this->day_of_the_week->HrefValue = "";
+			$this->day_of_the_week->TooltipValue = "";
 
-			// OrderTimeFrom
-			$this->OrderTimeFrom->LinkCustomAttributes = "";
-			$this->OrderTimeFrom->HrefValue = "";
-			$this->OrderTimeFrom->TooltipValue = "";
+			// order_time_from
+			$this->order_time_from->LinkCustomAttributes = "";
+			$this->order_time_from->HrefValue = "";
+			$this->order_time_from->TooltipValue = "";
 
-			// OrderTimeTo
-			$this->OrderTimeTo->LinkCustomAttributes = "";
-			$this->OrderTimeTo->HrefValue = "";
-			$this->OrderTimeTo->TooltipValue = "";
+			// order_time_to
+			$this->order_time_to->LinkCustomAttributes = "";
+			$this->order_time_to->HrefValue = "";
+			$this->order_time_to->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -622,13 +622,13 @@ class ctimings_delete extends ctimings {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['StoreID'];
+				$sThisKey .= $row['store_id'];
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['DayoftheWeek'];
+				$sThisKey .= $row['day_of_the_week'];
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['OrderTimeFrom'];
+				$sThisKey .= $row['order_time_from'];
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['OrderTimeTo'];
+				$sThisKey .= $row['order_time_to'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -790,8 +790,8 @@ ftimingsdelete.Form_CustomValidate =
 ftimingsdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ftimingsdelete.Lists["x_DayoftheWeek"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-ftimingsdelete.Lists["x_DayoftheWeek"].Options = <?php echo json_encode($timings_delete->DayoftheWeek->Options()) ?>;
+ftimingsdelete.Lists["x_day_of_the_week"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ftimingsdelete.Lists["x_day_of_the_week"].Options = <?php echo json_encode($timings_delete->day_of_the_week->Options()) ?>;
 
 // Form object for search
 </script>
@@ -818,14 +818,14 @@ $timings_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($timings->DayoftheWeek->Visible) { // DayoftheWeek ?>
-		<th class="<?php echo $timings->DayoftheWeek->HeaderCellClass() ?>"><span id="elh_timings_DayoftheWeek" class="timings_DayoftheWeek"><?php echo $timings->DayoftheWeek->FldCaption() ?></span></th>
+<?php if ($timings->day_of_the_week->Visible) { // day_of_the_week ?>
+		<th class="<?php echo $timings->day_of_the_week->HeaderCellClass() ?>"><span id="elh_timings_day_of_the_week" class="timings_day_of_the_week"><?php echo $timings->day_of_the_week->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($timings->OrderTimeFrom->Visible) { // OrderTimeFrom ?>
-		<th class="<?php echo $timings->OrderTimeFrom->HeaderCellClass() ?>"><span id="elh_timings_OrderTimeFrom" class="timings_OrderTimeFrom"><?php echo $timings->OrderTimeFrom->FldCaption() ?></span></th>
+<?php if ($timings->order_time_from->Visible) { // order_time_from ?>
+		<th class="<?php echo $timings->order_time_from->HeaderCellClass() ?>"><span id="elh_timings_order_time_from" class="timings_order_time_from"><?php echo $timings->order_time_from->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($timings->OrderTimeTo->Visible) { // OrderTimeTo ?>
-		<th class="<?php echo $timings->OrderTimeTo->HeaderCellClass() ?>"><span id="elh_timings_OrderTimeTo" class="timings_OrderTimeTo"><?php echo $timings->OrderTimeTo->FldCaption() ?></span></th>
+<?php if ($timings->order_time_to->Visible) { // order_time_to ?>
+		<th class="<?php echo $timings->order_time_to->HeaderCellClass() ?>"><span id="elh_timings_order_time_to" class="timings_order_time_to"><?php echo $timings->order_time_to->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -848,27 +848,27 @@ while (!$timings_delete->Recordset->EOF) {
 	$timings_delete->RenderRow();
 ?>
 	<tr<?php echo $timings->RowAttributes() ?>>
-<?php if ($timings->DayoftheWeek->Visible) { // DayoftheWeek ?>
-		<td<?php echo $timings->DayoftheWeek->CellAttributes() ?>>
-<span id="el<?php echo $timings_delete->RowCnt ?>_timings_DayoftheWeek" class="timings_DayoftheWeek">
-<span<?php echo $timings->DayoftheWeek->ViewAttributes() ?>>
-<?php echo $timings->DayoftheWeek->ListViewValue() ?></span>
+<?php if ($timings->day_of_the_week->Visible) { // day_of_the_week ?>
+		<td<?php echo $timings->day_of_the_week->CellAttributes() ?>>
+<span id="el<?php echo $timings_delete->RowCnt ?>_timings_day_of_the_week" class="timings_day_of_the_week">
+<span<?php echo $timings->day_of_the_week->ViewAttributes() ?>>
+<?php echo $timings->day_of_the_week->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($timings->OrderTimeFrom->Visible) { // OrderTimeFrom ?>
-		<td<?php echo $timings->OrderTimeFrom->CellAttributes() ?>>
-<span id="el<?php echo $timings_delete->RowCnt ?>_timings_OrderTimeFrom" class="timings_OrderTimeFrom">
-<span<?php echo $timings->OrderTimeFrom->ViewAttributes() ?>>
-<?php echo $timings->OrderTimeFrom->ListViewValue() ?></span>
+<?php if ($timings->order_time_from->Visible) { // order_time_from ?>
+		<td<?php echo $timings->order_time_from->CellAttributes() ?>>
+<span id="el<?php echo $timings_delete->RowCnt ?>_timings_order_time_from" class="timings_order_time_from">
+<span<?php echo $timings->order_time_from->ViewAttributes() ?>>
+<?php echo $timings->order_time_from->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($timings->OrderTimeTo->Visible) { // OrderTimeTo ?>
-		<td<?php echo $timings->OrderTimeTo->CellAttributes() ?>>
-<span id="el<?php echo $timings_delete->RowCnt ?>_timings_OrderTimeTo" class="timings_OrderTimeTo">
-<span<?php echo $timings->OrderTimeTo->ViewAttributes() ?>>
-<?php echo $timings->OrderTimeTo->ListViewValue() ?></span>
+<?php if ($timings->order_time_to->Visible) { // order_time_to ?>
+		<td<?php echo $timings->order_time_to->CellAttributes() ?>>
+<span id="el<?php echo $timings_delete->RowCnt ?>_timings_order_time_to" class="timings_order_time_to">
+<span<?php echo $timings->order_time_to->ViewAttributes() ?>>
+<?php echo $timings->order_time_to->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

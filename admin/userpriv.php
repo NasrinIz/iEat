@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "userlevelsinfo.php" ?>
+<?php include_once "user_levelsinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -16,7 +16,7 @@ ob_start(); // Turn on output buffering
 
 $userpriv = NULL; // Initialize page object first
 
-class cuserpriv extends cuserlevels {
+class cuserpriv extends cuser_levels {
 
 	// Page ID
 	var $PageID = 'userpriv';
@@ -236,12 +236,12 @@ class cuserpriv extends cuserlevels {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (userlevels)
-		if (!isset($GLOBALS["userlevels"]) || get_class($GLOBALS["userlevels"]) == "cuserlevels") {
-			$GLOBALS["userlevels"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["userlevels"];
+		// Table object (user_levels)
+		if (!isset($GLOBALS["user_levels"]) || get_class($GLOBALS["user_levels"]) == "cuser_levels") {
+			$GLOBALS["user_levels"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["user_levels"];
 		}
-		if (!isset($GLOBALS["userlevels"])) $GLOBALS["userlevels"] = &$this;
+		if (!isset($GLOBALS["user_levels"])) $GLOBALS["user_levels"] = &$this;
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
@@ -278,7 +278,7 @@ class cuserpriv extends cuserlevels {
 		$Security = new cAdvancedSecurity();
 		if (!$Security->IsLoggedIn()) $Security->AutoLogin();
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
-		$Security->LoadCurrentUserLevel(CurrentProjectID() . 'userlevels');
+		$Security->LoadCurrentUserLevel(CurrentProjectID() . 'user_levels');
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
 		if (!$Security->CanAdmin()) {
 			$Security->SaveLastUrl();
@@ -353,7 +353,7 @@ class cuserpriv extends cuserlevels {
 		global $Breadcrumb;
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
 		$Breadcrumb = new cBreadcrumb;
-		$Breadcrumb->Add("list", "userlevels", "userlevelslist.php", "", "userlevels");
+		$Breadcrumb->Add("list", "user_levels", "user_levelslist.php", "", "user_levels");
 		$Breadcrumb->Add("userpriv", "UserLevelPermission", $url);
 		$this->Heading = $Language->Phrase("UserLevelPermission");
 
@@ -370,12 +370,12 @@ class cuserpriv extends cuserlevels {
 			$this->CurrentAction = "I"; // Display with input box
 
 			// Load key from QueryString
-			if (@$_GET["userlevelid"] <> "") {
-				$this->userlevelid->setQueryStringValue($_GET["userlevelid"]);
+			if (@$_GET["user_level_id"] <> "") {
+				$this->user_level_id->setQueryStringValue($_GET["user_level_id"]);
 			} else {
-				$this->Page_Terminate("userlevelslist.php"); // Return to list
+				$this->Page_Terminate("user_levelslist.php"); // Return to list
 			}
-			if ($this->userlevelid->QueryStringValue == "-1") {
+			if ($this->user_level_id->QueryStringValue == "-1") {
 				$this->Disabled = " disabled";
 			} else {
 				$this->Disabled = "";
@@ -384,7 +384,7 @@ class cuserpriv extends cuserlevels {
 			$this->CurrentAction = $_POST["a_edit"];
 
 			// Get fields from form
-			$this->userlevelid->setFormValue($_POST["x_userlevelid"]);
+			$this->user_level_id->setFormValue($_POST["x_user_level_id"]);
 			for ($i = 0; $i < $this->TableNameCount; $i++) {
 				if (isset($_POST["Table_" . $i])) {
 					if (defined("EW_USER_LEVEL_COMPAT")) {
@@ -403,10 +403,10 @@ class cuserpriv extends cuserlevels {
 		switch ($this->CurrentAction) {
 			case "I": // Display
 				if (!$Security->SetupUserLevelEx()) // Get all User Level info
-					$this->Page_Terminate("userlevelslist.php"); // Return to list
+					$this->Page_Terminate("user_levelslist.php"); // Return to list
 				$ar = array();
 				for ($i = 0; $i < $this->TableNameCount; $i++) {
-					$tempPriv = $Security->GetUserLevelPrivEx($this->TableList[$i][4] . $this->TableList[$i][0], $this->userlevelid->CurrentValue);
+					$tempPriv = $Security->GetUserLevelPrivEx($this->TableList[$i][4] . $this->TableList[$i][0], $this->user_level_id->CurrentValue);
 					$ar[] = array("table" => ew_ConvertToUtf8($this->GetTableCaption($i)), "index" => $i, "permission" => $tempPriv);
 				}
 				$this->Privileges["disabled"] = $this->Disabled;
@@ -432,7 +432,7 @@ class cuserpriv extends cuserlevels {
 						$this->setSuccessMessage($Language->Phrase("UpdateSuccess")); // Set up update success message
 
 					// Alternatively, comment out the following line to go back to this page
-					$this->Page_Terminate("userlevelslist.php"); // Return to list
+					$this->Page_Terminate("user_levelslist.php"); // Return to list
 				}
 		}
 	}
@@ -444,15 +444,15 @@ class cuserpriv extends cuserlevels {
 		foreach ($this->Privileges as $i => $privilege) {
 			$Sql = "SELECT * FROM " . EW_USER_LEVEL_PRIV_TABLE . " WHERE " .
 				EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD . " = '" . ew_AdjustSql($this->TableList[$i][4] . $this->TableList[$i][0], EW_USER_LEVEL_PRIV_DBID) . "' AND " .
-				EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . " = " . $this->userlevelid->CurrentValue;
+				EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . " = " . $this->user_level_id->CurrentValue;
 			$rs = $c->Execute($Sql);
 			if ($rs && !$rs->EOF) {
 				$Sql = "UPDATE " . EW_USER_LEVEL_PRIV_TABLE . " SET " . EW_USER_LEVEL_PRIV_PRIV_FIELD . " = " . $privilege . " WHERE " .
 					EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD . " = '" . ew_AdjustSql($this->TableList[$i][4] . $this->TableList[$i][0], EW_USER_LEVEL_PRIV_DBID) . "' AND " .
-					EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . " = " . $this->userlevelid->CurrentValue;
+					EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . " = " . $this->user_level_id->CurrentValue;
 				$c->Execute($Sql);
 			} else {
-				$Sql = "INSERT INTO " . EW_USER_LEVEL_PRIV_TABLE . " (" . EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD . ", " . EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . ", " . EW_USER_LEVEL_PRIV_PRIV_FIELD . ") VALUES ('" . ew_AdjustSql($this->TableList[$i][4] . $this->TableList[$i][0], EW_USER_LEVEL_PRIV_DBID) . "', " . $this->userlevelid->CurrentValue . ", " . $privilege . ")";
+				$Sql = "INSERT INTO " . EW_USER_LEVEL_PRIV_TABLE . " (" . EW_USER_LEVEL_PRIV_TABLE_NAME_FIELD . ", " . EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . ", " . EW_USER_LEVEL_PRIV_PRIV_FIELD . ") VALUES ('" . ew_AdjustSql($this->TableList[$i][4] . $this->TableList[$i][0], EW_USER_LEVEL_PRIV_DBID) . "', " . $this->user_level_id->CurrentValue . ", " . $privilege . ")";
 				$c->Execute($Sql);
 			}
 			if ($rs)
@@ -603,13 +603,13 @@ var fuserpriv = new ew_Form("fuserpriv");
 <?php if ($userpriv->CheckToken) { ?>
 <input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $userpriv->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="userlevels">
+<input type="hidden" name="t" value="user_levels">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
-<input type="hidden" name="x_userlevelid" id="x_userlevelid" value="<?php echo $userlevels->userlevelid->CurrentValue ?>">
+<input type="hidden" name="x_user_level_id" id="x_user_level_id" value="<?php echo $user_levels->user_level_id->CurrentValue ?>">
 <div class="ewDesktop">
 <div class="box ewBox ewGrid">
 <div class="box-header with-border">
-	<h3 class="box-title"><?php echo $Language->Phrase("UserLevel") ?><?php echo $Security->GetUserLevelName($userlevels->userlevelid->CurrentValue) ?> (<?php echo $userlevels->userlevelid->CurrentValue ?>)</h3>
+	<h3 class="box-title"><?php echo $Language->Phrase("UserLevel") ?><?php echo $Security->GetUserLevelName($user_levels->user_level_id->CurrentValue) ?> (<?php echo $user_levels->user_level_id->CurrentValue ?>)</h3>
 	<div class="box-tools pull-right">
 		<div class="has-feedback">
 			<input type="text" name="tableName" id="tableName" class="form-control input-sm" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>" autocomplete="off">

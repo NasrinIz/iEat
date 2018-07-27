@@ -7,7 +7,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn14.php" ?>
 <?php include_once "ordersinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
-<?php include_once "orderdetailsgridcls.php" ?>
+<?php include_once "order_detailsgridcls.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
 
@@ -321,22 +321,22 @@ class corders_edit extends corders {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->OrderID->SetVisibility();
+		$this->order_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->OrderID->Visible = FALSE;
-		$this->CustomerID->SetVisibility();
-		$this->FullName->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->ZipCode->SetVisibility();
-		$this->Phone->SetVisibility();
-		$this->Discount->SetVisibility();
-		$this->TotalPrice->SetVisibility();
-		$this->PaymentTypeID->SetVisibility();
-		$this->DeliveryTypeID->SetVisibility();
-		$this->Description->SetVisibility();
-		$this->FeedBack->SetVisibility();
-		$this->OrderDateTime->SetVisibility();
+			$this->order_id->Visible = FALSE;
+		$this->customer_id->SetVisibility();
+		$this->full_name->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->zip_code->SetVisibility();
+		$this->phone->SetVisibility();
+		$this->discount->SetVisibility();
+		$this->total_price->SetVisibility();
+		$this->payment_type_id->SetVisibility();
+		$this->delivery_type_id->SetVisibility();
+		$this->description->SetVisibility();
+		$this->feedback->SetVisibility();
+		$this->order_date_time->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -358,12 +358,12 @@ class corders_edit extends corders {
 			$sDetailTblVar = $this->getCurrentDetailTable();
 			if ($sDetailTblVar <> "") {
 				$DetailTblVar = explode(",", $sDetailTblVar);
-				if (in_array("orderdetails", $DetailTblVar)) {
+				if (in_array("order_details", $DetailTblVar)) {
 
-					// Process auto fill for detail table 'orderdetails'
-					if (preg_match('/^forderdetails(grid|add|addopt|edit|update|search)$/', @$_POST["form"])) {
-						if (!isset($GLOBALS["orderdetails_grid"])) $GLOBALS["orderdetails_grid"] = new corderdetails_grid;
-						$GLOBALS["orderdetails_grid"]->Page_Init();
+					// Process auto fill for detail table 'order_details'
+					if (preg_match('/^forder_details(grid|add|addopt|edit|update|search)$/', @$_POST["form"])) {
+						if (!isset($GLOBALS["order_details_grid"])) $GLOBALS["order_details_grid"] = new corder_details_grid;
+						$GLOBALS["order_details_grid"]->Page_Init();
 						$this->Page_Terminate();
 						exit();
 					}
@@ -473,19 +473,19 @@ class corders_edit extends corders {
 				$postBack = TRUE;
 
 			// Load key from Form
-			if ($objForm->HasValue("x_OrderID")) {
-				$this->OrderID->setFormValue($objForm->GetValue("x_OrderID"));
+			if ($objForm->HasValue("x_order_id")) {
+				$this->order_id->setFormValue($objForm->GetValue("x_order_id"));
 			}
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 
 			// Load key from QueryString
 			$loadByQuery = FALSE;
-			if (isset($_GET["OrderID"])) {
-				$this->OrderID->setQueryStringValue($_GET["OrderID"]);
+			if (isset($_GET["order_id"])) {
+				$this->order_id->setQueryStringValue($_GET["order_id"]);
 				$loadByQuery = TRUE;
 			} else {
-				$this->OrderID->CurrentValue = NULL;
+				$this->order_id->CurrentValue = NULL;
 			}
 		}
 
@@ -601,68 +601,68 @@ class corders_edit extends corders {
 
 		// Load from form
 		global $objForm;
-		if (!$this->OrderID->FldIsDetailKey)
-			$this->OrderID->setFormValue($objForm->GetValue("x_OrderID"));
-		if (!$this->CustomerID->FldIsDetailKey) {
-			$this->CustomerID->setFormValue($objForm->GetValue("x_CustomerID"));
+		if (!$this->order_id->FldIsDetailKey)
+			$this->order_id->setFormValue($objForm->GetValue("x_order_id"));
+		if (!$this->customer_id->FldIsDetailKey) {
+			$this->customer_id->setFormValue($objForm->GetValue("x_customer_id"));
 		}
-		if (!$this->FullName->FldIsDetailKey) {
-			$this->FullName->setFormValue($objForm->GetValue("x_FullName"));
+		if (!$this->full_name->FldIsDetailKey) {
+			$this->full_name->setFormValue($objForm->GetValue("x_full_name"));
 		}
-		if (!$this->ProvinceID->FldIsDetailKey) {
-			$this->ProvinceID->setFormValue($objForm->GetValue("x_ProvinceID"));
+		if (!$this->province_id->FldIsDetailKey) {
+			$this->province_id->setFormValue($objForm->GetValue("x_province_id"));
 		}
-		if (!$this->Address->FldIsDetailKey) {
-			$this->Address->setFormValue($objForm->GetValue("x_Address"));
+		if (!$this->address->FldIsDetailKey) {
+			$this->address->setFormValue($objForm->GetValue("x_address"));
 		}
-		if (!$this->ZipCode->FldIsDetailKey) {
-			$this->ZipCode->setFormValue($objForm->GetValue("x_ZipCode"));
+		if (!$this->zip_code->FldIsDetailKey) {
+			$this->zip_code->setFormValue($objForm->GetValue("x_zip_code"));
 		}
-		if (!$this->Phone->FldIsDetailKey) {
-			$this->Phone->setFormValue($objForm->GetValue("x_Phone"));
+		if (!$this->phone->FldIsDetailKey) {
+			$this->phone->setFormValue($objForm->GetValue("x_phone"));
 		}
-		if (!$this->Discount->FldIsDetailKey) {
-			$this->Discount->setFormValue($objForm->GetValue("x_Discount"));
+		if (!$this->discount->FldIsDetailKey) {
+			$this->discount->setFormValue($objForm->GetValue("x_discount"));
 		}
-		if (!$this->TotalPrice->FldIsDetailKey) {
-			$this->TotalPrice->setFormValue($objForm->GetValue("x_TotalPrice"));
+		if (!$this->total_price->FldIsDetailKey) {
+			$this->total_price->setFormValue($objForm->GetValue("x_total_price"));
 		}
-		if (!$this->PaymentTypeID->FldIsDetailKey) {
-			$this->PaymentTypeID->setFormValue($objForm->GetValue("x_PaymentTypeID"));
+		if (!$this->payment_type_id->FldIsDetailKey) {
+			$this->payment_type_id->setFormValue($objForm->GetValue("x_payment_type_id"));
 		}
-		if (!$this->DeliveryTypeID->FldIsDetailKey) {
-			$this->DeliveryTypeID->setFormValue($objForm->GetValue("x_DeliveryTypeID"));
+		if (!$this->delivery_type_id->FldIsDetailKey) {
+			$this->delivery_type_id->setFormValue($objForm->GetValue("x_delivery_type_id"));
 		}
-		if (!$this->Description->FldIsDetailKey) {
-			$this->Description->setFormValue($objForm->GetValue("x_Description"));
+		if (!$this->description->FldIsDetailKey) {
+			$this->description->setFormValue($objForm->GetValue("x_description"));
 		}
-		if (!$this->FeedBack->FldIsDetailKey) {
-			$this->FeedBack->setFormValue($objForm->GetValue("x_FeedBack"));
+		if (!$this->feedback->FldIsDetailKey) {
+			$this->feedback->setFormValue($objForm->GetValue("x_feedback"));
 		}
-		if (!$this->OrderDateTime->FldIsDetailKey) {
-			$this->OrderDateTime->setFormValue($objForm->GetValue("x_OrderDateTime"));
-			$this->OrderDateTime->CurrentValue = ew_UnFormatDateTime($this->OrderDateTime->CurrentValue, 0);
+		if (!$this->order_date_time->FldIsDetailKey) {
+			$this->order_date_time->setFormValue($objForm->GetValue("x_order_date_time"));
+			$this->order_date_time->CurrentValue = ew_UnFormatDateTime($this->order_date_time->CurrentValue, 0);
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->OrderID->CurrentValue = $this->OrderID->FormValue;
-		$this->CustomerID->CurrentValue = $this->CustomerID->FormValue;
-		$this->FullName->CurrentValue = $this->FullName->FormValue;
-		$this->ProvinceID->CurrentValue = $this->ProvinceID->FormValue;
-		$this->Address->CurrentValue = $this->Address->FormValue;
-		$this->ZipCode->CurrentValue = $this->ZipCode->FormValue;
-		$this->Phone->CurrentValue = $this->Phone->FormValue;
-		$this->Discount->CurrentValue = $this->Discount->FormValue;
-		$this->TotalPrice->CurrentValue = $this->TotalPrice->FormValue;
-		$this->PaymentTypeID->CurrentValue = $this->PaymentTypeID->FormValue;
-		$this->DeliveryTypeID->CurrentValue = $this->DeliveryTypeID->FormValue;
-		$this->Description->CurrentValue = $this->Description->FormValue;
-		$this->FeedBack->CurrentValue = $this->FeedBack->FormValue;
-		$this->OrderDateTime->CurrentValue = $this->OrderDateTime->FormValue;
-		$this->OrderDateTime->CurrentValue = ew_UnFormatDateTime($this->OrderDateTime->CurrentValue, 0);
+		$this->order_id->CurrentValue = $this->order_id->FormValue;
+		$this->customer_id->CurrentValue = $this->customer_id->FormValue;
+		$this->full_name->CurrentValue = $this->full_name->FormValue;
+		$this->province_id->CurrentValue = $this->province_id->FormValue;
+		$this->address->CurrentValue = $this->address->FormValue;
+		$this->zip_code->CurrentValue = $this->zip_code->FormValue;
+		$this->phone->CurrentValue = $this->phone->FormValue;
+		$this->discount->CurrentValue = $this->discount->FormValue;
+		$this->total_price->CurrentValue = $this->total_price->FormValue;
+		$this->payment_type_id->CurrentValue = $this->payment_type_id->FormValue;
+		$this->delivery_type_id->CurrentValue = $this->delivery_type_id->FormValue;
+		$this->description->CurrentValue = $this->description->FormValue;
+		$this->feedback->CurrentValue = $this->feedback->FormValue;
+		$this->order_date_time->CurrentValue = $this->order_date_time->FormValue;
+		$this->order_date_time->CurrentValue = ew_UnFormatDateTime($this->order_date_time->CurrentValue, 0);
 	}
 
 	// Load row based on key values
@@ -698,39 +698,39 @@ class corders_edit extends corders {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->OrderID->setDbValue($row['OrderID']);
-		$this->CustomerID->setDbValue($row['CustomerID']);
-		$this->FullName->setDbValue($row['FullName']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->ZipCode->setDbValue($row['ZipCode']);
-		$this->Phone->setDbValue($row['Phone']);
-		$this->Discount->setDbValue($row['Discount']);
-		$this->TotalPrice->setDbValue($row['TotalPrice']);
-		$this->PaymentTypeID->setDbValue($row['PaymentTypeID']);
-		$this->DeliveryTypeID->setDbValue($row['DeliveryTypeID']);
-		$this->Description->setDbValue($row['Description']);
-		$this->FeedBack->setDbValue($row['FeedBack']);
-		$this->OrderDateTime->setDbValue($row['OrderDateTime']);
+		$this->order_id->setDbValue($row['order_id']);
+		$this->customer_id->setDbValue($row['customer_id']);
+		$this->full_name->setDbValue($row['full_name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->zip_code->setDbValue($row['zip_code']);
+		$this->phone->setDbValue($row['phone']);
+		$this->discount->setDbValue($row['discount']);
+		$this->total_price->setDbValue($row['total_price']);
+		$this->payment_type_id->setDbValue($row['payment_type_id']);
+		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
+		$this->description->setDbValue($row['description']);
+		$this->feedback->setDbValue($row['feedback']);
+		$this->order_date_time->setDbValue($row['order_date_time']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['OrderID'] = NULL;
-		$row['CustomerID'] = NULL;
-		$row['FullName'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['ZipCode'] = NULL;
-		$row['Phone'] = NULL;
-		$row['Discount'] = NULL;
-		$row['TotalPrice'] = NULL;
-		$row['PaymentTypeID'] = NULL;
-		$row['DeliveryTypeID'] = NULL;
-		$row['Description'] = NULL;
-		$row['FeedBack'] = NULL;
-		$row['OrderDateTime'] = NULL;
+		$row['order_id'] = NULL;
+		$row['customer_id'] = NULL;
+		$row['full_name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['zip_code'] = NULL;
+		$row['phone'] = NULL;
+		$row['discount'] = NULL;
+		$row['total_price'] = NULL;
+		$row['payment_type_id'] = NULL;
+		$row['delivery_type_id'] = NULL;
+		$row['description'] = NULL;
+		$row['feedback'] = NULL;
+		$row['order_date_time'] = NULL;
 		return $row;
 	}
 
@@ -739,20 +739,20 @@ class corders_edit extends corders {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->OrderID->DbValue = $row['OrderID'];
-		$this->CustomerID->DbValue = $row['CustomerID'];
-		$this->FullName->DbValue = $row['FullName'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->ZipCode->DbValue = $row['ZipCode'];
-		$this->Phone->DbValue = $row['Phone'];
-		$this->Discount->DbValue = $row['Discount'];
-		$this->TotalPrice->DbValue = $row['TotalPrice'];
-		$this->PaymentTypeID->DbValue = $row['PaymentTypeID'];
-		$this->DeliveryTypeID->DbValue = $row['DeliveryTypeID'];
-		$this->Description->DbValue = $row['Description'];
-		$this->FeedBack->DbValue = $row['FeedBack'];
-		$this->OrderDateTime->DbValue = $row['OrderDateTime'];
+		$this->order_id->DbValue = $row['order_id'];
+		$this->customer_id->DbValue = $row['customer_id'];
+		$this->full_name->DbValue = $row['full_name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->zip_code->DbValue = $row['zip_code'];
+		$this->phone->DbValue = $row['phone'];
+		$this->discount->DbValue = $row['discount'];
+		$this->total_price->DbValue = $row['total_price'];
+		$this->payment_type_id->DbValue = $row['payment_type_id'];
+		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
+		$this->description->DbValue = $row['description'];
+		$this->feedback->DbValue = $row['feedback'];
+		$this->order_date_time->DbValue = $row['order_date_time'];
 	}
 
 	// Load old record
@@ -760,8 +760,8 @@ class corders_edit extends corders {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("OrderID")) <> "")
-			$this->OrderID->CurrentValue = $this->getKey("OrderID"); // OrderID
+		if (strval($this->getKey("order_id")) <> "")
+			$this->order_id->CurrentValue = $this->getKey("order_id"); // order_id
 		else
 			$bValidKey = FALSE;
 
@@ -784,437 +784,437 @@ class corders_edit extends corders {
 		// Initialize URLs
 		// Convert decimal values if posted back
 
-		if ($this->Discount->FormValue == $this->Discount->CurrentValue && is_numeric(ew_StrToFloat($this->Discount->CurrentValue)))
-			$this->Discount->CurrentValue = ew_StrToFloat($this->Discount->CurrentValue);
+		if ($this->discount->FormValue == $this->discount->CurrentValue && is_numeric(ew_StrToFloat($this->discount->CurrentValue)))
+			$this->discount->CurrentValue = ew_StrToFloat($this->discount->CurrentValue);
 
 		// Convert decimal values if posted back
-		if ($this->TotalPrice->FormValue == $this->TotalPrice->CurrentValue && is_numeric(ew_StrToFloat($this->TotalPrice->CurrentValue)))
-			$this->TotalPrice->CurrentValue = ew_StrToFloat($this->TotalPrice->CurrentValue);
+		if ($this->total_price->FormValue == $this->total_price->CurrentValue && is_numeric(ew_StrToFloat($this->total_price->CurrentValue)))
+			$this->total_price->CurrentValue = ew_StrToFloat($this->total_price->CurrentValue);
 
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// OrderID
-		// CustomerID
-		// FullName
-		// ProvinceID
-		// Address
-		// ZipCode
-		// Phone
-		// Discount
-		// TotalPrice
-		// PaymentTypeID
-		// DeliveryTypeID
-		// Description
-		// FeedBack
-		// OrderDateTime
+		// order_id
+		// customer_id
+		// full_name
+		// province_id
+		// address
+		// zip_code
+		// phone
+		// discount
+		// total_price
+		// payment_type_id
+		// delivery_type_id
+		// description
+		// feedback
+		// order_date_time
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// OrderID
-		$this->OrderID->ViewValue = $this->OrderID->CurrentValue;
-		$this->OrderID->ViewCustomAttributes = "";
+		// order_id
+		$this->order_id->ViewValue = $this->order_id->CurrentValue;
+		$this->order_id->ViewCustomAttributes = "";
 
-		// CustomerID
-		if (strval($this->CustomerID->CurrentValue) <> "") {
-			$sFilterWrk = "`CustomerID`" . ew_SearchString("=", $this->CustomerID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `CustomerID`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+		// customer_id
+		if (strval($this->customer_id->CurrentValue) <> "") {
+			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
 		$sWhereWrk = "";
-		$this->CustomerID->LookupFilters = array();
+		$this->customer_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `FullName`";
+		$sSqlWrk .= " ORDER BY `full_name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->CustomerID->ViewValue = $this->CustomerID->DisplayValue($arwrk);
+				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
 			}
 		} else {
-			$this->CustomerID->ViewValue = NULL;
+			$this->customer_id->ViewValue = NULL;
 		}
-		$this->CustomerID->ViewCustomAttributes = "";
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Discount
-		$this->Discount->ViewValue = $this->Discount->CurrentValue;
-		$this->Discount->ViewCustomAttributes = "";
+		// discount
+		$this->discount->ViewValue = $this->discount->CurrentValue;
+		$this->discount->ViewCustomAttributes = "";
 
-		// TotalPrice
-		$this->TotalPrice->ViewValue = $this->TotalPrice->CurrentValue;
-		$this->TotalPrice->ViewValue = ew_FormatCurrency($this->TotalPrice->ViewValue, 0, -2, -2, -2);
-		$this->TotalPrice->ViewCustomAttributes = "";
+		// total_price
+		$this->total_price->ViewValue = $this->total_price->CurrentValue;
+		$this->total_price->ViewValue = ew_FormatCurrency($this->total_price->ViewValue, 0, -2, -2, -2);
+		$this->total_price->ViewCustomAttributes = "";
 
-		// PaymentTypeID
-		if (strval($this->PaymentTypeID->CurrentValue) <> "") {
-			$sFilterWrk = "`PaymentTypeID`" . ew_SearchString("=", $this->PaymentTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `PaymentTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `paymenttypes`";
+		// payment_type_id
+		if (strval($this->payment_type_id->CurrentValue) <> "") {
+			$sFilterWrk = "`payment_type_id`" . ew_SearchString("=", $this->payment_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `payment_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `payment_types`";
 		$sWhereWrk = "";
-		$this->PaymentTypeID->LookupFilters = array();
+		$this->payment_type_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->PaymentTypeID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->payment_type_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->PaymentTypeID->ViewValue = $this->PaymentTypeID->DisplayValue($arwrk);
+				$this->payment_type_id->ViewValue = $this->payment_type_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->PaymentTypeID->ViewValue = $this->PaymentTypeID->CurrentValue;
+				$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
 			}
 		} else {
-			$this->PaymentTypeID->ViewValue = NULL;
+			$this->payment_type_id->ViewValue = NULL;
 		}
-		$this->PaymentTypeID->ViewCustomAttributes = "";
+		$this->payment_type_id->ViewCustomAttributes = "";
 
-		// DeliveryTypeID
-		if (strval($this->DeliveryTypeID->CurrentValue) <> "") {
-			$sFilterWrk = "`DeliveryTypeID`" . ew_SearchString("=", $this->DeliveryTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `DeliveryTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `deliverytypes`";
+		// delivery_type_id
+		if (strval($this->delivery_type_id->CurrentValue) <> "") {
+			$sFilterWrk = "`delivery_type_id`" . ew_SearchString("=", $this->delivery_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `delivery_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `delivery_types`";
 		$sWhereWrk = "";
-		$this->DeliveryTypeID->LookupFilters = array();
+		$this->delivery_type_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->DeliveryTypeID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->delivery_type_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->DeliveryTypeID->ViewValue = $this->DeliveryTypeID->DisplayValue($arwrk);
+				$this->delivery_type_id->ViewValue = $this->delivery_type_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->DeliveryTypeID->ViewValue = $this->DeliveryTypeID->CurrentValue;
+				$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
 			}
 		} else {
-			$this->DeliveryTypeID->ViewValue = NULL;
+			$this->delivery_type_id->ViewValue = NULL;
 		}
-		$this->DeliveryTypeID->ViewCustomAttributes = "";
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// Description
-		$this->Description->ViewValue = $this->Description->CurrentValue;
-		$this->Description->ViewCustomAttributes = "";
+		// description
+		$this->description->ViewValue = $this->description->CurrentValue;
+		$this->description->ViewCustomAttributes = "";
 
-		// FeedBack
-		$this->FeedBack->ViewValue = $this->FeedBack->CurrentValue;
-		$this->FeedBack->ViewCustomAttributes = "";
+		// feedback
+		$this->feedback->ViewValue = $this->feedback->CurrentValue;
+		$this->feedback->ViewCustomAttributes = "";
 
-		// OrderDateTime
-		$this->OrderDateTime->ViewValue = $this->OrderDateTime->CurrentValue;
-		$this->OrderDateTime->ViewValue = ew_FormatDateTime($this->OrderDateTime->ViewValue, 0);
-		$this->OrderDateTime->ViewCustomAttributes = "";
+		// order_date_time
+		$this->order_date_time->ViewValue = $this->order_date_time->CurrentValue;
+		$this->order_date_time->ViewValue = ew_FormatDateTime($this->order_date_time->ViewValue, 0);
+		$this->order_date_time->ViewCustomAttributes = "";
 
-			// OrderID
-			$this->OrderID->LinkCustomAttributes = "";
-			$this->OrderID->HrefValue = "";
-			$this->OrderID->TooltipValue = "";
+			// order_id
+			$this->order_id->LinkCustomAttributes = "";
+			$this->order_id->HrefValue = "";
+			$this->order_id->TooltipValue = "";
 
-			// CustomerID
-			$this->CustomerID->LinkCustomAttributes = "";
-			$this->CustomerID->HrefValue = "";
-			$this->CustomerID->TooltipValue = "";
+			// customer_id
+			$this->customer_id->LinkCustomAttributes = "";
+			$this->customer_id->HrefValue = "";
+			$this->customer_id->TooltipValue = "";
 
-			// FullName
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
-			$this->FullName->TooltipValue = "";
+			// full_name
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
+			$this->full_name->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
-			$this->ZipCode->TooltipValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
+			$this->zip_code->TooltipValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
-			$this->Phone->TooltipValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
+			$this->phone->TooltipValue = "";
 
-			// Discount
-			$this->Discount->LinkCustomAttributes = "";
-			$this->Discount->HrefValue = "";
-			$this->Discount->TooltipValue = "";
+			// discount
+			$this->discount->LinkCustomAttributes = "";
+			$this->discount->HrefValue = "";
+			$this->discount->TooltipValue = "";
 
-			// TotalPrice
-			$this->TotalPrice->LinkCustomAttributes = "";
-			$this->TotalPrice->HrefValue = "";
-			$this->TotalPrice->TooltipValue = "";
+			// total_price
+			$this->total_price->LinkCustomAttributes = "";
+			$this->total_price->HrefValue = "";
+			$this->total_price->TooltipValue = "";
 
-			// PaymentTypeID
-			$this->PaymentTypeID->LinkCustomAttributes = "";
-			$this->PaymentTypeID->HrefValue = "";
-			$this->PaymentTypeID->TooltipValue = "";
+			// payment_type_id
+			$this->payment_type_id->LinkCustomAttributes = "";
+			$this->payment_type_id->HrefValue = "";
+			$this->payment_type_id->TooltipValue = "";
 
-			// DeliveryTypeID
-			$this->DeliveryTypeID->LinkCustomAttributes = "";
-			$this->DeliveryTypeID->HrefValue = "";
-			$this->DeliveryTypeID->TooltipValue = "";
+			// delivery_type_id
+			$this->delivery_type_id->LinkCustomAttributes = "";
+			$this->delivery_type_id->HrefValue = "";
+			$this->delivery_type_id->TooltipValue = "";
 
-			// Description
-			$this->Description->LinkCustomAttributes = "";
-			$this->Description->HrefValue = "";
-			$this->Description->TooltipValue = "";
+			// description
+			$this->description->LinkCustomAttributes = "";
+			$this->description->HrefValue = "";
+			$this->description->TooltipValue = "";
 
-			// FeedBack
-			$this->FeedBack->LinkCustomAttributes = "";
-			$this->FeedBack->HrefValue = "";
-			$this->FeedBack->TooltipValue = "";
+			// feedback
+			$this->feedback->LinkCustomAttributes = "";
+			$this->feedback->HrefValue = "";
+			$this->feedback->TooltipValue = "";
 
-			// OrderDateTime
-			$this->OrderDateTime->LinkCustomAttributes = "";
-			$this->OrderDateTime->HrefValue = "";
-			$this->OrderDateTime->TooltipValue = "";
+			// order_date_time
+			$this->order_date_time->LinkCustomAttributes = "";
+			$this->order_date_time->HrefValue = "";
+			$this->order_date_time->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// OrderID
-			$this->OrderID->EditAttrs["class"] = "form-control";
-			$this->OrderID->EditCustomAttributes = "";
-			$this->OrderID->EditValue = $this->OrderID->CurrentValue;
-			$this->OrderID->ViewCustomAttributes = "";
+			// order_id
+			$this->order_id->EditAttrs["class"] = "form-control";
+			$this->order_id->EditCustomAttributes = "";
+			$this->order_id->EditValue = $this->order_id->CurrentValue;
+			$this->order_id->ViewCustomAttributes = "";
 
-			// CustomerID
-			$this->CustomerID->EditAttrs["class"] = "form-control";
-			$this->CustomerID->EditCustomAttributes = "";
-			if (trim(strval($this->CustomerID->CurrentValue)) == "") {
+			// customer_id
+			$this->customer_id->EditAttrs["class"] = "form-control";
+			$this->customer_id->EditCustomAttributes = "";
+			if (trim(strval($this->customer_id->CurrentValue)) == "") {
 				$sFilterWrk = "0=1";
 			} else {
-				$sFilterWrk = "`CustomerID`" . ew_SearchString("=", $this->CustomerID->CurrentValue, EW_DATATYPE_NUMBER, "");
+				$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `CustomerID`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `customers`";
+			$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `customers`";
 			$sWhereWrk = "";
-			$this->CustomerID->LookupFilters = array();
+			$this->customer_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `FullName`";
+			$sSqlWrk .= " ORDER BY `full_name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
-			$this->CustomerID->EditValue = $arwrk;
+			$this->customer_id->EditValue = $arwrk;
 
-			// FullName
-			$this->FullName->EditAttrs["class"] = "form-control";
-			$this->FullName->EditCustomAttributes = "";
-			$this->FullName->EditValue = ew_HtmlEncode($this->FullName->CurrentValue);
-			$this->FullName->PlaceHolder = ew_RemoveHtml($this->FullName->FldCaption());
+			// full_name
+			$this->full_name->EditAttrs["class"] = "form-control";
+			$this->full_name->EditCustomAttributes = "";
+			$this->full_name->EditValue = ew_HtmlEncode($this->full_name->CurrentValue);
+			$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
 
-			// ProvinceID
-			$this->ProvinceID->EditAttrs["class"] = "form-control";
-			$this->ProvinceID->EditCustomAttributes = "";
-			if (trim(strval($this->ProvinceID->CurrentValue)) == "") {
+			// province_id
+			$this->province_id->EditAttrs["class"] = "form-control";
+			$this->province_id->EditCustomAttributes = "";
+			if (trim(strval($this->province_id->CurrentValue)) == "") {
 				$sFilterWrk = "0=1";
 			} else {
-				$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
+				$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `provinces`";
+			$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `provinces`";
 			$sWhereWrk = "";
-			$this->ProvinceID->LookupFilters = array();
+			$this->province_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
-			$this->ProvinceID->EditValue = $arwrk;
+			$this->province_id->EditValue = $arwrk;
 
-			// Address
-			$this->Address->EditAttrs["class"] = "form-control";
-			$this->Address->EditCustomAttributes = "";
-			$this->Address->EditValue = ew_HtmlEncode($this->Address->CurrentValue);
-			$this->Address->PlaceHolder = ew_RemoveHtml($this->Address->FldCaption());
+			// address
+			$this->address->EditAttrs["class"] = "form-control";
+			$this->address->EditCustomAttributes = "";
+			$this->address->EditValue = ew_HtmlEncode($this->address->CurrentValue);
+			$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
 
-			// ZipCode
-			$this->ZipCode->EditAttrs["class"] = "form-control";
-			$this->ZipCode->EditCustomAttributes = "";
-			$this->ZipCode->EditValue = ew_HtmlEncode($this->ZipCode->CurrentValue);
-			$this->ZipCode->PlaceHolder = ew_RemoveHtml($this->ZipCode->FldCaption());
+			// zip_code
+			$this->zip_code->EditAttrs["class"] = "form-control";
+			$this->zip_code->EditCustomAttributes = "";
+			$this->zip_code->EditValue = ew_HtmlEncode($this->zip_code->CurrentValue);
+			$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
 
-			// Phone
-			$this->Phone->EditAttrs["class"] = "form-control";
-			$this->Phone->EditCustomAttributes = "";
-			$this->Phone->EditValue = ew_HtmlEncode($this->Phone->CurrentValue);
-			$this->Phone->PlaceHolder = ew_RemoveHtml($this->Phone->FldCaption());
+			// phone
+			$this->phone->EditAttrs["class"] = "form-control";
+			$this->phone->EditCustomAttributes = "";
+			$this->phone->EditValue = ew_HtmlEncode($this->phone->CurrentValue);
+			$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
 
-			// Discount
-			$this->Discount->EditAttrs["class"] = "form-control";
-			$this->Discount->EditCustomAttributes = "";
-			$this->Discount->EditValue = ew_HtmlEncode($this->Discount->CurrentValue);
-			$this->Discount->PlaceHolder = ew_RemoveHtml($this->Discount->FldCaption());
-			if (strval($this->Discount->EditValue) <> "" && is_numeric($this->Discount->EditValue)) $this->Discount->EditValue = ew_FormatNumber($this->Discount->EditValue, -2, -1, -2, 0);
+			// discount
+			$this->discount->EditAttrs["class"] = "form-control";
+			$this->discount->EditCustomAttributes = "";
+			$this->discount->EditValue = ew_HtmlEncode($this->discount->CurrentValue);
+			$this->discount->PlaceHolder = ew_RemoveHtml($this->discount->FldCaption());
+			if (strval($this->discount->EditValue) <> "" && is_numeric($this->discount->EditValue)) $this->discount->EditValue = ew_FormatNumber($this->discount->EditValue, -2, -1, -2, 0);
 
-			// TotalPrice
-			$this->TotalPrice->EditAttrs["class"] = "form-control";
-			$this->TotalPrice->EditCustomAttributes = "";
-			$this->TotalPrice->EditValue = ew_HtmlEncode($this->TotalPrice->CurrentValue);
-			$this->TotalPrice->PlaceHolder = ew_RemoveHtml($this->TotalPrice->FldCaption());
-			if (strval($this->TotalPrice->EditValue) <> "" && is_numeric($this->TotalPrice->EditValue)) $this->TotalPrice->EditValue = ew_FormatNumber($this->TotalPrice->EditValue, -2, -2, -2, -2);
+			// total_price
+			$this->total_price->EditAttrs["class"] = "form-control";
+			$this->total_price->EditCustomAttributes = "";
+			$this->total_price->EditValue = ew_HtmlEncode($this->total_price->CurrentValue);
+			$this->total_price->PlaceHolder = ew_RemoveHtml($this->total_price->FldCaption());
+			if (strval($this->total_price->EditValue) <> "" && is_numeric($this->total_price->EditValue)) $this->total_price->EditValue = ew_FormatNumber($this->total_price->EditValue, -2, -2, -2, -2);
 
-			// PaymentTypeID
-			$this->PaymentTypeID->EditAttrs["class"] = "form-control";
-			$this->PaymentTypeID->EditCustomAttributes = "";
-			if (trim(strval($this->PaymentTypeID->CurrentValue)) == "") {
+			// payment_type_id
+			$this->payment_type_id->EditAttrs["class"] = "form-control";
+			$this->payment_type_id->EditCustomAttributes = "";
+			if (trim(strval($this->payment_type_id->CurrentValue)) == "") {
 				$sFilterWrk = "0=1";
 			} else {
-				$sFilterWrk = "`PaymentTypeID`" . ew_SearchString("=", $this->PaymentTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
+				$sFilterWrk = "`payment_type_id`" . ew_SearchString("=", $this->payment_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `PaymentTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `paymenttypes`";
+			$sSqlWrk = "SELECT `payment_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `payment_types`";
 			$sWhereWrk = "";
-			$this->PaymentTypeID->LookupFilters = array();
+			$this->payment_type_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->PaymentTypeID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->payment_type_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
-			$this->PaymentTypeID->EditValue = $arwrk;
+			$this->payment_type_id->EditValue = $arwrk;
 
-			// DeliveryTypeID
-			$this->DeliveryTypeID->EditAttrs["class"] = "form-control";
-			$this->DeliveryTypeID->EditCustomAttributes = "";
-			if (trim(strval($this->DeliveryTypeID->CurrentValue)) == "") {
+			// delivery_type_id
+			$this->delivery_type_id->EditAttrs["class"] = "form-control";
+			$this->delivery_type_id->EditCustomAttributes = "";
+			if (trim(strval($this->delivery_type_id->CurrentValue)) == "") {
 				$sFilterWrk = "0=1";
 			} else {
-				$sFilterWrk = "`DeliveryTypeID`" . ew_SearchString("=", $this->DeliveryTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
+				$sFilterWrk = "`delivery_type_id`" . ew_SearchString("=", $this->delivery_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `DeliveryTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `deliverytypes`";
+			$sSqlWrk = "SELECT `delivery_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `delivery_types`";
 			$sWhereWrk = "";
-			$this->DeliveryTypeID->LookupFilters = array();
+			$this->delivery_type_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->DeliveryTypeID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->delivery_type_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
-			$this->DeliveryTypeID->EditValue = $arwrk;
+			$this->delivery_type_id->EditValue = $arwrk;
 
-			// Description
-			$this->Description->EditAttrs["class"] = "form-control";
-			$this->Description->EditCustomAttributes = "";
-			$this->Description->EditValue = ew_HtmlEncode($this->Description->CurrentValue);
-			$this->Description->PlaceHolder = ew_RemoveHtml($this->Description->FldCaption());
+			// description
+			$this->description->EditAttrs["class"] = "form-control";
+			$this->description->EditCustomAttributes = "";
+			$this->description->EditValue = ew_HtmlEncode($this->description->CurrentValue);
+			$this->description->PlaceHolder = ew_RemoveHtml($this->description->FldCaption());
 
-			// FeedBack
-			$this->FeedBack->EditAttrs["class"] = "form-control";
-			$this->FeedBack->EditCustomAttributes = "";
-			$this->FeedBack->EditValue = ew_HtmlEncode($this->FeedBack->CurrentValue);
-			$this->FeedBack->PlaceHolder = ew_RemoveHtml($this->FeedBack->FldCaption());
+			// feedback
+			$this->feedback->EditAttrs["class"] = "form-control";
+			$this->feedback->EditCustomAttributes = "";
+			$this->feedback->EditValue = ew_HtmlEncode($this->feedback->CurrentValue);
+			$this->feedback->PlaceHolder = ew_RemoveHtml($this->feedback->FldCaption());
 
-			// OrderDateTime
+			// order_date_time
 			// Edit refer script
-			// OrderID
+			// order_id
 
-			$this->OrderID->LinkCustomAttributes = "";
-			$this->OrderID->HrefValue = "";
+			$this->order_id->LinkCustomAttributes = "";
+			$this->order_id->HrefValue = "";
 
-			// CustomerID
-			$this->CustomerID->LinkCustomAttributes = "";
-			$this->CustomerID->HrefValue = "";
+			// customer_id
+			$this->customer_id->LinkCustomAttributes = "";
+			$this->customer_id->HrefValue = "";
 
-			// FullName
-			$this->FullName->LinkCustomAttributes = "";
-			$this->FullName->HrefValue = "";
+			// full_name
+			$this->full_name->LinkCustomAttributes = "";
+			$this->full_name->HrefValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
 
-			// Phone
-			$this->Phone->LinkCustomAttributes = "";
-			$this->Phone->HrefValue = "";
+			// phone
+			$this->phone->LinkCustomAttributes = "";
+			$this->phone->HrefValue = "";
 
-			// Discount
-			$this->Discount->LinkCustomAttributes = "";
-			$this->Discount->HrefValue = "";
+			// discount
+			$this->discount->LinkCustomAttributes = "";
+			$this->discount->HrefValue = "";
 
-			// TotalPrice
-			$this->TotalPrice->LinkCustomAttributes = "";
-			$this->TotalPrice->HrefValue = "";
+			// total_price
+			$this->total_price->LinkCustomAttributes = "";
+			$this->total_price->HrefValue = "";
 
-			// PaymentTypeID
-			$this->PaymentTypeID->LinkCustomAttributes = "";
-			$this->PaymentTypeID->HrefValue = "";
+			// payment_type_id
+			$this->payment_type_id->LinkCustomAttributes = "";
+			$this->payment_type_id->HrefValue = "";
 
-			// DeliveryTypeID
-			$this->DeliveryTypeID->LinkCustomAttributes = "";
-			$this->DeliveryTypeID->HrefValue = "";
+			// delivery_type_id
+			$this->delivery_type_id->LinkCustomAttributes = "";
+			$this->delivery_type_id->HrefValue = "";
 
-			// Description
-			$this->Description->LinkCustomAttributes = "";
-			$this->Description->HrefValue = "";
+			// description
+			$this->description->LinkCustomAttributes = "";
+			$this->description->HrefValue = "";
 
-			// FeedBack
-			$this->FeedBack->LinkCustomAttributes = "";
-			$this->FeedBack->HrefValue = "";
+			// feedback
+			$this->feedback->LinkCustomAttributes = "";
+			$this->feedback->HrefValue = "";
 
-			// OrderDateTime
-			$this->OrderDateTime->LinkCustomAttributes = "";
-			$this->OrderDateTime->HrefValue = "";
+			// order_date_time
+			$this->order_date_time->LinkCustomAttributes = "";
+			$this->order_date_time->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -1234,42 +1234,42 @@ class corders_edit extends corders {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->FullName->FldIsDetailKey && !is_null($this->FullName->FormValue) && $this->FullName->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->FullName->FldCaption(), $this->FullName->ReqErrMsg));
+		if (!$this->full_name->FldIsDetailKey && !is_null($this->full_name->FormValue) && $this->full_name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->full_name->FldCaption(), $this->full_name->ReqErrMsg));
 		}
-		if (!$this->ProvinceID->FldIsDetailKey && !is_null($this->ProvinceID->FormValue) && $this->ProvinceID->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->ProvinceID->FldCaption(), $this->ProvinceID->ReqErrMsg));
+		if (!$this->province_id->FldIsDetailKey && !is_null($this->province_id->FormValue) && $this->province_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->province_id->FldCaption(), $this->province_id->ReqErrMsg));
 		}
-		if (!$this->Address->FldIsDetailKey && !is_null($this->Address->FormValue) && $this->Address->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Address->FldCaption(), $this->Address->ReqErrMsg));
+		if (!$this->address->FldIsDetailKey && !is_null($this->address->FormValue) && $this->address->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->address->FldCaption(), $this->address->ReqErrMsg));
 		}
-		if (!$this->ZipCode->FldIsDetailKey && !is_null($this->ZipCode->FormValue) && $this->ZipCode->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->ZipCode->FldCaption(), $this->ZipCode->ReqErrMsg));
+		if (!$this->zip_code->FldIsDetailKey && !is_null($this->zip_code->FormValue) && $this->zip_code->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->zip_code->FldCaption(), $this->zip_code->ReqErrMsg));
 		}
-		if (!$this->Phone->FldIsDetailKey && !is_null($this->Phone->FormValue) && $this->Phone->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Phone->FldCaption(), $this->Phone->ReqErrMsg));
+		if (!$this->phone->FldIsDetailKey && !is_null($this->phone->FormValue) && $this->phone->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->phone->FldCaption(), $this->phone->ReqErrMsg));
 		}
-		if (!ew_CheckNumber($this->Discount->FormValue)) {
-			ew_AddMessage($gsFormError, $this->Discount->FldErrMsg());
+		if (!ew_CheckNumber($this->discount->FormValue)) {
+			ew_AddMessage($gsFormError, $this->discount->FldErrMsg());
 		}
-		if (!$this->TotalPrice->FldIsDetailKey && !is_null($this->TotalPrice->FormValue) && $this->TotalPrice->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->TotalPrice->FldCaption(), $this->TotalPrice->ReqErrMsg));
+		if (!$this->total_price->FldIsDetailKey && !is_null($this->total_price->FormValue) && $this->total_price->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->total_price->FldCaption(), $this->total_price->ReqErrMsg));
 		}
-		if (!ew_CheckNumber($this->TotalPrice->FormValue)) {
-			ew_AddMessage($gsFormError, $this->TotalPrice->FldErrMsg());
+		if (!ew_CheckNumber($this->total_price->FormValue)) {
+			ew_AddMessage($gsFormError, $this->total_price->FldErrMsg());
 		}
-		if (!$this->PaymentTypeID->FldIsDetailKey && !is_null($this->PaymentTypeID->FormValue) && $this->PaymentTypeID->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->PaymentTypeID->FldCaption(), $this->PaymentTypeID->ReqErrMsg));
+		if (!$this->payment_type_id->FldIsDetailKey && !is_null($this->payment_type_id->FormValue) && $this->payment_type_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->payment_type_id->FldCaption(), $this->payment_type_id->ReqErrMsg));
 		}
-		if (!$this->DeliveryTypeID->FldIsDetailKey && !is_null($this->DeliveryTypeID->FormValue) && $this->DeliveryTypeID->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->DeliveryTypeID->FldCaption(), $this->DeliveryTypeID->ReqErrMsg));
+		if (!$this->delivery_type_id->FldIsDetailKey && !is_null($this->delivery_type_id->FormValue) && $this->delivery_type_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->delivery_type_id->FldCaption(), $this->delivery_type_id->ReqErrMsg));
 		}
 
 		// Validate detail grid
 		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("orderdetails", $DetailTblVar) && $GLOBALS["orderdetails"]->DetailEdit) {
-			if (!isset($GLOBALS["orderdetails_grid"])) $GLOBALS["orderdetails_grid"] = new corderdetails_grid(); // get detail page object
-			$GLOBALS["orderdetails_grid"]->ValidateGridForm();
+		if (in_array("order_details", $DetailTblVar) && $GLOBALS["order_details"]->DetailEdit) {
+			if (!isset($GLOBALS["order_details_grid"])) $GLOBALS["order_details_grid"] = new corder_details_grid(); // get detail page object
+			$GLOBALS["order_details_grid"]->ValidateGridForm();
 		}
 
 		// Return validate result
@@ -1311,45 +1311,45 @@ class corders_edit extends corders {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// CustomerID
-			$this->CustomerID->SetDbValueDef($rsnew, $this->CustomerID->CurrentValue, NULL, $this->CustomerID->ReadOnly);
+			// customer_id
+			$this->customer_id->SetDbValueDef($rsnew, $this->customer_id->CurrentValue, NULL, $this->customer_id->ReadOnly);
 
-			// FullName
-			$this->FullName->SetDbValueDef($rsnew, $this->FullName->CurrentValue, "", $this->FullName->ReadOnly);
+			// full_name
+			$this->full_name->SetDbValueDef($rsnew, $this->full_name->CurrentValue, "", $this->full_name->ReadOnly);
 
-			// ProvinceID
-			$this->ProvinceID->SetDbValueDef($rsnew, $this->ProvinceID->CurrentValue, 0, $this->ProvinceID->ReadOnly);
+			// province_id
+			$this->province_id->SetDbValueDef($rsnew, $this->province_id->CurrentValue, 0, $this->province_id->ReadOnly);
 
-			// Address
-			$this->Address->SetDbValueDef($rsnew, $this->Address->CurrentValue, "", $this->Address->ReadOnly);
+			// address
+			$this->address->SetDbValueDef($rsnew, $this->address->CurrentValue, "", $this->address->ReadOnly);
 
-			// ZipCode
-			$this->ZipCode->SetDbValueDef($rsnew, $this->ZipCode->CurrentValue, "", $this->ZipCode->ReadOnly);
+			// zip_code
+			$this->zip_code->SetDbValueDef($rsnew, $this->zip_code->CurrentValue, "", $this->zip_code->ReadOnly);
 
-			// Phone
-			$this->Phone->SetDbValueDef($rsnew, $this->Phone->CurrentValue, "", $this->Phone->ReadOnly);
+			// phone
+			$this->phone->SetDbValueDef($rsnew, $this->phone->CurrentValue, "", $this->phone->ReadOnly);
 
-			// Discount
-			$this->Discount->SetDbValueDef($rsnew, $this->Discount->CurrentValue, NULL, $this->Discount->ReadOnly);
+			// discount
+			$this->discount->SetDbValueDef($rsnew, $this->discount->CurrentValue, NULL, $this->discount->ReadOnly);
 
-			// TotalPrice
-			$this->TotalPrice->SetDbValueDef($rsnew, $this->TotalPrice->CurrentValue, 0, $this->TotalPrice->ReadOnly);
+			// total_price
+			$this->total_price->SetDbValueDef($rsnew, $this->total_price->CurrentValue, 0, $this->total_price->ReadOnly);
 
-			// PaymentTypeID
-			$this->PaymentTypeID->SetDbValueDef($rsnew, $this->PaymentTypeID->CurrentValue, 0, $this->PaymentTypeID->ReadOnly);
+			// payment_type_id
+			$this->payment_type_id->SetDbValueDef($rsnew, $this->payment_type_id->CurrentValue, 0, $this->payment_type_id->ReadOnly);
 
-			// DeliveryTypeID
-			$this->DeliveryTypeID->SetDbValueDef($rsnew, $this->DeliveryTypeID->CurrentValue, 0, $this->DeliveryTypeID->ReadOnly);
+			// delivery_type_id
+			$this->delivery_type_id->SetDbValueDef($rsnew, $this->delivery_type_id->CurrentValue, 0, $this->delivery_type_id->ReadOnly);
 
-			// Description
-			$this->Description->SetDbValueDef($rsnew, $this->Description->CurrentValue, NULL, $this->Description->ReadOnly);
+			// description
+			$this->description->SetDbValueDef($rsnew, $this->description->CurrentValue, NULL, $this->description->ReadOnly);
 
-			// FeedBack
-			$this->FeedBack->SetDbValueDef($rsnew, $this->FeedBack->CurrentValue, NULL, $this->FeedBack->ReadOnly);
+			// feedback
+			$this->feedback->SetDbValueDef($rsnew, $this->feedback->CurrentValue, NULL, $this->feedback->ReadOnly);
 
-			// OrderDateTime
-			$this->OrderDateTime->SetDbValueDef($rsnew, ew_CurrentDateTime(), ew_CurrentDate());
-			$rsnew['OrderDateTime'] = &$this->OrderDateTime->DbValue;
+			// order_date_time
+			$this->order_date_time->SetDbValueDef($rsnew, ew_CurrentDateTime(), ew_CurrentDate());
+			$rsnew['order_date_time'] = &$this->order_date_time->DbValue;
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -1366,10 +1366,10 @@ class corders_edit extends corders {
 				// Update detail records
 				$DetailTblVar = explode(",", $this->getCurrentDetailTable());
 				if ($EditRow) {
-					if (in_array("orderdetails", $DetailTblVar) && $GLOBALS["orderdetails"]->DetailEdit) {
-						if (!isset($GLOBALS["orderdetails_grid"])) $GLOBALS["orderdetails_grid"] = new corderdetails_grid(); // Get detail page object
-						$Security->LoadCurrentUserLevel($this->ProjectID . "orderdetails"); // Load user level of detail table
-						$EditRow = $GLOBALS["orderdetails_grid"]->GridUpdate();
+					if (in_array("order_details", $DetailTblVar) && $GLOBALS["order_details"]->DetailEdit) {
+						if (!isset($GLOBALS["order_details_grid"])) $GLOBALS["order_details_grid"] = new corder_details_grid(); // Get detail page object
+						$Security->LoadCurrentUserLevel($this->ProjectID . "order_details"); // Load user level of detail table
+						$EditRow = $GLOBALS["order_details_grid"]->GridUpdate();
 						$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
 					}
 				}
@@ -1415,19 +1415,19 @@ class corders_edit extends corders {
 		}
 		if ($sDetailTblVar <> "") {
 			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("orderdetails", $DetailTblVar)) {
-				if (!isset($GLOBALS["orderdetails_grid"]))
-					$GLOBALS["orderdetails_grid"] = new corderdetails_grid;
-				if ($GLOBALS["orderdetails_grid"]->DetailEdit) {
-					$GLOBALS["orderdetails_grid"]->CurrentMode = "edit";
-					$GLOBALS["orderdetails_grid"]->CurrentAction = "gridedit";
+			if (in_array("order_details", $DetailTblVar)) {
+				if (!isset($GLOBALS["order_details_grid"]))
+					$GLOBALS["order_details_grid"] = new corder_details_grid;
+				if ($GLOBALS["order_details_grid"]->DetailEdit) {
+					$GLOBALS["order_details_grid"]->CurrentMode = "edit";
+					$GLOBALS["order_details_grid"]->CurrentAction = "gridedit";
 
 					// Save current master table to detail table
-					$GLOBALS["orderdetails_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["orderdetails_grid"]->setStartRecordNumber(1);
-					$GLOBALS["orderdetails_grid"]->OrderID->FldIsDetailKey = TRUE;
-					$GLOBALS["orderdetails_grid"]->OrderID->CurrentValue = $this->OrderID->CurrentValue;
-					$GLOBALS["orderdetails_grid"]->OrderID->setSessionValue($GLOBALS["orderdetails_grid"]->OrderID->CurrentValue);
+					$GLOBALS["order_details_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["order_details_grid"]->setStartRecordNumber(1);
+					$GLOBALS["order_details_grid"]->order_id->FldIsDetailKey = TRUE;
+					$GLOBALS["order_details_grid"]->order_id->CurrentValue = $this->order_id->CurrentValue;
+					$GLOBALS["order_details_grid"]->order_id->setSessionValue($GLOBALS["order_details_grid"]->order_id->CurrentValue);
 				}
 			}
 		}
@@ -1448,55 +1448,55 @@ class corders_edit extends corders {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		case "x_CustomerID":
+		case "x_customer_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `CustomerID` AS `LinkFld`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+			$sSqlWrk = "SELECT `customer_id` AS `LinkFld`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
 			$sWhereWrk = "";
 			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`CustomerID` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`customer_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `FullName`";
+			$sSqlWrk .= " ORDER BY `full_name`";
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
 			break;
-		case "x_ProvinceID":
+		case "x_province_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `ProvinceID` AS `LinkFld`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+			$sSqlWrk = "SELECT `province_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 			$sWhereWrk = "";
 			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`ProvinceID` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`province_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
 			break;
-		case "x_PaymentTypeID":
+		case "x_payment_type_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `PaymentTypeID` AS `LinkFld`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `paymenttypes`";
+			$sSqlWrk = "SELECT `payment_type_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `payment_types`";
 			$sWhereWrk = "";
 			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`PaymentTypeID` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`payment_type_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->PaymentTypeID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->payment_type_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
 			break;
-		case "x_DeliveryTypeID":
+		case "x_delivery_type_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `DeliveryTypeID` AS `LinkFld`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `deliverytypes`";
+			$sSqlWrk = "SELECT `delivery_type_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `delivery_types`";
 			$sWhereWrk = "";
 			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`DeliveryTypeID` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`delivery_type_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->DeliveryTypeID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->delivery_type_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
 			break;
@@ -1619,36 +1619,36 @@ fordersedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_FullName");
+			elm = this.GetElements("x" + infix + "_full_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->FullName->FldCaption(), $orders->FullName->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_ProvinceID");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->full_name->FldCaption(), $orders->full_name->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_province_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->ProvinceID->FldCaption(), $orders->ProvinceID->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Address");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->province_id->FldCaption(), $orders->province_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_address");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->Address->FldCaption(), $orders->Address->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_ZipCode");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->address->FldCaption(), $orders->address->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_zip_code");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->ZipCode->FldCaption(), $orders->ZipCode->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Phone");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->zip_code->FldCaption(), $orders->zip_code->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_phone");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->Phone->FldCaption(), $orders->Phone->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Discount");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->phone->FldCaption(), $orders->phone->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_discount");
 			if (elm && !ew_CheckNumber(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($orders->Discount->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_TotalPrice");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($orders->discount->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_total_price");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->TotalPrice->FldCaption(), $orders->TotalPrice->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_TotalPrice");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->total_price->FldCaption(), $orders->total_price->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_total_price");
 			if (elm && !ew_CheckNumber(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($orders->TotalPrice->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_PaymentTypeID");
+				return this.OnError(elm, "<?php echo ew_JsEncode2($orders->total_price->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_payment_type_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->PaymentTypeID->FldCaption(), $orders->PaymentTypeID->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_DeliveryTypeID");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->payment_type_id->FldCaption(), $orders->payment_type_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_delivery_type_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->DeliveryTypeID->FldCaption(), $orders->DeliveryTypeID->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $orders->delivery_type_id->FldCaption(), $orders->delivery_type_id->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1678,14 +1678,14 @@ fordersedit.Form_CustomValidate =
 fordersedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fordersedit.Lists["x_CustomerID"] = {"LinkField":"x_CustomerID","Ajax":true,"AutoFill":false,"DisplayFields":["x_FullName","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-fordersedit.Lists["x_CustomerID"].Data = "<?php echo $orders_edit->CustomerID->LookupFilterQuery(FALSE, "edit") ?>";
-fordersedit.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fordersedit.Lists["x_ProvinceID"].Data = "<?php echo $orders_edit->ProvinceID->LookupFilterQuery(FALSE, "edit") ?>";
-fordersedit.Lists["x_PaymentTypeID"] = {"LinkField":"x_PaymentTypeID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"paymenttypes"};
-fordersedit.Lists["x_PaymentTypeID"].Data = "<?php echo $orders_edit->PaymentTypeID->LookupFilterQuery(FALSE, "edit") ?>";
-fordersedit.Lists["x_DeliveryTypeID"] = {"LinkField":"x_DeliveryTypeID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"deliverytypes"};
-fordersedit.Lists["x_DeliveryTypeID"].Data = "<?php echo $orders_edit->DeliveryTypeID->LookupFilterQuery(FALSE, "edit") ?>";
+fordersedit.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
+fordersedit.Lists["x_customer_id"].Data = "<?php echo $orders_edit->customer_id->LookupFilterQuery(FALSE, "edit") ?>";
+fordersedit.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+fordersedit.Lists["x_province_id"].Data = "<?php echo $orders_edit->province_id->LookupFilterQuery(FALSE, "edit") ?>";
+fordersedit.Lists["x_payment_type_id"] = {"LinkField":"x_payment_type_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"payment_types"};
+fordersedit.Lists["x_payment_type_id"].Data = "<?php echo $orders_edit->payment_type_id->LookupFilterQuery(FALSE, "edit") ?>";
+fordersedit.Lists["x_delivery_type_id"] = {"LinkField":"x_delivery_type_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"delivery_types"};
+fordersedit.Lists["x_delivery_type_id"].Data = "<?php echo $orders_edit->delivery_type_id->LookupFilterQuery(FALSE, "edit") ?>";
 
 // Form object for search
 </script>
@@ -1705,154 +1705,154 @@ $orders_edit->ShowMessage();
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="modal" value="<?php echo intval($orders_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
-<?php if ($orders->OrderID->Visible) { // OrderID ?>
-	<div id="r_OrderID" class="form-group">
-		<label id="elh_orders_OrderID" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->OrderID->FldCaption() ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->OrderID->CellAttributes() ?>>
-<span id="el_orders_OrderID">
-<span<?php echo $orders->OrderID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $orders->OrderID->EditValue ?></p></span>
+<?php if ($orders->order_id->Visible) { // order_id ?>
+	<div id="r_order_id" class="form-group">
+		<label id="elh_orders_order_id" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->order_id->FldCaption() ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->order_id->CellAttributes() ?>>
+<span id="el_orders_order_id">
+<span<?php echo $orders->order_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $orders->order_id->EditValue ?></p></span>
 </span>
-<input type="hidden" data-table="orders" data-field="x_OrderID" name="x_OrderID" id="x_OrderID" value="<?php echo ew_HtmlEncode($orders->OrderID->CurrentValue) ?>">
-<?php echo $orders->OrderID->CustomMsg ?></div></div>
+<input type="hidden" data-table="orders" data-field="x_order_id" name="x_order_id" id="x_order_id" value="<?php echo ew_HtmlEncode($orders->order_id->CurrentValue) ?>">
+<?php echo $orders->order_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->CustomerID->Visible) { // CustomerID ?>
-	<div id="r_CustomerID" class="form-group">
-		<label id="elh_orders_CustomerID" for="x_CustomerID" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->CustomerID->FldCaption() ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->CustomerID->CellAttributes() ?>>
-<span id="el_orders_CustomerID">
-<select data-table="orders" data-field="x_CustomerID" data-value-separator="<?php echo $orders->CustomerID->DisplayValueSeparatorAttribute() ?>" id="x_CustomerID" name="x_CustomerID"<?php echo $orders->CustomerID->EditAttributes() ?>>
-<?php echo $orders->CustomerID->SelectOptionListHtml("x_CustomerID") ?>
+<?php if ($orders->customer_id->Visible) { // customer_id ?>
+	<div id="r_customer_id" class="form-group">
+		<label id="elh_orders_customer_id" for="x_customer_id" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->customer_id->FldCaption() ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->customer_id->CellAttributes() ?>>
+<span id="el_orders_customer_id">
+<select data-table="orders" data-field="x_customer_id" data-value-separator="<?php echo $orders->customer_id->DisplayValueSeparatorAttribute() ?>" id="x_customer_id" name="x_customer_id"<?php echo $orders->customer_id->EditAttributes() ?>>
+<?php echo $orders->customer_id->SelectOptionListHtml("x_customer_id") ?>
 </select>
 </span>
-<?php echo $orders->CustomerID->CustomMsg ?></div></div>
+<?php echo $orders->customer_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->FullName->Visible) { // FullName ?>
-	<div id="r_FullName" class="form-group">
-		<label id="elh_orders_FullName" for="x_FullName" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->FullName->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->FullName->CellAttributes() ?>>
-<span id="el_orders_FullName">
-<input type="text" data-table="orders" data-field="x_FullName" name="x_FullName" id="x_FullName" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($orders->FullName->getPlaceHolder()) ?>" value="<?php echo $orders->FullName->EditValue ?>"<?php echo $orders->FullName->EditAttributes() ?>>
+<?php if ($orders->full_name->Visible) { // full_name ?>
+	<div id="r_full_name" class="form-group">
+		<label id="elh_orders_full_name" for="x_full_name" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->full_name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->full_name->CellAttributes() ?>>
+<span id="el_orders_full_name">
+<input type="text" data-table="orders" data-field="x_full_name" name="x_full_name" id="x_full_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($orders->full_name->getPlaceHolder()) ?>" value="<?php echo $orders->full_name->EditValue ?>"<?php echo $orders->full_name->EditAttributes() ?>>
 </span>
-<?php echo $orders->FullName->CustomMsg ?></div></div>
+<?php echo $orders->full_name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->ProvinceID->Visible) { // ProvinceID ?>
-	<div id="r_ProvinceID" class="form-group">
-		<label id="elh_orders_ProvinceID" for="x_ProvinceID" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->ProvinceID->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->ProvinceID->CellAttributes() ?>>
-<span id="el_orders_ProvinceID">
-<select data-table="orders" data-field="x_ProvinceID" data-value-separator="<?php echo $orders->ProvinceID->DisplayValueSeparatorAttribute() ?>" id="x_ProvinceID" name="x_ProvinceID"<?php echo $orders->ProvinceID->EditAttributes() ?>>
-<?php echo $orders->ProvinceID->SelectOptionListHtml("x_ProvinceID") ?>
+<?php if ($orders->province_id->Visible) { // province_id ?>
+	<div id="r_province_id" class="form-group">
+		<label id="elh_orders_province_id" for="x_province_id" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->province_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->province_id->CellAttributes() ?>>
+<span id="el_orders_province_id">
+<select data-table="orders" data-field="x_province_id" data-value-separator="<?php echo $orders->province_id->DisplayValueSeparatorAttribute() ?>" id="x_province_id" name="x_province_id"<?php echo $orders->province_id->EditAttributes() ?>>
+<?php echo $orders->province_id->SelectOptionListHtml("x_province_id") ?>
 </select>
 </span>
-<?php echo $orders->ProvinceID->CustomMsg ?></div></div>
+<?php echo $orders->province_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->Address->Visible) { // Address ?>
-	<div id="r_Address" class="form-group">
-		<label id="elh_orders_Address" for="x_Address" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->Address->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->Address->CellAttributes() ?>>
-<span id="el_orders_Address">
-<textarea data-table="orders" data-field="x_Address" name="x_Address" id="x_Address" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($orders->Address->getPlaceHolder()) ?>"<?php echo $orders->Address->EditAttributes() ?>><?php echo $orders->Address->EditValue ?></textarea>
+<?php if ($orders->address->Visible) { // address ?>
+	<div id="r_address" class="form-group">
+		<label id="elh_orders_address" for="x_address" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->address->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->address->CellAttributes() ?>>
+<span id="el_orders_address">
+<textarea data-table="orders" data-field="x_address" name="x_address" id="x_address" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($orders->address->getPlaceHolder()) ?>"<?php echo $orders->address->EditAttributes() ?>><?php echo $orders->address->EditValue ?></textarea>
 </span>
-<?php echo $orders->Address->CustomMsg ?></div></div>
+<?php echo $orders->address->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->ZipCode->Visible) { // ZipCode ?>
-	<div id="r_ZipCode" class="form-group">
-		<label id="elh_orders_ZipCode" for="x_ZipCode" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->ZipCode->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->ZipCode->CellAttributes() ?>>
-<span id="el_orders_ZipCode">
-<input type="text" data-table="orders" data-field="x_ZipCode" name="x_ZipCode" id="x_ZipCode" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($orders->ZipCode->getPlaceHolder()) ?>" value="<?php echo $orders->ZipCode->EditValue ?>"<?php echo $orders->ZipCode->EditAttributes() ?>>
+<?php if ($orders->zip_code->Visible) { // zip_code ?>
+	<div id="r_zip_code" class="form-group">
+		<label id="elh_orders_zip_code" for="x_zip_code" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->zip_code->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->zip_code->CellAttributes() ?>>
+<span id="el_orders_zip_code">
+<input type="text" data-table="orders" data-field="x_zip_code" name="x_zip_code" id="x_zip_code" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($orders->zip_code->getPlaceHolder()) ?>" value="<?php echo $orders->zip_code->EditValue ?>"<?php echo $orders->zip_code->EditAttributes() ?>>
 </span>
-<?php echo $orders->ZipCode->CustomMsg ?></div></div>
+<?php echo $orders->zip_code->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->Phone->Visible) { // Phone ?>
-	<div id="r_Phone" class="form-group">
-		<label id="elh_orders_Phone" for="x_Phone" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->Phone->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->Phone->CellAttributes() ?>>
-<span id="el_orders_Phone">
-<input type="text" data-table="orders" data-field="x_Phone" name="x_Phone" id="x_Phone" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($orders->Phone->getPlaceHolder()) ?>" value="<?php echo $orders->Phone->EditValue ?>"<?php echo $orders->Phone->EditAttributes() ?>>
+<?php if ($orders->phone->Visible) { // phone ?>
+	<div id="r_phone" class="form-group">
+		<label id="elh_orders_phone" for="x_phone" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->phone->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->phone->CellAttributes() ?>>
+<span id="el_orders_phone">
+<input type="text" data-table="orders" data-field="x_phone" name="x_phone" id="x_phone" size="30" maxlength="10" placeholder="<?php echo ew_HtmlEncode($orders->phone->getPlaceHolder()) ?>" value="<?php echo $orders->phone->EditValue ?>"<?php echo $orders->phone->EditAttributes() ?>>
 </span>
-<?php echo $orders->Phone->CustomMsg ?></div></div>
+<?php echo $orders->phone->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->Discount->Visible) { // Discount ?>
-	<div id="r_Discount" class="form-group">
-		<label id="elh_orders_Discount" for="x_Discount" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->Discount->FldCaption() ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->Discount->CellAttributes() ?>>
-<span id="el_orders_Discount">
-<input type="text" data-table="orders" data-field="x_Discount" name="x_Discount" id="x_Discount" size="30" placeholder="<?php echo ew_HtmlEncode($orders->Discount->getPlaceHolder()) ?>" value="<?php echo $orders->Discount->EditValue ?>"<?php echo $orders->Discount->EditAttributes() ?>>
+<?php if ($orders->discount->Visible) { // discount ?>
+	<div id="r_discount" class="form-group">
+		<label id="elh_orders_discount" for="x_discount" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->discount->FldCaption() ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->discount->CellAttributes() ?>>
+<span id="el_orders_discount">
+<input type="text" data-table="orders" data-field="x_discount" name="x_discount" id="x_discount" size="30" placeholder="<?php echo ew_HtmlEncode($orders->discount->getPlaceHolder()) ?>" value="<?php echo $orders->discount->EditValue ?>"<?php echo $orders->discount->EditAttributes() ?>>
 </span>
-<?php echo $orders->Discount->CustomMsg ?></div></div>
+<?php echo $orders->discount->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->TotalPrice->Visible) { // TotalPrice ?>
-	<div id="r_TotalPrice" class="form-group">
-		<label id="elh_orders_TotalPrice" for="x_TotalPrice" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->TotalPrice->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->TotalPrice->CellAttributes() ?>>
-<span id="el_orders_TotalPrice">
-<input type="text" data-table="orders" data-field="x_TotalPrice" name="x_TotalPrice" id="x_TotalPrice" size="30" placeholder="<?php echo ew_HtmlEncode($orders->TotalPrice->getPlaceHolder()) ?>" value="<?php echo $orders->TotalPrice->EditValue ?>"<?php echo $orders->TotalPrice->EditAttributes() ?>>
+<?php if ($orders->total_price->Visible) { // total_price ?>
+	<div id="r_total_price" class="form-group">
+		<label id="elh_orders_total_price" for="x_total_price" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->total_price->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->total_price->CellAttributes() ?>>
+<span id="el_orders_total_price">
+<input type="text" data-table="orders" data-field="x_total_price" name="x_total_price" id="x_total_price" size="30" placeholder="<?php echo ew_HtmlEncode($orders->total_price->getPlaceHolder()) ?>" value="<?php echo $orders->total_price->EditValue ?>"<?php echo $orders->total_price->EditAttributes() ?>>
 </span>
-<?php echo $orders->TotalPrice->CustomMsg ?></div></div>
+<?php echo $orders->total_price->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->PaymentTypeID->Visible) { // PaymentTypeID ?>
-	<div id="r_PaymentTypeID" class="form-group">
-		<label id="elh_orders_PaymentTypeID" for="x_PaymentTypeID" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->PaymentTypeID->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->PaymentTypeID->CellAttributes() ?>>
-<span id="el_orders_PaymentTypeID">
-<select data-table="orders" data-field="x_PaymentTypeID" data-value-separator="<?php echo $orders->PaymentTypeID->DisplayValueSeparatorAttribute() ?>" id="x_PaymentTypeID" name="x_PaymentTypeID"<?php echo $orders->PaymentTypeID->EditAttributes() ?>>
-<?php echo $orders->PaymentTypeID->SelectOptionListHtml("x_PaymentTypeID") ?>
+<?php if ($orders->payment_type_id->Visible) { // payment_type_id ?>
+	<div id="r_payment_type_id" class="form-group">
+		<label id="elh_orders_payment_type_id" for="x_payment_type_id" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->payment_type_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->payment_type_id->CellAttributes() ?>>
+<span id="el_orders_payment_type_id">
+<select data-table="orders" data-field="x_payment_type_id" data-value-separator="<?php echo $orders->payment_type_id->DisplayValueSeparatorAttribute() ?>" id="x_payment_type_id" name="x_payment_type_id"<?php echo $orders->payment_type_id->EditAttributes() ?>>
+<?php echo $orders->payment_type_id->SelectOptionListHtml("x_payment_type_id") ?>
 </select>
 </span>
-<?php echo $orders->PaymentTypeID->CustomMsg ?></div></div>
+<?php echo $orders->payment_type_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->DeliveryTypeID->Visible) { // DeliveryTypeID ?>
-	<div id="r_DeliveryTypeID" class="form-group">
-		<label id="elh_orders_DeliveryTypeID" for="x_DeliveryTypeID" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->DeliveryTypeID->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->DeliveryTypeID->CellAttributes() ?>>
-<span id="el_orders_DeliveryTypeID">
-<select data-table="orders" data-field="x_DeliveryTypeID" data-value-separator="<?php echo $orders->DeliveryTypeID->DisplayValueSeparatorAttribute() ?>" id="x_DeliveryTypeID" name="x_DeliveryTypeID"<?php echo $orders->DeliveryTypeID->EditAttributes() ?>>
-<?php echo $orders->DeliveryTypeID->SelectOptionListHtml("x_DeliveryTypeID") ?>
+<?php if ($orders->delivery_type_id->Visible) { // delivery_type_id ?>
+	<div id="r_delivery_type_id" class="form-group">
+		<label id="elh_orders_delivery_type_id" for="x_delivery_type_id" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->delivery_type_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->delivery_type_id->CellAttributes() ?>>
+<span id="el_orders_delivery_type_id">
+<select data-table="orders" data-field="x_delivery_type_id" data-value-separator="<?php echo $orders->delivery_type_id->DisplayValueSeparatorAttribute() ?>" id="x_delivery_type_id" name="x_delivery_type_id"<?php echo $orders->delivery_type_id->EditAttributes() ?>>
+<?php echo $orders->delivery_type_id->SelectOptionListHtml("x_delivery_type_id") ?>
 </select>
 </span>
-<?php echo $orders->DeliveryTypeID->CustomMsg ?></div></div>
+<?php echo $orders->delivery_type_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->Description->Visible) { // Description ?>
-	<div id="r_Description" class="form-group">
-		<label id="elh_orders_Description" for="x_Description" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->Description->FldCaption() ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->Description->CellAttributes() ?>>
-<span id="el_orders_Description">
-<textarea data-table="orders" data-field="x_Description" name="x_Description" id="x_Description" cols="50" rows="7" placeholder="<?php echo ew_HtmlEncode($orders->Description->getPlaceHolder()) ?>"<?php echo $orders->Description->EditAttributes() ?>><?php echo $orders->Description->EditValue ?></textarea>
+<?php if ($orders->description->Visible) { // description ?>
+	<div id="r_description" class="form-group">
+		<label id="elh_orders_description" for="x_description" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->description->FldCaption() ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->description->CellAttributes() ?>>
+<span id="el_orders_description">
+<textarea data-table="orders" data-field="x_description" name="x_description" id="x_description" cols="50" rows="7" placeholder="<?php echo ew_HtmlEncode($orders->description->getPlaceHolder()) ?>"<?php echo $orders->description->EditAttributes() ?>><?php echo $orders->description->EditValue ?></textarea>
 </span>
-<?php echo $orders->Description->CustomMsg ?></div></div>
+<?php echo $orders->description->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($orders->FeedBack->Visible) { // FeedBack ?>
-	<div id="r_FeedBack" class="form-group">
-		<label id="elh_orders_FeedBack" for="x_FeedBack" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->FeedBack->FldCaption() ?></label>
-		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->FeedBack->CellAttributes() ?>>
-<span id="el_orders_FeedBack">
-<textarea data-table="orders" data-field="x_FeedBack" name="x_FeedBack" id="x_FeedBack" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($orders->FeedBack->getPlaceHolder()) ?>"<?php echo $orders->FeedBack->EditAttributes() ?>><?php echo $orders->FeedBack->EditValue ?></textarea>
+<?php if ($orders->feedback->Visible) { // feedback ?>
+	<div id="r_feedback" class="form-group">
+		<label id="elh_orders_feedback" for="x_feedback" class="<?php echo $orders_edit->LeftColumnClass ?>"><?php echo $orders->feedback->FldCaption() ?></label>
+		<div class="<?php echo $orders_edit->RightColumnClass ?>"><div<?php echo $orders->feedback->CellAttributes() ?>>
+<span id="el_orders_feedback">
+<textarea data-table="orders" data-field="x_feedback" name="x_feedback" id="x_feedback" cols="35" rows="4" placeholder="<?php echo ew_HtmlEncode($orders->feedback->getPlaceHolder()) ?>"<?php echo $orders->feedback->EditAttributes() ?>><?php echo $orders->feedback->EditValue ?></textarea>
 </span>
-<?php echo $orders->FeedBack->CustomMsg ?></div></div>
+<?php echo $orders->feedback->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->
 <?php
-	if (in_array("orderdetails", explode(",", $orders->getCurrentDetailTable())) && $orderdetails->DetailEdit) {
+	if (in_array("order_details", explode(",", $orders->getCurrentDetailTable())) && $order_details->DetailEdit) {
 ?>
 <?php if ($orders->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("orderdetails", "TblCaption") ?></h4>
+<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("order_details", "TblCaption") ?></h4>
 <?php } ?>
-<?php include_once "orderdetailsgrid.php" ?>
+<?php include_once "order_detailsgrid.php" ?>
 <?php } ?>
 <?php if (!$orders_edit->IsModal) { ?>
 <div class="form-group"><!-- buttons .form-group -->

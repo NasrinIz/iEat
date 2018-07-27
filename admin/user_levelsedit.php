@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "timingsinfo.php" ?>
+<?php include_once "user_levelsinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$timings_edit = NULL; // Initialize page object first
+$user_levels_edit = NULL; // Initialize page object first
 
-class ctimings_edit extends ctimings {
+class cuser_levels_edit extends cuser_levels {
 
 	// Page ID
 	var $PageID = 'edit';
@@ -25,10 +25,10 @@ class ctimings_edit extends ctimings {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'timings';
+	var $TableName = 'user_levels';
 
 	// Page object name
-	var $PageObjName = 'timings_edit';
+	var $PageObjName = 'user_levels_edit';
 
 	// Page headings
 	var $Heading = '';
@@ -250,10 +250,10 @@ class ctimings_edit extends ctimings {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (timings)
-		if (!isset($GLOBALS["timings"]) || get_class($GLOBALS["timings"]) == "ctimings") {
-			$GLOBALS["timings"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["timings"];
+		// Table object (user_levels)
+		if (!isset($GLOBALS["user_levels"]) || get_class($GLOBALS["user_levels"]) == "cuser_levels") {
+			$GLOBALS["user_levels"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["user_levels"];
 		}
 
 		// Table object (employees)
@@ -265,7 +265,7 @@ class ctimings_edit extends ctimings {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'timings', TRUE);
+			define("EW_TABLE_NAME", 'user_levels', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -303,13 +303,9 @@ class ctimings_edit extends ctimings {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanEdit()) {
+		if (!$Security->CanAdmin()) {
 			$Security->SaveLastUrl();
-			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
-			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("timingslist.php"));
-			else
-				$this->Page_Terminate(ew_GetUrl("login.php"));
+			$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
 
 		// NOTE: Security object may be needed in other part of the script, skip set to Nothing
@@ -320,10 +316,8 @@ class ctimings_edit extends ctimings {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->store_id->SetVisibility();
-		$this->day_of_the_week->SetVisibility();
-		$this->order_time_from->SetVisibility();
-		$this->order_time_to->SetVisibility();
+		$this->user_level_id->SetVisibility();
+		$this->user_level_name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -369,13 +363,13 @@ class ctimings_edit extends ctimings {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $timings;
+		global $EW_EXPORT, $user_levels;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($timings);
+				$doc = new $class($user_levels);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -401,7 +395,7 @@ class ctimings_edit extends ctimings {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "timingsview.php")
+					if ($pageName == "user_levelsview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -444,46 +438,19 @@ class ctimings_edit extends ctimings {
 				$postBack = TRUE;
 
 			// Load key from Form
-			if ($objForm->HasValue("x_store_id")) {
-				$this->store_id->setFormValue($objForm->GetValue("x_store_id"));
-			}
-			if ($objForm->HasValue("x_day_of_the_week")) {
-				$this->day_of_the_week->setFormValue($objForm->GetValue("x_day_of_the_week"));
-			}
-			if ($objForm->HasValue("x_order_time_from")) {
-				$this->order_time_from->setFormValue($objForm->GetValue("x_order_time_from"));
-			}
-			if ($objForm->HasValue("x_order_time_to")) {
-				$this->order_time_to->setFormValue($objForm->GetValue("x_order_time_to"));
+			if ($objForm->HasValue("x_user_level_id")) {
+				$this->user_level_id->setFormValue($objForm->GetValue("x_user_level_id"));
 			}
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 
 			// Load key from QueryString
 			$loadByQuery = FALSE;
-			if (isset($_GET["store_id"])) {
-				$this->store_id->setQueryStringValue($_GET["store_id"]);
+			if (isset($_GET["user_level_id"])) {
+				$this->user_level_id->setQueryStringValue($_GET["user_level_id"]);
 				$loadByQuery = TRUE;
 			} else {
-				$this->store_id->CurrentValue = NULL;
-			}
-			if (isset($_GET["day_of_the_week"])) {
-				$this->day_of_the_week->setQueryStringValue($_GET["day_of_the_week"]);
-				$loadByQuery = TRUE;
-			} else {
-				$this->day_of_the_week->CurrentValue = NULL;
-			}
-			if (isset($_GET["order_time_from"])) {
-				$this->order_time_from->setQueryStringValue($_GET["order_time_from"]);
-				$loadByQuery = TRUE;
-			} else {
-				$this->order_time_from->CurrentValue = NULL;
-			}
-			if (isset($_GET["order_time_to"])) {
-				$this->order_time_to->setQueryStringValue($_GET["order_time_to"]);
-				$loadByQuery = TRUE;
-			} else {
-				$this->order_time_to->CurrentValue = NULL;
+				$this->user_level_id->CurrentValue = NULL;
 			}
 		}
 
@@ -510,12 +477,12 @@ class ctimings_edit extends ctimings {
 			case "I": // Get a record to display
 				if (!$loaded) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("timingslist.php"); // No matching record, return to list
+					$this->Page_Terminate("user_levelslist.php"); // No matching record, return to list
 				}
 				break;
 			Case "U": // Update
 				$sReturnUrl = $this->getReturnUrl();
-				if (ew_GetPageName($sReturnUrl) == "timingslist.php")
+				if (ew_GetPageName($sReturnUrl) == "user_levelslist.php")
 					$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to List page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
 				if ($this->EditRow()) { // Update record based on key
@@ -587,31 +554,19 @@ class ctimings_edit extends ctimings {
 
 		// Load from form
 		global $objForm;
-		if (!$this->store_id->FldIsDetailKey) {
-			$this->store_id->setFormValue($objForm->GetValue("x_store_id"));
+		if (!$this->user_level_id->FldIsDetailKey) {
+			$this->user_level_id->setFormValue($objForm->GetValue("x_user_level_id"));
 		}
-		if (!$this->day_of_the_week->FldIsDetailKey) {
-			$this->day_of_the_week->setFormValue($objForm->GetValue("x_day_of_the_week"));
-		}
-		if (!$this->order_time_from->FldIsDetailKey) {
-			$this->order_time_from->setFormValue($objForm->GetValue("x_order_time_from"));
-			$this->order_time_from->CurrentValue = ew_UnFormatDateTime($this->order_time_from->CurrentValue, 4);
-		}
-		if (!$this->order_time_to->FldIsDetailKey) {
-			$this->order_time_to->setFormValue($objForm->GetValue("x_order_time_to"));
-			$this->order_time_to->CurrentValue = ew_UnFormatDateTime($this->order_time_to->CurrentValue, 4);
+		if (!$this->user_level_name->FldIsDetailKey) {
+			$this->user_level_name->setFormValue($objForm->GetValue("x_user_level_name"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->store_id->CurrentValue = $this->store_id->FormValue;
-		$this->day_of_the_week->CurrentValue = $this->day_of_the_week->FormValue;
-		$this->order_time_from->CurrentValue = $this->order_time_from->FormValue;
-		$this->order_time_from->CurrentValue = ew_UnFormatDateTime($this->order_time_from->CurrentValue, 4);
-		$this->order_time_to->CurrentValue = $this->order_time_to->FormValue;
-		$this->order_time_to->CurrentValue = ew_UnFormatDateTime($this->order_time_to->CurrentValue, 4);
+		$this->user_level_id->CurrentValue = $this->user_level_id->FormValue;
+		$this->user_level_name->CurrentValue = $this->user_level_name->FormValue;
 	}
 
 	// Load row based on key values
@@ -647,19 +602,16 @@ class ctimings_edit extends ctimings {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->store_id->setDbValue($row['store_id']);
-		$this->day_of_the_week->setDbValue($row['day_of_the_week']);
-		$this->order_time_from->setDbValue($row['order_time_from']);
-		$this->order_time_to->setDbValue($row['order_time_to']);
+		$this->user_level_id->setDbValue($row['user_level_id']);
+		$this->user_level_id->CurrentValue = intval($this->user_level_id->CurrentValue);
+		$this->user_level_name->setDbValue($row['user_level_name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['store_id'] = NULL;
-		$row['day_of_the_week'] = NULL;
-		$row['order_time_from'] = NULL;
-		$row['order_time_to'] = NULL;
+		$row['user_level_id'] = NULL;
+		$row['user_level_name'] = NULL;
 		return $row;
 	}
 
@@ -668,10 +620,8 @@ class ctimings_edit extends ctimings {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->store_id->DbValue = $row['store_id'];
-		$this->day_of_the_week->DbValue = $row['day_of_the_week'];
-		$this->order_time_from->DbValue = $row['order_time_from'];
-		$this->order_time_to->DbValue = $row['order_time_to'];
+		$this->user_level_id->DbValue = $row['user_level_id'];
+		$this->user_level_name->DbValue = $row['user_level_name'];
 	}
 
 	// Load old record
@@ -679,20 +629,8 @@ class ctimings_edit extends ctimings {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("store_id")) <> "")
-			$this->store_id->CurrentValue = $this->getKey("store_id"); // store_id
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("day_of_the_week")) <> "")
-			$this->day_of_the_week->CurrentValue = $this->getKey("day_of_the_week"); // day_of_the_week
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("order_time_from")) <> "")
-			$this->order_time_from->CurrentValue = $this->getKey("order_time_from"); // order_time_from
-		else
-			$bValidKey = FALSE;
-		if (strval($this->getKey("order_time_to")) <> "")
-			$this->order_time_to->CurrentValue = $this->getKey("order_time_to"); // order_time_to
+		if (strval($this->getKey("user_level_id")) <> "")
+			$this->user_level_id->CurrentValue = $this->getKey("user_level_id"); // user_level_id
 		else
 			$bValidKey = FALSE;
 
@@ -718,143 +656,53 @@ class ctimings_edit extends ctimings {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// store_id
-		// day_of_the_week
-		// order_time_from
-		// order_time_to
+		// user_level_id
+		// user_level_name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// store_id
-		if (strval($this->store_id->CurrentValue) <> "") {
-			$sFilterWrk = "`store_id`" . ew_SearchString("=", $this->store_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `store_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
-		$sWhereWrk = "";
-		$this->store_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->store_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->store_id->ViewValue = $this->store_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->store_id->ViewValue = $this->store_id->CurrentValue;
-			}
-		} else {
-			$this->store_id->ViewValue = NULL;
-		}
-		$this->store_id->ViewCustomAttributes = "";
+		// user_level_id
+		$this->user_level_id->ViewValue = $this->user_level_id->CurrentValue;
+		$this->user_level_id->ViewCustomAttributes = "";
 
-		// day_of_the_week
-		if (strval($this->day_of_the_week->CurrentValue) <> "") {
-			$this->day_of_the_week->ViewValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
-		} else {
-			$this->day_of_the_week->ViewValue = NULL;
-		}
-		$this->day_of_the_week->ViewCustomAttributes = "";
+		// user_level_name
+		$this->user_level_name->ViewValue = $this->user_level_name->CurrentValue;
+		if ($Security->GetUserLevelName($this->user_level_id->CurrentValue) <> "") $this->user_level_name->ViewValue = $Security->GetUserLevelName($this->user_level_id->CurrentValue);
+		$this->user_level_name->ViewCustomAttributes = "";
 
-		// order_time_from
-		$this->order_time_from->ViewValue = $this->order_time_from->CurrentValue;
-		$this->order_time_from->ViewValue = ew_FormatDateTime($this->order_time_from->ViewValue, 4);
-		$this->order_time_from->ViewCustomAttributes = "";
+			// user_level_id
+			$this->user_level_id->LinkCustomAttributes = "";
+			$this->user_level_id->HrefValue = "";
+			$this->user_level_id->TooltipValue = "";
 
-		// order_time_to
-		$this->order_time_to->ViewValue = $this->order_time_to->CurrentValue;
-		$this->order_time_to->ViewValue = ew_FormatDateTime($this->order_time_to->ViewValue, 4);
-		$this->order_time_to->ViewCustomAttributes = "";
-
-			// store_id
-			$this->store_id->LinkCustomAttributes = "";
-			$this->store_id->HrefValue = "";
-			$this->store_id->TooltipValue = "";
-
-			// day_of_the_week
-			$this->day_of_the_week->LinkCustomAttributes = "";
-			$this->day_of_the_week->HrefValue = "";
-			$this->day_of_the_week->TooltipValue = "";
-
-			// order_time_from
-			$this->order_time_from->LinkCustomAttributes = "";
-			$this->order_time_from->HrefValue = "";
-			$this->order_time_from->TooltipValue = "";
-
-			// order_time_to
-			$this->order_time_to->LinkCustomAttributes = "";
-			$this->order_time_to->HrefValue = "";
-			$this->order_time_to->TooltipValue = "";
+			// user_level_name
+			$this->user_level_name->LinkCustomAttributes = "";
+			$this->user_level_name->HrefValue = "";
+			$this->user_level_name->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// store_id
-			$this->store_id->EditAttrs["class"] = "form-control";
-			$this->store_id->EditCustomAttributes = "";
-			if (strval($this->store_id->CurrentValue) <> "") {
-				$sFilterWrk = "`store_id`" . ew_SearchString("=", $this->store_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			$sSqlWrk = "SELECT `store_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
-			$sWhereWrk = "";
-			$this->store_id->LookupFilters = array();
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->store_id, $sWhereWrk); // Call Lookup Selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `name`";
-				$rswrk = Conn()->Execute($sSqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = array();
-					$arwrk[1] = $rswrk->fields('DispFld');
-					$this->store_id->EditValue = $this->store_id->DisplayValue($arwrk);
-					$rswrk->Close();
-				} else {
-					$this->store_id->EditValue = $this->store_id->CurrentValue;
-				}
-			} else {
-				$this->store_id->EditValue = NULL;
-			}
-			$this->store_id->ViewCustomAttributes = "";
+			// user_level_id
+			$this->user_level_id->EditAttrs["class"] = "form-control";
+			$this->user_level_id->EditCustomAttributes = "";
+			$this->user_level_id->EditValue = $this->user_level_id->CurrentValue;
+			$this->user_level_id->ViewCustomAttributes = "";
 
-			// day_of_the_week
-			$this->day_of_the_week->EditAttrs["class"] = "form-control";
-			$this->day_of_the_week->EditCustomAttributes = "";
-			if (strval($this->day_of_the_week->CurrentValue) <> "") {
-				$this->day_of_the_week->EditValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
-			} else {
-				$this->day_of_the_week->EditValue = NULL;
-			}
-			$this->day_of_the_week->ViewCustomAttributes = "";
-
-			// order_time_from
-			$this->order_time_from->EditAttrs["class"] = "form-control";
-			$this->order_time_from->EditCustomAttributes = "";
-			$this->order_time_from->EditValue = $this->order_time_from->CurrentValue;
-			$this->order_time_from->EditValue = ew_FormatDateTime($this->order_time_from->EditValue, 4);
-			$this->order_time_from->ViewCustomAttributes = "";
-
-			// order_time_to
-			$this->order_time_to->EditAttrs["class"] = "form-control";
-			$this->order_time_to->EditCustomAttributes = "";
-			$this->order_time_to->EditValue = $this->order_time_to->CurrentValue;
-			$this->order_time_to->EditValue = ew_FormatDateTime($this->order_time_to->EditValue, 4);
-			$this->order_time_to->ViewCustomAttributes = "";
+			// user_level_name
+			$this->user_level_name->EditAttrs["class"] = "form-control";
+			$this->user_level_name->EditCustomAttributes = "";
+			$this->user_level_name->EditValue = ew_HtmlEncode($this->user_level_name->CurrentValue);
+			if (in_array($this->user_level_id->CurrentValue, array(-2,-1,0))) $this->user_level_name->ReadOnly = TRUE;
+			$this->user_level_name->PlaceHolder = ew_RemoveHtml($this->user_level_name->FldCaption());
 
 			// Edit refer script
-			// store_id
+			// user_level_id
 
-			$this->store_id->LinkCustomAttributes = "";
-			$this->store_id->HrefValue = "";
+			$this->user_level_id->LinkCustomAttributes = "";
+			$this->user_level_id->HrefValue = "";
 
-			// day_of_the_week
-			$this->day_of_the_week->LinkCustomAttributes = "";
-			$this->day_of_the_week->HrefValue = "";
-
-			// order_time_from
-			$this->order_time_from->LinkCustomAttributes = "";
-			$this->order_time_from->HrefValue = "";
-
-			// order_time_to
-			$this->order_time_to->LinkCustomAttributes = "";
-			$this->order_time_to->HrefValue = "";
+			// user_level_name
+			$this->user_level_name->LinkCustomAttributes = "";
+			$this->user_level_name->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -874,23 +722,14 @@ class ctimings_edit extends ctimings {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->store_id->FldIsDetailKey && !is_null($this->store_id->FormValue) && $this->store_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->store_id->FldCaption(), $this->store_id->ReqErrMsg));
+		if (!$this->user_level_id->FldIsDetailKey && !is_null($this->user_level_id->FormValue) && $this->user_level_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->user_level_id->FldCaption(), $this->user_level_id->ReqErrMsg));
 		}
-		if (!$this->day_of_the_week->FldIsDetailKey && !is_null($this->day_of_the_week->FormValue) && $this->day_of_the_week->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->day_of_the_week->FldCaption(), $this->day_of_the_week->ReqErrMsg));
+		if (!ew_CheckInteger($this->user_level_id->FormValue)) {
+			ew_AddMessage($gsFormError, $this->user_level_id->FldErrMsg());
 		}
-		if (!$this->order_time_from->FldIsDetailKey && !is_null($this->order_time_from->FormValue) && $this->order_time_from->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->order_time_from->FldCaption(), $this->order_time_from->ReqErrMsg));
-		}
-		if (!ew_CheckTime($this->order_time_from->FormValue)) {
-			ew_AddMessage($gsFormError, $this->order_time_from->FldErrMsg());
-		}
-		if (!$this->order_time_to->FldIsDetailKey && !is_null($this->order_time_to->FormValue) && $this->order_time_to->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->order_time_to->FldCaption(), $this->order_time_to->ReqErrMsg));
-		}
-		if (!ew_CheckTime($this->order_time_to->FormValue)) {
-			ew_AddMessage($gsFormError, $this->order_time_to->FldErrMsg());
+		if (!$this->user_level_name->FldIsDetailKey && !is_null($this->user_level_name->FormValue) && $this->user_level_name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->user_level_name->FldCaption(), $this->user_level_name->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -928,12 +767,12 @@ class ctimings_edit extends ctimings {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// store_id
-			// day_of_the_week
-			// order_time_from
-			// order_time_to
-			// Call Row Updating event
+			// user_level_id
+			// user_level_name
 
+			$this->user_level_name->SetDbValueDef($rsnew, $this->user_level_name->CurrentValue, "", $this->user_level_name->ReadOnly);
+
+			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
 			if ($bUpdateRow) {
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
@@ -961,6 +800,10 @@ class ctimings_edit extends ctimings {
 		// Call Row_Updated event
 		if ($EditRow)
 			$this->Row_Updated($rsold, $rsnew);
+
+		// Load user level information again
+		if ($EditRow)
+			$Security->SetupUserLevel();
 		$rs->Close();
 		return $EditRow;
 	}
@@ -970,7 +813,7 @@ class ctimings_edit extends ctimings {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("timingslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("user_levelslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "edit";
 		$Breadcrumb->Add("edit", $PageId, $url);
 	}
@@ -1063,29 +906,29 @@ class ctimings_edit extends ctimings {
 <?php
 
 // Create page object
-if (!isset($timings_edit)) $timings_edit = new ctimings_edit();
+if (!isset($user_levels_edit)) $user_levels_edit = new cuser_levels_edit();
 
 // Page init
-$timings_edit->Page_Init();
+$user_levels_edit->Page_Init();
 
 // Page main
-$timings_edit->Page_Main();
+$user_levels_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$timings_edit->Page_Render();
+$user_levels_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "edit";
-var CurrentForm = ftimingsedit = new ew_Form("ftimingsedit", "edit");
+var CurrentForm = fuser_levelsedit = new ew_Form("fuser_levelsedit", "edit");
 
 // Validate form
-ftimingsedit.Validate = function() {
+fuser_levelsedit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -1099,24 +942,35 @@ ftimingsedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_store_id");
+			elm = this.GetElements("x" + infix + "_user_level_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $timings->store_id->FldCaption(), $timings->store_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_day_of_the_week");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $user_levels->user_level_id->FldCaption(), $user_levels->user_level_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_user_level_id");
+			if (elm && !ew_CheckInteger(elm.value))
+				return this.OnError(elm, "<?php echo ew_JsEncode2($user_levels->user_level_id->FldErrMsg()) ?>");
+			elm = this.GetElements("x" + infix + "_user_level_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $timings->day_of_the_week->FldCaption(), $timings->day_of_the_week->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_order_time_from");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $timings->order_time_from->FldCaption(), $timings->order_time_from->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_order_time_from");
-			if (elm && !ew_CheckTime(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($timings->order_time_from->FldErrMsg()) ?>");
-			elm = this.GetElements("x" + infix + "_order_time_to");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $timings->order_time_to->FldCaption(), $timings->order_time_to->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_order_time_to");
-			if (elm && !ew_CheckTime(elm.value))
-				return this.OnError(elm, "<?php echo ew_JsEncode2($timings->order_time_to->FldErrMsg()) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $user_levels->user_level_name->FldCaption(), $user_levels->user_level_name->ReqErrMsg)) ?>");
+			var elId = fobj.elements["x" + infix + "_user_level_id"];
+			var elName = fobj.elements["x" + infix + "_user_level_name"];
+			if (elId && elName) {
+				elId.value = $.trim(elId.value);
+				elName.value = $.trim(elName.value);
+				if (elId && !ew_CheckInteger(elId.value))
+					return this.OnError(elId, ewLanguage.Phrase("UserLevelIDInteger"));
+				var level = parseInt(elId.value, 10);
+				if (level == 0 && !ew_SameText(elName.value, "Default")) {
+					return this.OnError(elName, ewLanguage.Phrase("UserLevelDefaultName"));
+				} else if (level == -1 && !ew_SameText(elName.value, "Administrator")) {
+					return this.OnError(elName, ewLanguage.Phrase("UserLevelAdministratorName"));
+				} else if (level == -2 && !ew_SameText(elName.value, "Anonymous")) {
+					return this.OnError(elName, ewLanguage.Phrase("UserLevelAnonymousName"));
+				} else if (level < -2) {
+					return this.OnError(elId, ewLanguage.Phrase("UserLevelIDIncorrect"));
+				} else if (level > 0 && ["anonymous", "administrator", "default"].includes(elName.value.toLowerCase())) {
+					return this.OnError(elName, ewLanguage.Phrase("UserLevelNameIncorrect"));
+				}
+			}
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1135,7 +989,7 @@ ftimingsedit.Validate = function() {
 }
 
 // Form_CustomValidate event
-ftimingsedit.Form_CustomValidate = 
+fuser_levelsedit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1143,95 +997,65 @@ ftimingsedit.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-ftimingsedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fuser_levelsedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ftimingsedit.Lists["x_store_id"] = {"LinkField":"x_store_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"stores"};
-ftimingsedit.Lists["x_store_id"].Data = "<?php echo $timings_edit->store_id->LookupFilterQuery(FALSE, "edit") ?>";
-ftimingsedit.Lists["x_day_of_the_week"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-ftimingsedit.Lists["x_day_of_the_week"].Options = <?php echo json_encode($timings_edit->day_of_the_week->Options()) ?>;
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $timings_edit->ShowPageHeader(); ?>
+<?php $user_levels_edit->ShowPageHeader(); ?>
 <?php
-$timings_edit->ShowMessage();
+$user_levels_edit->ShowMessage();
 ?>
-<form name="ftimingsedit" id="ftimingsedit" class="<?php echo $timings_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($timings_edit->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $timings_edit->Token ?>">
+<form name="fuser_levelsedit" id="fuser_levelsedit" class="<?php echo $user_levels_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($user_levels_edit->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $user_levels_edit->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="timings">
+<input type="hidden" name="t" value="user_levels">
 <input type="hidden" name="a_edit" id="a_edit" value="U">
-<input type="hidden" name="modal" value="<?php echo intval($timings_edit->IsModal) ?>">
+<input type="hidden" name="modal" value="<?php echo intval($user_levels_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
-<?php if ($timings->store_id->Visible) { // store_id ?>
-	<div id="r_store_id" class="form-group">
-		<label id="elh_timings_store_id" for="x_store_id" class="<?php echo $timings_edit->LeftColumnClass ?>"><?php echo $timings->store_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $timings_edit->RightColumnClass ?>"><div<?php echo $timings->store_id->CellAttributes() ?>>
-<span id="el_timings_store_id">
-<span<?php echo $timings->store_id->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $timings->store_id->EditValue ?></p></span>
+<?php if ($user_levels->user_level_id->Visible) { // user_level_id ?>
+	<div id="r_user_level_id" class="form-group">
+		<label id="elh_user_levels_user_level_id" for="x_user_level_id" class="<?php echo $user_levels_edit->LeftColumnClass ?>"><?php echo $user_levels->user_level_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $user_levels_edit->RightColumnClass ?>"><div<?php echo $user_levels->user_level_id->CellAttributes() ?>>
+<span id="el_user_levels_user_level_id">
+<span<?php echo $user_levels->user_level_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $user_levels->user_level_id->EditValue ?></p></span>
 </span>
-<input type="hidden" data-table="timings" data-field="x_store_id" name="x_store_id" id="x_store_id" value="<?php echo ew_HtmlEncode($timings->store_id->CurrentValue) ?>">
-<?php echo $timings->store_id->CustomMsg ?></div></div>
+<input type="hidden" data-table="user_levels" data-field="x_user_level_id" name="x_user_level_id" id="x_user_level_id" value="<?php echo ew_HtmlEncode($user_levels->user_level_id->CurrentValue) ?>">
+<?php echo $user_levels->user_level_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($timings->day_of_the_week->Visible) { // day_of_the_week ?>
-	<div id="r_day_of_the_week" class="form-group">
-		<label id="elh_timings_day_of_the_week" for="x_day_of_the_week" class="<?php echo $timings_edit->LeftColumnClass ?>"><?php echo $timings->day_of_the_week->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $timings_edit->RightColumnClass ?>"><div<?php echo $timings->day_of_the_week->CellAttributes() ?>>
-<span id="el_timings_day_of_the_week">
-<span<?php echo $timings->day_of_the_week->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $timings->day_of_the_week->EditValue ?></p></span>
+<?php if ($user_levels->user_level_name->Visible) { // user_level_name ?>
+	<div id="r_user_level_name" class="form-group">
+		<label id="elh_user_levels_user_level_name" for="x_user_level_name" class="<?php echo $user_levels_edit->LeftColumnClass ?>"><?php echo $user_levels->user_level_name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $user_levels_edit->RightColumnClass ?>"><div<?php echo $user_levels->user_level_name->CellAttributes() ?>>
+<span id="el_user_levels_user_level_name">
+<input type="text" data-table="user_levels" data-field="x_user_level_name" name="x_user_level_name" id="x_user_level_name" size="30" maxlength="80" placeholder="<?php echo ew_HtmlEncode($user_levels->user_level_name->getPlaceHolder()) ?>" value="<?php echo $user_levels->user_level_name->EditValue ?>"<?php echo $user_levels->user_level_name->EditAttributes() ?>>
 </span>
-<input type="hidden" data-table="timings" data-field="x_day_of_the_week" name="x_day_of_the_week" id="x_day_of_the_week" value="<?php echo ew_HtmlEncode($timings->day_of_the_week->CurrentValue) ?>">
-<?php echo $timings->day_of_the_week->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($timings->order_time_from->Visible) { // order_time_from ?>
-	<div id="r_order_time_from" class="form-group">
-		<label id="elh_timings_order_time_from" for="x_order_time_from" class="<?php echo $timings_edit->LeftColumnClass ?>"><?php echo $timings->order_time_from->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $timings_edit->RightColumnClass ?>"><div<?php echo $timings->order_time_from->CellAttributes() ?>>
-<span id="el_timings_order_time_from">
-<span<?php echo $timings->order_time_from->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $timings->order_time_from->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="timings" data-field="x_order_time_from" name="x_order_time_from" id="x_order_time_from" value="<?php echo ew_HtmlEncode($timings->order_time_from->CurrentValue) ?>">
-<?php echo $timings->order_time_from->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($timings->order_time_to->Visible) { // order_time_to ?>
-	<div id="r_order_time_to" class="form-group">
-		<label id="elh_timings_order_time_to" for="x_order_time_to" class="<?php echo $timings_edit->LeftColumnClass ?>"><?php echo $timings->order_time_to->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $timings_edit->RightColumnClass ?>"><div<?php echo $timings->order_time_to->CellAttributes() ?>>
-<span id="el_timings_order_time_to">
-<span<?php echo $timings->order_time_to->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $timings->order_time_to->EditValue ?></p></span>
-</span>
-<input type="hidden" data-table="timings" data-field="x_order_time_to" name="x_order_time_to" id="x_order_time_to" value="<?php echo ew_HtmlEncode($timings->order_time_to->CurrentValue) ?>">
-<?php echo $timings->order_time_to->CustomMsg ?></div></div>
+<?php echo $user_levels->user_level_name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->
-<?php if (!$timings_edit->IsModal) { ?>
+<?php if (!$user_levels_edit->IsModal) { ?>
 <div class="form-group"><!-- buttons .form-group -->
-	<div class="<?php echo $timings_edit->OffsetColumnClass ?>"><!-- buttons offset -->
+	<div class="<?php echo $user_levels_edit->OffsetColumnClass ?>"><!-- buttons offset -->
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("SaveBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $timings_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $user_levels_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>
 </form>
 <script type="text/javascript">
-ftimingsedit.Init();
+fuser_levelsedit.Init();
 </script>
 <?php
-$timings_edit->ShowPageFooter();
+$user_levels_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1243,5 +1067,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$timings_edit->Page_Terminate();
+$user_levels_edit->Page_Terminate();
 ?>

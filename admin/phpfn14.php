@@ -4292,22 +4292,22 @@ class cAdvancedSecurity {
 			$sSql = $UserTable->GetSQL($sFilter, "");
 			if ($rs = $UserTableConn->Execute($sSql)) {
 				if (!$rs->EOF) {
-					$valid = $customValid || ew_ComparePassword($rs->fields('UserPass'), $pwd, $encrypted);
+					$valid = $customValid || ew_ComparePassword($rs->fields('user_pass'), $pwd, $encrypted);
 					if ($valid) {
 						$_SESSION[EW_SESSION_STATUS] = "login";
 						$_SESSION[EW_SESSION_SYS_ADMIN] = 0; // Non System Administrator
-						$this->setCurrentUserName($rs->fields('UserName')); // Load user name
-						if (is_null($rs->fields('Level'))) {
+						$this->setCurrentUserName($rs->fields('user_name')); // Load user name
+						if (is_null($rs->fields('level_no'))) {
 							$this->setSessionUserLevelID(0);
 						} else {
-							$this->setSessionUserLevelID(intval($rs->fields('Level'))); // Load User Level
+							$this->setSessionUserLevelID(intval($rs->fields('level_no'))); // Load User Level
 						}
 						$this->SetupUserLevel();
 
 						// Call User Validated event
 						$row = $rs->fields;
 						$UserProfile->Assign($row);
-						$UserProfile->Delete('UserPass'); // Delete password
+						$UserProfile->Delete('user_pass'); // Delete password
 						$valid = $this->User_Validated($row) !== FALSE; // For backward compatibility
 					}
 				} else { // User not found in user table
@@ -4569,7 +4569,7 @@ class cAdvancedSecurity {
 		if (count($this->UserLevelPriv) == 0 && $this->IsAdmin() && $Page != NULL && @$_SESSION[EW_SESSION_USER_LEVEL_MSG] == "") {
 			$Page->setFailureMessage($Language->Phrase("NoUserLevel"));
 			$_SESSION[EW_SESSION_USER_LEVEL_MSG] = "1"; // Show only once
-			$Page->Page_Terminate("userlevelslist.php");
+			$Page->Page_Terminate("user_levelslist.php");
 		}
 		return TRUE;
 	}

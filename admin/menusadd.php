@@ -7,7 +7,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn14.php" ?>
 <?php include_once "menusinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
-<?php include_once "sub_menusgridcls.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
 
@@ -321,8 +320,8 @@ class cmenus_add extends cmenus {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->Name->SetVisibility();
-		$this->Picture->SetVisibility();
+		$this->name->SetVisibility();
+		$this->picture->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -339,22 +338,6 @@ class cmenus_add extends cmenus {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
-
-			// Get the keys for master table
-			$sDetailTblVar = $this->getCurrentDetailTable();
-			if ($sDetailTblVar <> "") {
-				$DetailTblVar = explode(",", $sDetailTblVar);
-				if (in_array("sub_menus", $DetailTblVar)) {
-
-					// Process auto fill for detail table 'sub_menus'
-					if (preg_match('/^fsub_menus(grid|add|addopt|edit|update|search)$/', @$_POST["form"])) {
-						if (!isset($GLOBALS["sub_menus_grid"])) $GLOBALS["sub_menus_grid"] = new csub_menus_grid;
-						$GLOBALS["sub_menus_grid"]->Page_Init();
-						$this->Page_Terminate();
-						exit();
-					}
-				}
-			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -461,11 +444,11 @@ class cmenus_add extends cmenus {
 
 			// Load key values from QueryString
 			$this->CopyRecord = TRUE;
-			if (@$_GET["MenuID"] != "") {
-				$this->MenuID->setQueryStringValue($_GET["MenuID"]);
-				$this->setKey("MenuID", $this->MenuID->CurrentValue); // Set up key
+			if (@$_GET["menu_id"] != "") {
+				$this->menu_id->setQueryStringValue($_GET["menu_id"]);
+				$this->setKey("menu_id", $this->menu_id->CurrentValue); // Set up key
 			} else {
-				$this->setKey("MenuID", ""); // Clear key
+				$this->setKey("menu_id", ""); // Clear key
 				$this->CopyRecord = FALSE;
 			}
 			if ($this->CopyRecord) {
@@ -482,9 +465,6 @@ class cmenus_add extends cmenus {
 		if (@$_POST["a_add"] <> "") {
 			$this->LoadFormValues(); // Load form values
 		}
-
-		// Set up detail parameters
-		$this->SetupDetailParms();
 
 		// Validate form if post back
 		if (@$_POST["a_add"] <> "") {
@@ -505,19 +485,13 @@ class cmenus_add extends cmenus {
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
 					$this->Page_Terminate("menuslist.php"); // No matching record, return to list
 				}
-
-				// Set up detail parameters
-				$this->SetupDetailParms();
 				break;
 			case "A": // Add new record
 				$this->SendEmail = TRUE; // Send email on add success
 				if ($this->AddRow($this->OldRecordset)) { // Add successful
 					if ($this->getSuccessMessage() == "")
 						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
-					if ($this->getCurrentDetailTable() <> "") // Master/detail add
-						$sReturnUrl = $this->GetDetailUrl();
-					else
-						$sReturnUrl = $this->getReturnUrl();
+					$sReturnUrl = $this->getReturnUrl();
 					if (ew_GetPageName($sReturnUrl) == "menuslist.php")
 						$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to List page with correct master key if necessary
 					elseif (ew_GetPageName($sReturnUrl) == "menusview.php")
@@ -526,9 +500,6 @@ class cmenus_add extends cmenus {
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->RestoreFormValues(); // Add failed, restore form values
-
-					// Set up detail parameters
-					$this->SetupDetailParms();
 				}
 		}
 
@@ -548,20 +519,20 @@ class cmenus_add extends cmenus {
 		global $objForm, $Language;
 
 		// Get upload data
-		$this->Picture->Upload->Index = $objForm->Index;
-		$this->Picture->Upload->UploadFile();
-		$this->Picture->CurrentValue = $this->Picture->Upload->FileName;
+		$this->picture->Upload->Index = $objForm->Index;
+		$this->picture->Upload->UploadFile();
+		$this->picture->CurrentValue = $this->picture->Upload->FileName;
 	}
 
 	// Load default values
 	function LoadDefaultValues() {
-		$this->MenuID->CurrentValue = NULL;
-		$this->MenuID->OldValue = $this->MenuID->CurrentValue;
-		$this->Name->CurrentValue = NULL;
-		$this->Name->OldValue = $this->Name->CurrentValue;
-		$this->Picture->Upload->DbValue = NULL;
-		$this->Picture->OldValue = $this->Picture->Upload->DbValue;
-		$this->Picture->CurrentValue = NULL; // Clear file related field
+		$this->menu_id->CurrentValue = NULL;
+		$this->menu_id->OldValue = $this->menu_id->CurrentValue;
+		$this->name->CurrentValue = NULL;
+		$this->name->OldValue = $this->name->CurrentValue;
+		$this->picture->Upload->DbValue = NULL;
+		$this->picture->OldValue = $this->picture->Upload->DbValue;
+		$this->picture->CurrentValue = NULL; // Clear file related field
 	}
 
 	// Load form values
@@ -570,15 +541,15 @@ class cmenus_add extends cmenus {
 		// Load from form
 		global $objForm;
 		$this->GetUploadFiles(); // Get upload files
-		if (!$this->Name->FldIsDetailKey) {
-			$this->Name->setFormValue($objForm->GetValue("x_Name"));
+		if (!$this->name->FldIsDetailKey) {
+			$this->name->setFormValue($objForm->GetValue("x_name"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->Name->CurrentValue = $this->Name->FormValue;
+		$this->name->CurrentValue = $this->name->FormValue;
 	}
 
 	// Load row based on key values
@@ -614,19 +585,19 @@ class cmenus_add extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->MenuID->setDbValue($row['MenuID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->Picture->Upload->DbValue = $row['Picture'];
-		$this->Picture->setDbValue($this->Picture->Upload->DbValue);
+		$this->menu_id->setDbValue($row['menu_id']);
+		$this->name->setDbValue($row['name']);
+		$this->picture->Upload->DbValue = $row['picture'];
+		$this->picture->setDbValue($this->picture->Upload->DbValue);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$this->LoadDefaultValues();
 		$row = array();
-		$row['MenuID'] = $this->MenuID->CurrentValue;
-		$row['Name'] = $this->Name->CurrentValue;
-		$row['Picture'] = $this->Picture->Upload->DbValue;
+		$row['menu_id'] = $this->menu_id->CurrentValue;
+		$row['name'] = $this->name->CurrentValue;
+		$row['picture'] = $this->picture->Upload->DbValue;
 		return $row;
 	}
 
@@ -635,9 +606,9 @@ class cmenus_add extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->MenuID->DbValue = $row['MenuID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->Picture->Upload->DbValue = $row['Picture'];
+		$this->menu_id->DbValue = $row['menu_id'];
+		$this->name->DbValue = $row['name'];
+		$this->picture->Upload->DbValue = $row['picture'];
 	}
 
 	// Load old record
@@ -645,8 +616,8 @@ class cmenus_add extends cmenus {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("MenuID")) <> "")
-			$this->MenuID->CurrentValue = $this->getKey("MenuID"); // MenuID
+		if (strval($this->getKey("menu_id")) <> "")
+			$this->menu_id->CurrentValue = $this->getKey("menu_id"); // menu_id
 		else
 			$bValidKey = FALSE;
 
@@ -672,88 +643,88 @@ class cmenus_add extends cmenus {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// MenuID
-		// Name
-		// Picture
+		// menu_id
+		// name
+		// picture
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// Picture
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->ImageWidth = 100;
-			$this->Picture->ImageHeight = 100;
-			$this->Picture->ImageAlt = $this->Picture->FldAlt();
-			$this->Picture->ViewValue = $this->Picture->Upload->DbValue;
+		// picture
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->ImageWidth = 100;
+			$this->picture->ImageHeight = 100;
+			$this->picture->ImageAlt = $this->picture->FldAlt();
+			$this->picture->ViewValue = $this->picture->Upload->DbValue;
 		} else {
-			$this->Picture->ViewValue = "";
+			$this->picture->ViewValue = "";
 		}
-		$this->Picture->ViewCustomAttributes = "";
+		$this->picture->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// Picture
-			$this->Picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->Picture->Upload->DbValue)) {
-				$this->Picture->HrefValue = ew_GetFileUploadUrl($this->Picture, $this->Picture->Upload->DbValue); // Add prefix/suffix
-				$this->Picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->Picture->HrefValue = ew_FullUrl($this->Picture->HrefValue, "href");
+			// picture
+			$this->picture->LinkCustomAttributes = "";
+			if (!ew_Empty($this->picture->Upload->DbValue)) {
+				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
+				$this->picture->LinkAttrs["target"] = ""; // Add target
+				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
 			} else {
-				$this->Picture->HrefValue = "";
+				$this->picture->HrefValue = "";
 			}
-			$this->Picture->HrefValue2 = $this->Picture->UploadPath . $this->Picture->Upload->DbValue;
-			$this->Picture->TooltipValue = "";
-			if ($this->Picture->UseColorbox) {
-				if (ew_Empty($this->Picture->TooltipValue))
-					$this->Picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->Picture->LinkAttrs["data-rel"] = "menus_x_Picture";
-				ew_AppendClass($this->Picture->LinkAttrs["class"], "ewLightbox");
+			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
+			$this->picture->TooltipValue = "";
+			if ($this->picture->UseColorbox) {
+				if (ew_Empty($this->picture->TooltipValue))
+					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
+				$this->picture->LinkAttrs["data-rel"] = "menus_x_picture";
+				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
 			}
 		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
 
-			// Name
-			$this->Name->EditAttrs["class"] = "form-control";
-			$this->Name->EditCustomAttributes = "";
-			$this->Name->EditValue = ew_HtmlEncode($this->Name->CurrentValue);
-			$this->Name->PlaceHolder = ew_RemoveHtml($this->Name->FldCaption());
+			// name
+			$this->name->EditAttrs["class"] = "form-control";
+			$this->name->EditCustomAttributes = "";
+			$this->name->EditValue = ew_HtmlEncode($this->name->CurrentValue);
+			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
-			// Picture
-			$this->Picture->EditAttrs["class"] = "form-control";
-			$this->Picture->EditCustomAttributes = "";
-			if (!ew_Empty($this->Picture->Upload->DbValue)) {
-				$this->Picture->ImageWidth = 100;
-				$this->Picture->ImageHeight = 100;
-				$this->Picture->ImageAlt = $this->Picture->FldAlt();
-				$this->Picture->EditValue = $this->Picture->Upload->DbValue;
+			// picture
+			$this->picture->EditAttrs["class"] = "form-control";
+			$this->picture->EditCustomAttributes = "";
+			if (!ew_Empty($this->picture->Upload->DbValue)) {
+				$this->picture->ImageWidth = 100;
+				$this->picture->ImageHeight = 100;
+				$this->picture->ImageAlt = $this->picture->FldAlt();
+				$this->picture->EditValue = $this->picture->Upload->DbValue;
 			} else {
-				$this->Picture->EditValue = "";
+				$this->picture->EditValue = "";
 			}
-			if (!ew_Empty($this->Picture->CurrentValue))
-					$this->Picture->Upload->FileName = $this->Picture->CurrentValue;
-			if (($this->CurrentAction == "I" || $this->CurrentAction == "C") && !$this->EventCancelled) ew_RenderUploadField($this->Picture);
+			if (!ew_Empty($this->picture->CurrentValue))
+					$this->picture->Upload->FileName = $this->picture->CurrentValue;
+			if (($this->CurrentAction == "I" || $this->CurrentAction == "C") && !$this->EventCancelled) ew_RenderUploadField($this->picture);
 
 			// Add refer script
-			// Name
+			// name
 
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
 
-			// Picture
-			$this->Picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->Picture->Upload->DbValue)) {
-				$this->Picture->HrefValue = ew_GetFileUploadUrl($this->Picture, $this->Picture->Upload->DbValue); // Add prefix/suffix
-				$this->Picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->Picture->HrefValue = ew_FullUrl($this->Picture->HrefValue, "href");
+			// picture
+			$this->picture->LinkCustomAttributes = "";
+			if (!ew_Empty($this->picture->Upload->DbValue)) {
+				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
+				$this->picture->LinkAttrs["target"] = ""; // Add target
+				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
 			} else {
-				$this->Picture->HrefValue = "";
+				$this->picture->HrefValue = "";
 			}
-			$this->Picture->HrefValue2 = $this->Picture->UploadPath . $this->Picture->Upload->DbValue;
+			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -773,15 +744,8 @@ class cmenus_add extends cmenus {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->Name->FldIsDetailKey && !is_null($this->Name->FormValue) && $this->Name->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Name->FldCaption(), $this->Name->ReqErrMsg));
-		}
-
-		// Validate detail grid
-		$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-		if (in_array("sub_menus", $DetailTblVar) && $GLOBALS["sub_menus"]->DetailAdd) {
-			if (!isset($GLOBALS["sub_menus_grid"])) $GLOBALS["sub_menus_grid"] = new csub_menus_grid(); // get detail page object
-			$GLOBALS["sub_menus_grid"]->ValidateGridForm();
+		if (!$this->name->FldIsDetailKey && !is_null($this->name->FormValue) && $this->name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->name->FldCaption(), $this->name->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -801,51 +765,47 @@ class cmenus_add extends cmenus {
 		global $Language, $Security;
 		$conn = &$this->Connection();
 
-		// Begin transaction
-		if ($this->getCurrentDetailTable() <> "")
-			$conn->BeginTrans();
-
 		// Load db values from rsold
 		$this->LoadDbValues($rsold);
 		if ($rsold) {
 		}
 		$rsnew = array();
 
-		// Name
-		$this->Name->SetDbValueDef($rsnew, $this->Name->CurrentValue, "", FALSE);
+		// name
+		$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", FALSE);
 
-		// Picture
-		if ($this->Picture->Visible && !$this->Picture->Upload->KeepFile) {
-			$this->Picture->Upload->DbValue = ""; // No need to delete old file
-			if ($this->Picture->Upload->FileName == "") {
-				$rsnew['Picture'] = NULL;
+		// picture
+		if ($this->picture->Visible && !$this->picture->Upload->KeepFile) {
+			$this->picture->Upload->DbValue = ""; // No need to delete old file
+			if ($this->picture->Upload->FileName == "") {
+				$rsnew['picture'] = NULL;
 			} else {
-				$rsnew['Picture'] = $this->Picture->Upload->FileName;
+				$rsnew['picture'] = $this->picture->Upload->FileName;
 			}
 		}
-		if ($this->Picture->Visible && !$this->Picture->Upload->KeepFile) {
-			$OldFiles = ew_Empty($this->Picture->Upload->DbValue) ? array() : array($this->Picture->Upload->DbValue);
-			if (!ew_Empty($this->Picture->Upload->FileName)) {
-				$NewFiles = array($this->Picture->Upload->FileName);
+		if ($this->picture->Visible && !$this->picture->Upload->KeepFile) {
+			$OldFiles = ew_Empty($this->picture->Upload->DbValue) ? array() : array($this->picture->Upload->DbValue);
+			if (!ew_Empty($this->picture->Upload->FileName)) {
+				$NewFiles = array($this->picture->Upload->FileName);
 				$NewFileCount = count($NewFiles);
 				for ($i = 0; $i < $NewFileCount; $i++) {
-					$fldvar = ($this->Picture->Upload->Index < 0) ? $this->Picture->FldVar : substr($this->Picture->FldVar, 0, 1) . $this->Picture->Upload->Index . substr($this->Picture->FldVar, 1);
+					$fldvar = ($this->picture->Upload->Index < 0) ? $this->picture->FldVar : substr($this->picture->FldVar, 0, 1) . $this->picture->Upload->Index . substr($this->picture->FldVar, 1);
 					if ($NewFiles[$i] <> "") {
 						$file = $NewFiles[$i];
-						if (file_exists(ew_UploadTempPath($fldvar, $this->Picture->TblVar) . $file)) {
-							$file1 = ew_UploadFileNameEx($this->Picture->PhysicalUploadPath(), $file); // Get new file name
+						if (file_exists(ew_UploadTempPath($fldvar, $this->picture->TblVar) . $file)) {
+							$file1 = ew_UploadFileNameEx($this->picture->PhysicalUploadPath(), $file); // Get new file name
 							if ($file1 <> $file) { // Rename temp file
-								while (file_exists(ew_UploadTempPath($fldvar, $this->Picture->TblVar) . $file1) || file_exists($this->Picture->PhysicalUploadPath() . $file1)) // Make sure no file name clash
-									$file1 = ew_UniqueFilename($this->Picture->PhysicalUploadPath(), $file1, TRUE); // Use indexed name
-								rename(ew_UploadTempPath($fldvar, $this->Picture->TblVar) . $file, ew_UploadTempPath($fldvar, $this->Picture->TblVar) . $file1);
+								while (file_exists(ew_UploadTempPath($fldvar, $this->picture->TblVar) . $file1) || file_exists($this->picture->PhysicalUploadPath() . $file1)) // Make sure no file name clash
+									$file1 = ew_UniqueFilename($this->picture->PhysicalUploadPath(), $file1, TRUE); // Use indexed name
+								rename(ew_UploadTempPath($fldvar, $this->picture->TblVar) . $file, ew_UploadTempPath($fldvar, $this->picture->TblVar) . $file1);
 								$NewFiles[$i] = $file1;
 							}
 						}
 					}
 				}
-				$this->Picture->Upload->DbValue = empty($OldFiles) ? "" : implode(EW_MULTIPLE_UPLOAD_SEPARATOR, $OldFiles);
-				$this->Picture->Upload->FileName = implode(EW_MULTIPLE_UPLOAD_SEPARATOR, $NewFiles);
-				$this->Picture->SetDbValueDef($rsnew, $this->Picture->Upload->FileName, NULL, FALSE);
+				$this->picture->Upload->DbValue = empty($OldFiles) ? "" : implode(EW_MULTIPLE_UPLOAD_SEPARATOR, $OldFiles);
+				$this->picture->Upload->FileName = implode(EW_MULTIPLE_UPLOAD_SEPARATOR, $NewFiles);
+				$this->picture->SetDbValueDef($rsnew, $this->picture->Upload->FileName, NULL, FALSE);
 			}
 		}
 
@@ -857,20 +817,20 @@ class cmenus_add extends cmenus {
 			$AddRow = $this->Insert($rsnew);
 			$conn->raiseErrorFn = '';
 			if ($AddRow) {
-				if ($this->Picture->Visible && !$this->Picture->Upload->KeepFile) {
-					$OldFiles = ew_Empty($this->Picture->Upload->DbValue) ? array() : array($this->Picture->Upload->DbValue);
-					if (!ew_Empty($this->Picture->Upload->FileName)) {
-						$NewFiles = array($this->Picture->Upload->FileName);
-						$NewFiles2 = array($rsnew['Picture']);
+				if ($this->picture->Visible && !$this->picture->Upload->KeepFile) {
+					$OldFiles = ew_Empty($this->picture->Upload->DbValue) ? array() : array($this->picture->Upload->DbValue);
+					if (!ew_Empty($this->picture->Upload->FileName)) {
+						$NewFiles = array($this->picture->Upload->FileName);
+						$NewFiles2 = array($rsnew['picture']);
 						$NewFileCount = count($NewFiles);
 						for ($i = 0; $i < $NewFileCount; $i++) {
-							$fldvar = ($this->Picture->Upload->Index < 0) ? $this->Picture->FldVar : substr($this->Picture->FldVar, 0, 1) . $this->Picture->Upload->Index . substr($this->Picture->FldVar, 1);
+							$fldvar = ($this->picture->Upload->Index < 0) ? $this->picture->FldVar : substr($this->picture->FldVar, 0, 1) . $this->picture->Upload->Index . substr($this->picture->FldVar, 1);
 							if ($NewFiles[$i] <> "") {
-								$file = ew_UploadTempPath($fldvar, $this->Picture->TblVar) . $NewFiles[$i];
+								$file = ew_UploadTempPath($fldvar, $this->picture->TblVar) . $NewFiles[$i];
 								if (file_exists($file)) {
 									if (@$NewFiles2[$i] <> "") // Use correct file name
 										$NewFiles[$i] = $NewFiles2[$i];
-									if (!$this->Picture->Upload->SaveToFile($NewFiles[$i], TRUE, $i)) { // Just replace
+									if (!$this->picture->Upload->SaveToFile($NewFiles[$i], TRUE, $i)) { // Just replace
 										$this->setFailureMessage($Language->Phrase("UploadErrMsg7"));
 										return FALSE;
 									}
@@ -894,29 +854,6 @@ class cmenus_add extends cmenus {
 			}
 			$AddRow = FALSE;
 		}
-
-		// Add detail records
-		if ($AddRow) {
-			$DetailTblVar = explode(",", $this->getCurrentDetailTable());
-			if (in_array("sub_menus", $DetailTblVar) && $GLOBALS["sub_menus"]->DetailAdd) {
-				$GLOBALS["sub_menus"]->MenuID->setSessionValue($this->MenuID->CurrentValue); // Set master key
-				if (!isset($GLOBALS["sub_menus_grid"])) $GLOBALS["sub_menus_grid"] = new csub_menus_grid(); // Get detail page object
-				$Security->LoadCurrentUserLevel($this->ProjectID . "sub_menus"); // Load user level of detail table
-				$AddRow = $GLOBALS["sub_menus_grid"]->GridInsert();
-				$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
-				if (!$AddRow)
-					$GLOBALS["sub_menus"]->MenuID->setSessionValue(""); // Clear master key if insert failed
-			}
-		}
-
-		// Commit/Rollback transaction
-		if ($this->getCurrentDetailTable() <> "") {
-			if ($AddRow) {
-				$conn->CommitTrans(); // Commit transaction
-			} else {
-				$conn->RollbackTrans(); // Rollback transaction
-			}
-		}
 		if ($AddRow) {
 
 			// Call Row Inserted event
@@ -924,42 +861,9 @@ class cmenus_add extends cmenus {
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
-		// Picture
-		ew_CleanUploadTempPath($this->Picture, $this->Picture->Upload->Index);
+		// picture
+		ew_CleanUploadTempPath($this->picture, $this->picture->Upload->Index);
 		return $AddRow;
-	}
-
-	// Set up detail parms based on QueryString
-	function SetupDetailParms() {
-
-		// Get the keys for master table
-		if (isset($_GET[EW_TABLE_SHOW_DETAIL])) {
-			$sDetailTblVar = $_GET[EW_TABLE_SHOW_DETAIL];
-			$this->setCurrentDetailTable($sDetailTblVar);
-		} else {
-			$sDetailTblVar = $this->getCurrentDetailTable();
-		}
-		if ($sDetailTblVar <> "") {
-			$DetailTblVar = explode(",", $sDetailTblVar);
-			if (in_array("sub_menus", $DetailTblVar)) {
-				if (!isset($GLOBALS["sub_menus_grid"]))
-					$GLOBALS["sub_menus_grid"] = new csub_menus_grid;
-				if ($GLOBALS["sub_menus_grid"]->DetailAdd) {
-					if ($this->CopyRecord)
-						$GLOBALS["sub_menus_grid"]->CurrentMode = "copy";
-					else
-						$GLOBALS["sub_menus_grid"]->CurrentMode = "add";
-					$GLOBALS["sub_menus_grid"]->CurrentAction = "gridadd";
-
-					// Save current master table to detail table
-					$GLOBALS["sub_menus_grid"]->setCurrentMasterTable($this->TableVar);
-					$GLOBALS["sub_menus_grid"]->setStartRecordNumber(1);
-					$GLOBALS["sub_menus_grid"]->MenuID->FldIsDetailKey = TRUE;
-					$GLOBALS["sub_menus_grid"]->MenuID->CurrentValue = $this->MenuID->CurrentValue;
-					$GLOBALS["sub_menus_grid"]->MenuID->setSessionValue($GLOBALS["sub_menus_grid"]->MenuID->CurrentValue);
-				}
-			}
-		}
 	}
 
 	// Set up Breadcrumb
@@ -1096,9 +1000,9 @@ fmenusadd.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_Name");
+			elm = this.GetElements("x" + infix + "_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $menus->Name->FldCaption(), $menus->Name->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $menus->name->FldCaption(), $menus->name->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1147,46 +1051,38 @@ $menus_add->ShowMessage();
 <input type="hidden" name="a_add" id="a_add" value="A">
 <input type="hidden" name="modal" value="<?php echo intval($menus_add->IsModal) ?>">
 <div class="ewAddDiv"><!-- page* -->
-<?php if ($menus->Name->Visible) { // Name ?>
-	<div id="r_Name" class="form-group">
-		<label id="elh_menus_Name" for="x_Name" class="<?php echo $menus_add->LeftColumnClass ?>"><?php echo $menus->Name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $menus_add->RightColumnClass ?>"><div<?php echo $menus->Name->CellAttributes() ?>>
-<span id="el_menus_Name">
-<input type="text" data-table="menus" data-field="x_Name" name="x_Name" id="x_Name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($menus->Name->getPlaceHolder()) ?>" value="<?php echo $menus->Name->EditValue ?>"<?php echo $menus->Name->EditAttributes() ?>>
+<?php if ($menus->name->Visible) { // name ?>
+	<div id="r_name" class="form-group">
+		<label id="elh_menus_name" for="x_name" class="<?php echo $menus_add->LeftColumnClass ?>"><?php echo $menus->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $menus_add->RightColumnClass ?>"><div<?php echo $menus->name->CellAttributes() ?>>
+<span id="el_menus_name">
+<input type="text" data-table="menus" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($menus->name->getPlaceHolder()) ?>" value="<?php echo $menus->name->EditValue ?>"<?php echo $menus->name->EditAttributes() ?>>
 </span>
-<?php echo $menus->Name->CustomMsg ?></div></div>
+<?php echo $menus->name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($menus->Picture->Visible) { // Picture ?>
-	<div id="r_Picture" class="form-group">
-		<label id="elh_menus_Picture" class="<?php echo $menus_add->LeftColumnClass ?>"><?php echo $menus->Picture->FldCaption() ?></label>
-		<div class="<?php echo $menus_add->RightColumnClass ?>"><div<?php echo $menus->Picture->CellAttributes() ?>>
-<span id="el_menus_Picture">
-<div id="fd_x_Picture">
-<span title="<?php echo $menus->Picture->FldTitle() ? $menus->Picture->FldTitle() : $Language->Phrase("ChooseFile") ?>" class="btn btn-default btn-sm fileinput-button ewTooltip<?php if ($menus->Picture->ReadOnly || $menus->Picture->Disabled) echo " hide"; ?>" data-trigger="hover">
+<?php if ($menus->picture->Visible) { // picture ?>
+	<div id="r_picture" class="form-group">
+		<label id="elh_menus_picture" class="<?php echo $menus_add->LeftColumnClass ?>"><?php echo $menus->picture->FldCaption() ?></label>
+		<div class="<?php echo $menus_add->RightColumnClass ?>"><div<?php echo $menus->picture->CellAttributes() ?>>
+<span id="el_menus_picture">
+<div id="fd_x_picture">
+<span title="<?php echo $menus->picture->FldTitle() ? $menus->picture->FldTitle() : $Language->Phrase("ChooseFile") ?>" class="btn btn-default btn-sm fileinput-button ewTooltip<?php if ($menus->picture->ReadOnly || $menus->picture->Disabled) echo " hide"; ?>" data-trigger="hover">
 	<span><?php echo $Language->Phrase("ChooseFileBtn") ?></span>
-	<input type="file" title=" " data-table="menus" data-field="x_Picture" name="x_Picture" id="x_Picture"<?php echo $menus->Picture->EditAttributes() ?>>
+	<input type="file" title=" " data-table="menus" data-field="x_picture" name="x_picture" id="x_picture"<?php echo $menus->picture->EditAttributes() ?>>
 </span>
-<input type="hidden" name="fn_x_Picture" id= "fn_x_Picture" value="<?php echo $menus->Picture->Upload->FileName ?>">
-<input type="hidden" name="fa_x_Picture" id= "fa_x_Picture" value="0">
-<input type="hidden" name="fs_x_Picture" id= "fs_x_Picture" value="60">
-<input type="hidden" name="fx_x_Picture" id= "fx_x_Picture" value="<?php echo $menus->Picture->UploadAllowedFileExt ?>">
-<input type="hidden" name="fm_x_Picture" id= "fm_x_Picture" value="<?php echo $menus->Picture->UploadMaxFileSize ?>">
+<input type="hidden" name="fn_x_picture" id= "fn_x_picture" value="<?php echo $menus->picture->Upload->FileName ?>">
+<input type="hidden" name="fa_x_picture" id= "fa_x_picture" value="0">
+<input type="hidden" name="fs_x_picture" id= "fs_x_picture" value="60">
+<input type="hidden" name="fx_x_picture" id= "fx_x_picture" value="<?php echo $menus->picture->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x_picture" id= "fm_x_picture" value="<?php echo $menus->picture->UploadMaxFileSize ?>">
 </div>
-<table id="ft_x_Picture" class="table table-condensed pull-left ewUploadTable"><tbody class="files"></tbody></table>
+<table id="ft_x_picture" class="table table-condensed pull-left ewUploadTable"><tbody class="files"></tbody></table>
 </span>
-<?php echo $menus->Picture->CustomMsg ?></div></div>
+<?php echo $menus->picture->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->
-<?php
-	if (in_array("sub_menus", explode(",", $menus->getCurrentDetailTable())) && $sub_menus->DetailAdd) {
-?>
-<?php if ($menus->getCurrentDetailTable() <> "") { ?>
-<h4 class="ewDetailCaption"><?php echo $Language->TablePhrase("sub_menus", "TblCaption") ?></h4>
-<?php } ?>
-<?php include_once "sub_menusgrid.php" ?>
-<?php } ?>
 <?php if (!$menus_add->IsModal) { ?>
 <div class="form-group"><!-- buttons .form-group -->
 	<div class="<?php echo $menus_add->OffsetColumnClass ?>"><!-- buttons offset -->

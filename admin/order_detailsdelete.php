@@ -5,6 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
+<?php include_once "order_detailsinfo.php" ?>
 <?php include_once "ordersinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
@@ -14,9 +15,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$orders_delete = NULL; // Initialize page object first
+$order_details_delete = NULL; // Initialize page object first
 
-class corders_delete extends corders {
+class corder_details_delete extends corder_details {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +26,10 @@ class corders_delete extends corders {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'orders';
+	var $TableName = 'order_details';
 
 	// Page object name
-	var $PageObjName = 'orders_delete';
+	var $PageObjName = 'order_details_delete';
 
 	// Page headings
 	var $Heading = '';
@@ -250,11 +251,14 @@ class corders_delete extends corders {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (orders)
-		if (!isset($GLOBALS["orders"]) || get_class($GLOBALS["orders"]) == "corders") {
-			$GLOBALS["orders"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["orders"];
+		// Table object (order_details)
+		if (!isset($GLOBALS["order_details"]) || get_class($GLOBALS["order_details"]) == "corder_details") {
+			$GLOBALS["order_details"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["order_details"];
 		}
+
+		// Table object (orders)
+		if (!isset($GLOBALS['orders'])) $GLOBALS['orders'] = new corders();
 
 		// Table object (employees)
 		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
@@ -265,7 +269,7 @@ class corders_delete extends corders {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'orders', TRUE);
+			define("EW_TABLE_NAME", 'order_details', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -304,7 +308,7 @@ class corders_delete extends corders {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("orderslist.php"));
+				$this->Page_Terminate(ew_GetUrl("order_detailslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -315,19 +319,10 @@ class corders_delete extends corders {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->order_id->SetVisibility();
-		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->order_id->Visible = FALSE;
-		$this->customer_id->SetVisibility();
-		$this->full_name->SetVisibility();
-		$this->province_id->SetVisibility();
-		$this->zip_code->SetVisibility();
-		$this->phone->SetVisibility();
-		$this->discount->SetVisibility();
-		$this->total_price->SetVisibility();
-		$this->payment_type_id->SetVisibility();
-		$this->delivery_type_id->SetVisibility();
-		$this->order_date_time->SetVisibility();
+		$this->quantity->SetVisibility();
+		$this->menu_id->SetVisibility();
+		$this->sub_menu_id->SetVisibility();
+		$this->price->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -359,13 +354,13 @@ class corders_delete extends corders {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $orders;
+		global $EW_EXPORT, $order_details;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($orders);
+				$doc = new $class($order_details);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -405,6 +400,9 @@ class corders_delete extends corders {
 	function Page_Main() {
 		global $Language;
 
+		// Set up master/detail parameters
+		$this->SetupMasterParms();
+
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
@@ -412,10 +410,10 @@ class corders_delete extends corders {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("orderslist.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("order_detailslist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in orders class, ordersinfo.php
+		// SQL constructor in order_details class, order_detailsinfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -443,7 +441,7 @@ class corders_delete extends corders {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("orderslist.php"); // Return to list
+				$this->Page_Terminate("order_detailslist.php"); // Return to list
 			}
 		}
 	}
@@ -507,39 +505,23 @@ class corders_delete extends corders {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
+		$this->order_detail_id->setDbValue($row['order_detail_id']);
 		$this->order_id->setDbValue($row['order_id']);
-		$this->customer_id->setDbValue($row['customer_id']);
-		$this->full_name->setDbValue($row['full_name']);
-		$this->province_id->setDbValue($row['province_id']);
-		$this->address->setDbValue($row['address']);
-		$this->zip_code->setDbValue($row['zip_code']);
-		$this->phone->setDbValue($row['phone']);
-		$this->discount->setDbValue($row['discount']);
-		$this->total_price->setDbValue($row['total_price']);
-		$this->payment_type_id->setDbValue($row['payment_type_id']);
-		$this->delivery_type_id->setDbValue($row['delivery_type_id']);
-		$this->description->setDbValue($row['description']);
-		$this->feedback->setDbValue($row['feedback']);
-		$this->order_date_time->setDbValue($row['order_date_time']);
+		$this->quantity->setDbValue($row['quantity']);
+		$this->menu_id->setDbValue($row['menu_id']);
+		$this->sub_menu_id->setDbValue($row['sub_menu_id']);
+		$this->price->setDbValue($row['price']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
+		$row['order_detail_id'] = NULL;
 		$row['order_id'] = NULL;
-		$row['customer_id'] = NULL;
-		$row['full_name'] = NULL;
-		$row['province_id'] = NULL;
-		$row['address'] = NULL;
-		$row['zip_code'] = NULL;
-		$row['phone'] = NULL;
-		$row['discount'] = NULL;
-		$row['total_price'] = NULL;
-		$row['payment_type_id'] = NULL;
-		$row['delivery_type_id'] = NULL;
-		$row['description'] = NULL;
-		$row['feedback'] = NULL;
-		$row['order_date_time'] = NULL;
+		$row['quantity'] = NULL;
+		$row['menu_id'] = NULL;
+		$row['sub_menu_id'] = NULL;
+		$row['price'] = NULL;
 		return $row;
 	}
 
@@ -548,20 +530,12 @@ class corders_delete extends corders {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
+		$this->order_detail_id->DbValue = $row['order_detail_id'];
 		$this->order_id->DbValue = $row['order_id'];
-		$this->customer_id->DbValue = $row['customer_id'];
-		$this->full_name->DbValue = $row['full_name'];
-		$this->province_id->DbValue = $row['province_id'];
-		$this->address->DbValue = $row['address'];
-		$this->zip_code->DbValue = $row['zip_code'];
-		$this->phone->DbValue = $row['phone'];
-		$this->discount->DbValue = $row['discount'];
-		$this->total_price->DbValue = $row['total_price'];
-		$this->payment_type_id->DbValue = $row['payment_type_id'];
-		$this->delivery_type_id->DbValue = $row['delivery_type_id'];
-		$this->description->DbValue = $row['description'];
-		$this->feedback->DbValue = $row['feedback'];
-		$this->order_date_time->DbValue = $row['order_date_time'];
+		$this->quantity->DbValue = $row['quantity'];
+		$this->menu_id->DbValue = $row['menu_id'];
+		$this->sub_menu_id->DbValue = $row['sub_menu_id'];
+		$this->price->DbValue = $row['price'];
 	}
 
 	// Render row values based on field settings
@@ -571,214 +545,98 @@ class corders_delete extends corders {
 		// Initialize URLs
 		// Convert decimal values if posted back
 
-		if ($this->discount->FormValue == $this->discount->CurrentValue && is_numeric(ew_StrToFloat($this->discount->CurrentValue)))
-			$this->discount->CurrentValue = ew_StrToFloat($this->discount->CurrentValue);
-
-		// Convert decimal values if posted back
-		if ($this->total_price->FormValue == $this->total_price->CurrentValue && is_numeric(ew_StrToFloat($this->total_price->CurrentValue)))
-			$this->total_price->CurrentValue = ew_StrToFloat($this->total_price->CurrentValue);
+		if ($this->price->FormValue == $this->price->CurrentValue && is_numeric(ew_StrToFloat($this->price->CurrentValue)))
+			$this->price->CurrentValue = ew_StrToFloat($this->price->CurrentValue);
 
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
+		// order_detail_id
 		// order_id
-		// customer_id
-		// full_name
-		// province_id
-		// address
-		// zip_code
-		// phone
-		// discount
-		// total_price
-		// payment_type_id
-		// delivery_type_id
-		// description
-		// feedback
-		// order_date_time
+		// quantity
+		// menu_id
+		// sub_menu_id
+		// price
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// order_id
-		$this->order_id->ViewValue = $this->order_id->CurrentValue;
-		$this->order_id->ViewCustomAttributes = "";
+		// quantity
+		$this->quantity->ViewValue = $this->quantity->CurrentValue;
+		$this->quantity->ViewCustomAttributes = "";
 
-		// customer_id
-		if (strval($this->customer_id->CurrentValue) <> "") {
-			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+		// menu_id
+		if (strval($this->menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
 		$sWhereWrk = "";
-		$this->customer_id->LookupFilters = array();
+		$this->menu_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `full_name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
-			}
-		} else {
-			$this->customer_id->ViewValue = NULL;
-		}
-		$this->customer_id->ViewCustomAttributes = "";
-
-		// full_name
-		$this->full_name->ViewValue = $this->full_name->CurrentValue;
-		$this->full_name->ViewCustomAttributes = "";
-
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
+				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
+				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
 			}
 		} else {
-			$this->province_id->ViewValue = NULL;
+			$this->menu_id->ViewValue = NULL;
 		}
-		$this->province_id->ViewCustomAttributes = "";
+		$this->menu_id->ViewCustomAttributes = "";
 
-		// zip_code
-		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
-		$this->zip_code->ViewCustomAttributes = "";
-
-		// phone
-		$this->phone->ViewValue = $this->phone->CurrentValue;
-		$this->phone->ViewCustomAttributes = "";
-
-		// discount
-		$this->discount->ViewValue = $this->discount->CurrentValue;
-		$this->discount->ViewCustomAttributes = "";
-
-		// total_price
-		$this->total_price->ViewValue = $this->total_price->CurrentValue;
-		$this->total_price->ViewValue = ew_FormatCurrency($this->total_price->ViewValue, 0, -2, -2, -2);
-		$this->total_price->ViewCustomAttributes = "";
-
-		// payment_type_id
-		if (strval($this->payment_type_id->CurrentValue) <> "") {
-			$sFilterWrk = "`payment_type_id`" . ew_SearchString("=", $this->payment_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `payment_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `payment_types`";
+		// sub_menu_id
+		if (strval($this->sub_menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`sub_menu_id`" . ew_SearchString("=", $this->sub_menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `sub_menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `sub_menus`";
 		$sWhereWrk = "";
-		$this->payment_type_id->LookupFilters = array();
+		$this->sub_menu_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->payment_type_id, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->sub_menu_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->payment_type_id->ViewValue = $this->payment_type_id->DisplayValue($arwrk);
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->CurrentValue;
 			}
 		} else {
-			$this->payment_type_id->ViewValue = NULL;
+			$this->sub_menu_id->ViewValue = NULL;
 		}
-		$this->payment_type_id->ViewCustomAttributes = "";
+		$this->sub_menu_id->ViewCustomAttributes = "";
 
-		// delivery_type_id
-		if (strval($this->delivery_type_id->CurrentValue) <> "") {
-			$sFilterWrk = "`delivery_type_id`" . ew_SearchString("=", $this->delivery_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `delivery_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `delivery_types`";
-		$sWhereWrk = "";
-		$this->delivery_type_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->delivery_type_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->delivery_type_id->ViewValue = $this->delivery_type_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
-			}
-		} else {
-			$this->delivery_type_id->ViewValue = NULL;
-		}
-		$this->delivery_type_id->ViewCustomAttributes = "";
+		// price
+		$this->price->ViewValue = $this->price->CurrentValue;
+		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+		$this->price->ViewCustomAttributes = "";
 
-		// order_date_time
-		$this->order_date_time->ViewValue = $this->order_date_time->CurrentValue;
-		$this->order_date_time->ViewValue = ew_FormatDateTime($this->order_date_time->ViewValue, 0);
-		$this->order_date_time->ViewCustomAttributes = "";
+			// quantity
+			$this->quantity->LinkCustomAttributes = "";
+			$this->quantity->HrefValue = "";
+			$this->quantity->TooltipValue = "";
 
-			// order_id
-			$this->order_id->LinkCustomAttributes = "";
-			$this->order_id->HrefValue = "";
-			$this->order_id->TooltipValue = "";
+			// menu_id
+			$this->menu_id->LinkCustomAttributes = "";
+			$this->menu_id->HrefValue = "";
+			$this->menu_id->TooltipValue = "";
 
-			// customer_id
-			$this->customer_id->LinkCustomAttributes = "";
-			$this->customer_id->HrefValue = "";
-			$this->customer_id->TooltipValue = "";
+			// sub_menu_id
+			$this->sub_menu_id->LinkCustomAttributes = "";
+			$this->sub_menu_id->HrefValue = "";
+			$this->sub_menu_id->TooltipValue = "";
 
-			// full_name
-			$this->full_name->LinkCustomAttributes = "";
-			$this->full_name->HrefValue = "";
-			$this->full_name->TooltipValue = "";
-
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-			$this->province_id->TooltipValue = "";
-
-			// zip_code
-			$this->zip_code->LinkCustomAttributes = "";
-			$this->zip_code->HrefValue = "";
-			$this->zip_code->TooltipValue = "";
-
-			// phone
-			$this->phone->LinkCustomAttributes = "";
-			$this->phone->HrefValue = "";
-			$this->phone->TooltipValue = "";
-
-			// discount
-			$this->discount->LinkCustomAttributes = "";
-			$this->discount->HrefValue = "";
-			$this->discount->TooltipValue = "";
-
-			// total_price
-			$this->total_price->LinkCustomAttributes = "";
-			$this->total_price->HrefValue = "";
-			$this->total_price->TooltipValue = "";
-
-			// payment_type_id
-			$this->payment_type_id->LinkCustomAttributes = "";
-			$this->payment_type_id->HrefValue = "";
-			$this->payment_type_id->TooltipValue = "";
-
-			// delivery_type_id
-			$this->delivery_type_id->LinkCustomAttributes = "";
-			$this->delivery_type_id->HrefValue = "";
-			$this->delivery_type_id->TooltipValue = "";
-
-			// order_date_time
-			$this->order_date_time->LinkCustomAttributes = "";
-			$this->order_date_time->HrefValue = "";
-			$this->order_date_time->TooltipValue = "";
+			// price
+			$this->price->LinkCustomAttributes = "";
+			$this->price->HrefValue = "";
+			$this->price->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -828,7 +686,7 @@ class corders_delete extends corders {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['order_id'];
+				$sThisKey .= $row['order_detail_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -866,12 +724,74 @@ class corders_delete extends corders {
 		return $DeleteRows;
 	}
 
+	// Set up master/detail based on QueryString
+	function SetupMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setQueryStringValue($_GET["fk_order_id"]);
+					$this->order_id->setQueryStringValue($GLOBALS["orders"]->order_id->QueryStringValue);
+					$this->order_id->setSessionValue($this->order_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setFormValue($_POST["fk_order_id"]);
+					$this->order_id->setFormValue($GLOBALS["orders"]->order_id->FormValue);
+					$this->order_id->setSessionValue($this->order_id->FormValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+
+			// Reset start record counter (new master key)
+			if (!$this->IsAddOrEdit()) {
+				$this->StartRec = 1;
+				$this->setStartRecordNumber($this->StartRec);
+			}
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "orders") {
+				if ($this->order_id->CurrentValue == "") $this->order_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("orderslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("order_detailslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -957,29 +877,29 @@ class corders_delete extends corders {
 <?php
 
 // Create page object
-if (!isset($orders_delete)) $orders_delete = new corders_delete();
+if (!isset($order_details_delete)) $order_details_delete = new corder_details_delete();
 
 // Page init
-$orders_delete->Page_Init();
+$order_details_delete->Page_Init();
 
 // Page main
-$orders_delete->Page_Main();
+$order_details_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$orders_delete->Page_Render();
+$order_details_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = fordersdelete = new ew_Form("fordersdelete", "delete");
+var CurrentForm = forder_detailsdelete = new ew_Form("forder_detailsdelete", "delete");
 
 // Form_CustomValidate event
-fordersdelete.Form_CustomValidate = 
+forder_detailsdelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -987,17 +907,13 @@ fordersdelete.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fordersdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+forder_detailsdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fordersdelete.Lists["x_customer_id"] = {"LinkField":"x_customer_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_full_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"customers"};
-fordersdelete.Lists["x_customer_id"].Data = "<?php echo $orders_delete->customer_id->LookupFilterQuery(FALSE, "delete") ?>";
-fordersdelete.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fordersdelete.Lists["x_province_id"].Data = "<?php echo $orders_delete->province_id->LookupFilterQuery(FALSE, "delete") ?>";
-fordersdelete.Lists["x_payment_type_id"] = {"LinkField":"x_payment_type_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"payment_types"};
-fordersdelete.Lists["x_payment_type_id"].Data = "<?php echo $orders_delete->payment_type_id->LookupFilterQuery(FALSE, "delete") ?>";
-fordersdelete.Lists["x_delivery_type_id"] = {"LinkField":"x_delivery_type_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"delivery_types"};
-fordersdelete.Lists["x_delivery_type_id"].Data = "<?php echo $orders_delete->delivery_type_id->LookupFilterQuery(FALSE, "delete") ?>";
+forder_detailsdelete.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
+forder_detailsdelete.Lists["x_menu_id"].Data = "<?php echo $order_details_delete->menu_id->LookupFilterQuery(FALSE, "delete") ?>";
+forder_detailsdelete.Lists["x_sub_menu_id"] = {"LinkField":"x_sub_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"sub_menus"};
+forder_detailsdelete.Lists["x_sub_menu_id"].Data = "<?php echo $order_details_delete->sub_menu_id->LookupFilterQuery(FALSE, "delete") ?>";
 
 // Form object for search
 </script>
@@ -1005,17 +921,17 @@ fordersdelete.Lists["x_delivery_type_id"].Data = "<?php echo $orders_delete->del
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $orders_delete->ShowPageHeader(); ?>
+<?php $order_details_delete->ShowPageHeader(); ?>
 <?php
-$orders_delete->ShowMessage();
+$order_details_delete->ShowMessage();
 ?>
-<form name="fordersdelete" id="fordersdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($orders_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $orders_delete->Token ?>">
+<form name="forder_detailsdelete" id="forder_detailsdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($order_details_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $order_details_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="orders">
+<input type="hidden" name="t" value="order_details">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($orders_delete->RecKeys as $key) { ?>
+<?php foreach ($order_details_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
@@ -1024,153 +940,76 @@ $orders_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($orders->order_id->Visible) { // order_id ?>
-		<th class="<?php echo $orders->order_id->HeaderCellClass() ?>"><span id="elh_orders_order_id" class="orders_order_id"><?php echo $orders->order_id->FldCaption() ?></span></th>
+<?php if ($order_details->quantity->Visible) { // quantity ?>
+		<th class="<?php echo $order_details->quantity->HeaderCellClass() ?>"><span id="elh_order_details_quantity" class="order_details_quantity"><?php echo $order_details->quantity->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($orders->customer_id->Visible) { // customer_id ?>
-		<th class="<?php echo $orders->customer_id->HeaderCellClass() ?>"><span id="elh_orders_customer_id" class="orders_customer_id"><?php echo $orders->customer_id->FldCaption() ?></span></th>
+<?php if ($order_details->menu_id->Visible) { // menu_id ?>
+		<th class="<?php echo $order_details->menu_id->HeaderCellClass() ?>"><span id="elh_order_details_menu_id" class="order_details_menu_id"><?php echo $order_details->menu_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($orders->full_name->Visible) { // full_name ?>
-		<th class="<?php echo $orders->full_name->HeaderCellClass() ?>"><span id="elh_orders_full_name" class="orders_full_name"><?php echo $orders->full_name->FldCaption() ?></span></th>
+<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+		<th class="<?php echo $order_details->sub_menu_id->HeaderCellClass() ?>"><span id="elh_order_details_sub_menu_id" class="order_details_sub_menu_id"><?php echo $order_details->sub_menu_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($orders->province_id->Visible) { // province_id ?>
-		<th class="<?php echo $orders->province_id->HeaderCellClass() ?>"><span id="elh_orders_province_id" class="orders_province_id"><?php echo $orders->province_id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->zip_code->Visible) { // zip_code ?>
-		<th class="<?php echo $orders->zip_code->HeaderCellClass() ?>"><span id="elh_orders_zip_code" class="orders_zip_code"><?php echo $orders->zip_code->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->phone->Visible) { // phone ?>
-		<th class="<?php echo $orders->phone->HeaderCellClass() ?>"><span id="elh_orders_phone" class="orders_phone"><?php echo $orders->phone->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->discount->Visible) { // discount ?>
-		<th class="<?php echo $orders->discount->HeaderCellClass() ?>"><span id="elh_orders_discount" class="orders_discount"><?php echo $orders->discount->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->total_price->Visible) { // total_price ?>
-		<th class="<?php echo $orders->total_price->HeaderCellClass() ?>"><span id="elh_orders_total_price" class="orders_total_price"><?php echo $orders->total_price->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->payment_type_id->Visible) { // payment_type_id ?>
-		<th class="<?php echo $orders->payment_type_id->HeaderCellClass() ?>"><span id="elh_orders_payment_type_id" class="orders_payment_type_id"><?php echo $orders->payment_type_id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->delivery_type_id->Visible) { // delivery_type_id ?>
-		<th class="<?php echo $orders->delivery_type_id->HeaderCellClass() ?>"><span id="elh_orders_delivery_type_id" class="orders_delivery_type_id"><?php echo $orders->delivery_type_id->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($orders->order_date_time->Visible) { // order_date_time ?>
-		<th class="<?php echo $orders->order_date_time->HeaderCellClass() ?>"><span id="elh_orders_order_date_time" class="orders_order_date_time"><?php echo $orders->order_date_time->FldCaption() ?></span></th>
+<?php if ($order_details->price->Visible) { // price ?>
+		<th class="<?php echo $order_details->price->HeaderCellClass() ?>"><span id="elh_order_details_price" class="order_details_price"><?php echo $order_details->price->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$orders_delete->RecCnt = 0;
+$order_details_delete->RecCnt = 0;
 $i = 0;
-while (!$orders_delete->Recordset->EOF) {
-	$orders_delete->RecCnt++;
-	$orders_delete->RowCnt++;
+while (!$order_details_delete->Recordset->EOF) {
+	$order_details_delete->RecCnt++;
+	$order_details_delete->RowCnt++;
 
 	// Set row properties
-	$orders->ResetAttrs();
-	$orders->RowType = EW_ROWTYPE_VIEW; // View
+	$order_details->ResetAttrs();
+	$order_details->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$orders_delete->LoadRowValues($orders_delete->Recordset);
+	$order_details_delete->LoadRowValues($order_details_delete->Recordset);
 
 	// Render row
-	$orders_delete->RenderRow();
+	$order_details_delete->RenderRow();
 ?>
-	<tr<?php echo $orders->RowAttributes() ?>>
-<?php if ($orders->order_id->Visible) { // order_id ?>
-		<td<?php echo $orders->order_id->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_order_id" class="orders_order_id">
-<span<?php echo $orders->order_id->ViewAttributes() ?>>
-<?php echo $orders->order_id->ListViewValue() ?></span>
+	<tr<?php echo $order_details->RowAttributes() ?>>
+<?php if ($order_details->quantity->Visible) { // quantity ?>
+		<td<?php echo $order_details->quantity->CellAttributes() ?>>
+<span id="el<?php echo $order_details_delete->RowCnt ?>_order_details_quantity" class="order_details_quantity">
+<span<?php echo $order_details->quantity->ViewAttributes() ?>>
+<?php echo $order_details->quantity->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->customer_id->Visible) { // customer_id ?>
-		<td<?php echo $orders->customer_id->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_customer_id" class="orders_customer_id">
-<span<?php echo $orders->customer_id->ViewAttributes() ?>>
-<?php echo $orders->customer_id->ListViewValue() ?></span>
+<?php if ($order_details->menu_id->Visible) { // menu_id ?>
+		<td<?php echo $order_details->menu_id->CellAttributes() ?>>
+<span id="el<?php echo $order_details_delete->RowCnt ?>_order_details_menu_id" class="order_details_menu_id">
+<span<?php echo $order_details->menu_id->ViewAttributes() ?>>
+<?php echo $order_details->menu_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->full_name->Visible) { // full_name ?>
-		<td<?php echo $orders->full_name->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_full_name" class="orders_full_name">
-<span<?php echo $orders->full_name->ViewAttributes() ?>>
-<?php echo $orders->full_name->ListViewValue() ?></span>
+<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+		<td<?php echo $order_details->sub_menu_id->CellAttributes() ?>>
+<span id="el<?php echo $order_details_delete->RowCnt ?>_order_details_sub_menu_id" class="order_details_sub_menu_id">
+<span<?php echo $order_details->sub_menu_id->ViewAttributes() ?>>
+<?php echo $order_details->sub_menu_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($orders->province_id->Visible) { // province_id ?>
-		<td<?php echo $orders->province_id->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_province_id" class="orders_province_id">
-<span<?php echo $orders->province_id->ViewAttributes() ?>>
-<?php echo $orders->province_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->zip_code->Visible) { // zip_code ?>
-		<td<?php echo $orders->zip_code->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_zip_code" class="orders_zip_code">
-<span<?php echo $orders->zip_code->ViewAttributes() ?>>
-<?php echo $orders->zip_code->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->phone->Visible) { // phone ?>
-		<td<?php echo $orders->phone->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_phone" class="orders_phone">
-<span<?php echo $orders->phone->ViewAttributes() ?>>
-<?php echo $orders->phone->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->discount->Visible) { // discount ?>
-		<td<?php echo $orders->discount->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_discount" class="orders_discount">
-<span<?php echo $orders->discount->ViewAttributes() ?>>
-<?php echo $orders->discount->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->total_price->Visible) { // total_price ?>
-		<td<?php echo $orders->total_price->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_total_price" class="orders_total_price">
-<span<?php echo $orders->total_price->ViewAttributes() ?>>
-<?php echo $orders->total_price->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->payment_type_id->Visible) { // payment_type_id ?>
-		<td<?php echo $orders->payment_type_id->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_payment_type_id" class="orders_payment_type_id">
-<span<?php echo $orders->payment_type_id->ViewAttributes() ?>>
-<?php echo $orders->payment_type_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->delivery_type_id->Visible) { // delivery_type_id ?>
-		<td<?php echo $orders->delivery_type_id->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_delivery_type_id" class="orders_delivery_type_id">
-<span<?php echo $orders->delivery_type_id->ViewAttributes() ?>>
-<?php echo $orders->delivery_type_id->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($orders->order_date_time->Visible) { // order_date_time ?>
-		<td<?php echo $orders->order_date_time->CellAttributes() ?>>
-<span id="el<?php echo $orders_delete->RowCnt ?>_orders_order_date_time" class="orders_order_date_time">
-<span<?php echo $orders->order_date_time->ViewAttributes() ?>>
-<?php echo $orders->order_date_time->ListViewValue() ?></span>
+<?php if ($order_details->price->Visible) { // price ?>
+		<td<?php echo $order_details->price->CellAttributes() ?>>
+<span id="el<?php echo $order_details_delete->RowCnt ?>_order_details_price" class="order_details_price">
+<span<?php echo $order_details->price->ViewAttributes() ?>>
+<?php echo $order_details->price->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$orders_delete->Recordset->MoveNext();
+	$order_details_delete->Recordset->MoveNext();
 }
-$orders_delete->Recordset->Close();
+$order_details_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -1178,14 +1017,14 @@ $orders_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $orders_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $order_details_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-fordersdelete.Init();
+forder_detailsdelete.Init();
 </script>
 <?php
-$orders_delete->ShowPageFooter();
+$order_details_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1197,5 +1036,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$orders_delete->Page_Terminate();
+$order_details_delete->Page_Terminate();
 ?>

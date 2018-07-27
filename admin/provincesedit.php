@@ -320,10 +320,10 @@ class cprovinces_edit extends cprovinces {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->ProvinceID->SetVisibility();
+		$this->province_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->ProvinceID->Visible = FALSE;
-		$this->Name->SetVisibility();
+			$this->province_id->Visible = FALSE;
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -444,19 +444,19 @@ class cprovinces_edit extends cprovinces {
 				$postBack = TRUE;
 
 			// Load key from Form
-			if ($objForm->HasValue("x_ProvinceID")) {
-				$this->ProvinceID->setFormValue($objForm->GetValue("x_ProvinceID"));
+			if ($objForm->HasValue("x_province_id")) {
+				$this->province_id->setFormValue($objForm->GetValue("x_province_id"));
 			}
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 
 			// Load key from QueryString
 			$loadByQuery = FALSE;
-			if (isset($_GET["ProvinceID"])) {
-				$this->ProvinceID->setQueryStringValue($_GET["ProvinceID"]);
+			if (isset($_GET["province_id"])) {
+				$this->province_id->setQueryStringValue($_GET["province_id"]);
 				$loadByQuery = TRUE;
 			} else {
-				$this->ProvinceID->CurrentValue = NULL;
+				$this->province_id->CurrentValue = NULL;
 			}
 		}
 
@@ -560,18 +560,18 @@ class cprovinces_edit extends cprovinces {
 
 		// Load from form
 		global $objForm;
-		if (!$this->ProvinceID->FldIsDetailKey)
-			$this->ProvinceID->setFormValue($objForm->GetValue("x_ProvinceID"));
-		if (!$this->Name->FldIsDetailKey) {
-			$this->Name->setFormValue($objForm->GetValue("x_Name"));
+		if (!$this->province_id->FldIsDetailKey)
+			$this->province_id->setFormValue($objForm->GetValue("x_province_id"));
+		if (!$this->name->FldIsDetailKey) {
+			$this->name->setFormValue($objForm->GetValue("x_name"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->ProvinceID->CurrentValue = $this->ProvinceID->FormValue;
-		$this->Name->CurrentValue = $this->Name->FormValue;
+		$this->province_id->CurrentValue = $this->province_id->FormValue;
+		$this->name->CurrentValue = $this->name->FormValue;
 	}
 
 	// Load row based on key values
@@ -607,15 +607,15 @@ class cprovinces_edit extends cprovinces {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Name->setDbValue($row['Name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['ProvinceID'] = NULL;
-		$row['Name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -624,8 +624,8 @@ class cprovinces_edit extends cprovinces {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Name->DbValue = $row['Name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Load old record
@@ -633,8 +633,8 @@ class cprovinces_edit extends cprovinces {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("ProvinceID")) <> "")
-			$this->ProvinceID->CurrentValue = $this->getKey("ProvinceID"); // ProvinceID
+		if (strval($this->getKey("province_id")) <> "")
+			$this->province_id->CurrentValue = $this->getKey("province_id"); // province_id
 		else
 			$bValidKey = FALSE;
 
@@ -660,51 +660,51 @@ class cprovinces_edit extends cprovinces {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// ProvinceID
-		// Name
+		// province_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// ProvinceID
-		$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
-		$this->ProvinceID->ViewCustomAttributes = "";
+		// province_id
+		$this->province_id->ViewValue = $this->province_id->CurrentValue;
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// ProvinceID
-			$this->ProvinceID->EditAttrs["class"] = "form-control";
-			$this->ProvinceID->EditCustomAttributes = "";
-			$this->ProvinceID->EditValue = $this->ProvinceID->CurrentValue;
-			$this->ProvinceID->ViewCustomAttributes = "";
+			// province_id
+			$this->province_id->EditAttrs["class"] = "form-control";
+			$this->province_id->EditCustomAttributes = "";
+			$this->province_id->EditValue = $this->province_id->CurrentValue;
+			$this->province_id->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->EditAttrs["class"] = "form-control";
-			$this->Name->EditCustomAttributes = "";
-			$this->Name->EditValue = ew_HtmlEncode($this->Name->CurrentValue);
-			$this->Name->PlaceHolder = ew_RemoveHtml($this->Name->FldCaption());
+			// name
+			$this->name->EditAttrs["class"] = "form-control";
+			$this->name->EditCustomAttributes = "";
+			$this->name->EditValue = ew_HtmlEncode($this->name->CurrentValue);
+			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
 			// Edit refer script
-			// ProvinceID
+			// province_id
 
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -724,8 +724,8 @@ class cprovinces_edit extends cprovinces {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->Name->FldIsDetailKey && !is_null($this->Name->FormValue) && $this->Name->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Name->FldCaption(), $this->Name->ReqErrMsg));
+		if (!$this->name->FldIsDetailKey && !is_null($this->name->FormValue) && $this->name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->name->FldCaption(), $this->name->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -763,8 +763,8 @@ class cprovinces_edit extends cprovinces {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// Name
-			$this->Name->SetDbValueDef($rsnew, $this->Name->CurrentValue, "", $this->Name->ReadOnly);
+			// name
+			$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", $this->name->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -932,9 +932,9 @@ fprovincesedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_Name");
+			elm = this.GetElements("x" + infix + "_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $provinces->Name->FldCaption(), $provinces->Name->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $provinces->name->FldCaption(), $provinces->name->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -983,26 +983,26 @@ $provinces_edit->ShowMessage();
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="modal" value="<?php echo intval($provinces_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
-<?php if ($provinces->ProvinceID->Visible) { // ProvinceID ?>
-	<div id="r_ProvinceID" class="form-group">
-		<label id="elh_provinces_ProvinceID" class="<?php echo $provinces_edit->LeftColumnClass ?>"><?php echo $provinces->ProvinceID->FldCaption() ?></label>
-		<div class="<?php echo $provinces_edit->RightColumnClass ?>"><div<?php echo $provinces->ProvinceID->CellAttributes() ?>>
-<span id="el_provinces_ProvinceID">
-<span<?php echo $provinces->ProvinceID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $provinces->ProvinceID->EditValue ?></p></span>
+<?php if ($provinces->province_id->Visible) { // province_id ?>
+	<div id="r_province_id" class="form-group">
+		<label id="elh_provinces_province_id" class="<?php echo $provinces_edit->LeftColumnClass ?>"><?php echo $provinces->province_id->FldCaption() ?></label>
+		<div class="<?php echo $provinces_edit->RightColumnClass ?>"><div<?php echo $provinces->province_id->CellAttributes() ?>>
+<span id="el_provinces_province_id">
+<span<?php echo $provinces->province_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $provinces->province_id->EditValue ?></p></span>
 </span>
-<input type="hidden" data-table="provinces" data-field="x_ProvinceID" name="x_ProvinceID" id="x_ProvinceID" value="<?php echo ew_HtmlEncode($provinces->ProvinceID->CurrentValue) ?>">
-<?php echo $provinces->ProvinceID->CustomMsg ?></div></div>
+<input type="hidden" data-table="provinces" data-field="x_province_id" name="x_province_id" id="x_province_id" value="<?php echo ew_HtmlEncode($provinces->province_id->CurrentValue) ?>">
+<?php echo $provinces->province_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($provinces->Name->Visible) { // Name ?>
-	<div id="r_Name" class="form-group">
-		<label id="elh_provinces_Name" for="x_Name" class="<?php echo $provinces_edit->LeftColumnClass ?>"><?php echo $provinces->Name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $provinces_edit->RightColumnClass ?>"><div<?php echo $provinces->Name->CellAttributes() ?>>
-<span id="el_provinces_Name">
-<input type="text" data-table="provinces" data-field="x_Name" name="x_Name" id="x_Name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($provinces->Name->getPlaceHolder()) ?>" value="<?php echo $provinces->Name->EditValue ?>"<?php echo $provinces->Name->EditAttributes() ?>>
+<?php if ($provinces->name->Visible) { // name ?>
+	<div id="r_name" class="form-group">
+		<label id="elh_provinces_name" for="x_name" class="<?php echo $provinces_edit->LeftColumnClass ?>"><?php echo $provinces->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $provinces_edit->RightColumnClass ?>"><div<?php echo $provinces->name->CellAttributes() ?>>
+<span id="el_provinces_name">
+<input type="text" data-table="provinces" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($provinces->name->getPlaceHolder()) ?>" value="<?php echo $provinces->name->EditValue ?>"<?php echo $provinces->name->EditAttributes() ?>>
 </span>
-<?php echo $provinces->Name->CustomMsg ?></div></div>
+<?php echo $provinces->name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->

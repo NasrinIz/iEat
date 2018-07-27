@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "menusinfo.php" ?>
+<?php include_once "user_levelsinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$menus_view = NULL; // Initialize page object first
+$user_levels_view = NULL; // Initialize page object first
 
-class cmenus_view extends cmenus {
+class cuser_levels_view extends cuser_levels {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class cmenus_view extends cmenus {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'menus';
+	var $TableName = 'user_levels';
 
 	// Page object name
-	var $PageObjName = 'menus_view';
+	var $PageObjName = 'user_levels_view';
 
 	// Page headings
 	var $Heading = '';
@@ -282,15 +282,15 @@ class cmenus_view extends cmenus {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (menus)
-		if (!isset($GLOBALS["menus"]) || get_class($GLOBALS["menus"]) == "cmenus") {
-			$GLOBALS["menus"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["menus"];
+		// Table object (user_levels)
+		if (!isset($GLOBALS["user_levels"]) || get_class($GLOBALS["user_levels"]) == "cuser_levels") {
+			$GLOBALS["user_levels"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["user_levels"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["menu_id"] <> "") {
-			$this->RecKey["menu_id"] = $_GET["menu_id"];
-			$KeyUrl .= "&amp;menu_id=" . urlencode($this->RecKey["menu_id"]);
+		if (@$_GET["user_level_id"] <> "") {
+			$this->RecKey["user_level_id"] = $_GET["user_level_id"];
+			$KeyUrl .= "&amp;user_level_id=" . urlencode($this->RecKey["user_level_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -309,7 +309,7 @@ class cmenus_view extends cmenus {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'menus', TRUE);
+			define("EW_TABLE_NAME", 'user_levels', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -360,13 +360,9 @@ class cmenus_view extends cmenus {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanView()) {
+		if (!$Security->CanAdmin()) {
 			$Security->SaveLastUrl();
-			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
-			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("menuslist.php"));
-			else
-				$this->Page_Terminate(ew_GetUrl("login.php"));
+			$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
 
 		// NOTE: Security object may be needed in other part of the script, skip set to Nothing
@@ -392,9 +388,9 @@ class cmenus_view extends cmenus {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["menu_id"] <> "") {
+		if (@$_GET["user_level_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["menu_id"];
+			$gsExportFile .= $_GET["user_level_id"];
 		}
 
 		// Get custom export parameters
@@ -420,11 +416,8 @@ class cmenus_view extends cmenus {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->menu_id->SetVisibility();
-		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->menu_id->Visible = FALSE;
-		$this->name->SetVisibility();
-		$this->picture->SetVisibility();
+		$this->user_level_id->SetVisibility();
+		$this->user_level_name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -456,13 +449,13 @@ class cmenus_view extends cmenus {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $menus;
+		global $EW_EXPORT, $user_levels;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($menus);
+				$doc = new $class($user_levels);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -488,7 +481,7 @@ class cmenus_view extends cmenus {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "menusview.php")
+					if ($pageName == "user_levelsview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -532,14 +525,14 @@ class cmenus_view extends cmenus {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["menu_id"] <> "") {
-				$this->menu_id->setQueryStringValue($_GET["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->QueryStringValue;
-			} elseif (@$_POST["menu_id"] <> "") {
-				$this->menu_id->setFormValue($_POST["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->FormValue;
+			if (@$_GET["user_level_id"] <> "") {
+				$this->user_level_id->setQueryStringValue($_GET["user_level_id"]);
+				$this->RecKey["user_level_id"] = $this->user_level_id->QueryStringValue;
+			} elseif (@$_POST["user_level_id"] <> "") {
+				$this->user_level_id->setFormValue($_POST["user_level_id"]);
+				$this->RecKey["user_level_id"] = $this->user_level_id->FormValue;
 			} else {
-				$sReturnUrl = "menuslist.php"; // Return to list
+				$sReturnUrl = "user_levelslist.php"; // Return to list
 			}
 
 			// Get action
@@ -549,7 +542,7 @@ class cmenus_view extends cmenus {
 					if (!$this->LoadRow()) { // Load record based on key
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "menuslist.php"; // No matching record, return to list
+						$sReturnUrl = "user_levelslist.php"; // No matching record, return to list
 					}
 			}
 
@@ -560,7 +553,7 @@ class cmenus_view extends cmenus {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "menuslist.php"; // Not page request, return to list
+			$sReturnUrl = "user_levelslist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -722,18 +715,16 @@ class cmenus_view extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->menu_id->setDbValue($row['menu_id']);
-		$this->name->setDbValue($row['name']);
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->picture->setDbValue($this->picture->Upload->DbValue);
+		$this->user_level_id->setDbValue($row['user_level_id']);
+		$this->user_level_id->CurrentValue = intval($this->user_level_id->CurrentValue);
+		$this->user_level_name->setDbValue($row['user_level_name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['menu_id'] = NULL;
-		$row['name'] = NULL;
-		$row['picture'] = NULL;
+		$row['user_level_id'] = NULL;
+		$row['user_level_name'] = NULL;
 		return $row;
 	}
 
@@ -742,9 +733,8 @@ class cmenus_view extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->menu_id->DbValue = $row['menu_id'];
-		$this->name->DbValue = $row['name'];
-		$this->picture->Upload->DbValue = $row['picture'];
+		$this->user_level_id->DbValue = $row['user_level_id'];
+		$this->user_level_name->DbValue = $row['user_level_name'];
 	}
 
 	// Render row values based on field settings
@@ -763,58 +753,29 @@ class cmenus_view extends cmenus {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// menu_id
-		// name
-		// picture
+		// user_level_id
+		// user_level_name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// menu_id
-		$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
-		$this->menu_id->ViewCustomAttributes = "";
+		// user_level_id
+		$this->user_level_id->ViewValue = $this->user_level_id->CurrentValue;
+		$this->user_level_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
+		// user_level_name
+		$this->user_level_name->ViewValue = $this->user_level_name->CurrentValue;
+		if ($Security->GetUserLevelName($this->user_level_id->CurrentValue) <> "") $this->user_level_name->ViewValue = $Security->GetUserLevelName($this->user_level_id->CurrentValue);
+		$this->user_level_name->ViewCustomAttributes = "";
 
-		// picture
-		if (!ew_Empty($this->picture->Upload->DbValue)) {
-			$this->picture->ImageWidth = 100;
-			$this->picture->ImageHeight = 100;
-			$this->picture->ImageAlt = $this->picture->FldAlt();
-			$this->picture->ViewValue = $this->picture->Upload->DbValue;
-		} else {
-			$this->picture->ViewValue = "";
-		}
-		$this->picture->ViewCustomAttributes = "";
+			// user_level_id
+			$this->user_level_id->LinkCustomAttributes = "";
+			$this->user_level_id->HrefValue = "";
+			$this->user_level_id->TooltipValue = "";
 
-			// menu_id
-			$this->menu_id->LinkCustomAttributes = "";
-			$this->menu_id->HrefValue = "";
-			$this->menu_id->TooltipValue = "";
-
-			// name
-			$this->name->LinkCustomAttributes = "";
-			$this->name->HrefValue = "";
-			$this->name->TooltipValue = "";
-
-			// picture
-			$this->picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->picture->Upload->DbValue)) {
-				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
-				$this->picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
-			} else {
-				$this->picture->HrefValue = "";
-			}
-			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
-			$this->picture->TooltipValue = "";
-			if ($this->picture->UseColorbox) {
-				if (ew_Empty($this->picture->TooltipValue))
-					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->picture->LinkAttrs["data-rel"] = "menus_x_picture";
-				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
-			}
+			// user_level_name
+			$this->user_level_name->LinkCustomAttributes = "";
+			$this->user_level_name->HrefValue = "";
+			$this->user_level_name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -864,7 +825,7 @@ class cmenus_view extends cmenus {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_menus\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_menus',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fmenusview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_user_levels\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_user_levels',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fuser_levelsview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -964,7 +925,7 @@ class cmenus_view extends cmenus {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("menuslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("user_levelslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1076,30 +1037,30 @@ class cmenus_view extends cmenus {
 <?php
 
 // Create page object
-if (!isset($menus_view)) $menus_view = new cmenus_view();
+if (!isset($user_levels_view)) $user_levels_view = new cuser_levels_view();
 
 // Page init
-$menus_view->Page_Init();
+$user_levels_view->Page_Init();
 
 // Page main
-$menus_view->Page_Main();
+$user_levels_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$menus_view->Page_Render();
+$user_levels_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($user_levels->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = fmenusview = new ew_Form("fmenusview", "view");
+var CurrentForm = fuser_levelsview = new ew_Form("fuser_levelsview", "view");
 
 // Form_CustomValidate event
-fmenusview.Form_CustomValidate = 
+fuser_levelsview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1107,7 +1068,7 @@ fmenusview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fmenusview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fuser_levelsview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
@@ -1118,74 +1079,62 @@ fmenusview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($user_levels->Export == "") { ?>
 <div class="ewToolbar">
-<?php $menus_view->ExportOptions->Render("body") ?>
+<?php $user_levels_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($menus_view->OtherOptions as &$option)
+	foreach ($user_levels_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $menus_view->ShowPageHeader(); ?>
+<?php $user_levels_view->ShowPageHeader(); ?>
 <?php
-$menus_view->ShowMessage();
+$user_levels_view->ShowMessage();
 ?>
-<form name="fmenusview" id="fmenusview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($menus_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $menus_view->Token ?>">
+<form name="fuser_levelsview" id="fuser_levelsview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($user_levels_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $user_levels_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="menus">
-<input type="hidden" name="modal" value="<?php echo intval($menus_view->IsModal) ?>">
+<input type="hidden" name="t" value="user_levels">
+<input type="hidden" name="modal" value="<?php echo intval($user_levels_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($menus->menu_id->Visible) { // menu_id ?>
-	<tr id="r_menu_id">
-		<td class="col-sm-2"><span id="elh_menus_menu_id"><?php echo $menus->menu_id->FldCaption() ?></span></td>
-		<td data-name="menu_id"<?php echo $menus->menu_id->CellAttributes() ?>>
-<span id="el_menus_menu_id">
-<span<?php echo $menus->menu_id->ViewAttributes() ?>>
-<?php echo $menus->menu_id->ViewValue ?></span>
+<?php if ($user_levels->user_level_id->Visible) { // user_level_id ?>
+	<tr id="r_user_level_id">
+		<td class="col-sm-2"><span id="elh_user_levels_user_level_id"><?php echo $user_levels->user_level_id->FldCaption() ?></span></td>
+		<td data-name="user_level_id"<?php echo $user_levels->user_level_id->CellAttributes() ?>>
+<span id="el_user_levels_user_level_id">
+<span<?php echo $user_levels->user_level_id->ViewAttributes() ?>>
+<?php echo $user_levels->user_level_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($menus->name->Visible) { // name ?>
-	<tr id="r_name">
-		<td class="col-sm-2"><span id="elh_menus_name"><?php echo $menus->name->FldCaption() ?></span></td>
-		<td data-name="name"<?php echo $menus->name->CellAttributes() ?>>
-<span id="el_menus_name">
-<span<?php echo $menus->name->ViewAttributes() ?>>
-<?php echo $menus->name->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($menus->picture->Visible) { // picture ?>
-	<tr id="r_picture">
-		<td class="col-sm-2"><span id="elh_menus_picture"><?php echo $menus->picture->FldCaption() ?></span></td>
-		<td data-name="picture"<?php echo $menus->picture->CellAttributes() ?>>
-<span id="el_menus_picture">
-<span>
-<?php echo ew_GetFileViewTag($menus->picture, $menus->picture->ViewValue) ?>
-</span>
+<?php if ($user_levels->user_level_name->Visible) { // user_level_name ?>
+	<tr id="r_user_level_name">
+		<td class="col-sm-2"><span id="elh_user_levels_user_level_name"><?php echo $user_levels->user_level_name->FldCaption() ?></span></td>
+		<td data-name="user_level_name"<?php echo $user_levels->user_level_name->CellAttributes() ?>>
+<span id="el_user_levels_user_level_name">
+<span<?php echo $user_levels->user_level_name->ViewAttributes() ?>>
+<?php echo $user_levels->user_level_name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
 </form>
-<?php if ($menus->Export == "") { ?>
+<?php if ($user_levels->Export == "") { ?>
 <script type="text/javascript">
-fmenusview.Init();
+fuser_levelsview.Init();
 </script>
 <?php } ?>
 <?php
-$menus_view->ShowPageFooter();
+$user_levels_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($user_levels->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1195,5 +1144,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$menus_view->Page_Terminate();
+$user_levels_view->Page_Terminate();
 ?>

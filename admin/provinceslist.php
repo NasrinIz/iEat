@@ -403,7 +403,7 @@ class cprovinces_list extends cprovinces {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->Name->SetVisibility();
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -735,8 +735,8 @@ class cprovinces_list extends cprovinces {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->ProvinceID->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->ProvinceID->FormValue))
+			$this->province_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->province_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -749,8 +749,8 @@ class cprovinces_list extends cprovinces {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->ProvinceID->AdvancedSearch->ToJson(), ","); // Field ProvinceID
-		$sFilterList = ew_Concat($sFilterList, $this->Name->AdvancedSearch->ToJson(), ","); // Field Name
+		$sFilterList = ew_Concat($sFilterList, $this->province_id->AdvancedSearch->ToJson(), ","); // Field province_id
+		$sFilterList = ew_Concat($sFilterList, $this->name->AdvancedSearch->ToJson(), ","); // Field name
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -795,21 +795,21 @@ class cprovinces_list extends cprovinces {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field ProvinceID
-		$this->ProvinceID->AdvancedSearch->SearchValue = @$filter["x_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchOperator = @$filter["z_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchCondition = @$filter["v_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchValue2 = @$filter["y_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->SearchOperator2 = @$filter["w_ProvinceID"];
-		$this->ProvinceID->AdvancedSearch->Save();
+		// Field province_id
+		$this->province_id->AdvancedSearch->SearchValue = @$filter["x_province_id"];
+		$this->province_id->AdvancedSearch->SearchOperator = @$filter["z_province_id"];
+		$this->province_id->AdvancedSearch->SearchCondition = @$filter["v_province_id"];
+		$this->province_id->AdvancedSearch->SearchValue2 = @$filter["y_province_id"];
+		$this->province_id->AdvancedSearch->SearchOperator2 = @$filter["w_province_id"];
+		$this->province_id->AdvancedSearch->Save();
 
-		// Field Name
-		$this->Name->AdvancedSearch->SearchValue = @$filter["x_Name"];
-		$this->Name->AdvancedSearch->SearchOperator = @$filter["z_Name"];
-		$this->Name->AdvancedSearch->SearchCondition = @$filter["v_Name"];
-		$this->Name->AdvancedSearch->SearchValue2 = @$filter["y_Name"];
-		$this->Name->AdvancedSearch->SearchOperator2 = @$filter["w_Name"];
-		$this->Name->AdvancedSearch->Save();
+		// Field name
+		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
+		$this->name->AdvancedSearch->SearchOperator = @$filter["z_name"];
+		$this->name->AdvancedSearch->SearchCondition = @$filter["v_name"];
+		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
+		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
+		$this->name->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -817,7 +817,7 @@ class cprovinces_list extends cprovinces {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->Name, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->name, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -964,7 +964,7 @@ class cprovinces_list extends cprovinces {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->Name); // Name
+			$this->UpdateSort($this->name); // name
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -997,7 +997,7 @@ class cprovinces_list extends cprovinces {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->Name->setSort("");
+				$this->name->setSort("");
 			}
 
 			// Reset start position
@@ -1146,7 +1146,7 @@ class cprovinces_list extends cprovinces {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->ProvinceID->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->province_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1452,15 +1452,15 @@ class cprovinces_list extends cprovinces {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Name->setDbValue($row['Name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['ProvinceID'] = NULL;
-		$row['Name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -1469,8 +1469,8 @@ class cprovinces_list extends cprovinces {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Name->DbValue = $row['Name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Load old record
@@ -1478,8 +1478,8 @@ class cprovinces_list extends cprovinces {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("ProvinceID")) <> "")
-			$this->ProvinceID->CurrentValue = $this->getKey("ProvinceID"); // ProvinceID
+		if (strval($this->getKey("province_id")) <> "")
+			$this->province_id->CurrentValue = $this->getKey("province_id"); // province_id
 		else
 			$bValidKey = FALSE;
 
@@ -1511,19 +1511,19 @@ class cprovinces_list extends cprovinces {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// ProvinceID
-		// Name
+		// province_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1896,12 +1896,12 @@ $provinces_list->RenderListOptions();
 // Render list options (header, left)
 $provinces_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($provinces->Name->Visible) { // Name ?>
-	<?php if ($provinces->SortUrl($provinces->Name) == "") { ?>
-		<th data-name="Name" class="<?php echo $provinces->Name->HeaderCellClass() ?>"><div id="elh_provinces_Name" class="provinces_Name"><div class="ewTableHeaderCaption"><?php echo $provinces->Name->FldCaption() ?></div></div></th>
+<?php if ($provinces->name->Visible) { // name ?>
+	<?php if ($provinces->SortUrl($provinces->name) == "") { ?>
+		<th data-name="name" class="<?php echo $provinces->name->HeaderCellClass() ?>"><div id="elh_provinces_name" class="provinces_name"><div class="ewTableHeaderCaption"><?php echo $provinces->name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Name" class="<?php echo $provinces->Name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $provinces->SortUrl($provinces->Name) ?>',1);"><div id="elh_provinces_Name" class="provinces_Name">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $provinces->Name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($provinces->Name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($provinces->Name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="name" class="<?php echo $provinces->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $provinces->SortUrl($provinces->name) ?>',1);"><div id="elh_provinces_name" class="provinces_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $provinces->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($provinces->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($provinces->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -1970,11 +1970,11 @@ while ($provinces_list->RecCnt < $provinces_list->StopRec) {
 // Render list options (body, left)
 $provinces_list->ListOptions->Render("body", "left", $provinces_list->RowCnt);
 ?>
-	<?php if ($provinces->Name->Visible) { // Name ?>
-		<td data-name="Name"<?php echo $provinces->Name->CellAttributes() ?>>
-<span id="el<?php echo $provinces_list->RowCnt ?>_provinces_Name" class="provinces_Name">
-<span<?php echo $provinces->Name->ViewAttributes() ?>>
-<?php echo $provinces->Name->ListViewValue() ?></span>
+	<?php if ($provinces->name->Visible) { // name ?>
+		<td data-name="name"<?php echo $provinces->name->CellAttributes() ?>>
+<span id="el<?php echo $provinces_list->RowCnt ?>_provinces_name" class="provinces_name">
+<span<?php echo $provinces->name->ViewAttributes() ?>>
+<?php echo $provinces->name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

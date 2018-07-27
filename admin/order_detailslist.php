@@ -5,7 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "storesinfo.php" ?>
+<?php include_once "order_detailsinfo.php" ?>
+<?php include_once "ordersinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +15,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$stores_list = NULL; // Initialize page object first
+$order_details_list = NULL; // Initialize page object first
 
-class cstores_list extends cstores {
+class corder_details_list extends corder_details {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +26,13 @@ class cstores_list extends cstores {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'stores';
+	var $TableName = 'order_details';
 
 	// Page object name
-	var $PageObjName = 'stores_list';
+	var $PageObjName = 'order_details_list';
 
 	// Grid form hidden field names
-	var $FormName = 'fstoreslist';
+	var $FormName = 'forder_detailslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -290,10 +291,10 @@ class cstores_list extends cstores {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (stores)
-		if (!isset($GLOBALS["stores"]) || get_class($GLOBALS["stores"]) == "cstores") {
-			$GLOBALS["stores"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["stores"];
+		// Table object (order_details)
+		if (!isset($GLOBALS["order_details"]) || get_class($GLOBALS["order_details"]) == "corder_details") {
+			$GLOBALS["order_details"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["order_details"];
 		}
 
 		// Initialize URLs
@@ -304,12 +305,15 @@ class cstores_list extends cstores {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "storesadd.php";
+		$this->AddUrl = "order_detailsadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "storesdelete.php";
-		$this->MultiUpdateUrl = "storesupdate.php";
+		$this->MultiDeleteUrl = "order_detailsdelete.php";
+		$this->MultiUpdateUrl = "order_detailsupdate.php";
+
+		// Table object (orders)
+		if (!isset($GLOBALS['orders'])) $GLOBALS['orders'] = new corders();
 
 		// Table object (employees)
 		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
@@ -320,7 +324,7 @@ class cstores_list extends cstores {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'stores', TRUE);
+			define("EW_TABLE_NAME", 'order_details', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -362,7 +366,7 @@ class cstores_list extends cstores {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fstoreslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption forder_detailslistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -403,10 +407,10 @@ class cstores_list extends cstores {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->name->SetVisibility();
-		$this->province_id->SetVisibility();
-		$this->address->SetVisibility();
-		$this->zip_code->SetVisibility();
+		$this->quantity->SetVisibility();
+		$this->menu_id->SetVisibility();
+		$this->sub_menu_id->SetVisibility();
+		$this->price->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -438,6 +442,9 @@ class cstores_list extends cstores {
 		// Create Token
 		$this->CreateToken();
 
+		// Set up master detail parameters
+		$this->SetupMasterParms();
+
 		// Setup other options
 		$this->SetupOtherOptions();
 
@@ -467,13 +474,13 @@ class cstores_list extends cstores {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $stores;
+		global $EW_EXPORT, $order_details;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($stores);
+				$doc = new $class($order_details);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -595,28 +602,8 @@ class cstores_list extends cstores {
 					$option->HideAllOptions();
 			}
 
-			// Get default search criteria
-			ew_AddFilter($this->DefaultSearchWhere, $this->BasicSearchWhere(TRUE));
-
-			// Get basic search values
-			$this->LoadBasicSearchValues();
-
-			// Process filter list
-			$this->ProcessFilterList();
-
-			// Restore search parms from Session if not searching / reset / export
-			if (($this->Export <> "" || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->CheckSearchParms())
-				$this->RestoreSearchParms();
-
-			// Call Recordset SearchValidated event
-			$this->Recordset_SearchValidated();
-
 			// Set up sorting order
 			$this->SetupSortOrder();
-
-			// Get basic search criteria
-			if ($gsSearchError == "")
-				$sSrchBasic = $this->BasicSearchWhere();
 		}
 
 		// Restore display records
@@ -630,37 +617,32 @@ class cstores_list extends cstores {
 		if ($this->Command <> "json")
 			$this->LoadSortOrder();
 
-		// Load search default if no existing search criteria
-		if (!$this->CheckSearchParms()) {
-
-			// Load basic search from default
-			$this->BasicSearch->LoadDefault();
-			if ($this->BasicSearch->Keyword != "")
-				$sSrchBasic = $this->BasicSearchWhere();
-		}
-
-		// Build search criteria
-		ew_AddFilter($this->SearchWhere, $sSrchAdvanced);
-		ew_AddFilter($this->SearchWhere, $sSrchBasic);
-
-		// Call Recordset_Searching event
-		$this->Recordset_Searching($this->SearchWhere);
-
-		// Save search criteria
-		if ($this->Command == "search" && !$this->RestoreSearch) {
-			$this->setSearchWhere($this->SearchWhere); // Save to Session
-			$this->StartRec = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRec);
-		} elseif ($this->Command <> "json") {
-			$this->SearchWhere = $this->getSearchWhere();
-		}
-
 		// Build filter
 		$sFilter = "";
 		if (!$Security->CanList())
 			$sFilter = "(0=1)"; // Filter all records
+
+		// Restore master/detail filter
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Restore master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Restore detail filter
 		ew_AddFilter($sFilter, $this->DbDetailFilter);
 		ew_AddFilter($sFilter, $this->SearchWhere);
+
+		// Load master record
+		if ($this->CurrentMode <> "add" && $this->GetMasterFilter() <> "" && $this->getCurrentMasterTable() == "orders") {
+			global $orders;
+			$rsmaster = $orders->LoadRs($this->DbMasterFilter);
+			$this->MasterRecordExists = ($rsmaster && !$rsmaster->EOF);
+			if (!$this->MasterRecordExists) {
+				$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record found
+				$this->Page_Terminate("orderslist.php"); // Return to master page
+			} else {
+				$orders->LoadListRowValues($rsmaster);
+				$orders->RowType = EW_ROWTYPE_MASTER; // Master row
+				$orders->RenderListRow();
+				$rsmaster->Close();
+			}
+		}
 
 		// Set up filter
 		if ($this->Command == "json") {
@@ -738,255 +720,11 @@ class cstores_list extends cstores {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->store_id->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->store_id->FormValue))
+			$this->order_detail_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->order_detail_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
-	}
-
-	// Get list of filters
-	function GetFilterList() {
-		global $UserProfile;
-
-		// Initialize
-		$sFilterList = "";
-		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->store_id->AdvancedSearch->ToJson(), ","); // Field store_id
-		$sFilterList = ew_Concat($sFilterList, $this->name->AdvancedSearch->ToJson(), ","); // Field name
-		$sFilterList = ew_Concat($sFilterList, $this->province_id->AdvancedSearch->ToJson(), ","); // Field province_id
-		$sFilterList = ew_Concat($sFilterList, $this->address->AdvancedSearch->ToJson(), ","); // Field address
-		$sFilterList = ew_Concat($sFilterList, $this->zip_code->AdvancedSearch->ToJson(), ","); // Field zip_code
-		if ($this->BasicSearch->Keyword <> "") {
-			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
-			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
-		}
-		$sFilterList = preg_replace('/,$/', "", $sFilterList);
-
-		// Return filter list in json
-		if ($sFilterList <> "")
-			$sFilterList = "\"data\":{" . $sFilterList . "}";
-		if ($sSavedFilterList <> "") {
-			if ($sFilterList <> "")
-				$sFilterList .= ",";
-			$sFilterList .= "\"filters\":" . $sSavedFilterList;
-		}
-		return ($sFilterList <> "") ? "{" . $sFilterList . "}" : "null";
-	}
-
-	// Process filter list
-	function ProcessFilterList() {
-		global $UserProfile;
-		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
-			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "fstoreslistsrch", $filters);
-
-			// Clean output buffer
-			if (!EW_DEBUG_ENABLED && ob_get_length())
-				ob_end_clean();
-			echo ew_ArrayToJson(array(array("success" => TRUE))); // Success
-			$this->Page_Terminate();
-			exit();
-		} elseif (@$_POST["cmd"] == "resetfilter") {
-			$this->RestoreFilterList();
-		}
-	}
-
-	// Restore list of filters
-	function RestoreFilterList() {
-
-		// Return if not reset filter
-		if (@$_POST["cmd"] <> "resetfilter")
-			return FALSE;
-		$filter = json_decode(@$_POST["filter"], TRUE);
-		$this->Command = "search";
-
-		// Field store_id
-		$this->store_id->AdvancedSearch->SearchValue = @$filter["x_store_id"];
-		$this->store_id->AdvancedSearch->SearchOperator = @$filter["z_store_id"];
-		$this->store_id->AdvancedSearch->SearchCondition = @$filter["v_store_id"];
-		$this->store_id->AdvancedSearch->SearchValue2 = @$filter["y_store_id"];
-		$this->store_id->AdvancedSearch->SearchOperator2 = @$filter["w_store_id"];
-		$this->store_id->AdvancedSearch->Save();
-
-		// Field name
-		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
-		$this->name->AdvancedSearch->SearchOperator = @$filter["z_name"];
-		$this->name->AdvancedSearch->SearchCondition = @$filter["v_name"];
-		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
-		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
-		$this->name->AdvancedSearch->Save();
-
-		// Field province_id
-		$this->province_id->AdvancedSearch->SearchValue = @$filter["x_province_id"];
-		$this->province_id->AdvancedSearch->SearchOperator = @$filter["z_province_id"];
-		$this->province_id->AdvancedSearch->SearchCondition = @$filter["v_province_id"];
-		$this->province_id->AdvancedSearch->SearchValue2 = @$filter["y_province_id"];
-		$this->province_id->AdvancedSearch->SearchOperator2 = @$filter["w_province_id"];
-		$this->province_id->AdvancedSearch->Save();
-
-		// Field address
-		$this->address->AdvancedSearch->SearchValue = @$filter["x_address"];
-		$this->address->AdvancedSearch->SearchOperator = @$filter["z_address"];
-		$this->address->AdvancedSearch->SearchCondition = @$filter["v_address"];
-		$this->address->AdvancedSearch->SearchValue2 = @$filter["y_address"];
-		$this->address->AdvancedSearch->SearchOperator2 = @$filter["w_address"];
-		$this->address->AdvancedSearch->Save();
-
-		// Field zip_code
-		$this->zip_code->AdvancedSearch->SearchValue = @$filter["x_zip_code"];
-		$this->zip_code->AdvancedSearch->SearchOperator = @$filter["z_zip_code"];
-		$this->zip_code->AdvancedSearch->SearchCondition = @$filter["v_zip_code"];
-		$this->zip_code->AdvancedSearch->SearchValue2 = @$filter["y_zip_code"];
-		$this->zip_code->AdvancedSearch->SearchOperator2 = @$filter["w_zip_code"];
-		$this->zip_code->AdvancedSearch->Save();
-		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
-		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
-	}
-
-	// Return basic search SQL
-	function BasicSearchSQL($arKeywords, $type) {
-		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->name, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->address, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->zip_code, $arKeywords, $type);
-		return $sWhere;
-	}
-
-	// Build basic search SQL
-	function BuildBasicSearchSQL(&$Where, &$Fld, $arKeywords, $type) {
-		global $EW_BASIC_SEARCH_IGNORE_PATTERN;
-		$sDefCond = ($type == "OR") ? "OR" : "AND";
-		$arSQL = array(); // Array for SQL parts
-		$arCond = array(); // Array for search conditions
-		$cnt = count($arKeywords);
-		$j = 0; // Number of SQL parts
-		for ($i = 0; $i < $cnt; $i++) {
-			$Keyword = $arKeywords[$i];
-			$Keyword = trim($Keyword);
-			if ($EW_BASIC_SEARCH_IGNORE_PATTERN <> "") {
-				$Keyword = preg_replace($EW_BASIC_SEARCH_IGNORE_PATTERN, "\\", $Keyword);
-				$ar = explode("\\", $Keyword);
-			} else {
-				$ar = array($Keyword);
-			}
-			foreach ($ar as $Keyword) {
-				if ($Keyword <> "") {
-					$sWrk = "";
-					if ($Keyword == "OR" && $type == "") {
-						if ($j > 0)
-							$arCond[$j-1] = "OR";
-					} elseif ($Keyword == EW_NULL_VALUE) {
-						$sWrk = $Fld->FldExpression . " IS NULL";
-					} elseif ($Keyword == EW_NOT_NULL_VALUE) {
-						$sWrk = $Fld->FldExpression . " IS NOT NULL";
-					} elseif ($Fld->FldIsVirtual) {
-						$sWrk = $Fld->FldVirtualExpression . ew_Like(ew_QuotedValue("%" . $Keyword . "%", EW_DATATYPE_STRING, $this->DBID), $this->DBID);
-					} elseif ($Fld->FldDataType != EW_DATATYPE_NUMBER || is_numeric($Keyword)) {
-						$sWrk = $Fld->FldBasicSearchExpression . ew_Like(ew_QuotedValue("%" . $Keyword . "%", EW_DATATYPE_STRING, $this->DBID), $this->DBID);
-					}
-					if ($sWrk <> "") {
-						$arSQL[$j] = $sWrk;
-						$arCond[$j] = $sDefCond;
-						$j += 1;
-					}
-				}
-			}
-		}
-		$cnt = count($arSQL);
-		$bQuoted = FALSE;
-		$sSql = "";
-		if ($cnt > 0) {
-			for ($i = 0; $i < $cnt-1; $i++) {
-				if ($arCond[$i] == "OR") {
-					if (!$bQuoted) $sSql .= "(";
-					$bQuoted = TRUE;
-				}
-				$sSql .= $arSQL[$i];
-				if ($bQuoted && $arCond[$i] <> "OR") {
-					$sSql .= ")";
-					$bQuoted = FALSE;
-				}
-				$sSql .= " " . $arCond[$i] . " ";
-			}
-			$sSql .= $arSQL[$cnt-1];
-			if ($bQuoted)
-				$sSql .= ")";
-		}
-		if ($sSql <> "") {
-			if ($Where <> "") $Where .= " OR ";
-			$Where .= "(" . $sSql . ")";
-		}
-	}
-
-	// Return basic search WHERE clause based on search keyword and type
-	function BasicSearchWhere($Default = FALSE) {
-		global $Security;
-		$sSearchStr = "";
-		if (!$Security->CanSearch()) return "";
-		$sSearchKeyword = ($Default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-		$sSearchType = ($Default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-		// Get search SQL
-		if ($sSearchKeyword <> "") {
-			$ar = $this->BasicSearch->KeywordList($Default);
-
-			// Search keyword in any fields
-			if (($sSearchType == "OR" || $sSearchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
-				foreach ($ar as $sKeyword) {
-					if ($sKeyword <> "") {
-						if ($sSearchStr <> "") $sSearchStr .= " " . $sSearchType . " ";
-						$sSearchStr .= "(" . $this->BasicSearchSQL(array($sKeyword), $sSearchType) . ")";
-					}
-				}
-			} else {
-				$sSearchStr = $this->BasicSearchSQL($ar, $sSearchType);
-			}
-			if (!$Default && in_array($this->Command, array("", "reset", "resetall"))) $this->Command = "search";
-		}
-		if (!$Default && $this->Command == "search") {
-			$this->BasicSearch->setKeyword($sSearchKeyword);
-			$this->BasicSearch->setType($sSearchType);
-		}
-		return $sSearchStr;
-	}
-
-	// Check if search parm exists
-	function CheckSearchParms() {
-
-		// Check basic search
-		if ($this->BasicSearch->IssetSession())
-			return TRUE;
-		return FALSE;
-	}
-
-	// Clear all search parameters
-	function ResetSearchParms() {
-
-		// Clear search WHERE clause
-		$this->SearchWhere = "";
-		$this->setSearchWhere($this->SearchWhere);
-
-		// Clear basic search parameters
-		$this->ResetBasicSearchParms();
-	}
-
-	// Load advanced search default values
-	function LoadAdvancedSearchDefault() {
-		return FALSE;
-	}
-
-	// Clear all basic search parameters
-	function ResetBasicSearchParms() {
-		$this->BasicSearch->UnsetSession();
-	}
-
-	// Restore all search parameters
-	function RestoreSearchParms() {
-		$this->RestoreSearch = TRUE;
-
-		// Restore basic search values
-		$this->BasicSearch->Load();
 	}
 
 	// Set up sort parameters
@@ -996,10 +734,10 @@ class cstores_list extends cstores {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->name); // name
-			$this->UpdateSort($this->province_id); // province_id
-			$this->UpdateSort($this->address); // address
-			$this->UpdateSort($this->zip_code); // zip_code
+			$this->UpdateSort($this->quantity); // quantity
+			$this->UpdateSort($this->menu_id); // menu_id
+			$this->UpdateSort($this->sub_menu_id); // sub_menu_id
+			$this->UpdateSort($this->price); // price
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1024,18 +762,22 @@ class cstores_list extends cstores {
 		// Check if reset command
 		if (substr($this->Command,0,5) == "reset") {
 
-			// Reset search criteria
-			if ($this->Command == "reset" || $this->Command == "resetall")
-				$this->ResetSearchParms();
+			// Reset master/detail keys
+			if ($this->Command == "resetall") {
+				$this->setCurrentMasterTable(""); // Clear master table
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+				$this->order_id->setSessionValue("");
+			}
 
 			// Reset sorting order
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->name->setSort("");
-				$this->province_id->setSort("");
-				$this->address->setSort("");
-				$this->zip_code->setSort("");
+				$this->quantity->setSort("");
+				$this->menu_id->setSort("");
+				$this->sub_menu_id->setSort("");
+				$this->price->setSort("");
 			}
 
 			// Reset start position
@@ -1184,7 +926,7 @@ class cstores_list extends cstores {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->store_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->order_detail_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1220,11 +962,11 @@ class cstores_list extends cstores {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fstoreslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
-		$item->Visible = TRUE;
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"forder_detailslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Visible = FALSE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fstoreslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
-		$item->Visible = TRUE;
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"forder_detailslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Visible = FALSE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
 		$this->FilterOptions->DropDownButtonPhrase = $Language->Phrase("Filters");
@@ -1247,7 +989,7 @@ class cstores_list extends cstores {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fstoreslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.forder_detailslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1348,17 +1090,6 @@ class cstores_list extends cstores {
 		$this->SearchOptions->Tag = "div";
 		$this->SearchOptions->TagClassName = "ewSearchOption";
 
-		// Search button
-		$item = &$this->SearchOptions->Add("searchtoggle");
-		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fstoreslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
-		$item->Visible = TRUE;
-
-		// Show all button
-		$item = &$this->SearchOptions->Add("showall");
-		$item->Body = "<a class=\"btn btn-default ewShowAll\" title=\"" . $Language->Phrase("ShowAll") . "\" data-caption=\"" . $Language->Phrase("ShowAll") . "\" href=\"" . $this->PageUrl() . "cmd=reset\">" . $Language->Phrase("ShowAllBtn") . "</a>";
-		$item->Visible = ($this->SearchWhere <> $this->DefaultSearchWhere && $this->SearchWhere <> "0=101");
-
 		// Button group for search
 		$this->SearchOptions->UseDropDownButton = FALSE;
 		$this->SearchOptions->UseImageAndText = TRUE;
@@ -1424,13 +1155,6 @@ class cstores_list extends cstores {
 		}
 	}
 
-	// Load basic search values
-	function LoadBasicSearchValues() {
-		$this->BasicSearch->Keyword = @$_GET[EW_TABLE_BASIC_SEARCH];
-		if ($this->BasicSearch->Keyword <> "" && $this->Command == "") $this->Command = "search";
-		$this->BasicSearch->Type = @$_GET[EW_TABLE_BASIC_SEARCH_TYPE];
-	}
-
 	// Load recordset
 	function LoadRecordset($offset = -1, $rowcnt = -1) {
 
@@ -1490,21 +1214,23 @@ class cstores_list extends cstores {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->store_id->setDbValue($row['store_id']);
-		$this->name->setDbValue($row['name']);
-		$this->province_id->setDbValue($row['province_id']);
-		$this->address->setDbValue($row['address']);
-		$this->zip_code->setDbValue($row['zip_code']);
+		$this->order_detail_id->setDbValue($row['order_detail_id']);
+		$this->order_id->setDbValue($row['order_id']);
+		$this->quantity->setDbValue($row['quantity']);
+		$this->menu_id->setDbValue($row['menu_id']);
+		$this->sub_menu_id->setDbValue($row['sub_menu_id']);
+		$this->price->setDbValue($row['price']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['store_id'] = NULL;
-		$row['name'] = NULL;
-		$row['province_id'] = NULL;
-		$row['address'] = NULL;
-		$row['zip_code'] = NULL;
+		$row['order_detail_id'] = NULL;
+		$row['order_id'] = NULL;
+		$row['quantity'] = NULL;
+		$row['menu_id'] = NULL;
+		$row['sub_menu_id'] = NULL;
+		$row['price'] = NULL;
 		return $row;
 	}
 
@@ -1513,11 +1239,12 @@ class cstores_list extends cstores {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->store_id->DbValue = $row['store_id'];
-		$this->name->DbValue = $row['name'];
-		$this->province_id->DbValue = $row['province_id'];
-		$this->address->DbValue = $row['address'];
-		$this->zip_code->DbValue = $row['zip_code'];
+		$this->order_detail_id->DbValue = $row['order_detail_id'];
+		$this->order_id->DbValue = $row['order_id'];
+		$this->quantity->DbValue = $row['quantity'];
+		$this->menu_id->DbValue = $row['menu_id'];
+		$this->sub_menu_id->DbValue = $row['sub_menu_id'];
+		$this->price->DbValue = $row['price'];
 	}
 
 	// Load old record
@@ -1525,8 +1252,8 @@ class cstores_list extends cstores {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("store_id")) <> "")
-			$this->store_id->CurrentValue = $this->getKey("store_id"); // store_id
+		if (strval($this->getKey("order_detail_id")) <> "")
+			$this->order_detail_id->CurrentValue = $this->getKey("order_detail_id"); // order_detail_id
 		else
 			$bValidKey = FALSE;
 
@@ -1554,78 +1281,185 @@ class cstores_list extends cstores {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
+		// Convert decimal values if posted back
+		if ($this->price->FormValue == $this->price->CurrentValue && is_numeric(ew_StrToFloat($this->price->CurrentValue)))
+			$this->price->CurrentValue = ew_StrToFloat($this->price->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// store_id
-		// name
-		// province_id
-		// address
-		// zip_code
+		// order_detail_id
+		// order_id
+		// quantity
+		// menu_id
+		// sub_menu_id
+		// price
+		// Accumulate aggregate value
 
+		if ($this->RowType <> EW_ROWTYPE_AGGREGATEINIT && $this->RowType <> EW_ROWTYPE_AGGREGATE) {
+			if (is_numeric($this->price->CurrentValue))
+				$this->price->Total += $this->price->CurrentValue; // Accumulate total
+		}
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
+		// quantity
+		$this->quantity->ViewValue = $this->quantity->CurrentValue;
+		$this->quantity->ViewCustomAttributes = "";
 
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// menu_id
+		if (strval($this->menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
 		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
+		$this->menu_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
 		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
+				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
+				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
 			}
 		} else {
-			$this->province_id->ViewValue = NULL;
+			$this->menu_id->ViewValue = NULL;
 		}
-		$this->province_id->ViewCustomAttributes = "";
+		$this->menu_id->ViewCustomAttributes = "";
 
-		// address
-		$this->address->ViewValue = $this->address->CurrentValue;
-		$this->address->ViewCustomAttributes = "";
+		// sub_menu_id
+		if (strval($this->sub_menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`sub_menu_id`" . ew_SearchString("=", $this->sub_menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `sub_menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `sub_menus`";
+		$sWhereWrk = "";
+		$this->sub_menu_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sub_menu_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `name`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->CurrentValue;
+			}
+		} else {
+			$this->sub_menu_id->ViewValue = NULL;
+		}
+		$this->sub_menu_id->ViewCustomAttributes = "";
 
-		// zip_code
-		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
-		$this->zip_code->ViewCustomAttributes = "";
+		// price
+		$this->price->ViewValue = $this->price->CurrentValue;
+		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+		$this->price->ViewCustomAttributes = "";
 
-			// name
-			$this->name->LinkCustomAttributes = "";
-			$this->name->HrefValue = "";
-			$this->name->TooltipValue = "";
+			// quantity
+			$this->quantity->LinkCustomAttributes = "";
+			$this->quantity->HrefValue = "";
+			$this->quantity->TooltipValue = "";
 
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-			$this->province_id->TooltipValue = "";
+			// menu_id
+			$this->menu_id->LinkCustomAttributes = "";
+			$this->menu_id->HrefValue = "";
+			$this->menu_id->TooltipValue = "";
 
-			// address
-			$this->address->LinkCustomAttributes = "";
-			$this->address->HrefValue = "";
-			$this->address->TooltipValue = "";
+			// sub_menu_id
+			$this->sub_menu_id->LinkCustomAttributes = "";
+			$this->sub_menu_id->HrefValue = "";
+			$this->sub_menu_id->TooltipValue = "";
 
-			// zip_code
-			$this->zip_code->LinkCustomAttributes = "";
-			$this->zip_code->HrefValue = "";
-			$this->zip_code->TooltipValue = "";
+			// price
+			$this->price->LinkCustomAttributes = "";
+			$this->price->HrefValue = "";
+			$this->price->TooltipValue = "";
+		} elseif ($this->RowType == EW_ROWTYPE_AGGREGATEINIT) { // Initialize aggregate row
+			$this->price->Total = 0; // Initialize total
+		} elseif ($this->RowType == EW_ROWTYPE_AGGREGATE) { // Aggregate row
+			$this->price->CurrentValue = $this->price->Total;
+			$this->price->ViewValue = $this->price->CurrentValue;
+			$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+			$this->price->ViewCustomAttributes = "";
+			$this->price->HrefValue = ""; // Clear href value
 		}
 
 		// Call Row Rendered event
 		if ($this->RowType <> EW_ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
+	}
+
+	// Set up master/detail based on QueryString
+	function SetupMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setQueryStringValue($_GET["fk_order_id"]);
+					$this->order_id->setQueryStringValue($GLOBALS["orders"]->order_id->QueryStringValue);
+					$this->order_id->setSessionValue($this->order_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setFormValue($_POST["fk_order_id"]);
+					$this->order_id->setFormValue($GLOBALS["orders"]->order_id->FormValue);
+					$this->order_id->setSessionValue($this->order_id->FormValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Update URL
+			$this->AddUrl = $this->AddMasterUrl($this->AddUrl);
+			$this->InlineAddUrl = $this->AddMasterUrl($this->InlineAddUrl);
+			$this->GridAddUrl = $this->AddMasterUrl($this->GridAddUrl);
+			$this->GridEditUrl = $this->AddMasterUrl($this->GridEditUrl);
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+
+			// Reset start record counter (new master key)
+			if (!$this->IsAddOrEdit()) {
+				$this->StartRec = 1;
+				$this->setStartRecordNumber($this->StartRec);
+			}
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "orders") {
+				if ($this->order_id->CurrentValue == "") $this->order_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb
@@ -1786,30 +1620,30 @@ class cstores_list extends cstores {
 <?php
 
 // Create page object
-if (!isset($stores_list)) $stores_list = new cstores_list();
+if (!isset($order_details_list)) $order_details_list = new corder_details_list();
 
 // Page init
-$stores_list->Page_Init();
+$order_details_list->Page_Init();
 
 // Page main
-$stores_list->Page_Main();
+$order_details_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$stores_list->Page_Render();
+$order_details_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = fstoreslist = new ew_Form("fstoreslist", "list");
-fstoreslist.FormKeyCountName = '<?php echo $stores_list->FormKeyCountName ?>';
+var CurrentForm = forder_detailslist = new ew_Form("forder_detailslist", "list");
+forder_detailslist.FormKeyCountName = '<?php echo $order_details_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-fstoreslist.Form_CustomValidate = 
+forder_detailslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1817,150 +1651,127 @@ fstoreslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fstoreslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+forder_detailslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fstoreslist.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fstoreslist.Lists["x_province_id"].Data = "<?php echo $stores_list->province_id->LookupFilterQuery(FALSE, "list") ?>";
+forder_detailslist.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
+forder_detailslist.Lists["x_menu_id"].Data = "<?php echo $order_details_list->menu_id->LookupFilterQuery(FALSE, "list") ?>";
+forder_detailslist.Lists["x_sub_menu_id"] = {"LinkField":"x_sub_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"sub_menus"};
+forder_detailslist.Lists["x_sub_menu_id"].Data = "<?php echo $order_details_list->sub_menu_id->LookupFilterQuery(FALSE, "list") ?>";
 
 // Form object for search
-var CurrentSearchForm = fstoreslistsrch = new ew_Form("fstoreslistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <div class="ewToolbar">
-<?php if ($stores_list->TotalRecs > 0 && $stores_list->ExportOptions->Visible()) { ?>
-<?php $stores_list->ExportOptions->Render("body") ?>
-<?php } ?>
-<?php if ($stores_list->SearchOptions->Visible()) { ?>
-<?php $stores_list->SearchOptions->Render("body") ?>
-<?php } ?>
-<?php if ($stores_list->FilterOptions->Visible()) { ?>
-<?php $stores_list->FilterOptions->Render("body") ?>
+<?php if ($order_details_list->TotalRecs > 0 && $order_details_list->ExportOptions->Visible()) { ?>
+<?php $order_details_list->ExportOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
+<?php if (($order_details->Export == "") || (EW_EXPORT_MASTER_RECORD && $order_details->Export == "print")) { ?>
 <?php
-	$bSelectLimit = $stores_list->UseSelectLimit;
-	if ($bSelectLimit) {
-		if ($stores_list->TotalRecs <= 0)
-			$stores_list->TotalRecs = $stores->ListRecordCount();
-	} else {
-		if (!$stores_list->Recordset && ($stores_list->Recordset = $stores_list->LoadRecordset()))
-			$stores_list->TotalRecs = $stores_list->Recordset->RecordCount();
+if ($order_details_list->DbMasterFilter <> "" && $order_details->getCurrentMasterTable() == "orders") {
+	if ($order_details_list->MasterRecordExists) {
+?>
+<?php include_once "ordersmaster.php" ?>
+<?php
 	}
-	$stores_list->StartRec = 1;
-	if ($stores_list->DisplayRecs <= 0 || ($stores->Export <> "" && $stores->ExportAll)) // Display all records
-		$stores_list->DisplayRecs = $stores_list->TotalRecs;
-	if (!($stores->Export <> "" && $stores->ExportAll))
-		$stores_list->SetupStartRec(); // Set up start record position
+}
+?>
+<?php } ?>
+<?php
+	$bSelectLimit = $order_details_list->UseSelectLimit;
+	if ($bSelectLimit) {
+		if ($order_details_list->TotalRecs <= 0)
+			$order_details_list->TotalRecs = $order_details->ListRecordCount();
+	} else {
+		if (!$order_details_list->Recordset && ($order_details_list->Recordset = $order_details_list->LoadRecordset()))
+			$order_details_list->TotalRecs = $order_details_list->Recordset->RecordCount();
+	}
+	$order_details_list->StartRec = 1;
+	if ($order_details_list->DisplayRecs <= 0 || ($order_details->Export <> "" && $order_details->ExportAll)) // Display all records
+		$order_details_list->DisplayRecs = $order_details_list->TotalRecs;
+	if (!($order_details->Export <> "" && $order_details->ExportAll))
+		$order_details_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$stores_list->Recordset = $stores_list->LoadRecordset($stores_list->StartRec-1, $stores_list->DisplayRecs);
+		$order_details_list->Recordset = $order_details_list->LoadRecordset($order_details_list->StartRec-1, $order_details_list->DisplayRecs);
 
 	// Set no record found message
-	if ($stores->CurrentAction == "" && $stores_list->TotalRecs == 0) {
+	if ($order_details->CurrentAction == "" && $order_details_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$stores_list->setWarningMessage(ew_DeniedMsg());
-		if ($stores_list->SearchWhere == "0=101")
-			$stores_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$order_details_list->setWarningMessage(ew_DeniedMsg());
+		if ($order_details_list->SearchWhere == "0=101")
+			$order_details_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$stores_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$order_details_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
-$stores_list->RenderOtherOptions();
+$order_details_list->RenderOtherOptions();
 ?>
-<?php if ($Security->CanSearch()) { ?>
-<?php if ($stores->Export == "" && $stores->CurrentAction == "") { ?>
-<form name="fstoreslistsrch" id="fstoreslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($stores_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="fstoreslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
-<input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="stores">
-	<div class="ewBasicSearch">
-<div id="xsr_1" class="ewRow">
-	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($stores_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($stores_list->BasicSearch->getType()) ?>">
-	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $stores_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
-		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($stores_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($stores_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($stores_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($stores_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
-		</ul>
-	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
-	</div>
-	</div>
-</div>
-	</div>
-</div>
-</form>
-<?php } ?>
-<?php } ?>
-<?php $stores_list->ShowPageHeader(); ?>
+<?php $order_details_list->ShowPageHeader(); ?>
 <?php
-$stores_list->ShowMessage();
+$order_details_list->ShowMessage();
 ?>
-<?php if ($stores_list->TotalRecs > 0 || $stores->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($stores_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> stores">
+<?php if ($order_details_list->TotalRecs > 0 || $order_details->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($order_details_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> order_details">
 <div class="box-header ewGridUpperPanel">
-<?php if ($stores->CurrentAction <> "gridadd" && $stores->CurrentAction <> "gridedit") { ?>
+<?php if ($order_details->CurrentAction <> "gridadd" && $order_details->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($stores_list->Pager)) $stores_list->Pager = new cPrevNextPager($stores_list->StartRec, $stores_list->DisplayRecs, $stores_list->TotalRecs, $stores_list->AutoHidePager) ?>
-<?php if ($stores_list->Pager->RecordCount > 0 && $stores_list->Pager->Visible) { ?>
+<?php if (!isset($order_details_list->Pager)) $order_details_list->Pager = new cPrevNextPager($order_details_list->StartRec, $order_details_list->DisplayRecs, $order_details_list->TotalRecs, $order_details_list->AutoHidePager) ?>
+<?php if ($order_details_list->Pager->RecordCount > 0 && $order_details_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($stores_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($stores_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $stores_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $order_details_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($stores_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($stores_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $stores_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $order_details_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($stores_list->Pager->RecordCount > 0) { ?>
+<?php if ($order_details_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $stores_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $stores_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $stores_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $order_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $order_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $order_details_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($stores_list->TotalRecs > 0 && (!$stores_list->AutoHidePageSizeSelector || $stores_list->Pager->Visible)) { ?>
+<?php if ($order_details_list->TotalRecs > 0 && (!$order_details_list->AutoHidePageSizeSelector || $order_details_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="stores">
+<input type="hidden" name="t" value="order_details">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($stores_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($stores_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($stores_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($stores->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($order_details_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($order_details_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($order_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($order_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -1968,182 +1779,233 @@ $stores_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($stores_list->OtherOptions as &$option)
+	foreach ($order_details_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
-<form name="fstoreslist" id="fstoreslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($stores_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $stores_list->Token ?>">
+<form name="forder_detailslist" id="forder_detailslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($order_details_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $order_details_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="stores">
-<div id="gmp_stores" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($stores_list->TotalRecs > 0 || $stores->CurrentAction == "gridedit") { ?>
-<table id="tbl_storeslist" class="table ewTable">
+<input type="hidden" name="t" value="order_details">
+<?php if ($order_details->getCurrentMasterTable() == "orders" && $order_details->CurrentAction <> "") { ?>
+<input type="hidden" name="<?php echo EW_TABLE_SHOW_MASTER ?>" value="orders">
+<input type="hidden" name="fk_order_id" value="<?php echo $order_details->order_id->getSessionValue() ?>">
+<?php } ?>
+<div id="gmp_order_details" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($order_details_list->TotalRecs > 0 || $order_details->CurrentAction == "gridedit") { ?>
+<table id="tbl_order_detailslist" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$stores_list->RowType = EW_ROWTYPE_HEADER;
+$order_details_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$stores_list->RenderListOptions();
+$order_details_list->RenderListOptions();
 
 // Render list options (header, left)
-$stores_list->ListOptions->Render("header", "left");
+$order_details_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($stores->name->Visible) { // name ?>
-	<?php if ($stores->SortUrl($stores->name) == "") { ?>
-		<th data-name="name" class="<?php echo $stores->name->HeaderCellClass() ?>"><div id="elh_stores_name" class="stores_name"><div class="ewTableHeaderCaption"><?php echo $stores->name->FldCaption() ?></div></div></th>
+<?php if ($order_details->quantity->Visible) { // quantity ?>
+	<?php if ($order_details->SortUrl($order_details->quantity) == "") { ?>
+		<th data-name="quantity" class="<?php echo $order_details->quantity->HeaderCellClass() ?>"><div id="elh_order_details_quantity" class="order_details_quantity"><div class="ewTableHeaderCaption"><?php echo $order_details->quantity->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="name" class="<?php echo $stores->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $stores->SortUrl($stores->name) ?>',1);"><div id="elh_stores_name" class="stores_name">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $stores->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($stores->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($stores->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="quantity" class="<?php echo $order_details->quantity->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $order_details->SortUrl($order_details->quantity) ?>',1);"><div id="elh_order_details_quantity" class="order_details_quantity">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $order_details->quantity->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($order_details->quantity->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($order_details->quantity->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($stores->province_id->Visible) { // province_id ?>
-	<?php if ($stores->SortUrl($stores->province_id) == "") { ?>
-		<th data-name="province_id" class="<?php echo $stores->province_id->HeaderCellClass() ?>"><div id="elh_stores_province_id" class="stores_province_id"><div class="ewTableHeaderCaption"><?php echo $stores->province_id->FldCaption() ?></div></div></th>
+<?php if ($order_details->menu_id->Visible) { // menu_id ?>
+	<?php if ($order_details->SortUrl($order_details->menu_id) == "") { ?>
+		<th data-name="menu_id" class="<?php echo $order_details->menu_id->HeaderCellClass() ?>"><div id="elh_order_details_menu_id" class="order_details_menu_id"><div class="ewTableHeaderCaption"><?php echo $order_details->menu_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="province_id" class="<?php echo $stores->province_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $stores->SortUrl($stores->province_id) ?>',1);"><div id="elh_stores_province_id" class="stores_province_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $stores->province_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($stores->province_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($stores->province_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="menu_id" class="<?php echo $order_details->menu_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $order_details->SortUrl($order_details->menu_id) ?>',1);"><div id="elh_order_details_menu_id" class="order_details_menu_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $order_details->menu_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($order_details->menu_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($order_details->menu_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($stores->address->Visible) { // address ?>
-	<?php if ($stores->SortUrl($stores->address) == "") { ?>
-		<th data-name="address" class="<?php echo $stores->address->HeaderCellClass() ?>"><div id="elh_stores_address" class="stores_address"><div class="ewTableHeaderCaption"><?php echo $stores->address->FldCaption() ?></div></div></th>
+<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+	<?php if ($order_details->SortUrl($order_details->sub_menu_id) == "") { ?>
+		<th data-name="sub_menu_id" class="<?php echo $order_details->sub_menu_id->HeaderCellClass() ?>"><div id="elh_order_details_sub_menu_id" class="order_details_sub_menu_id"><div class="ewTableHeaderCaption"><?php echo $order_details->sub_menu_id->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="address" class="<?php echo $stores->address->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $stores->SortUrl($stores->address) ?>',1);"><div id="elh_stores_address" class="stores_address">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $stores->address->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($stores->address->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($stores->address->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="sub_menu_id" class="<?php echo $order_details->sub_menu_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $order_details->SortUrl($order_details->sub_menu_id) ?>',1);"><div id="elh_order_details_sub_menu_id" class="order_details_sub_menu_id">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $order_details->sub_menu_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($order_details->sub_menu_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($order_details->sub_menu_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($stores->zip_code->Visible) { // zip_code ?>
-	<?php if ($stores->SortUrl($stores->zip_code) == "") { ?>
-		<th data-name="zip_code" class="<?php echo $stores->zip_code->HeaderCellClass() ?>"><div id="elh_stores_zip_code" class="stores_zip_code"><div class="ewTableHeaderCaption"><?php echo $stores->zip_code->FldCaption() ?></div></div></th>
+<?php if ($order_details->price->Visible) { // price ?>
+	<?php if ($order_details->SortUrl($order_details->price) == "") { ?>
+		<th data-name="price" class="<?php echo $order_details->price->HeaderCellClass() ?>"><div id="elh_order_details_price" class="order_details_price"><div class="ewTableHeaderCaption"><?php echo $order_details->price->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="zip_code" class="<?php echo $stores->zip_code->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $stores->SortUrl($stores->zip_code) ?>',1);"><div id="elh_stores_zip_code" class="stores_zip_code">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $stores->zip_code->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($stores->zip_code->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($stores->zip_code->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="price" class="<?php echo $order_details->price->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $order_details->SortUrl($order_details->price) ?>',1);"><div id="elh_order_details_price" class="order_details_price">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $order_details->price->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($order_details->price->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($order_details->price->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$stores_list->ListOptions->Render("header", "right");
+$order_details_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($stores->ExportAll && $stores->Export <> "") {
-	$stores_list->StopRec = $stores_list->TotalRecs;
+if ($order_details->ExportAll && $order_details->Export <> "") {
+	$order_details_list->StopRec = $order_details_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($stores_list->TotalRecs > $stores_list->StartRec + $stores_list->DisplayRecs - 1)
-		$stores_list->StopRec = $stores_list->StartRec + $stores_list->DisplayRecs - 1;
+	if ($order_details_list->TotalRecs > $order_details_list->StartRec + $order_details_list->DisplayRecs - 1)
+		$order_details_list->StopRec = $order_details_list->StartRec + $order_details_list->DisplayRecs - 1;
 	else
-		$stores_list->StopRec = $stores_list->TotalRecs;
+		$order_details_list->StopRec = $order_details_list->TotalRecs;
 }
-$stores_list->RecCnt = $stores_list->StartRec - 1;
-if ($stores_list->Recordset && !$stores_list->Recordset->EOF) {
-	$stores_list->Recordset->MoveFirst();
-	$bSelectLimit = $stores_list->UseSelectLimit;
-	if (!$bSelectLimit && $stores_list->StartRec > 1)
-		$stores_list->Recordset->Move($stores_list->StartRec - 1);
-} elseif (!$stores->AllowAddDeleteRow && $stores_list->StopRec == 0) {
-	$stores_list->StopRec = $stores->GridAddRowCount;
+$order_details_list->RecCnt = $order_details_list->StartRec - 1;
+if ($order_details_list->Recordset && !$order_details_list->Recordset->EOF) {
+	$order_details_list->Recordset->MoveFirst();
+	$bSelectLimit = $order_details_list->UseSelectLimit;
+	if (!$bSelectLimit && $order_details_list->StartRec > 1)
+		$order_details_list->Recordset->Move($order_details_list->StartRec - 1);
+} elseif (!$order_details->AllowAddDeleteRow && $order_details_list->StopRec == 0) {
+	$order_details_list->StopRec = $order_details->GridAddRowCount;
 }
 
 // Initialize aggregate
-$stores->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$stores->ResetAttrs();
-$stores_list->RenderRow();
-while ($stores_list->RecCnt < $stores_list->StopRec) {
-	$stores_list->RecCnt++;
-	if (intval($stores_list->RecCnt) >= intval($stores_list->StartRec)) {
-		$stores_list->RowCnt++;
+$order_details->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$order_details->ResetAttrs();
+$order_details_list->RenderRow();
+while ($order_details_list->RecCnt < $order_details_list->StopRec) {
+	$order_details_list->RecCnt++;
+	if (intval($order_details_list->RecCnt) >= intval($order_details_list->StartRec)) {
+		$order_details_list->RowCnt++;
 
 		// Set up key count
-		$stores_list->KeyCount = $stores_list->RowIndex;
+		$order_details_list->KeyCount = $order_details_list->RowIndex;
 
 		// Init row class and style
-		$stores->ResetAttrs();
-		$stores->CssClass = "";
-		if ($stores->CurrentAction == "gridadd") {
+		$order_details->ResetAttrs();
+		$order_details->CssClass = "";
+		if ($order_details->CurrentAction == "gridadd") {
 		} else {
-			$stores_list->LoadRowValues($stores_list->Recordset); // Load row values
+			$order_details_list->LoadRowValues($order_details_list->Recordset); // Load row values
 		}
-		$stores->RowType = EW_ROWTYPE_VIEW; // Render view
+		$order_details->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$stores->RowAttrs = array_merge($stores->RowAttrs, array('data-rowindex'=>$stores_list->RowCnt, 'id'=>'r' . $stores_list->RowCnt . '_stores', 'data-rowtype'=>$stores->RowType));
+		$order_details->RowAttrs = array_merge($order_details->RowAttrs, array('data-rowindex'=>$order_details_list->RowCnt, 'id'=>'r' . $order_details_list->RowCnt . '_order_details', 'data-rowtype'=>$order_details->RowType));
 
 		// Render row
-		$stores_list->RenderRow();
+		$order_details_list->RenderRow();
 
 		// Render list options
-		$stores_list->RenderListOptions();
+		$order_details_list->RenderListOptions();
 ?>
-	<tr<?php echo $stores->RowAttributes() ?>>
+	<tr<?php echo $order_details->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$stores_list->ListOptions->Render("body", "left", $stores_list->RowCnt);
+$order_details_list->ListOptions->Render("body", "left", $order_details_list->RowCnt);
 ?>
-	<?php if ($stores->name->Visible) { // name ?>
-		<td data-name="name"<?php echo $stores->name->CellAttributes() ?>>
-<span id="el<?php echo $stores_list->RowCnt ?>_stores_name" class="stores_name">
-<span<?php echo $stores->name->ViewAttributes() ?>>
-<?php echo $stores->name->ListViewValue() ?></span>
+	<?php if ($order_details->quantity->Visible) { // quantity ?>
+		<td data-name="quantity"<?php echo $order_details->quantity->CellAttributes() ?>>
+<span id="el<?php echo $order_details_list->RowCnt ?>_order_details_quantity" class="order_details_quantity">
+<span<?php echo $order_details->quantity->ViewAttributes() ?>>
+<?php echo $order_details->quantity->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($stores->province_id->Visible) { // province_id ?>
-		<td data-name="province_id"<?php echo $stores->province_id->CellAttributes() ?>>
-<span id="el<?php echo $stores_list->RowCnt ?>_stores_province_id" class="stores_province_id">
-<span<?php echo $stores->province_id->ViewAttributes() ?>>
-<?php echo $stores->province_id->ListViewValue() ?></span>
+	<?php if ($order_details->menu_id->Visible) { // menu_id ?>
+		<td data-name="menu_id"<?php echo $order_details->menu_id->CellAttributes() ?>>
+<span id="el<?php echo $order_details_list->RowCnt ?>_order_details_menu_id" class="order_details_menu_id">
+<span<?php echo $order_details->menu_id->ViewAttributes() ?>>
+<?php echo $order_details->menu_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($stores->address->Visible) { // address ?>
-		<td data-name="address"<?php echo $stores->address->CellAttributes() ?>>
-<span id="el<?php echo $stores_list->RowCnt ?>_stores_address" class="stores_address">
-<span<?php echo $stores->address->ViewAttributes() ?>>
-<?php echo $stores->address->ListViewValue() ?></span>
+	<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+		<td data-name="sub_menu_id"<?php echo $order_details->sub_menu_id->CellAttributes() ?>>
+<span id="el<?php echo $order_details_list->RowCnt ?>_order_details_sub_menu_id" class="order_details_sub_menu_id">
+<span<?php echo $order_details->sub_menu_id->ViewAttributes() ?>>
+<?php echo $order_details->sub_menu_id->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($stores->zip_code->Visible) { // zip_code ?>
-		<td data-name="zip_code"<?php echo $stores->zip_code->CellAttributes() ?>>
-<span id="el<?php echo $stores_list->RowCnt ?>_stores_zip_code" class="stores_zip_code">
-<span<?php echo $stores->zip_code->ViewAttributes() ?>>
-<?php echo $stores->zip_code->ListViewValue() ?></span>
+	<?php if ($order_details->price->Visible) { // price ?>
+		<td data-name="price"<?php echo $order_details->price->CellAttributes() ?>>
+<span id="el<?php echo $order_details_list->RowCnt ?>_order_details_price" class="order_details_price">
+<span<?php echo $order_details->price->ViewAttributes() ?>>
+<?php echo $order_details->price->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$stores_list->ListOptions->Render("body", "right", $stores_list->RowCnt);
+$order_details_list->ListOptions->Render("body", "right", $order_details_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($stores->CurrentAction <> "gridadd")
-		$stores_list->Recordset->MoveNext();
+	if ($order_details->CurrentAction <> "gridadd")
+		$order_details_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
+<?php
+
+// Render aggregate row
+$order_details->RowType = EW_ROWTYPE_AGGREGATE;
+$order_details->ResetAttrs();
+$order_details_list->RenderRow();
+?>
+<?php if ($order_details_list->TotalRecs > 0 && ($order_details->CurrentAction <> "gridadd" && $order_details->CurrentAction <> "gridedit")) { ?>
+<tfoot><!-- Table footer -->
+	<tr class="ewTableFooter">
+<?php
+
+// Render list options
+$order_details_list->RenderListOptions();
+
+// Render list options (footer, left)
+$order_details_list->ListOptions->Render("footer", "left");
+?>
+	<?php if ($order_details->quantity->Visible) { // quantity ?>
+		<td data-name="quantity" class="<?php echo $order_details->quantity->FooterCellClass() ?>"><span id="elf_order_details_quantity" class="order_details_quantity">
+		&nbsp;
+		</span></td>
+	<?php } ?>
+	<?php if ($order_details->menu_id->Visible) { // menu_id ?>
+		<td data-name="menu_id" class="<?php echo $order_details->menu_id->FooterCellClass() ?>"><span id="elf_order_details_menu_id" class="order_details_menu_id">
+		&nbsp;
+		</span></td>
+	<?php } ?>
+	<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+		<td data-name="sub_menu_id" class="<?php echo $order_details->sub_menu_id->FooterCellClass() ?>"><span id="elf_order_details_sub_menu_id" class="order_details_sub_menu_id">
+		&nbsp;
+		</span></td>
+	<?php } ?>
+	<?php if ($order_details->price->Visible) { // price ?>
+		<td data-name="price" class="<?php echo $order_details->price->FooterCellClass() ?>"><span id="elf_order_details_price" class="order_details_price">
+<span class="ewAggregate"><?php echo $Language->Phrase("TOTAL") ?></span><span class="ewAggregateValue">
+<?php echo $order_details->price->ViewValue ?></span>
+		</span></td>
+	<?php } ?>
+<?php
+
+// Render list options (footer, right)
+$order_details_list->ListOptions->Render("footer", "right");
+?>
+	</tr>
+</tfoot>
+<?php } ?>
 </table>
 <?php } ?>
-<?php if ($stores->CurrentAction == "") { ?>
+<?php if ($order_details->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2151,65 +2013,65 @@ $stores_list->ListOptions->Render("body", "right", $stores_list->RowCnt);
 <?php
 
 // Close recordset
-if ($stores_list->Recordset)
-	$stores_list->Recordset->Close();
+if ($order_details_list->Recordset)
+	$order_details_list->Recordset->Close();
 ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($stores->CurrentAction <> "gridadd" && $stores->CurrentAction <> "gridedit") { ?>
+<?php if ($order_details->CurrentAction <> "gridadd" && $order_details->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($stores_list->Pager)) $stores_list->Pager = new cPrevNextPager($stores_list->StartRec, $stores_list->DisplayRecs, $stores_list->TotalRecs, $stores_list->AutoHidePager) ?>
-<?php if ($stores_list->Pager->RecordCount > 0 && $stores_list->Pager->Visible) { ?>
+<?php if (!isset($order_details_list->Pager)) $order_details_list->Pager = new cPrevNextPager($order_details_list->StartRec, $order_details_list->DisplayRecs, $order_details_list->TotalRecs, $order_details_list->AutoHidePager) ?>
+<?php if ($order_details_list->Pager->RecordCount > 0 && $order_details_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($stores_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($stores_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $stores_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $order_details_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($stores_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($stores_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $stores_list->PageUrl() ?>start=<?php echo $stores_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($order_details_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $order_details_list->PageUrl() ?>start=<?php echo $order_details_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $stores_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $order_details_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($stores_list->Pager->RecordCount > 0) { ?>
+<?php if ($order_details_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $stores_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $stores_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $stores_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $order_details_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $order_details_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $order_details_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($stores_list->TotalRecs > 0 && (!$stores_list->AutoHidePageSizeSelector || $stores_list->Pager->Visible)) { ?>
+<?php if ($order_details_list->TotalRecs > 0 && (!$order_details_list->AutoHidePageSizeSelector || $order_details_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="stores">
+<input type="hidden" name="t" value="order_details">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($stores_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($stores_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($stores_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($stores->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($order_details_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($order_details_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($order_details_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($order_details->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2217,7 +2079,7 @@ if ($stores_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($stores_list->OtherOptions as &$option)
+	foreach ($order_details_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2225,10 +2087,10 @@ if ($stores_list->Recordset)
 </div>
 </div>
 <?php } ?>
-<?php if ($stores_list->TotalRecs == 0 && $stores->CurrentAction == "") { // Show other options ?>
+<?php if ($order_details_list->TotalRecs == 0 && $order_details->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($stores_list->OtherOptions as &$option) {
+	foreach ($order_details_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2237,12 +2099,10 @@ if ($stores_list->Recordset)
 <div class="clearfix"></div>
 <?php } ?>
 <script type="text/javascript">
-fstoreslistsrch.FilterList = <?php echo $stores_list->GetFilterList() ?>;
-fstoreslistsrch.Init();
-fstoreslist.Init();
+forder_detailslist.Init();
 </script>
 <?php
-$stores_list->ShowPageFooter();
+$order_details_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -2254,5 +2114,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$stores_list->Page_Terminate();
+$order_details_list->Page_Terminate();
 ?>

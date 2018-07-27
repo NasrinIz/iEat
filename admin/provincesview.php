@@ -288,9 +288,9 @@ class cprovinces_view extends cprovinces {
 			$GLOBALS["Table"] = &$GLOBALS["provinces"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["ProvinceID"] <> "") {
-			$this->RecKey["ProvinceID"] = $_GET["ProvinceID"];
-			$KeyUrl .= "&amp;ProvinceID=" . urlencode($this->RecKey["ProvinceID"]);
+		if (@$_GET["province_id"] <> "") {
+			$this->RecKey["province_id"] = $_GET["province_id"];
+			$KeyUrl .= "&amp;province_id=" . urlencode($this->RecKey["province_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -392,9 +392,9 @@ class cprovinces_view extends cprovinces {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["ProvinceID"] <> "") {
+		if (@$_GET["province_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["ProvinceID"];
+			$gsExportFile .= $_GET["province_id"];
 		}
 
 		// Get custom export parameters
@@ -420,10 +420,10 @@ class cprovinces_view extends cprovinces {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->ProvinceID->SetVisibility();
+		$this->province_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->ProvinceID->Visible = FALSE;
-		$this->Name->SetVisibility();
+			$this->province_id->Visible = FALSE;
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -531,12 +531,12 @@ class cprovinces_view extends cprovinces {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["ProvinceID"] <> "") {
-				$this->ProvinceID->setQueryStringValue($_GET["ProvinceID"]);
-				$this->RecKey["ProvinceID"] = $this->ProvinceID->QueryStringValue;
-			} elseif (@$_POST["ProvinceID"] <> "") {
-				$this->ProvinceID->setFormValue($_POST["ProvinceID"]);
-				$this->RecKey["ProvinceID"] = $this->ProvinceID->FormValue;
+			if (@$_GET["province_id"] <> "") {
+				$this->province_id->setQueryStringValue($_GET["province_id"]);
+				$this->RecKey["province_id"] = $this->province_id->QueryStringValue;
+			} elseif (@$_POST["province_id"] <> "") {
+				$this->province_id->setFormValue($_POST["province_id"]);
+				$this->RecKey["province_id"] = $this->province_id->FormValue;
 			} else {
 				$sReturnUrl = "provinceslist.php"; // Return to list
 			}
@@ -721,15 +721,15 @@ class cprovinces_view extends cprovinces {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Name->setDbValue($row['Name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['ProvinceID'] = NULL;
-		$row['Name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -738,8 +738,8 @@ class cprovinces_view extends cprovinces {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Name->DbValue = $row['Name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Render row values based on field settings
@@ -758,28 +758,28 @@ class cprovinces_view extends cprovinces {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// ProvinceID
-		// Name
+		// province_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// ProvinceID
-		$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
-		$this->ProvinceID->ViewCustomAttributes = "";
+		// province_id
+		$this->province_id->ViewValue = $this->province_id->CurrentValue;
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1104,24 +1104,24 @@ $provinces_view->ShowMessage();
 <input type="hidden" name="t" value="provinces">
 <input type="hidden" name="modal" value="<?php echo intval($provinces_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($provinces->ProvinceID->Visible) { // ProvinceID ?>
-	<tr id="r_ProvinceID">
-		<td class="col-sm-2"><span id="elh_provinces_ProvinceID"><?php echo $provinces->ProvinceID->FldCaption() ?></span></td>
-		<td data-name="ProvinceID"<?php echo $provinces->ProvinceID->CellAttributes() ?>>
-<span id="el_provinces_ProvinceID">
-<span<?php echo $provinces->ProvinceID->ViewAttributes() ?>>
-<?php echo $provinces->ProvinceID->ViewValue ?></span>
+<?php if ($provinces->province_id->Visible) { // province_id ?>
+	<tr id="r_province_id">
+		<td class="col-sm-2"><span id="elh_provinces_province_id"><?php echo $provinces->province_id->FldCaption() ?></span></td>
+		<td data-name="province_id"<?php echo $provinces->province_id->CellAttributes() ?>>
+<span id="el_provinces_province_id">
+<span<?php echo $provinces->province_id->ViewAttributes() ?>>
+<?php echo $provinces->province_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($provinces->Name->Visible) { // Name ?>
-	<tr id="r_Name">
-		<td class="col-sm-2"><span id="elh_provinces_Name"><?php echo $provinces->Name->FldCaption() ?></span></td>
-		<td data-name="Name"<?php echo $provinces->Name->CellAttributes() ?>>
-<span id="el_provinces_Name">
-<span<?php echo $provinces->Name->ViewAttributes() ?>>
-<?php echo $provinces->Name->ViewValue ?></span>
+<?php if ($provinces->name->Visible) { // name ?>
+	<tr id="r_name">
+		<td class="col-sm-2"><span id="elh_provinces_name"><?php echo $provinces->name->FldCaption() ?></span></td>
+		<td data-name="name"<?php echo $provinces->name->CellAttributes() ?>>
+<span id="el_provinces_name">
+<span<?php echo $provinces->name->ViewAttributes() ?>>
+<?php echo $provinces->name->ViewValue ?></span>
 </span>
 </td>
 	</tr>

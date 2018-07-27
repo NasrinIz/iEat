@@ -320,13 +320,13 @@ class cstores_edit extends cstores {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->StoreID->SetVisibility();
+		$this->store_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->StoreID->Visible = FALSE;
-		$this->Name->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->ZipCode->SetVisibility();
+			$this->store_id->Visible = FALSE;
+		$this->name->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->zip_code->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -447,19 +447,19 @@ class cstores_edit extends cstores {
 				$postBack = TRUE;
 
 			// Load key from Form
-			if ($objForm->HasValue("x_StoreID")) {
-				$this->StoreID->setFormValue($objForm->GetValue("x_StoreID"));
+			if ($objForm->HasValue("x_store_id")) {
+				$this->store_id->setFormValue($objForm->GetValue("x_store_id"));
 			}
 		} else {
 			$this->CurrentAction = "I"; // Default action is display
 
 			// Load key from QueryString
 			$loadByQuery = FALSE;
-			if (isset($_GET["StoreID"])) {
-				$this->StoreID->setQueryStringValue($_GET["StoreID"]);
+			if (isset($_GET["store_id"])) {
+				$this->store_id->setQueryStringValue($_GET["store_id"]);
 				$loadByQuery = TRUE;
 			} else {
-				$this->StoreID->CurrentValue = NULL;
+				$this->store_id->CurrentValue = NULL;
 			}
 		}
 
@@ -563,30 +563,30 @@ class cstores_edit extends cstores {
 
 		// Load from form
 		global $objForm;
-		if (!$this->StoreID->FldIsDetailKey)
-			$this->StoreID->setFormValue($objForm->GetValue("x_StoreID"));
-		if (!$this->Name->FldIsDetailKey) {
-			$this->Name->setFormValue($objForm->GetValue("x_Name"));
+		if (!$this->store_id->FldIsDetailKey)
+			$this->store_id->setFormValue($objForm->GetValue("x_store_id"));
+		if (!$this->name->FldIsDetailKey) {
+			$this->name->setFormValue($objForm->GetValue("x_name"));
 		}
-		if (!$this->ProvinceID->FldIsDetailKey) {
-			$this->ProvinceID->setFormValue($objForm->GetValue("x_ProvinceID"));
+		if (!$this->province_id->FldIsDetailKey) {
+			$this->province_id->setFormValue($objForm->GetValue("x_province_id"));
 		}
-		if (!$this->Address->FldIsDetailKey) {
-			$this->Address->setFormValue($objForm->GetValue("x_Address"));
+		if (!$this->address->FldIsDetailKey) {
+			$this->address->setFormValue($objForm->GetValue("x_address"));
 		}
-		if (!$this->ZipCode->FldIsDetailKey) {
-			$this->ZipCode->setFormValue($objForm->GetValue("x_ZipCode"));
+		if (!$this->zip_code->FldIsDetailKey) {
+			$this->zip_code->setFormValue($objForm->GetValue("x_zip_code"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
-		$this->StoreID->CurrentValue = $this->StoreID->FormValue;
-		$this->Name->CurrentValue = $this->Name->FormValue;
-		$this->ProvinceID->CurrentValue = $this->ProvinceID->FormValue;
-		$this->Address->CurrentValue = $this->Address->FormValue;
-		$this->ZipCode->CurrentValue = $this->ZipCode->FormValue;
+		$this->store_id->CurrentValue = $this->store_id->FormValue;
+		$this->name->CurrentValue = $this->name->FormValue;
+		$this->province_id->CurrentValue = $this->province_id->FormValue;
+		$this->address->CurrentValue = $this->address->FormValue;
+		$this->zip_code->CurrentValue = $this->zip_code->FormValue;
 	}
 
 	// Load row based on key values
@@ -622,21 +622,21 @@ class cstores_edit extends cstores {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->StoreID->setDbValue($row['StoreID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->ZipCode->setDbValue($row['ZipCode']);
+		$this->store_id->setDbValue($row['store_id']);
+		$this->name->setDbValue($row['name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->zip_code->setDbValue($row['zip_code']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['StoreID'] = NULL;
-		$row['Name'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['ZipCode'] = NULL;
+		$row['store_id'] = NULL;
+		$row['name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['zip_code'] = NULL;
 		return $row;
 	}
 
@@ -645,11 +645,11 @@ class cstores_edit extends cstores {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->StoreID->DbValue = $row['StoreID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->ZipCode->DbValue = $row['ZipCode'];
+		$this->store_id->DbValue = $row['store_id'];
+		$this->name->DbValue = $row['name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->zip_code->DbValue = $row['zip_code'];
 	}
 
 	// Load old record
@@ -657,8 +657,8 @@ class cstores_edit extends cstores {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("StoreID")) <> "")
-			$this->StoreID->CurrentValue = $this->getKey("StoreID"); // StoreID
+		if (strval($this->getKey("store_id")) <> "")
+			$this->store_id->CurrentValue = $this->getKey("store_id"); // store_id
 		else
 			$bValidKey = FALSE;
 
@@ -684,145 +684,145 @@ class cstores_edit extends cstores {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// StoreID
-		// Name
-		// ProvinceID
-		// Address
-		// ZipCode
+		// store_id
+		// name
+		// province_id
+		// address
+		// zip_code
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// StoreID
-		$this->StoreID->ViewValue = $this->StoreID->CurrentValue;
-		$this->StoreID->ViewCustomAttributes = "";
+		// store_id
+		$this->store_id->ViewValue = $this->store_id->CurrentValue;
+		$this->store_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-			// StoreID
-			$this->StoreID->LinkCustomAttributes = "";
-			$this->StoreID->HrefValue = "";
-			$this->StoreID->TooltipValue = "";
+			// store_id
+			$this->store_id->LinkCustomAttributes = "";
+			$this->store_id->HrefValue = "";
+			$this->store_id->TooltipValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
-			$this->ZipCode->TooltipValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
+			$this->zip_code->TooltipValue = "";
 		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// StoreID
-			$this->StoreID->EditAttrs["class"] = "form-control";
-			$this->StoreID->EditCustomAttributes = "";
-			$this->StoreID->EditValue = $this->StoreID->CurrentValue;
-			$this->StoreID->ViewCustomAttributes = "";
+			// store_id
+			$this->store_id->EditAttrs["class"] = "form-control";
+			$this->store_id->EditCustomAttributes = "";
+			$this->store_id->EditValue = $this->store_id->CurrentValue;
+			$this->store_id->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->EditAttrs["class"] = "form-control";
-			$this->Name->EditCustomAttributes = "";
-			$this->Name->EditValue = ew_HtmlEncode($this->Name->CurrentValue);
-			$this->Name->PlaceHolder = ew_RemoveHtml($this->Name->FldCaption());
+			// name
+			$this->name->EditAttrs["class"] = "form-control";
+			$this->name->EditCustomAttributes = "";
+			$this->name->EditValue = ew_HtmlEncode($this->name->CurrentValue);
+			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
-			// ProvinceID
-			$this->ProvinceID->EditAttrs["class"] = "form-control";
-			$this->ProvinceID->EditCustomAttributes = "";
-			if (trim(strval($this->ProvinceID->CurrentValue)) == "") {
+			// province_id
+			$this->province_id->EditAttrs["class"] = "form-control";
+			$this->province_id->EditCustomAttributes = "";
+			if (trim(strval($this->province_id->CurrentValue)) == "") {
 				$sFilterWrk = "0=1";
 			} else {
-				$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
+				$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
 			}
-			$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `provinces`";
+			$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `provinces`";
 			$sWhereWrk = "";
-			$this->ProvinceID->LookupFilters = array();
+			$this->province_id->LookupFilters = array();
 			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
 			if ($rswrk) $rswrk->Close();
-			$this->ProvinceID->EditValue = $arwrk;
+			$this->province_id->EditValue = $arwrk;
 
-			// Address
-			$this->Address->EditAttrs["class"] = "form-control";
-			$this->Address->EditCustomAttributes = "";
-			$this->Address->EditValue = ew_HtmlEncode($this->Address->CurrentValue);
-			$this->Address->PlaceHolder = ew_RemoveHtml($this->Address->FldCaption());
+			// address
+			$this->address->EditAttrs["class"] = "form-control";
+			$this->address->EditCustomAttributes = "";
+			$this->address->EditValue = ew_HtmlEncode($this->address->CurrentValue);
+			$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
 
-			// ZipCode
-			$this->ZipCode->EditAttrs["class"] = "form-control";
-			$this->ZipCode->EditCustomAttributes = "";
-			$this->ZipCode->EditValue = ew_HtmlEncode($this->ZipCode->CurrentValue);
-			$this->ZipCode->PlaceHolder = ew_RemoveHtml($this->ZipCode->FldCaption());
+			// zip_code
+			$this->zip_code->EditAttrs["class"] = "form-control";
+			$this->zip_code->EditCustomAttributes = "";
+			$this->zip_code->EditValue = ew_HtmlEncode($this->zip_code->CurrentValue);
+			$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
 
 			// Edit refer script
-			// StoreID
+			// store_id
 
-			$this->StoreID->LinkCustomAttributes = "";
-			$this->StoreID->HrefValue = "";
+			$this->store_id->LinkCustomAttributes = "";
+			$this->store_id->HrefValue = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -842,17 +842,17 @@ class cstores_edit extends cstores {
 		// Check if validation required
 		if (!EW_SERVER_VALIDATE)
 			return ($gsFormError == "");
-		if (!$this->Name->FldIsDetailKey && !is_null($this->Name->FormValue) && $this->Name->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Name->FldCaption(), $this->Name->ReqErrMsg));
+		if (!$this->name->FldIsDetailKey && !is_null($this->name->FormValue) && $this->name->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->name->FldCaption(), $this->name->ReqErrMsg));
 		}
-		if (!$this->ProvinceID->FldIsDetailKey && !is_null($this->ProvinceID->FormValue) && $this->ProvinceID->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->ProvinceID->FldCaption(), $this->ProvinceID->ReqErrMsg));
+		if (!$this->province_id->FldIsDetailKey && !is_null($this->province_id->FormValue) && $this->province_id->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->province_id->FldCaption(), $this->province_id->ReqErrMsg));
 		}
-		if (!$this->Address->FldIsDetailKey && !is_null($this->Address->FormValue) && $this->Address->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->Address->FldCaption(), $this->Address->ReqErrMsg));
+		if (!$this->address->FldIsDetailKey && !is_null($this->address->FormValue) && $this->address->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->address->FldCaption(), $this->address->ReqErrMsg));
 		}
-		if (!$this->ZipCode->FldIsDetailKey && !is_null($this->ZipCode->FormValue) && $this->ZipCode->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->ZipCode->FldCaption(), $this->ZipCode->ReqErrMsg));
+		if (!$this->zip_code->FldIsDetailKey && !is_null($this->zip_code->FormValue) && $this->zip_code->FormValue == "") {
+			ew_AddMessage($gsFormError, str_replace("%s", $this->zip_code->FldCaption(), $this->zip_code->ReqErrMsg));
 		}
 
 		// Return validate result
@@ -890,17 +890,17 @@ class cstores_edit extends cstores {
 			$this->LoadDbValues($rsold);
 			$rsnew = array();
 
-			// Name
-			$this->Name->SetDbValueDef($rsnew, $this->Name->CurrentValue, "", $this->Name->ReadOnly);
+			// name
+			$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", $this->name->ReadOnly);
 
-			// ProvinceID
-			$this->ProvinceID->SetDbValueDef($rsnew, $this->ProvinceID->CurrentValue, 0, $this->ProvinceID->ReadOnly);
+			// province_id
+			$this->province_id->SetDbValueDef($rsnew, $this->province_id->CurrentValue, 0, $this->province_id->ReadOnly);
 
-			// Address
-			$this->Address->SetDbValueDef($rsnew, $this->Address->CurrentValue, "", $this->Address->ReadOnly);
+			// address
+			$this->address->SetDbValueDef($rsnew, $this->address->CurrentValue, "", $this->address->ReadOnly);
 
-			// ZipCode
-			$this->ZipCode->SetDbValueDef($rsnew, $this->ZipCode->CurrentValue, "", $this->ZipCode->ReadOnly);
+			// zip_code
+			$this->zip_code->SetDbValueDef($rsnew, $this->zip_code->CurrentValue, "", $this->zip_code->ReadOnly);
 
 			// Call Row Updating event
 			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
@@ -949,16 +949,16 @@ class cstores_edit extends cstores {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		case "x_ProvinceID":
+		case "x_province_id":
 			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `ProvinceID` AS `LinkFld`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+			$sSqlWrk = "SELECT `province_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 			$sWhereWrk = "";
 			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`ProvinceID` IN ({filter_value})', "t0" => "3", "fn0" => "");
+			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`province_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
 			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `Name`";
+			$sSqlWrk .= " ORDER BY `name`";
 			if ($sSqlWrk <> "")
 				$fld->LookupFilters["s"] .= $sSqlWrk;
 			break;
@@ -1081,18 +1081,18 @@ fstoresedit.Validate = function() {
 	for (var i = startcnt; i <= rowcnt; i++) {
 		var infix = ($k[0]) ? String(i) : "";
 		$fobj.data("rowindex", infix);
-			elm = this.GetElements("x" + infix + "_Name");
+			elm = this.GetElements("x" + infix + "_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->Name->FldCaption(), $stores->Name->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_ProvinceID");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->name->FldCaption(), $stores->name->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_province_id");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->ProvinceID->FldCaption(), $stores->ProvinceID->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_Address");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->province_id->FldCaption(), $stores->province_id->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_address");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->Address->FldCaption(), $stores->Address->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_ZipCode");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->address->FldCaption(), $stores->address->ReqErrMsg)) ?>");
+			elm = this.GetElements("x" + infix + "_zip_code");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->ZipCode->FldCaption(), $stores->ZipCode->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->zip_code->FldCaption(), $stores->zip_code->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1122,8 +1122,8 @@ fstoresedit.Form_CustomValidate =
 fstoresedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fstoresedit.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fstoresedit.Lists["x_ProvinceID"].Data = "<?php echo $stores_edit->ProvinceID->LookupFilterQuery(FALSE, "edit") ?>";
+fstoresedit.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+fstoresedit.Lists["x_province_id"].Data = "<?php echo $stores_edit->province_id->LookupFilterQuery(FALSE, "edit") ?>";
 
 // Form object for search
 </script>
@@ -1143,58 +1143,58 @@ $stores_edit->ShowMessage();
 <input type="hidden" name="a_edit" id="a_edit" value="U">
 <input type="hidden" name="modal" value="<?php echo intval($stores_edit->IsModal) ?>">
 <div class="ewEditDiv"><!-- page* -->
-<?php if ($stores->StoreID->Visible) { // StoreID ?>
-	<div id="r_StoreID" class="form-group">
-		<label id="elh_stores_StoreID" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->StoreID->FldCaption() ?></label>
-		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->StoreID->CellAttributes() ?>>
-<span id="el_stores_StoreID">
-<span<?php echo $stores->StoreID->ViewAttributes() ?>>
-<p class="form-control-static"><?php echo $stores->StoreID->EditValue ?></p></span>
+<?php if ($stores->store_id->Visible) { // store_id ?>
+	<div id="r_store_id" class="form-group">
+		<label id="elh_stores_store_id" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->store_id->FldCaption() ?></label>
+		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->store_id->CellAttributes() ?>>
+<span id="el_stores_store_id">
+<span<?php echo $stores->store_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $stores->store_id->EditValue ?></p></span>
 </span>
-<input type="hidden" data-table="stores" data-field="x_StoreID" name="x_StoreID" id="x_StoreID" value="<?php echo ew_HtmlEncode($stores->StoreID->CurrentValue) ?>">
-<?php echo $stores->StoreID->CustomMsg ?></div></div>
+<input type="hidden" data-table="stores" data-field="x_store_id" name="x_store_id" id="x_store_id" value="<?php echo ew_HtmlEncode($stores->store_id->CurrentValue) ?>">
+<?php echo $stores->store_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($stores->Name->Visible) { // Name ?>
-	<div id="r_Name" class="form-group">
-		<label id="elh_stores_Name" for="x_Name" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->Name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->Name->CellAttributes() ?>>
-<span id="el_stores_Name">
-<input type="text" data-table="stores" data-field="x_Name" name="x_Name" id="x_Name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->Name->getPlaceHolder()) ?>" value="<?php echo $stores->Name->EditValue ?>"<?php echo $stores->Name->EditAttributes() ?>>
+<?php if ($stores->name->Visible) { // name ?>
+	<div id="r_name" class="form-group">
+		<label id="elh_stores_name" for="x_name" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->name->CellAttributes() ?>>
+<span id="el_stores_name">
+<input type="text" data-table="stores" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->name->getPlaceHolder()) ?>" value="<?php echo $stores->name->EditValue ?>"<?php echo $stores->name->EditAttributes() ?>>
 </span>
-<?php echo $stores->Name->CustomMsg ?></div></div>
+<?php echo $stores->name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($stores->ProvinceID->Visible) { // ProvinceID ?>
-	<div id="r_ProvinceID" class="form-group">
-		<label id="elh_stores_ProvinceID" for="x_ProvinceID" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->ProvinceID->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->ProvinceID->CellAttributes() ?>>
-<span id="el_stores_ProvinceID">
-<select data-table="stores" data-field="x_ProvinceID" data-value-separator="<?php echo $stores->ProvinceID->DisplayValueSeparatorAttribute() ?>" id="x_ProvinceID" name="x_ProvinceID"<?php echo $stores->ProvinceID->EditAttributes() ?>>
-<?php echo $stores->ProvinceID->SelectOptionListHtml("x_ProvinceID") ?>
+<?php if ($stores->province_id->Visible) { // province_id ?>
+	<div id="r_province_id" class="form-group">
+		<label id="elh_stores_province_id" for="x_province_id" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->province_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->province_id->CellAttributes() ?>>
+<span id="el_stores_province_id">
+<select data-table="stores" data-field="x_province_id" data-value-separator="<?php echo $stores->province_id->DisplayValueSeparatorAttribute() ?>" id="x_province_id" name="x_province_id"<?php echo $stores->province_id->EditAttributes() ?>>
+<?php echo $stores->province_id->SelectOptionListHtml("x_province_id") ?>
 </select>
 </span>
-<?php echo $stores->ProvinceID->CustomMsg ?></div></div>
+<?php echo $stores->province_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($stores->Address->Visible) { // Address ?>
-	<div id="r_Address" class="form-group">
-		<label id="elh_stores_Address" for="x_Address" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->Address->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->Address->CellAttributes() ?>>
-<span id="el_stores_Address">
-<input type="text" data-table="stores" data-field="x_Address" name="x_Address" id="x_Address" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->Address->getPlaceHolder()) ?>" value="<?php echo $stores->Address->EditValue ?>"<?php echo $stores->Address->EditAttributes() ?>>
+<?php if ($stores->address->Visible) { // address ?>
+	<div id="r_address" class="form-group">
+		<label id="elh_stores_address" for="x_address" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->address->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->address->CellAttributes() ?>>
+<span id="el_stores_address">
+<input type="text" data-table="stores" data-field="x_address" name="x_address" id="x_address" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->address->getPlaceHolder()) ?>" value="<?php echo $stores->address->EditValue ?>"<?php echo $stores->address->EditAttributes() ?>>
 </span>
-<?php echo $stores->Address->CustomMsg ?></div></div>
+<?php echo $stores->address->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
-<?php if ($stores->ZipCode->Visible) { // ZipCode ?>
-	<div id="r_ZipCode" class="form-group">
-		<label id="elh_stores_ZipCode" for="x_ZipCode" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->ZipCode->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->ZipCode->CellAttributes() ?>>
-<span id="el_stores_ZipCode">
-<input type="text" data-table="stores" data-field="x_ZipCode" name="x_ZipCode" id="x_ZipCode" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($stores->ZipCode->getPlaceHolder()) ?>" value="<?php echo $stores->ZipCode->EditValue ?>"<?php echo $stores->ZipCode->EditAttributes() ?>>
+<?php if ($stores->zip_code->Visible) { // zip_code ?>
+	<div id="r_zip_code" class="form-group">
+		<label id="elh_stores_zip_code" for="x_zip_code" class="<?php echo $stores_edit->LeftColumnClass ?>"><?php echo $stores->zip_code->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $stores_edit->RightColumnClass ?>"><div<?php echo $stores->zip_code->CellAttributes() ?>>
+<span id="el_stores_zip_code">
+<input type="text" data-table="stores" data-field="x_zip_code" name="x_zip_code" id="x_zip_code" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($stores->zip_code->getPlaceHolder()) ?>" value="<?php echo $stores->zip_code->EditValue ?>"<?php echo $stores->zip_code->EditAttributes() ?>>
 </span>
-<?php echo $stores->ZipCode->CustomMsg ?></div></div>
+<?php echo $stores->zip_code->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->

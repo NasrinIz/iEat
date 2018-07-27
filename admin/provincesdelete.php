@@ -315,7 +315,7 @@ class cprovinces_delete extends cprovinces {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->Name->SetVisibility();
+		$this->name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -495,15 +495,15 @@ class cprovinces_delete extends cprovinces {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Name->setDbValue($row['Name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->name->setDbValue($row['name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['ProvinceID'] = NULL;
-		$row['Name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -512,8 +512,8 @@ class cprovinces_delete extends cprovinces {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Name->DbValue = $row['Name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->name->DbValue = $row['name'];
 	}
 
 	// Render row values based on field settings
@@ -526,19 +526,19 @@ class cprovinces_delete extends cprovinces {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// ProvinceID
-		// Name
+		// province_id
+		// name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -588,7 +588,7 @@ class cprovinces_delete extends cprovinces {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['ProvinceID'];
+				$sThisKey .= $row['province_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -776,8 +776,8 @@ $provinces_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($provinces->Name->Visible) { // Name ?>
-		<th class="<?php echo $provinces->Name->HeaderCellClass() ?>"><span id="elh_provinces_Name" class="provinces_Name"><?php echo $provinces->Name->FldCaption() ?></span></th>
+<?php if ($provinces->name->Visible) { // name ?>
+		<th class="<?php echo $provinces->name->HeaderCellClass() ?>"><span id="elh_provinces_name" class="provinces_name"><?php echo $provinces->name->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -800,11 +800,11 @@ while (!$provinces_delete->Recordset->EOF) {
 	$provinces_delete->RenderRow();
 ?>
 	<tr<?php echo $provinces->RowAttributes() ?>>
-<?php if ($provinces->Name->Visible) { // Name ?>
-		<td<?php echo $provinces->Name->CellAttributes() ?>>
-<span id="el<?php echo $provinces_delete->RowCnt ?>_provinces_Name" class="provinces_Name">
-<span<?php echo $provinces->Name->ViewAttributes() ?>>
-<?php echo $provinces->Name->ListViewValue() ?></span>
+<?php if ($provinces->name->Visible) { // name ?>
+		<td<?php echo $provinces->name->CellAttributes() ?>>
+<span id="el<?php echo $provinces_delete->RowCnt ?>_provinces_name" class="provinces_name">
+<span<?php echo $provinces->name->ViewAttributes() ?>>
+<?php echo $provinces->name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

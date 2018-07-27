@@ -1,14 +1,14 @@
 <?php
 
 // Global variable for table object
-$provinces = NULL;
+$user_levels = NULL;
 
 //
-// Table class for provinces
+// Table class for user_levels
 //
-class cprovinces extends cTable {
-	var $province_id;
-	var $name;
+class cuser_levels extends cTable {
+	var $user_level_id;
+	var $user_level_name;
 
 	//
 	// Table class constructor
@@ -18,12 +18,12 @@ class cprovinces extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 'provinces';
-		$this->TableName = 'provinces';
+		$this->TableVar = 'user_levels';
+		$this->TableName = 'user_levels';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`provinces`";
+		$this->UpdateTable = "`user_levels`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -42,16 +42,16 @@ class cprovinces extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// province_id
-		$this->province_id = new cField('provinces', 'provinces', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->province_id->Sortable = FALSE; // Allow sort
-		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['province_id'] = &$this->province_id;
+		// user_level_id
+		$this->user_level_id = new cField('user_levels', 'user_levels', 'x_user_level_id', 'user_level_id', '`user_level_id`', '`user_level_id`', 3, -1, FALSE, '`user_level_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->user_level_id->Sortable = TRUE; // Allow sort
+		$this->user_level_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['user_level_id'] = &$this->user_level_id;
 
-		// name
-		$this->name = new cField('provinces', 'provinces', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->name->Sortable = TRUE; // Allow sort
-		$this->fields['name'] = &$this->name;
+		// user_level_name
+		$this->user_level_name = new cField('user_levels', 'user_levels', 'x_user_level_name', 'user_level_name', '`user_level_name`', '`user_level_name`', 200, -1, FALSE, '`user_level_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->user_level_name->Sortable = TRUE; // Allow sort
+		$this->fields['user_level_name'] = &$this->user_level_name;
 	}
 
 	// Field Visibility
@@ -95,7 +95,7 @@ class cprovinces extends cTable {
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`provinces`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`user_levels`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -163,7 +163,7 @@ class cprovinces extends cTable {
 	var $_SqlOrderBy = "";
 
 	function getSqlOrderBy() { // Order By
-		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : "";
+		return ($this->_SqlOrderBy <> "") ? $this->_SqlOrderBy : EW_USER_LEVEL_ID_FIELD;
 	}
 
 	function SqlOrderBy() { // For backward compatibility
@@ -321,10 +321,6 @@ class cprovinces extends cTable {
 		$conn = &$this->Connection();
 		$bInsert = $conn->Execute($this->InsertSQL($rs));
 		if ($bInsert) {
-
-			// Get insert id if necessary
-			$this->province_id->setDbValue($conn->Insert_ID());
-			$rs['province_id'] = $this->province_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -360,8 +356,8 @@ class cprovinces extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('province_id', $rs))
-				ew_AddFilter($where, ew_QuotedName('province_id', $this->DBID) . '=' . ew_QuotedValue($rs['province_id'], $this->province_id->FldDataType, $this->DBID));
+			if (array_key_exists('user_level_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('user_level_id', $this->DBID) . '=' . ew_QuotedValue($rs['user_level_id'], $this->user_level_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -383,18 +379,18 @@ class cprovinces extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`province_id` = @province_id@";
+		return "`user_level_id` = @user_level_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->province_id->CurrentValue))
+		if (!is_numeric($this->user_level_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->province_id->CurrentValue))
+		if (is_null($this->user_level_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@province_id@", ew_AdjustSql($this->province_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@user_level_id@", ew_AdjustSql($this->user_level_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -408,7 +404,7 @@ class cprovinces extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "provinceslist.php";
+			return "user_levelslist.php";
 		}
 	}
 
@@ -419,11 +415,11 @@ class cprovinces extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "provincesview.php")
+		if ($pageName == "user_levelsview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "provincesedit.php")
+		elseif ($pageName == "user_levelsedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "provincesadd.php")
+		elseif ($pageName == "user_levelsadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -431,30 +427,30 @@ class cprovinces extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "provinceslist.php";
+		return "user_levelslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("user_levelsview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("user_levelsview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "provincesadd.php?" . $this->UrlParm($parm);
+			$url = "user_levelsadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "provincesadd.php";
+			$url = "user_levelsadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("provincesedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("user_levelsedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -466,7 +462,7 @@ class cprovinces extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("provincesadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("user_levelsadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -478,7 +474,7 @@ class cprovinces extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("provincesdelete.php", $this->UrlParm());
+		return $this->KeyUrl("user_levelsdelete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -488,7 +484,7 @@ class cprovinces extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "province_id:" . ew_VarToJson($this->province_id->CurrentValue, "number", "'");
+		$json .= "user_level_id:" . ew_VarToJson($this->user_level_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -496,8 +492,8 @@ class cprovinces extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->province_id->CurrentValue)) {
-			$sUrl .= "province_id=" . urlencode($this->province_id->CurrentValue);
+		if (!is_null($this->user_level_id->CurrentValue)) {
+			$sUrl .= "user_level_id=" . urlencode($this->user_level_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -530,10 +526,10 @@ class cprovinces extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["province_id"]))
-				$arKeys[] = $_POST["province_id"];
-			elseif (isset($_GET["province_id"]))
-				$arKeys[] = $_GET["province_id"];
+			if ($isPost && isset($_POST["user_level_id"]))
+				$arKeys[] = $_POST["user_level_id"];
+			elseif (isset($_GET["user_level_id"]))
+				$arKeys[] = $_GET["user_level_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -558,7 +554,7 @@ class cprovinces extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->province_id->CurrentValue = $key;
+			$this->user_level_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -579,8 +575,8 @@ class cprovinces extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->province_id->setDbValue($rs->fields('province_id'));
-		$this->name->setDbValue($rs->fields('name'));
+		$this->user_level_id->setDbValue($rs->fields('user_level_id'));
+		$this->user_level_name->setDbValue($rs->fields('user_level_name'));
 	}
 
 	// Render list row values
@@ -591,26 +587,27 @@ class cprovinces extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// province_id
-		// name
-		// province_id
+		// user_level_id
+		// user_level_name
+		// user_level_id
 
-		$this->province_id->ViewValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		$this->user_level_id->ViewValue = $this->user_level_id->CurrentValue;
+		$this->user_level_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
+		// user_level_name
+		$this->user_level_name->ViewValue = $this->user_level_name->CurrentValue;
+		if ($Security->GetUserLevelName($this->user_level_id->CurrentValue) <> "") $this->user_level_name->ViewValue = $Security->GetUserLevelName($this->user_level_id->CurrentValue);
+		$this->user_level_name->ViewCustomAttributes = "";
 
-		// province_id
-		$this->province_id->LinkCustomAttributes = "";
-		$this->province_id->HrefValue = "";
-		$this->province_id->TooltipValue = "";
+		// user_level_id
+		$this->user_level_id->LinkCustomAttributes = "";
+		$this->user_level_id->HrefValue = "";
+		$this->user_level_id->TooltipValue = "";
 
-		// name
-		$this->name->LinkCustomAttributes = "";
-		$this->name->HrefValue = "";
-		$this->name->TooltipValue = "";
+		// user_level_name
+		$this->user_level_name->LinkCustomAttributes = "";
+		$this->user_level_name->HrefValue = "";
+		$this->user_level_name->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -626,17 +623,18 @@ class cprovinces extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// province_id
-		$this->province_id->EditAttrs["class"] = "form-control";
-		$this->province_id->EditCustomAttributes = "";
-		$this->province_id->EditValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		// user_level_id
+		$this->user_level_id->EditAttrs["class"] = "form-control";
+		$this->user_level_id->EditCustomAttributes = "";
+		$this->user_level_id->EditValue = $this->user_level_id->CurrentValue;
+		$this->user_level_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->EditAttrs["class"] = "form-control";
-		$this->name->EditCustomAttributes = "";
-		$this->name->EditValue = $this->name->CurrentValue;
-		$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
+		// user_level_name
+		$this->user_level_name->EditAttrs["class"] = "form-control";
+		$this->user_level_name->EditCustomAttributes = "";
+		$this->user_level_name->EditValue = $this->user_level_name->CurrentValue;
+		if (in_array($this->user_level_id->CurrentValue, array(-2,-1,0))) $this->user_level_name->ReadOnly = TRUE;
+		$this->user_level_name->PlaceHolder = ew_RemoveHtml($this->user_level_name->FldCaption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -665,10 +663,11 @@ class cprovinces extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
-					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->user_level_id->Exportable) $Doc->ExportCaption($this->user_level_id);
+					if ($this->user_level_name->Exportable) $Doc->ExportCaption($this->user_level_name);
 				} else {
-					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->user_level_id->Exportable) $Doc->ExportCaption($this->user_level_id);
+					if ($this->user_level_name->Exportable) $Doc->ExportCaption($this->user_level_name);
 				}
 				$Doc->EndExportRow();
 			}
@@ -700,10 +699,11 @@ class cprovinces extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
-						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->user_level_id->Exportable) $Doc->ExportField($this->user_level_id);
+						if ($this->user_level_name->Exportable) $Doc->ExportField($this->user_level_name);
 					} else {
-						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->user_level_id->Exportable) $Doc->ExportField($this->user_level_id);
+						if ($this->user_level_name->Exportable) $Doc->ExportField($this->user_level_name);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

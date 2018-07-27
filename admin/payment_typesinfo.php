@@ -1,13 +1,13 @@
 <?php
 
 // Global variable for table object
-$provinces = NULL;
+$payment_types = NULL;
 
 //
-// Table class for provinces
+// Table class for payment_types
 //
-class cprovinces extends cTable {
-	var $province_id;
+class cpayment_types extends cTable {
+	var $payment_type_id;
 	var $name;
 
 	//
@@ -18,12 +18,12 @@ class cprovinces extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 'provinces';
-		$this->TableName = 'provinces';
+		$this->TableVar = 'payment_types';
+		$this->TableName = 'payment_types';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`provinces`";
+		$this->UpdateTable = "`payment_types`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -42,14 +42,14 @@ class cprovinces extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// province_id
-		$this->province_id = new cField('provinces', 'provinces', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->province_id->Sortable = FALSE; // Allow sort
-		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['province_id'] = &$this->province_id;
+		// payment_type_id
+		$this->payment_type_id = new cField('payment_types', 'payment_types', 'x_payment_type_id', 'payment_type_id', '`payment_type_id`', '`payment_type_id`', 3, -1, FALSE, '`payment_type_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->payment_type_id->Sortable = FALSE; // Allow sort
+		$this->payment_type_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['payment_type_id'] = &$this->payment_type_id;
 
 		// name
-		$this->name = new cField('provinces', 'provinces', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->name = new cField('payment_types', 'payment_types', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->name->Sortable = TRUE; // Allow sort
 		$this->fields['name'] = &$this->name;
 	}
@@ -95,7 +95,7 @@ class cprovinces extends cTable {
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`provinces`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`payment_types`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -323,8 +323,8 @@ class cprovinces extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->province_id->setDbValue($conn->Insert_ID());
-			$rs['province_id'] = $this->province_id->DbValue;
+			$this->payment_type_id->setDbValue($conn->Insert_ID());
+			$rs['payment_type_id'] = $this->payment_type_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -360,8 +360,8 @@ class cprovinces extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('province_id', $rs))
-				ew_AddFilter($where, ew_QuotedName('province_id', $this->DBID) . '=' . ew_QuotedValue($rs['province_id'], $this->province_id->FldDataType, $this->DBID));
+			if (array_key_exists('payment_type_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('payment_type_id', $this->DBID) . '=' . ew_QuotedValue($rs['payment_type_id'], $this->payment_type_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -383,18 +383,18 @@ class cprovinces extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`province_id` = @province_id@";
+		return "`payment_type_id` = @payment_type_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->province_id->CurrentValue))
+		if (!is_numeric($this->payment_type_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->province_id->CurrentValue))
+		if (is_null($this->payment_type_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@province_id@", ew_AdjustSql($this->province_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@payment_type_id@", ew_AdjustSql($this->payment_type_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -408,7 +408,7 @@ class cprovinces extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "provinceslist.php";
+			return "payment_typeslist.php";
 		}
 	}
 
@@ -419,11 +419,11 @@ class cprovinces extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "provincesview.php")
+		if ($pageName == "payment_typesview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "provincesedit.php")
+		elseif ($pageName == "payment_typesedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "provincesadd.php")
+		elseif ($pageName == "payment_typesadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -431,30 +431,30 @@ class cprovinces extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "provinceslist.php";
+		return "payment_typeslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("payment_typesview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("payment_typesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "provincesadd.php?" . $this->UrlParm($parm);
+			$url = "payment_typesadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "provincesadd.php";
+			$url = "payment_typesadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("provincesedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("payment_typesedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -466,7 +466,7 @@ class cprovinces extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("provincesadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("payment_typesadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -478,7 +478,7 @@ class cprovinces extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("provincesdelete.php", $this->UrlParm());
+		return $this->KeyUrl("payment_typesdelete.php", $this->UrlParm());
 	}
 
 	// Add master url
@@ -488,7 +488,7 @@ class cprovinces extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "province_id:" . ew_VarToJson($this->province_id->CurrentValue, "number", "'");
+		$json .= "payment_type_id:" . ew_VarToJson($this->payment_type_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -496,8 +496,8 @@ class cprovinces extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->province_id->CurrentValue)) {
-			$sUrl .= "province_id=" . urlencode($this->province_id->CurrentValue);
+		if (!is_null($this->payment_type_id->CurrentValue)) {
+			$sUrl .= "payment_type_id=" . urlencode($this->payment_type_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -530,10 +530,10 @@ class cprovinces extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["province_id"]))
-				$arKeys[] = $_POST["province_id"];
-			elseif (isset($_GET["province_id"]))
-				$arKeys[] = $_GET["province_id"];
+			if ($isPost && isset($_POST["payment_type_id"]))
+				$arKeys[] = $_POST["payment_type_id"];
+			elseif (isset($_GET["payment_type_id"]))
+				$arKeys[] = $_GET["payment_type_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -558,7 +558,7 @@ class cprovinces extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->province_id->CurrentValue = $key;
+			$this->payment_type_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -579,7 +579,7 @@ class cprovinces extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->province_id->setDbValue($rs->fields('province_id'));
+		$this->payment_type_id->setDbValue($rs->fields('payment_type_id'));
 		$this->name->setDbValue($rs->fields('name'));
 	}
 
@@ -591,21 +591,21 @@ class cprovinces extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// province_id
+		// payment_type_id
 		// name
-		// province_id
+		// payment_type_id
 
-		$this->province_id->ViewValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
+		$this->payment_type_id->ViewCustomAttributes = "";
 
 		// name
 		$this->name->ViewValue = $this->name->CurrentValue;
 		$this->name->ViewCustomAttributes = "";
 
-		// province_id
-		$this->province_id->LinkCustomAttributes = "";
-		$this->province_id->HrefValue = "";
-		$this->province_id->TooltipValue = "";
+		// payment_type_id
+		$this->payment_type_id->LinkCustomAttributes = "";
+		$this->payment_type_id->HrefValue = "";
+		$this->payment_type_id->TooltipValue = "";
 
 		// name
 		$this->name->LinkCustomAttributes = "";
@@ -626,11 +626,11 @@ class cprovinces extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// province_id
-		$this->province_id->EditAttrs["class"] = "form-control";
-		$this->province_id->EditCustomAttributes = "";
-		$this->province_id->EditValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		// payment_type_id
+		$this->payment_type_id->EditAttrs["class"] = "form-control";
+		$this->payment_type_id->EditCustomAttributes = "";
+		$this->payment_type_id->EditValue = $this->payment_type_id->CurrentValue;
+		$this->payment_type_id->ViewCustomAttributes = "";
 
 		// name
 		$this->name->EditAttrs["class"] = "form-control";
@@ -665,7 +665,7 @@ class cprovinces extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->payment_type_id->Exportable) $Doc->ExportCaption($this->payment_type_id);
 					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
 				} else {
 					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
@@ -700,7 +700,7 @@ class cprovinces extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->payment_type_id->Exportable) $Doc->ExportField($this->payment_type_id);
 						if ($this->name->Exportable) $Doc->ExportField($this->name);
 					} else {
 						if ($this->name->Exportable) $Doc->ExportField($this->name);

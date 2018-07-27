@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "sub_menusinfo.php" ?>
+<?php include_once "user_levelsinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$sub_menus_delete = NULL; // Initialize page object first
+$user_levels_delete = NULL; // Initialize page object first
 
-class csub_menus_delete extends csub_menus {
+class cuser_levels_delete extends cuser_levels {
 
 	// Page ID
 	var $PageID = 'delete';
@@ -25,10 +25,10 @@ class csub_menus_delete extends csub_menus {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'sub_menus';
+	var $TableName = 'user_levels';
 
 	// Page object name
-	var $PageObjName = 'sub_menus_delete';
+	var $PageObjName = 'user_levels_delete';
 
 	// Page headings
 	var $Heading = '';
@@ -250,10 +250,10 @@ class csub_menus_delete extends csub_menus {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (sub_menus)
-		if (!isset($GLOBALS["sub_menus"]) || get_class($GLOBALS["sub_menus"]) == "csub_menus") {
-			$GLOBALS["sub_menus"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["sub_menus"];
+		// Table object (user_levels)
+		if (!isset($GLOBALS["user_levels"]) || get_class($GLOBALS["user_levels"]) == "cuser_levels") {
+			$GLOBALS["user_levels"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["user_levels"];
 		}
 
 		// Table object (employees)
@@ -265,7 +265,7 @@ class csub_menus_delete extends csub_menus {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'sub_menus', TRUE);
+			define("EW_TABLE_NAME", 'user_levels', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -300,13 +300,9 @@ class csub_menus_delete extends csub_menus {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanDelete()) {
+		if (!$Security->CanAdmin()) {
 			$Security->SaveLastUrl();
-			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
-			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("sub_menuslist.php"));
-			else
-				$this->Page_Terminate(ew_GetUrl("login.php"));
+			$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
 
 		// NOTE: Security object may be needed in other part of the script, skip set to Nothing
@@ -315,10 +311,8 @@ class csub_menus_delete extends csub_menus {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->menu_id->SetVisibility();
-		$this->name->SetVisibility();
-		$this->picture->SetVisibility();
-		$this->price->SetVisibility();
+		$this->user_level_id->SetVisibility();
+		$this->user_level_name->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -350,13 +344,13 @@ class csub_menus_delete extends csub_menus {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $sub_menus;
+		global $EW_EXPORT, $user_levels;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($sub_menus);
+				$doc = new $class($user_levels);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -403,10 +397,10 @@ class csub_menus_delete extends csub_menus {
 		$this->RecKeys = $this->GetRecordKeys(); // Load record keys
 		$sFilter = $this->GetKeyFilter();
 		if ($sFilter == "")
-			$this->Page_Terminate("sub_menuslist.php"); // Prevent SQL injection, return to list
+			$this->Page_Terminate("user_levelslist.php"); // Prevent SQL injection, return to list
 
 		// Set up filter (SQL WHHERE clause) and get return SQL
-		// SQL constructor in sub_menus class, sub_menusinfo.php
+		// SQL constructor in user_levels class, user_levelsinfo.php
 
 		$this->CurrentFilter = $sFilter;
 
@@ -434,7 +428,7 @@ class csub_menus_delete extends csub_menus {
 			if ($this->TotalRecs <= 0) { // No record found, exit
 				if ($this->Recordset)
 					$this->Recordset->Close();
-				$this->Page_Terminate("sub_menuslist.php"); // Return to list
+				$this->Page_Terminate("user_levelslist.php"); // Return to list
 			}
 		}
 	}
@@ -498,24 +492,16 @@ class csub_menus_delete extends csub_menus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->sub_menu_id->setDbValue($row['sub_menu_id']);
-		$this->menu_id->setDbValue($row['menu_id']);
-		$this->name->setDbValue($row['name']);
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->picture->setDbValue($this->picture->Upload->DbValue);
-		$this->price->setDbValue($row['price']);
-		$this->description->setDbValue($row['description']);
+		$this->user_level_id->setDbValue($row['user_level_id']);
+		$this->user_level_id->CurrentValue = intval($this->user_level_id->CurrentValue);
+		$this->user_level_name->setDbValue($row['user_level_name']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['sub_menu_id'] = NULL;
-		$row['menu_id'] = NULL;
-		$row['name'] = NULL;
-		$row['picture'] = NULL;
-		$row['price'] = NULL;
-		$row['description'] = NULL;
+		$row['user_level_id'] = NULL;
+		$row['user_level_name'] = NULL;
 		return $row;
 	}
 
@@ -524,12 +510,8 @@ class csub_menus_delete extends csub_menus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->sub_menu_id->DbValue = $row['sub_menu_id'];
-		$this->menu_id->DbValue = $row['menu_id'];
-		$this->name->DbValue = $row['name'];
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->price->DbValue = $row['price'];
-		$this->description->DbValue = $row['description'];
+		$this->user_level_id->DbValue = $row['user_level_id'];
+		$this->user_level_name->DbValue = $row['user_level_name'];
 	}
 
 	// Render row values based on field settings
@@ -537,100 +519,34 @@ class csub_menus_delete extends csub_menus {
 		global $Security, $Language, $gsLanguage;
 
 		// Initialize URLs
-		// Convert decimal values if posted back
-
-		if ($this->price->FormValue == $this->price->CurrentValue && is_numeric(ew_StrToFloat($this->price->CurrentValue)))
-			$this->price->CurrentValue = ew_StrToFloat($this->price->CurrentValue);
-
 		// Call Row_Rendering event
+
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// sub_menu_id
-		// menu_id
-		// name
-		// picture
-		// price
-		// description
+		// user_level_id
+		// user_level_name
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// menu_id
-		if (strval($this->menu_id->CurrentValue) <> "") {
-			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
-		$sWhereWrk = "";
-		$this->menu_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
-			}
-		} else {
-			$this->menu_id->ViewValue = NULL;
-		}
-		$this->menu_id->ViewCustomAttributes = "";
+		// user_level_id
+		$this->user_level_id->ViewValue = $this->user_level_id->CurrentValue;
+		$this->user_level_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
+		// user_level_name
+		$this->user_level_name->ViewValue = $this->user_level_name->CurrentValue;
+		if ($Security->GetUserLevelName($this->user_level_id->CurrentValue) <> "") $this->user_level_name->ViewValue = $Security->GetUserLevelName($this->user_level_id->CurrentValue);
+		$this->user_level_name->ViewCustomAttributes = "";
 
-		// picture
-		if (!ew_Empty($this->picture->Upload->DbValue)) {
-			$this->picture->ImageWidth = 100;
-			$this->picture->ImageHeight = 100;
-			$this->picture->ImageAlt = $this->picture->FldAlt();
-			$this->picture->ViewValue = $this->picture->Upload->DbValue;
-		} else {
-			$this->picture->ViewValue = "";
-		}
-		$this->picture->ViewCustomAttributes = "";
+			// user_level_id
+			$this->user_level_id->LinkCustomAttributes = "";
+			$this->user_level_id->HrefValue = "";
+			$this->user_level_id->TooltipValue = "";
 
-		// price
-		$this->price->ViewValue = $this->price->CurrentValue;
-		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
-		$this->price->ViewCustomAttributes = "";
-
-			// menu_id
-			$this->menu_id->LinkCustomAttributes = "";
-			$this->menu_id->HrefValue = "";
-			$this->menu_id->TooltipValue = "";
-
-			// name
-			$this->name->LinkCustomAttributes = "";
-			$this->name->HrefValue = "";
-			$this->name->TooltipValue = "";
-
-			// picture
-			$this->picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->picture->Upload->DbValue)) {
-				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
-				$this->picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
-			} else {
-				$this->picture->HrefValue = "";
-			}
-			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
-			$this->picture->TooltipValue = "";
-			if ($this->picture->UseColorbox) {
-				if (ew_Empty($this->picture->TooltipValue))
-					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->picture->LinkAttrs["data-rel"] = "sub_menus_x_picture";
-				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
-			}
-
-			// price
-			$this->price->LinkCustomAttributes = "";
-			$this->price->HrefValue = "";
-			$this->price->TooltipValue = "";
+			// user_level_name
+			$this->user_level_name->LinkCustomAttributes = "";
+			$this->user_level_name->HrefValue = "";
+			$this->user_level_name->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -680,7 +596,8 @@ class csub_menus_delete extends csub_menus {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['sub_menu_id'];
+				$sThisKey .= $row['user_level_id'];
+				$x_user_level_id = $row['user_level_id']; // Get User Level id
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -688,6 +605,9 @@ class csub_menus_delete extends csub_menus {
 					break;
 				if ($sKey <> "") $sKey .= ", ";
 				$sKey .= $sThisKey;
+				if (!is_null($x_user_level_id)) {
+					$conn->Execute("DELETE FROM " . EW_USER_LEVEL_PRIV_TABLE . " WHERE " . EW_USER_LEVEL_PRIV_USER_LEVEL_ID_FIELD . " = " . $x_user_level_id); // Delete user rights as well
+				}
 			}
 		}
 		if (!$DeleteRows) {
@@ -723,7 +643,7 @@ class csub_menus_delete extends csub_menus {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("sub_menuslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("user_levelslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "delete";
 		$Breadcrumb->Add("delete", $PageId, $url);
 	}
@@ -809,29 +729,29 @@ class csub_menus_delete extends csub_menus {
 <?php
 
 // Create page object
-if (!isset($sub_menus_delete)) $sub_menus_delete = new csub_menus_delete();
+if (!isset($user_levels_delete)) $user_levels_delete = new cuser_levels_delete();
 
 // Page init
-$sub_menus_delete->Page_Init();
+$user_levels_delete->Page_Init();
 
 // Page main
-$sub_menus_delete->Page_Main();
+$user_levels_delete->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$sub_menus_delete->Page_Render();
+$user_levels_delete->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "delete";
-var CurrentForm = fsub_menusdelete = new ew_Form("fsub_menusdelete", "delete");
+var CurrentForm = fuser_levelsdelete = new ew_Form("fuser_levelsdelete", "delete");
 
 // Form_CustomValidate event
-fsub_menusdelete.Form_CustomValidate = 
+fuser_levelsdelete.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -839,29 +759,27 @@ fsub_menusdelete.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fsub_menusdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fuser_levelsdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fsub_menusdelete.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
-fsub_menusdelete.Lists["x_menu_id"].Data = "<?php echo $sub_menus_delete->menu_id->LookupFilterQuery(FALSE, "delete") ?>";
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $sub_menus_delete->ShowPageHeader(); ?>
+<?php $user_levels_delete->ShowPageHeader(); ?>
 <?php
-$sub_menus_delete->ShowMessage();
+$user_levels_delete->ShowMessage();
 ?>
-<form name="fsub_menusdelete" id="fsub_menusdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($sub_menus_delete->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $sub_menus_delete->Token ?>">
+<form name="fuser_levelsdelete" id="fuser_levelsdelete" class="form-inline ewForm ewDeleteForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($user_levels_delete->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $user_levels_delete->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="sub_menus">
+<input type="hidden" name="t" value="user_levels">
 <input type="hidden" name="a_delete" id="a_delete" value="D">
-<?php foreach ($sub_menus_delete->RecKeys as $key) { ?>
+<?php foreach ($user_levels_delete->RecKeys as $key) { ?>
 <?php $keyvalue = is_array($key) ? implode($EW_COMPOSITE_KEY_SEPARATOR, $key) : $key; ?>
 <input type="hidden" name="key_m[]" value="<?php echo ew_HtmlEncode($keyvalue) ?>">
 <?php } ?>
@@ -870,77 +788,54 @@ $sub_menus_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($sub_menus->menu_id->Visible) { // menu_id ?>
-		<th class="<?php echo $sub_menus->menu_id->HeaderCellClass() ?>"><span id="elh_sub_menus_menu_id" class="sub_menus_menu_id"><?php echo $sub_menus->menu_id->FldCaption() ?></span></th>
+<?php if ($user_levels->user_level_id->Visible) { // user_level_id ?>
+		<th class="<?php echo $user_levels->user_level_id->HeaderCellClass() ?>"><span id="elh_user_levels_user_level_id" class="user_levels_user_level_id"><?php echo $user_levels->user_level_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($sub_menus->name->Visible) { // name ?>
-		<th class="<?php echo $sub_menus->name->HeaderCellClass() ?>"><span id="elh_sub_menus_name" class="sub_menus_name"><?php echo $sub_menus->name->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($sub_menus->picture->Visible) { // picture ?>
-		<th class="<?php echo $sub_menus->picture->HeaderCellClass() ?>"><span id="elh_sub_menus_picture" class="sub_menus_picture"><?php echo $sub_menus->picture->FldCaption() ?></span></th>
-<?php } ?>
-<?php if ($sub_menus->price->Visible) { // price ?>
-		<th class="<?php echo $sub_menus->price->HeaderCellClass() ?>"><span id="elh_sub_menus_price" class="sub_menus_price"><?php echo $sub_menus->price->FldCaption() ?></span></th>
+<?php if ($user_levels->user_level_name->Visible) { // user_level_name ?>
+		<th class="<?php echo $user_levels->user_level_name->HeaderCellClass() ?>"><span id="elh_user_levels_user_level_name" class="user_levels_user_level_name"><?php echo $user_levels->user_level_name->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
 	<tbody>
 <?php
-$sub_menus_delete->RecCnt = 0;
+$user_levels_delete->RecCnt = 0;
 $i = 0;
-while (!$sub_menus_delete->Recordset->EOF) {
-	$sub_menus_delete->RecCnt++;
-	$sub_menus_delete->RowCnt++;
+while (!$user_levels_delete->Recordset->EOF) {
+	$user_levels_delete->RecCnt++;
+	$user_levels_delete->RowCnt++;
 
 	// Set row properties
-	$sub_menus->ResetAttrs();
-	$sub_menus->RowType = EW_ROWTYPE_VIEW; // View
+	$user_levels->ResetAttrs();
+	$user_levels->RowType = EW_ROWTYPE_VIEW; // View
 
 	// Get the field contents
-	$sub_menus_delete->LoadRowValues($sub_menus_delete->Recordset);
+	$user_levels_delete->LoadRowValues($user_levels_delete->Recordset);
 
 	// Render row
-	$sub_menus_delete->RenderRow();
+	$user_levels_delete->RenderRow();
 ?>
-	<tr<?php echo $sub_menus->RowAttributes() ?>>
-<?php if ($sub_menus->menu_id->Visible) { // menu_id ?>
-		<td<?php echo $sub_menus->menu_id->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_delete->RowCnt ?>_sub_menus_menu_id" class="sub_menus_menu_id">
-<span<?php echo $sub_menus->menu_id->ViewAttributes() ?>>
-<?php echo $sub_menus->menu_id->ListViewValue() ?></span>
+	<tr<?php echo $user_levels->RowAttributes() ?>>
+<?php if ($user_levels->user_level_id->Visible) { // user_level_id ?>
+		<td<?php echo $user_levels->user_level_id->CellAttributes() ?>>
+<span id="el<?php echo $user_levels_delete->RowCnt ?>_user_levels_user_level_id" class="user_levels_user_level_id">
+<span<?php echo $user_levels->user_level_id->ViewAttributes() ?>>
+<?php echo $user_levels->user_level_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($sub_menus->name->Visible) { // name ?>
-		<td<?php echo $sub_menus->name->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_delete->RowCnt ?>_sub_menus_name" class="sub_menus_name">
-<span<?php echo $sub_menus->name->ViewAttributes() ?>>
-<?php echo $sub_menus->name->ListViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($sub_menus->picture->Visible) { // picture ?>
-		<td<?php echo $sub_menus->picture->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_delete->RowCnt ?>_sub_menus_picture" class="sub_menus_picture">
-<span>
-<?php echo ew_GetFileViewTag($sub_menus->picture, $sub_menus->picture->ListViewValue()) ?>
-</span>
-</span>
-</td>
-<?php } ?>
-<?php if ($sub_menus->price->Visible) { // price ?>
-		<td<?php echo $sub_menus->price->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_delete->RowCnt ?>_sub_menus_price" class="sub_menus_price">
-<span<?php echo $sub_menus->price->ViewAttributes() ?>>
-<?php echo $sub_menus->price->ListViewValue() ?></span>
+<?php if ($user_levels->user_level_name->Visible) { // user_level_name ?>
+		<td<?php echo $user_levels->user_level_name->CellAttributes() ?>>
+<span id="el<?php echo $user_levels_delete->RowCnt ?>_user_levels_user_level_name" class="user_levels_user_level_name">
+<span<?php echo $user_levels->user_level_name->ViewAttributes() ?>>
+<?php echo $user_levels->user_level_name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
 	</tr>
 <?php
-	$sub_menus_delete->Recordset->MoveNext();
+	$user_levels_delete->Recordset->MoveNext();
 }
-$sub_menus_delete->Recordset->Close();
+$user_levels_delete->Recordset->Close();
 ?>
 </tbody>
 </table>
@@ -948,14 +843,14 @@ $sub_menus_delete->Recordset->Close();
 </div>
 <div>
 <button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("DeleteBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $sub_menus_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $user_levels_delete->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 </div>
 </form>
 <script type="text/javascript">
-fsub_menusdelete.Init();
+fuser_levelsdelete.Init();
 </script>
 <?php
-$sub_menus_delete->ShowPageFooter();
+$user_levels_delete->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -967,5 +862,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$sub_menus_delete->Page_Terminate();
+$user_levels_delete->Page_Terminate();
 ?>

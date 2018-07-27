@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "menusinfo.php" ?>
+<?php include_once "payment_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$menus_view = NULL; // Initialize page object first
+$payment_types_view = NULL; // Initialize page object first
 
-class cmenus_view extends cmenus {
+class cpayment_types_view extends cpayment_types {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +25,10 @@ class cmenus_view extends cmenus {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'menus';
+	var $TableName = 'payment_types';
 
 	// Page object name
-	var $PageObjName = 'menus_view';
+	var $PageObjName = 'payment_types_view';
 
 	// Page headings
 	var $Heading = '';
@@ -282,15 +282,15 @@ class cmenus_view extends cmenus {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (menus)
-		if (!isset($GLOBALS["menus"]) || get_class($GLOBALS["menus"]) == "cmenus") {
-			$GLOBALS["menus"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["menus"];
+		// Table object (payment_types)
+		if (!isset($GLOBALS["payment_types"]) || get_class($GLOBALS["payment_types"]) == "cpayment_types") {
+			$GLOBALS["payment_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["payment_types"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["menu_id"] <> "") {
-			$this->RecKey["menu_id"] = $_GET["menu_id"];
-			$KeyUrl .= "&amp;menu_id=" . urlencode($this->RecKey["menu_id"]);
+		if (@$_GET["payment_type_id"] <> "") {
+			$this->RecKey["payment_type_id"] = $_GET["payment_type_id"];
+			$KeyUrl .= "&amp;payment_type_id=" . urlencode($this->RecKey["payment_type_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -309,7 +309,7 @@ class cmenus_view extends cmenus {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'menus', TRUE);
+			define("EW_TABLE_NAME", 'payment_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -364,7 +364,7 @@ class cmenus_view extends cmenus {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("menuslist.php"));
+				$this->Page_Terminate(ew_GetUrl("payment_typeslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -392,9 +392,9 @@ class cmenus_view extends cmenus {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["menu_id"] <> "") {
+		if (@$_GET["payment_type_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["menu_id"];
+			$gsExportFile .= $_GET["payment_type_id"];
 		}
 
 		// Get custom export parameters
@@ -420,11 +420,10 @@ class cmenus_view extends cmenus {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->menu_id->SetVisibility();
+		$this->payment_type_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->menu_id->Visible = FALSE;
+			$this->payment_type_id->Visible = FALSE;
 		$this->name->SetVisibility();
-		$this->picture->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -456,13 +455,13 @@ class cmenus_view extends cmenus {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $menus;
+		global $EW_EXPORT, $payment_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($menus);
+				$doc = new $class($payment_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -488,7 +487,7 @@ class cmenus_view extends cmenus {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "menusview.php")
+					if ($pageName == "payment_typesview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -532,14 +531,14 @@ class cmenus_view extends cmenus {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["menu_id"] <> "") {
-				$this->menu_id->setQueryStringValue($_GET["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->QueryStringValue;
-			} elseif (@$_POST["menu_id"] <> "") {
-				$this->menu_id->setFormValue($_POST["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->FormValue;
+			if (@$_GET["payment_type_id"] <> "") {
+				$this->payment_type_id->setQueryStringValue($_GET["payment_type_id"]);
+				$this->RecKey["payment_type_id"] = $this->payment_type_id->QueryStringValue;
+			} elseif (@$_POST["payment_type_id"] <> "") {
+				$this->payment_type_id->setFormValue($_POST["payment_type_id"]);
+				$this->RecKey["payment_type_id"] = $this->payment_type_id->FormValue;
 			} else {
-				$sReturnUrl = "menuslist.php"; // Return to list
+				$sReturnUrl = "payment_typeslist.php"; // Return to list
 			}
 
 			// Get action
@@ -549,7 +548,7 @@ class cmenus_view extends cmenus {
 					if (!$this->LoadRow()) { // Load record based on key
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "menuslist.php"; // No matching record, return to list
+						$sReturnUrl = "payment_typeslist.php"; // No matching record, return to list
 					}
 			}
 
@@ -560,7 +559,7 @@ class cmenus_view extends cmenus {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "menuslist.php"; // Not page request, return to list
+			$sReturnUrl = "payment_typeslist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -722,18 +721,15 @@ class cmenus_view extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->menu_id->setDbValue($row['menu_id']);
+		$this->payment_type_id->setDbValue($row['payment_type_id']);
 		$this->name->setDbValue($row['name']);
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->picture->setDbValue($this->picture->Upload->DbValue);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['menu_id'] = NULL;
+		$row['payment_type_id'] = NULL;
 		$row['name'] = NULL;
-		$row['picture'] = NULL;
 		return $row;
 	}
 
@@ -742,9 +738,8 @@ class cmenus_view extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->menu_id->DbValue = $row['menu_id'];
+		$this->payment_type_id->DbValue = $row['payment_type_id'];
 		$this->name->DbValue = $row['name'];
-		$this->picture->Upload->DbValue = $row['picture'];
 	}
 
 	// Render row values based on field settings
@@ -763,58 +758,28 @@ class cmenus_view extends cmenus {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// menu_id
+		// payment_type_id
 		// name
-		// picture
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// menu_id
-		$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
-		$this->menu_id->ViewCustomAttributes = "";
+		// payment_type_id
+		$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
+		$this->payment_type_id->ViewCustomAttributes = "";
 
 		// name
 		$this->name->ViewValue = $this->name->CurrentValue;
 		$this->name->ViewCustomAttributes = "";
 
-		// picture
-		if (!ew_Empty($this->picture->Upload->DbValue)) {
-			$this->picture->ImageWidth = 100;
-			$this->picture->ImageHeight = 100;
-			$this->picture->ImageAlt = $this->picture->FldAlt();
-			$this->picture->ViewValue = $this->picture->Upload->DbValue;
-		} else {
-			$this->picture->ViewValue = "";
-		}
-		$this->picture->ViewCustomAttributes = "";
-
-			// menu_id
-			$this->menu_id->LinkCustomAttributes = "";
-			$this->menu_id->HrefValue = "";
-			$this->menu_id->TooltipValue = "";
+			// payment_type_id
+			$this->payment_type_id->LinkCustomAttributes = "";
+			$this->payment_type_id->HrefValue = "";
+			$this->payment_type_id->TooltipValue = "";
 
 			// name
 			$this->name->LinkCustomAttributes = "";
 			$this->name->HrefValue = "";
 			$this->name->TooltipValue = "";
-
-			// picture
-			$this->picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->picture->Upload->DbValue)) {
-				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
-				$this->picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
-			} else {
-				$this->picture->HrefValue = "";
-			}
-			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
-			$this->picture->TooltipValue = "";
-			if ($this->picture->UseColorbox) {
-				if (ew_Empty($this->picture->TooltipValue))
-					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->picture->LinkAttrs["data-rel"] = "menus_x_picture";
-				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
-			}
 		}
 
 		// Call Row Rendered event
@@ -864,7 +829,7 @@ class cmenus_view extends cmenus {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_menus\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_menus',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fmenusview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_payment_types\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_payment_types',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fpayment_typesview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -964,7 +929,7 @@ class cmenus_view extends cmenus {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("menuslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("payment_typeslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1076,30 +1041,30 @@ class cmenus_view extends cmenus {
 <?php
 
 // Create page object
-if (!isset($menus_view)) $menus_view = new cmenus_view();
+if (!isset($payment_types_view)) $payment_types_view = new cpayment_types_view();
 
 // Page init
-$menus_view->Page_Init();
+$payment_types_view->Page_Init();
 
 // Page main
-$menus_view->Page_Main();
+$payment_types_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$menus_view->Page_Render();
+$payment_types_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($payment_types->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = fmenusview = new ew_Form("fmenusview", "view");
+var CurrentForm = fpayment_typesview = new ew_Form("fpayment_typesview", "view");
 
 // Form_CustomValidate event
-fmenusview.Form_CustomValidate = 
+fpayment_typesview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1107,7 +1072,7 @@ fmenusview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fmenusview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fpayment_typesview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
 // Form object for search
@@ -1118,74 +1083,62 @@ fmenusview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($payment_types->Export == "") { ?>
 <div class="ewToolbar">
-<?php $menus_view->ExportOptions->Render("body") ?>
+<?php $payment_types_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($menus_view->OtherOptions as &$option)
+	foreach ($payment_types_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $menus_view->ShowPageHeader(); ?>
+<?php $payment_types_view->ShowPageHeader(); ?>
 <?php
-$menus_view->ShowMessage();
+$payment_types_view->ShowMessage();
 ?>
-<form name="fmenusview" id="fmenusview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($menus_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $menus_view->Token ?>">
+<form name="fpayment_typesview" id="fpayment_typesview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($payment_types_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $payment_types_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="menus">
-<input type="hidden" name="modal" value="<?php echo intval($menus_view->IsModal) ?>">
+<input type="hidden" name="t" value="payment_types">
+<input type="hidden" name="modal" value="<?php echo intval($payment_types_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($menus->menu_id->Visible) { // menu_id ?>
-	<tr id="r_menu_id">
-		<td class="col-sm-2"><span id="elh_menus_menu_id"><?php echo $menus->menu_id->FldCaption() ?></span></td>
-		<td data-name="menu_id"<?php echo $menus->menu_id->CellAttributes() ?>>
-<span id="el_menus_menu_id">
-<span<?php echo $menus->menu_id->ViewAttributes() ?>>
-<?php echo $menus->menu_id->ViewValue ?></span>
+<?php if ($payment_types->payment_type_id->Visible) { // payment_type_id ?>
+	<tr id="r_payment_type_id">
+		<td class="col-sm-2"><span id="elh_payment_types_payment_type_id"><?php echo $payment_types->payment_type_id->FldCaption() ?></span></td>
+		<td data-name="payment_type_id"<?php echo $payment_types->payment_type_id->CellAttributes() ?>>
+<span id="el_payment_types_payment_type_id">
+<span<?php echo $payment_types->payment_type_id->ViewAttributes() ?>>
+<?php echo $payment_types->payment_type_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($menus->name->Visible) { // name ?>
+<?php if ($payment_types->name->Visible) { // name ?>
 	<tr id="r_name">
-		<td class="col-sm-2"><span id="elh_menus_name"><?php echo $menus->name->FldCaption() ?></span></td>
-		<td data-name="name"<?php echo $menus->name->CellAttributes() ?>>
-<span id="el_menus_name">
-<span<?php echo $menus->name->ViewAttributes() ?>>
-<?php echo $menus->name->ViewValue ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
-<?php if ($menus->picture->Visible) { // picture ?>
-	<tr id="r_picture">
-		<td class="col-sm-2"><span id="elh_menus_picture"><?php echo $menus->picture->FldCaption() ?></span></td>
-		<td data-name="picture"<?php echo $menus->picture->CellAttributes() ?>>
-<span id="el_menus_picture">
-<span>
-<?php echo ew_GetFileViewTag($menus->picture, $menus->picture->ViewValue) ?>
-</span>
+		<td class="col-sm-2"><span id="elh_payment_types_name"><?php echo $payment_types->name->FldCaption() ?></span></td>
+		<td data-name="name"<?php echo $payment_types->name->CellAttributes() ?>>
+<span id="el_payment_types_name">
+<span<?php echo $payment_types->name->ViewAttributes() ?>>
+<?php echo $payment_types->name->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
 </form>
-<?php if ($menus->Export == "") { ?>
+<?php if ($payment_types->Export == "") { ?>
 <script type="text/javascript">
-fmenusview.Init();
+fpayment_typesview.Init();
 </script>
 <?php } ?>
 <?php
-$menus_view->ShowPageFooter();
+$payment_types_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($payment_types->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1195,5 +1148,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$menus_view->Page_Terminate();
+$payment_types_view->Page_Terminate();
 ?>

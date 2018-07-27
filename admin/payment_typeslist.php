@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "sub_menusinfo.php" ?>
+<?php include_once "payment_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +14,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$sub_menus_list = NULL; // Initialize page object first
+$payment_types_list = NULL; // Initialize page object first
 
-class csub_menus_list extends csub_menus {
+class cpayment_types_list extends cpayment_types {
 
 	// Page ID
 	var $PageID = 'list';
@@ -25,13 +25,13 @@ class csub_menus_list extends csub_menus {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'sub_menus';
+	var $TableName = 'payment_types';
 
 	// Page object name
-	var $PageObjName = 'sub_menus_list';
+	var $PageObjName = 'payment_types_list';
 
 	// Grid form hidden field names
-	var $FormName = 'fsub_menuslist';
+	var $FormName = 'fpayment_typeslist';
 	var $FormActionName = 'k_action';
 	var $FormKeyName = 'k_key';
 	var $FormOldKeyName = 'k_oldkey';
@@ -290,10 +290,10 @@ class csub_menus_list extends csub_menus {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (sub_menus)
-		if (!isset($GLOBALS["sub_menus"]) || get_class($GLOBALS["sub_menus"]) == "csub_menus") {
-			$GLOBALS["sub_menus"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["sub_menus"];
+		// Table object (payment_types)
+		if (!isset($GLOBALS["payment_types"]) || get_class($GLOBALS["payment_types"]) == "cpayment_types") {
+			$GLOBALS["payment_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["payment_types"];
 		}
 
 		// Initialize URLs
@@ -304,12 +304,12 @@ class csub_menus_list extends csub_menus {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "sub_menusadd.php";
+		$this->AddUrl = "payment_typesadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
-		$this->MultiDeleteUrl = "sub_menusdelete.php";
-		$this->MultiUpdateUrl = "sub_menusupdate.php";
+		$this->MultiDeleteUrl = "payment_typesdelete.php";
+		$this->MultiUpdateUrl = "payment_typesupdate.php";
 
 		// Table object (employees)
 		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
@@ -320,7 +320,7 @@ class csub_menus_list extends csub_menus {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'sub_menus', TRUE);
+			define("EW_TABLE_NAME", 'payment_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -362,7 +362,7 @@ class csub_menus_list extends csub_menus {
 		// Filter options
 		$this->FilterOptions = new cListOptions();
 		$this->FilterOptions->Tag = "div";
-		$this->FilterOptions->TagClassName = "ewFilterOption fsub_menuslistsrch";
+		$this->FilterOptions->TagClassName = "ewFilterOption fpayment_typeslistsrch";
 
 		// List actions
 		$this->ListActions = new cListActions();
@@ -403,10 +403,7 @@ class csub_menus_list extends csub_menus {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->menu_id->SetVisibility();
 		$this->name->SetVisibility();
-		$this->picture->SetVisibility();
-		$this->price->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -467,13 +464,13 @@ class csub_menus_list extends csub_menus {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $sub_menus;
+		global $EW_EXPORT, $payment_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($sub_menus);
+				$doc = new $class($payment_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -597,18 +594,12 @@ class csub_menus_list extends csub_menus {
 
 			// Get default search criteria
 			ew_AddFilter($this->DefaultSearchWhere, $this->BasicSearchWhere(TRUE));
-			ew_AddFilter($this->DefaultSearchWhere, $this->AdvancedSearchWhere(TRUE));
 
 			// Get basic search values
 			$this->LoadBasicSearchValues();
 
-			// Get and validate search values for advanced search
-			$this->LoadSearchValues(); // Get search values
-
 			// Process filter list
 			$this->ProcessFilterList();
-			if (!$this->ValidateSearch())
-				$this->setFailureMessage($gsSearchError);
 
 			// Restore search parms from Session if not searching / reset / export
 			if (($this->Export <> "" || $this->Command <> "search" && $this->Command <> "reset" && $this->Command <> "resetall") && $this->Command <> "json" && $this->CheckSearchParms())
@@ -623,10 +614,6 @@ class csub_menus_list extends csub_menus {
 			// Get basic search criteria
 			if ($gsSearchError == "")
 				$sSrchBasic = $this->BasicSearchWhere();
-
-			// Get search criteria for advanced search
-			if ($gsSearchError == "")
-				$sSrchAdvanced = $this->AdvancedSearchWhere();
 		}
 
 		// Restore display records
@@ -647,11 +634,6 @@ class csub_menus_list extends csub_menus {
 			$this->BasicSearch->LoadDefault();
 			if ($this->BasicSearch->Keyword != "")
 				$sSrchBasic = $this->BasicSearchWhere();
-
-			// Load advanced search from default
-			if ($this->LoadAdvancedSearchDefault()) {
-				$sSrchAdvanced = $this->AdvancedSearchWhere();
-			}
 		}
 
 		// Build search criteria
@@ -753,8 +735,8 @@ class csub_menus_list extends csub_menus {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->sub_menu_id->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->sub_menu_id->FormValue))
+			$this->payment_type_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->payment_type_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -767,12 +749,8 @@ class csub_menus_list extends csub_menus {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->sub_menu_id->AdvancedSearch->ToJson(), ","); // Field sub_menu_id
-		$sFilterList = ew_Concat($sFilterList, $this->menu_id->AdvancedSearch->ToJson(), ","); // Field menu_id
+		$sFilterList = ew_Concat($sFilterList, $this->payment_type_id->AdvancedSearch->ToJson(), ","); // Field payment_type_id
 		$sFilterList = ew_Concat($sFilterList, $this->name->AdvancedSearch->ToJson(), ","); // Field name
-		$sFilterList = ew_Concat($sFilterList, $this->picture->AdvancedSearch->ToJson(), ","); // Field picture
-		$sFilterList = ew_Concat($sFilterList, $this->price->AdvancedSearch->ToJson(), ","); // Field price
-		$sFilterList = ew_Concat($sFilterList, $this->description->AdvancedSearch->ToJson(), ","); // Field description
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -795,7 +773,7 @@ class csub_menus_list extends csub_menus {
 		global $UserProfile;
 		if (@$_POST["ajax"] == "savefilters") { // Save filter request (Ajax)
 			$filters = @$_POST["filters"];
-			$UserProfile->SetSearchFilters(CurrentUserName(), "fsub_menuslistsrch", $filters);
+			$UserProfile->SetSearchFilters(CurrentUserName(), "fpayment_typeslistsrch", $filters);
 
 			// Clean output buffer
 			if (!EW_DEBUG_ENABLED && ob_get_length())
@@ -817,21 +795,13 @@ class csub_menus_list extends csub_menus {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field sub_menu_id
-		$this->sub_menu_id->AdvancedSearch->SearchValue = @$filter["x_sub_menu_id"];
-		$this->sub_menu_id->AdvancedSearch->SearchOperator = @$filter["z_sub_menu_id"];
-		$this->sub_menu_id->AdvancedSearch->SearchCondition = @$filter["v_sub_menu_id"];
-		$this->sub_menu_id->AdvancedSearch->SearchValue2 = @$filter["y_sub_menu_id"];
-		$this->sub_menu_id->AdvancedSearch->SearchOperator2 = @$filter["w_sub_menu_id"];
-		$this->sub_menu_id->AdvancedSearch->Save();
-
-		// Field menu_id
-		$this->menu_id->AdvancedSearch->SearchValue = @$filter["x_menu_id"];
-		$this->menu_id->AdvancedSearch->SearchOperator = @$filter["z_menu_id"];
-		$this->menu_id->AdvancedSearch->SearchCondition = @$filter["v_menu_id"];
-		$this->menu_id->AdvancedSearch->SearchValue2 = @$filter["y_menu_id"];
-		$this->menu_id->AdvancedSearch->SearchOperator2 = @$filter["w_menu_id"];
-		$this->menu_id->AdvancedSearch->Save();
+		// Field payment_type_id
+		$this->payment_type_id->AdvancedSearch->SearchValue = @$filter["x_payment_type_id"];
+		$this->payment_type_id->AdvancedSearch->SearchOperator = @$filter["z_payment_type_id"];
+		$this->payment_type_id->AdvancedSearch->SearchCondition = @$filter["v_payment_type_id"];
+		$this->payment_type_id->AdvancedSearch->SearchValue2 = @$filter["y_payment_type_id"];
+		$this->payment_type_id->AdvancedSearch->SearchOperator2 = @$filter["w_payment_type_id"];
+		$this->payment_type_id->AdvancedSearch->Save();
 
 		// Field name
 		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
@@ -840,111 +810,14 @@ class csub_menus_list extends csub_menus {
 		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
 		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
 		$this->name->AdvancedSearch->Save();
-
-		// Field picture
-		$this->picture->AdvancedSearch->SearchValue = @$filter["x_picture"];
-		$this->picture->AdvancedSearch->SearchOperator = @$filter["z_picture"];
-		$this->picture->AdvancedSearch->SearchCondition = @$filter["v_picture"];
-		$this->picture->AdvancedSearch->SearchValue2 = @$filter["y_picture"];
-		$this->picture->AdvancedSearch->SearchOperator2 = @$filter["w_picture"];
-		$this->picture->AdvancedSearch->Save();
-
-		// Field price
-		$this->price->AdvancedSearch->SearchValue = @$filter["x_price"];
-		$this->price->AdvancedSearch->SearchOperator = @$filter["z_price"];
-		$this->price->AdvancedSearch->SearchCondition = @$filter["v_price"];
-		$this->price->AdvancedSearch->SearchValue2 = @$filter["y_price"];
-		$this->price->AdvancedSearch->SearchOperator2 = @$filter["w_price"];
-		$this->price->AdvancedSearch->Save();
-
-		// Field description
-		$this->description->AdvancedSearch->SearchValue = @$filter["x_description"];
-		$this->description->AdvancedSearch->SearchOperator = @$filter["z_description"];
-		$this->description->AdvancedSearch->SearchCondition = @$filter["v_description"];
-		$this->description->AdvancedSearch->SearchValue2 = @$filter["y_description"];
-		$this->description->AdvancedSearch->SearchOperator2 = @$filter["w_description"];
-		$this->description->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
-	}
-
-	// Advanced search WHERE clause based on QueryString
-	function AdvancedSearchWhere($Default = FALSE) {
-		global $Security;
-		$sWhere = "";
-		if (!$Security->CanSearch()) return "";
-		$this->BuildSearchSql($sWhere, $this->sub_menu_id, $Default, FALSE); // sub_menu_id
-		$this->BuildSearchSql($sWhere, $this->menu_id, $Default, FALSE); // menu_id
-		$this->BuildSearchSql($sWhere, $this->name, $Default, FALSE); // name
-		$this->BuildSearchSql($sWhere, $this->picture, $Default, FALSE); // picture
-		$this->BuildSearchSql($sWhere, $this->price, $Default, FALSE); // price
-		$this->BuildSearchSql($sWhere, $this->description, $Default, FALSE); // description
-
-		// Set up search parm
-		if (!$Default && $sWhere <> "" && in_array($this->Command, array("", "reset", "resetall"))) {
-			$this->Command = "search";
-		}
-		if (!$Default && $this->Command == "search") {
-			$this->sub_menu_id->AdvancedSearch->Save(); // sub_menu_id
-			$this->menu_id->AdvancedSearch->Save(); // menu_id
-			$this->name->AdvancedSearch->Save(); // name
-			$this->picture->AdvancedSearch->Save(); // picture
-			$this->price->AdvancedSearch->Save(); // price
-			$this->description->AdvancedSearch->Save(); // description
-		}
-		return $sWhere;
-	}
-
-	// Build search SQL
-	function BuildSearchSql(&$Where, &$Fld, $Default, $MultiValue) {
-		$FldParm = $Fld->FldParm();
-		$FldVal = ($Default) ? $Fld->AdvancedSearch->SearchValueDefault : $Fld->AdvancedSearch->SearchValue; // @$_GET["x_$FldParm"]
-		$FldOpr = ($Default) ? $Fld->AdvancedSearch->SearchOperatorDefault : $Fld->AdvancedSearch->SearchOperator; // @$_GET["z_$FldParm"]
-		$FldCond = ($Default) ? $Fld->AdvancedSearch->SearchConditionDefault : $Fld->AdvancedSearch->SearchCondition; // @$_GET["v_$FldParm"]
-		$FldVal2 = ($Default) ? $Fld->AdvancedSearch->SearchValue2Default : $Fld->AdvancedSearch->SearchValue2; // @$_GET["y_$FldParm"]
-		$FldOpr2 = ($Default) ? $Fld->AdvancedSearch->SearchOperator2Default : $Fld->AdvancedSearch->SearchOperator2; // @$_GET["w_$FldParm"]
-		$sWrk = "";
-		if (is_array($FldVal)) $FldVal = implode(",", $FldVal);
-		if (is_array($FldVal2)) $FldVal2 = implode(",", $FldVal2);
-		$FldOpr = strtoupper(trim($FldOpr));
-		if ($FldOpr == "") $FldOpr = "=";
-		$FldOpr2 = strtoupper(trim($FldOpr2));
-		if ($FldOpr2 == "") $FldOpr2 = "=";
-		if (EW_SEARCH_MULTI_VALUE_OPTION == 1)
-			$MultiValue = FALSE;
-		if ($MultiValue) {
-			$sWrk1 = ($FldVal <> "") ? ew_GetMultiSearchSql($Fld, $FldOpr, $FldVal, $this->DBID) : ""; // Field value 1
-			$sWrk2 = ($FldVal2 <> "") ? ew_GetMultiSearchSql($Fld, $FldOpr2, $FldVal2, $this->DBID) : ""; // Field value 2
-			$sWrk = $sWrk1; // Build final SQL
-			if ($sWrk2 <> "")
-				$sWrk = ($sWrk <> "") ? "($sWrk) $FldCond ($sWrk2)" : $sWrk2;
-		} else {
-			$FldVal = $this->ConvertSearchValue($Fld, $FldVal);
-			$FldVal2 = $this->ConvertSearchValue($Fld, $FldVal2);
-			$sWrk = ew_GetSearchSql($Fld, $FldVal, $FldOpr, $FldCond, $FldVal2, $FldOpr2, $this->DBID);
-		}
-		ew_AddFilter($Where, $sWrk);
-	}
-
-	// Convert search value
-	function ConvertSearchValue(&$Fld, $FldVal) {
-		if ($FldVal == EW_NULL_VALUE || $FldVal == EW_NOT_NULL_VALUE)
-			return $FldVal;
-		$Value = $FldVal;
-		if ($Fld->FldDataType == EW_DATATYPE_BOOLEAN) {
-			if ($FldVal <> "") $Value = ($FldVal == "1" || strtolower(strval($FldVal)) == "y" || strtolower(strval($FldVal)) == "t") ? $Fld->TrueValue : $Fld->FalseValue;
-		} elseif ($Fld->FldDataType == EW_DATATYPE_DATE || $Fld->FldDataType == EW_DATATYPE_TIME) {
-			if ($FldVal <> "") $Value = ew_UnFormatDateTime($FldVal, $Fld->FldDateTimeFormat);
-		}
-		return $Value;
 	}
 
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
 		$this->BuildBasicSearchSQL($sWhere, $this->name, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->picture, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->description, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -1052,18 +925,6 @@ class csub_menus_list extends csub_menus {
 		// Check basic search
 		if ($this->BasicSearch->IssetSession())
 			return TRUE;
-		if ($this->sub_menu_id->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->menu_id->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->name->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->picture->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->price->AdvancedSearch->IssetSession())
-			return TRUE;
-		if ($this->description->AdvancedSearch->IssetSession())
-			return TRUE;
 		return FALSE;
 	}
 
@@ -1076,9 +937,6 @@ class csub_menus_list extends csub_menus {
 
 		// Clear basic search parameters
 		$this->ResetBasicSearchParms();
-
-		// Clear advanced search parameters
-		$this->ResetAdvancedSearchParms();
 	}
 
 	// Load advanced search default values
@@ -1091,30 +949,12 @@ class csub_menus_list extends csub_menus {
 		$this->BasicSearch->UnsetSession();
 	}
 
-	// Clear all advanced search parameters
-	function ResetAdvancedSearchParms() {
-		$this->sub_menu_id->AdvancedSearch->UnsetSession();
-		$this->menu_id->AdvancedSearch->UnsetSession();
-		$this->name->AdvancedSearch->UnsetSession();
-		$this->picture->AdvancedSearch->UnsetSession();
-		$this->price->AdvancedSearch->UnsetSession();
-		$this->description->AdvancedSearch->UnsetSession();
-	}
-
 	// Restore all search parameters
 	function RestoreSearchParms() {
 		$this->RestoreSearch = TRUE;
 
 		// Restore basic search values
 		$this->BasicSearch->Load();
-
-		// Restore advanced search values
-		$this->sub_menu_id->AdvancedSearch->Load();
-		$this->menu_id->AdvancedSearch->Load();
-		$this->name->AdvancedSearch->Load();
-		$this->picture->AdvancedSearch->Load();
-		$this->price->AdvancedSearch->Load();
-		$this->description->AdvancedSearch->Load();
 	}
 
 	// Set up sort parameters
@@ -1124,10 +964,7 @@ class csub_menus_list extends csub_menus {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->menu_id); // menu_id
 			$this->UpdateSort($this->name); // name
-			$this->UpdateSort($this->picture); // picture
-			$this->UpdateSort($this->price); // price
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1160,10 +997,7 @@ class csub_menus_list extends csub_menus {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->menu_id->setSort("");
 				$this->name->setSort("");
-				$this->picture->setSort("");
-				$this->price->setSort("");
 			}
 
 			// Reset start position
@@ -1312,7 +1146,7 @@ class csub_menus_list extends csub_menus {
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->sub_menu_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->payment_type_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1348,10 +1182,10 @@ class csub_menus_list extends csub_menus {
 
 		// Filter button
 		$item = &$this->FilterOptions->Add("savecurrentfilter");
-		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fsub_menuslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
+		$item->Body = "<a class=\"ewSaveFilter\" data-form=\"fpayment_typeslistsrch\" href=\"#\">" . $Language->Phrase("SaveCurrentFilter") . "</a>";
 		$item->Visible = TRUE;
 		$item = &$this->FilterOptions->Add("deletefilter");
-		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fsub_menuslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
+		$item->Body = "<a class=\"ewDeleteFilter\" data-form=\"fpayment_typeslistsrch\" href=\"#\">" . $Language->Phrase("DeleteFilter") . "</a>";
 		$item->Visible = TRUE;
 		$this->FilterOptions->UseDropDownButton = TRUE;
 		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
@@ -1375,7 +1209,7 @@ class csub_menus_list extends csub_menus {
 					$item = &$option->Add("custom_" . $listaction->Action);
 					$caption = $listaction->Caption;
 					$icon = ($listaction->Icon <> "") ? "<span class=\"" . ew_HtmlEncode($listaction->Icon) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\"></span> " : $caption;
-					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fsub_menuslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
+					$item->Body = "<a class=\"ewAction ewListAction\" title=\"" . ew_HtmlEncode($caption) . "\" data-caption=\"" . ew_HtmlEncode($caption) . "\" href=\"\" onclick=\"ew_SubmitAction(event,jQuery.extend({f:document.fpayment_typeslist}," . $listaction->ToJson(TRUE) . "));return false;\">" . $icon . "</a>";
 					$item->Visible = $listaction->Allow;
 				}
 			}
@@ -1479,7 +1313,7 @@ class csub_menus_list extends csub_menus {
 		// Search button
 		$item = &$this->SearchOptions->Add("searchtoggle");
 		$SearchToggleClass = ($this->SearchWhere <> "") ? " active" : " active";
-		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fsub_menuslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
+		$item->Body = "<button type=\"button\" class=\"btn btn-default ewSearchToggle" . $SearchToggleClass . "\" title=\"" . $Language->Phrase("SearchPanel") . "\" data-caption=\"" . $Language->Phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"fpayment_typeslistsrch\">" . $Language->Phrase("SearchLink") . "</button>";
 		$item->Visible = TRUE;
 
 		// Show all button
@@ -1559,43 +1393,6 @@ class csub_menus_list extends csub_menus {
 		$this->BasicSearch->Type = @$_GET[EW_TABLE_BASIC_SEARCH_TYPE];
 	}
 
-	// Load search values for validation
-	function LoadSearchValues() {
-		global $objForm;
-
-		// Load search values
-		// sub_menu_id
-
-		$this->sub_menu_id->AdvancedSearch->SearchValue = @$_GET["x_sub_menu_id"];
-		if ($this->sub_menu_id->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->sub_menu_id->AdvancedSearch->SearchOperator = @$_GET["z_sub_menu_id"];
-
-		// menu_id
-		$this->menu_id->AdvancedSearch->SearchValue = @$_GET["x_menu_id"];
-		if ($this->menu_id->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->menu_id->AdvancedSearch->SearchOperator = @$_GET["z_menu_id"];
-
-		// name
-		$this->name->AdvancedSearch->SearchValue = @$_GET["x_name"];
-		if ($this->name->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->name->AdvancedSearch->SearchOperator = @$_GET["z_name"];
-
-		// picture
-		$this->picture->AdvancedSearch->SearchValue = @$_GET["x_picture"];
-		if ($this->picture->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->picture->AdvancedSearch->SearchOperator = @$_GET["z_picture"];
-
-		// price
-		$this->price->AdvancedSearch->SearchValue = @$_GET["x_price"];
-		if ($this->price->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->price->AdvancedSearch->SearchOperator = @$_GET["z_price"];
-
-		// description
-		$this->description->AdvancedSearch->SearchValue = @$_GET["x_description"];
-		if ($this->description->AdvancedSearch->SearchValue <> "" && $this->Command == "") $this->Command = "search";
-		$this->description->AdvancedSearch->SearchOperator = @$_GET["z_description"];
-	}
-
 	// Load recordset
 	function LoadRecordset($offset = -1, $rowcnt = -1) {
 
@@ -1655,24 +1452,15 @@ class csub_menus_list extends csub_menus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->sub_menu_id->setDbValue($row['sub_menu_id']);
-		$this->menu_id->setDbValue($row['menu_id']);
+		$this->payment_type_id->setDbValue($row['payment_type_id']);
 		$this->name->setDbValue($row['name']);
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->picture->setDbValue($this->picture->Upload->DbValue);
-		$this->price->setDbValue($row['price']);
-		$this->description->setDbValue($row['description']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['sub_menu_id'] = NULL;
-		$row['menu_id'] = NULL;
+		$row['payment_type_id'] = NULL;
 		$row['name'] = NULL;
-		$row['picture'] = NULL;
-		$row['price'] = NULL;
-		$row['description'] = NULL;
 		return $row;
 	}
 
@@ -1681,12 +1469,8 @@ class csub_menus_list extends csub_menus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->sub_menu_id->DbValue = $row['sub_menu_id'];
-		$this->menu_id->DbValue = $row['menu_id'];
+		$this->payment_type_id->DbValue = $row['payment_type_id'];
 		$this->name->DbValue = $row['name'];
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->price->DbValue = $row['price'];
-		$this->description->DbValue = $row['description'];
 	}
 
 	// Load old record
@@ -1694,8 +1478,8 @@ class csub_menus_list extends csub_menus {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("sub_menu_id")) <> "")
-			$this->sub_menu_id->CurrentValue = $this->getKey("sub_menu_id"); // sub_menu_id
+		if (strval($this->getKey("payment_type_id")) <> "")
+			$this->payment_type_id->CurrentValue = $this->getKey("payment_type_id"); // payment_type_id
 		else
 			$bValidKey = FALSE;
 
@@ -1723,178 +1507,28 @@ class csub_menus_list extends csub_menus {
 		$this->InlineCopyUrl = $this->GetInlineCopyUrl();
 		$this->DeleteUrl = $this->GetDeleteUrl();
 
-		// Convert decimal values if posted back
-		if ($this->price->FormValue == $this->price->CurrentValue && is_numeric(ew_StrToFloat($this->price->CurrentValue)))
-			$this->price->CurrentValue = ew_StrToFloat($this->price->CurrentValue);
-
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// sub_menu_id
-		// menu_id
+		// payment_type_id
 		// name
-		// picture
-		// price
-		// description
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
-
-		// menu_id
-		if (strval($this->menu_id->CurrentValue) <> "") {
-			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
-		$sWhereWrk = "";
-		$this->menu_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
-			}
-		} else {
-			$this->menu_id->ViewValue = NULL;
-		}
-		$this->menu_id->ViewCustomAttributes = "";
 
 		// name
 		$this->name->ViewValue = $this->name->CurrentValue;
 		$this->name->ViewCustomAttributes = "";
 
-		// picture
-		if (!ew_Empty($this->picture->Upload->DbValue)) {
-			$this->picture->ImageWidth = 100;
-			$this->picture->ImageHeight = 100;
-			$this->picture->ImageAlt = $this->picture->FldAlt();
-			$this->picture->ViewValue = $this->picture->Upload->DbValue;
-		} else {
-			$this->picture->ViewValue = "";
-		}
-		$this->picture->ViewCustomAttributes = "";
-
-		// price
-		$this->price->ViewValue = $this->price->CurrentValue;
-		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
-		$this->price->ViewCustomAttributes = "";
-
-			// menu_id
-			$this->menu_id->LinkCustomAttributes = "";
-			$this->menu_id->HrefValue = "";
-			$this->menu_id->TooltipValue = "";
-
 			// name
 			$this->name->LinkCustomAttributes = "";
 			$this->name->HrefValue = "";
 			$this->name->TooltipValue = "";
-
-			// picture
-			$this->picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->picture->Upload->DbValue)) {
-				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
-				$this->picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
-			} else {
-				$this->picture->HrefValue = "";
-			}
-			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
-			$this->picture->TooltipValue = "";
-			if ($this->picture->UseColorbox) {
-				if (ew_Empty($this->picture->TooltipValue))
-					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->picture->LinkAttrs["data-rel"] = "sub_menus_x" . $this->RowCnt . "_picture";
-				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
-			}
-
-			// price
-			$this->price->LinkCustomAttributes = "";
-			$this->price->HrefValue = "";
-			$this->price->TooltipValue = "";
-		} elseif ($this->RowType == EW_ROWTYPE_SEARCH) { // Search row
-
-			// menu_id
-			$this->menu_id->EditAttrs["class"] = "form-control";
-			$this->menu_id->EditCustomAttributes = "";
-			if (trim(strval($this->menu_id->AdvancedSearch->SearchValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
-				$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->AdvancedSearch->SearchValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `menus`";
-			$sWhereWrk = "";
-			$this->menu_id->LookupFilters = array();
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->menu_id->EditValue = $arwrk;
-
-			// name
-			$this->name->EditAttrs["class"] = "form-control";
-			$this->name->EditCustomAttributes = "";
-			$this->name->EditValue = ew_HtmlEncode($this->name->AdvancedSearch->SearchValue);
-			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
-
-			// picture
-			$this->picture->EditAttrs["class"] = "form-control";
-			$this->picture->EditCustomAttributes = "";
-			$this->picture->EditValue = ew_HtmlEncode($this->picture->AdvancedSearch->SearchValue);
-			$this->picture->PlaceHolder = ew_RemoveHtml($this->picture->FldCaption());
-
-			// price
-			$this->price->EditAttrs["class"] = "form-control";
-			$this->price->EditCustomAttributes = "";
-			$this->price->EditValue = ew_HtmlEncode($this->price->AdvancedSearch->SearchValue);
-			$this->price->PlaceHolder = ew_RemoveHtml($this->price->FldCaption());
 		}
-		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
-			$this->SetupFieldTitles();
 
 		// Call Row Rendered event
 		if ($this->RowType <> EW_ROWTYPE_AGGREGATEINIT)
 			$this->Row_Rendered();
-	}
-
-	// Validate search
-	function ValidateSearch() {
-		global $gsSearchError;
-
-		// Initialize
-		$gsSearchError = "";
-
-		// Check if validation required
-		if (!EW_SERVER_VALIDATE)
-			return TRUE;
-
-		// Return validate result
-		$ValidateSearch = ($gsSearchError == "");
-
-		// Call Form_CustomValidate event
-		$sFormCustomError = "";
-		$ValidateSearch = $ValidateSearch && $this->Form_CustomValidate($sFormCustomError);
-		if ($sFormCustomError <> "") {
-			ew_AddMessage($gsSearchError, $sFormCustomError);
-		}
-		return $ValidateSearch;
-	}
-
-	// Load advanced search
-	function LoadAdvancedSearch() {
-		$this->sub_menu_id->AdvancedSearch->Load();
-		$this->menu_id->AdvancedSearch->Load();
-		$this->name->AdvancedSearch->Load();
-		$this->picture->AdvancedSearch->Load();
-		$this->price->AdvancedSearch->Load();
-		$this->description->AdvancedSearch->Load();
 	}
 
 	// Set up Breadcrumb
@@ -1910,25 +1544,7 @@ class csub_menus_list extends csub_menus {
 	function SetupLookupFilters($fld, $pageId = null) {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
-		if ($pageId == "list") {
-			switch ($fld->FldVar) {
-			}
-		} elseif ($pageId == "extbs") {
-			switch ($fld->FldVar) {
-		case "x_menu_id":
-			$sSqlWrk = "";
-				$sSqlWrk = "SELECT `menu_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
-				$sWhereWrk = "";
-				$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`menu_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
-			$sSqlWrk = "";
-				$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
-				if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-				$sSqlWrk .= " ORDER BY `name`";
-			if ($sSqlWrk <> "")
-				$fld->LookupFilters["s"] .= $sSqlWrk;
-			break;
-			}
+		switch ($fld->FldVar) {
 		}
 	}
 
@@ -1936,12 +1552,7 @@ class csub_menus_list extends csub_menus {
 	function SetupAutoSuggestFilters($fld, $pageId = null) {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
-		if ($pageId == "list") {
-			switch ($fld->FldVar) {
-			}
-		} elseif ($pageId == "extbs") {
-			switch ($fld->FldVar) {
-			}
+		switch ($fld->FldVar) {
 		}
 	}
 
@@ -2078,30 +1689,30 @@ class csub_menus_list extends csub_menus {
 <?php
 
 // Create page object
-if (!isset($sub_menus_list)) $sub_menus_list = new csub_menus_list();
+if (!isset($payment_types_list)) $payment_types_list = new cpayment_types_list();
 
 // Page init
-$sub_menus_list->Page_Init();
+$payment_types_list->Page_Init();
 
 // Page main
-$sub_menus_list->Page_Main();
+$payment_types_list->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$sub_menus_list->Page_Render();
+$payment_types_list->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "list";
-var CurrentForm = fsub_menuslist = new ew_Form("fsub_menuslist", "list");
-fsub_menuslist.FormKeyCountName = '<?php echo $sub_menus_list->FormKeyCountName ?>';
+var CurrentForm = fpayment_typeslist = new ew_Form("fpayment_typeslist", "list");
+fpayment_typeslist.FormKeyCountName = '<?php echo $payment_types_list->FormKeyCountName ?>';
 
 // Form_CustomValidate event
-fsub_menuslist.Form_CustomValidate = 
+fpayment_typeslist.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -2109,130 +1720,76 @@ fsub_menuslist.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fsub_menuslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fpayment_typeslist.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fsub_menuslist.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
-fsub_menuslist.Lists["x_menu_id"].Data = "<?php echo $sub_menus_list->menu_id->LookupFilterQuery(FALSE, "list") ?>";
-
 // Form object for search
-var CurrentSearchForm = fsub_menuslistsrch = new ew_Form("fsub_menuslistsrch");
 
-// Validate function for search
-fsub_menuslistsrch.Validate = function(fobj) {
-	if (!this.ValidateRequired)
-		return true; // Ignore validation
-	fobj = fobj || this.Form;
-	var infix = "";
-
-	// Fire Form_CustomValidate event
-	if (!this.Form_CustomValidate(fobj))
-		return false;
-	return true;
-}
-
-// Form_CustomValidate event
-fsub_menuslistsrch.Form_CustomValidate = 
- function(fobj) { // DO NOT CHANGE THIS LINE!
-
- 	// Your custom validation code here, return false if invalid.
- 	return true;
- }
-
-// Use JavaScript validation or not
-fsub_menuslistsrch.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
-
-// Dynamic selection lists
-fsub_menuslistsrch.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
-fsub_menuslistsrch.Lists["x_menu_id"].Data = "<?php echo $sub_menus_list->menu_id->LookupFilterQuery(FALSE, "extbs") ?>";
+var CurrentSearchForm = fpayment_typeslistsrch = new ew_Form("fpayment_typeslistsrch");
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <div class="ewToolbar">
-<?php if ($sub_menus_list->TotalRecs > 0 && $sub_menus_list->ExportOptions->Visible()) { ?>
-<?php $sub_menus_list->ExportOptions->Render("body") ?>
+<?php if ($payment_types_list->TotalRecs > 0 && $payment_types_list->ExportOptions->Visible()) { ?>
+<?php $payment_types_list->ExportOptions->Render("body") ?>
 <?php } ?>
-<?php if ($sub_menus_list->SearchOptions->Visible()) { ?>
-<?php $sub_menus_list->SearchOptions->Render("body") ?>
+<?php if ($payment_types_list->SearchOptions->Visible()) { ?>
+<?php $payment_types_list->SearchOptions->Render("body") ?>
 <?php } ?>
-<?php if ($sub_menus_list->FilterOptions->Visible()) { ?>
-<?php $sub_menus_list->FilterOptions->Render("body") ?>
+<?php if ($payment_types_list->FilterOptions->Visible()) { ?>
+<?php $payment_types_list->FilterOptions->Render("body") ?>
 <?php } ?>
 <div class="clearfix"></div>
 </div>
 <?php
-	$bSelectLimit = $sub_menus_list->UseSelectLimit;
+	$bSelectLimit = $payment_types_list->UseSelectLimit;
 	if ($bSelectLimit) {
-		if ($sub_menus_list->TotalRecs <= 0)
-			$sub_menus_list->TotalRecs = $sub_menus->ListRecordCount();
+		if ($payment_types_list->TotalRecs <= 0)
+			$payment_types_list->TotalRecs = $payment_types->ListRecordCount();
 	} else {
-		if (!$sub_menus_list->Recordset && ($sub_menus_list->Recordset = $sub_menus_list->LoadRecordset()))
-			$sub_menus_list->TotalRecs = $sub_menus_list->Recordset->RecordCount();
+		if (!$payment_types_list->Recordset && ($payment_types_list->Recordset = $payment_types_list->LoadRecordset()))
+			$payment_types_list->TotalRecs = $payment_types_list->Recordset->RecordCount();
 	}
-	$sub_menus_list->StartRec = 1;
-	if ($sub_menus_list->DisplayRecs <= 0 || ($sub_menus->Export <> "" && $sub_menus->ExportAll)) // Display all records
-		$sub_menus_list->DisplayRecs = $sub_menus_list->TotalRecs;
-	if (!($sub_menus->Export <> "" && $sub_menus->ExportAll))
-		$sub_menus_list->SetupStartRec(); // Set up start record position
+	$payment_types_list->StartRec = 1;
+	if ($payment_types_list->DisplayRecs <= 0 || ($payment_types->Export <> "" && $payment_types->ExportAll)) // Display all records
+		$payment_types_list->DisplayRecs = $payment_types_list->TotalRecs;
+	if (!($payment_types->Export <> "" && $payment_types->ExportAll))
+		$payment_types_list->SetupStartRec(); // Set up start record position
 	if ($bSelectLimit)
-		$sub_menus_list->Recordset = $sub_menus_list->LoadRecordset($sub_menus_list->StartRec-1, $sub_menus_list->DisplayRecs);
+		$payment_types_list->Recordset = $payment_types_list->LoadRecordset($payment_types_list->StartRec-1, $payment_types_list->DisplayRecs);
 
 	// Set no record found message
-	if ($sub_menus->CurrentAction == "" && $sub_menus_list->TotalRecs == 0) {
+	if ($payment_types->CurrentAction == "" && $payment_types_list->TotalRecs == 0) {
 		if (!$Security->CanList())
-			$sub_menus_list->setWarningMessage(ew_DeniedMsg());
-		if ($sub_menus_list->SearchWhere == "0=101")
-			$sub_menus_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
+			$payment_types_list->setWarningMessage(ew_DeniedMsg());
+		if ($payment_types_list->SearchWhere == "0=101")
+			$payment_types_list->setWarningMessage($Language->Phrase("EnterSearchCriteria"));
 		else
-			$sub_menus_list->setWarningMessage($Language->Phrase("NoRecord"));
+			$payment_types_list->setWarningMessage($Language->Phrase("NoRecord"));
 	}
-$sub_menus_list->RenderOtherOptions();
+$payment_types_list->RenderOtherOptions();
 ?>
 <?php if ($Security->CanSearch()) { ?>
-<?php if ($sub_menus->Export == "" && $sub_menus->CurrentAction == "") { ?>
-<form name="fsub_menuslistsrch" id="fsub_menuslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
-<?php $SearchPanelClass = ($sub_menus_list->SearchWhere <> "") ? " in" : " in"; ?>
-<div id="fsub_menuslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
+<?php if ($payment_types->Export == "" && $payment_types->CurrentAction == "") { ?>
+<form name="fpayment_typeslistsrch" id="fpayment_typeslistsrch" class="form-inline ewForm ewExtSearchForm" action="<?php echo ew_CurrentPage() ?>">
+<?php $SearchPanelClass = ($payment_types_list->SearchWhere <> "") ? " in" : " in"; ?>
+<div id="fpayment_typeslistsrch_SearchPanel" class="ewSearchPanel collapse<?php echo $SearchPanelClass ?>">
 <input type="hidden" name="cmd" value="search">
-<input type="hidden" name="t" value="sub_menus">
+<input type="hidden" name="t" value="payment_types">
 	<div class="ewBasicSearch">
-<?php
-if ($gsSearchError == "")
-	$sub_menus_list->LoadAdvancedSearch(); // Load advanced search
-
-// Render for search
-$sub_menus->RowType = EW_ROWTYPE_SEARCH;
-
-// Render row
-$sub_menus->ResetAttrs();
-$sub_menus_list->RenderRow();
-?>
 <div id="xsr_1" class="ewRow">
-<?php if ($sub_menus->menu_id->Visible) { // menu_id ?>
-	<div id="xsc_menu_id" class="ewCell form-group">
-		<label for="x_menu_id" class="ewSearchCaption ewLabel"><?php echo $sub_menus->menu_id->FldCaption() ?></label>
-		<span class="ewSearchOperator"><?php echo $Language->Phrase("=") ?><input type="hidden" name="z_menu_id" id="z_menu_id" value="="></span>
-		<span class="ewSearchField">
-<select data-table="sub_menus" data-field="x_menu_id" data-value-separator="<?php echo $sub_menus->menu_id->DisplayValueSeparatorAttribute() ?>" id="x_menu_id" name="x_menu_id"<?php echo $sub_menus->menu_id->EditAttributes() ?>>
-<?php echo $sub_menus->menu_id->SelectOptionListHtml("x_menu_id") ?>
-</select>
-</span>
-	</div>
-<?php } ?>
-</div>
-<div id="xsr_2" class="ewRow">
 	<div class="ewQuickSearch input-group">
-	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($sub_menus_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
-	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($sub_menus_list->BasicSearch->getType()) ?>">
+	<input type="text" name="<?php echo EW_TABLE_BASIC_SEARCH ?>" id="<?php echo EW_TABLE_BASIC_SEARCH ?>" class="form-control" value="<?php echo ew_HtmlEncode($payment_types_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo ew_HtmlEncode($Language->Phrase("Search")) ?>">
+	<input type="hidden" name="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" id="<?php echo EW_TABLE_BASIC_SEARCH_TYPE ?>" value="<?php echo ew_HtmlEncode($payment_types_list->BasicSearch->getType()) ?>">
 	<div class="input-group-btn">
-		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $sub_menus_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
+		<button type="button" data-toggle="dropdown" class="btn btn-default"><span id="searchtype"><?php echo $payment_types_list->BasicSearch->getTypeNameShort() ?></span><span class="caret"></span></button>
 		<ul class="dropdown-menu pull-right" role="menu">
-			<li<?php if ($sub_menus_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
-			<li<?php if ($sub_menus_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
-			<li<?php if ($sub_menus_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
-			<li<?php if ($sub_menus_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
+			<li<?php if ($payment_types_list->BasicSearch->getType() == "") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this)"><?php echo $Language->Phrase("QuickSearchAuto") ?></a></li>
+			<li<?php if ($payment_types_list->BasicSearch->getType() == "=") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'=')"><?php echo $Language->Phrase("QuickSearchExact") ?></a></li>
+			<li<?php if ($payment_types_list->BasicSearch->getType() == "AND") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'AND')"><?php echo $Language->Phrase("QuickSearchAll") ?></a></li>
+			<li<?php if ($payment_types_list->BasicSearch->getType() == "OR") echo " class=\"active\""; ?>><a href="javascript:void(0);" onclick="ew_SetSearchType(this,'OR')"><?php echo $Language->Phrase("QuickSearchAny") ?></a></li>
 		</ul>
 	<button class="btn btn-primary ewButton" name="btnsubmit" id="btnsubmit" type="submit"><?php echo $Language->Phrase("SearchBtn") ?></button>
 	</div>
@@ -2243,68 +1800,68 @@ $sub_menus_list->RenderRow();
 </form>
 <?php } ?>
 <?php } ?>
-<?php $sub_menus_list->ShowPageHeader(); ?>
+<?php $payment_types_list->ShowPageHeader(); ?>
 <?php
-$sub_menus_list->ShowMessage();
+$payment_types_list->ShowMessage();
 ?>
-<?php if ($sub_menus_list->TotalRecs > 0 || $sub_menus->CurrentAction <> "") { ?>
-<div class="box ewBox ewGrid<?php if ($sub_menus_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> sub_menus">
+<?php if ($payment_types_list->TotalRecs > 0 || $payment_types->CurrentAction <> "") { ?>
+<div class="box ewBox ewGrid<?php if ($payment_types_list->IsAddOrEdit()) { ?> ewGridAddEdit<?php } ?> payment_types">
 <div class="box-header ewGridUpperPanel">
-<?php if ($sub_menus->CurrentAction <> "gridadd" && $sub_menus->CurrentAction <> "gridedit") { ?>
+<?php if ($payment_types->CurrentAction <> "gridadd" && $payment_types->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="form-inline ewForm ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($sub_menus_list->Pager)) $sub_menus_list->Pager = new cPrevNextPager($sub_menus_list->StartRec, $sub_menus_list->DisplayRecs, $sub_menus_list->TotalRecs, $sub_menus_list->AutoHidePager) ?>
-<?php if ($sub_menus_list->Pager->RecordCount > 0 && $sub_menus_list->Pager->Visible) { ?>
+<?php if (!isset($payment_types_list->Pager)) $payment_types_list->Pager = new cPrevNextPager($payment_types_list->StartRec, $payment_types_list->DisplayRecs, $payment_types_list->TotalRecs, $payment_types_list->AutoHidePager) ?>
+<?php if ($payment_types_list->Pager->RecordCount > 0 && $payment_types_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($sub_menus_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($sub_menus_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $sub_menus_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $payment_types_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($sub_menus_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($sub_menus_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $sub_menus_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $payment_types_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($sub_menus_list->Pager->RecordCount > 0) { ?>
+<?php if ($payment_types_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $sub_menus_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $sub_menus_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $sub_menus_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $payment_types_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $payment_types_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $payment_types_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($sub_menus_list->TotalRecs > 0 && (!$sub_menus_list->AutoHidePageSizeSelector || $sub_menus_list->Pager->Visible)) { ?>
+<?php if ($payment_types_list->TotalRecs > 0 && (!$payment_types_list->AutoHidePageSizeSelector || $payment_types_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="sub_menus">
+<input type="hidden" name="t" value="payment_types">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($sub_menus_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($sub_menus_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($sub_menus_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($sub_menus->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($payment_types_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($payment_types_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($payment_types_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($payment_types->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2312,183 +1869,131 @@ $sub_menus_list->ShowMessage();
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($sub_menus_list->OtherOptions as &$option)
+	foreach ($payment_types_list->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 </div>
 <div class="clearfix"></div>
 </div>
-<form name="fsub_menuslist" id="fsub_menuslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($sub_menus_list->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $sub_menus_list->Token ?>">
+<form name="fpayment_typeslist" id="fpayment_typeslist" class="form-inline ewForm ewListForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($payment_types_list->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $payment_types_list->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="sub_menus">
-<div id="gmp_sub_menus" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
-<?php if ($sub_menus_list->TotalRecs > 0 || $sub_menus->CurrentAction == "gridedit") { ?>
-<table id="tbl_sub_menuslist" class="table ewTable">
+<input type="hidden" name="t" value="payment_types">
+<div id="gmp_payment_types" class="<?php if (ew_IsResponsiveLayout()) { ?>table-responsive <?php } ?>ewGridMiddlePanel">
+<?php if ($payment_types_list->TotalRecs > 0 || $payment_types->CurrentAction == "gridedit") { ?>
+<table id="tbl_payment_typeslist" class="table ewTable">
 <thead>
 	<tr class="ewTableHeader">
 <?php
 
 // Header row
-$sub_menus_list->RowType = EW_ROWTYPE_HEADER;
+$payment_types_list->RowType = EW_ROWTYPE_HEADER;
 
 // Render list options
-$sub_menus_list->RenderListOptions();
+$payment_types_list->RenderListOptions();
 
 // Render list options (header, left)
-$sub_menus_list->ListOptions->Render("header", "left");
+$payment_types_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($sub_menus->menu_id->Visible) { // menu_id ?>
-	<?php if ($sub_menus->SortUrl($sub_menus->menu_id) == "") { ?>
-		<th data-name="menu_id" class="<?php echo $sub_menus->menu_id->HeaderCellClass() ?>"><div id="elh_sub_menus_menu_id" class="sub_menus_menu_id"><div class="ewTableHeaderCaption"><?php echo $sub_menus->menu_id->FldCaption() ?></div></div></th>
+<?php if ($payment_types->name->Visible) { // name ?>
+	<?php if ($payment_types->SortUrl($payment_types->name) == "") { ?>
+		<th data-name="name" class="<?php echo $payment_types->name->HeaderCellClass() ?>"><div id="elh_payment_types_name" class="payment_types_name"><div class="ewTableHeaderCaption"><?php echo $payment_types->name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="menu_id" class="<?php echo $sub_menus->menu_id->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $sub_menus->SortUrl($sub_menus->menu_id) ?>',1);"><div id="elh_sub_menus_menu_id" class="sub_menus_menu_id">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $sub_menus->menu_id->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($sub_menus->menu_id->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($sub_menus->menu_id->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($sub_menus->name->Visible) { // name ?>
-	<?php if ($sub_menus->SortUrl($sub_menus->name) == "") { ?>
-		<th data-name="name" class="<?php echo $sub_menus->name->HeaderCellClass() ?>"><div id="elh_sub_menus_name" class="sub_menus_name"><div class="ewTableHeaderCaption"><?php echo $sub_menus->name->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="name" class="<?php echo $sub_menus->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $sub_menus->SortUrl($sub_menus->name) ?>',1);"><div id="elh_sub_menus_name" class="sub_menus_name">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $sub_menus->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($sub_menus->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($sub_menus->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($sub_menus->picture->Visible) { // picture ?>
-	<?php if ($sub_menus->SortUrl($sub_menus->picture) == "") { ?>
-		<th data-name="picture" class="<?php echo $sub_menus->picture->HeaderCellClass() ?>"><div id="elh_sub_menus_picture" class="sub_menus_picture"><div class="ewTableHeaderCaption"><?php echo $sub_menus->picture->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="picture" class="<?php echo $sub_menus->picture->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $sub_menus->SortUrl($sub_menus->picture) ?>',1);"><div id="elh_sub_menus_picture" class="sub_menus_picture">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $sub_menus->picture->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($sub_menus->picture->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($sub_menus->picture->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($sub_menus->price->Visible) { // price ?>
-	<?php if ($sub_menus->SortUrl($sub_menus->price) == "") { ?>
-		<th data-name="price" class="<?php echo $sub_menus->price->HeaderCellClass() ?>"><div id="elh_sub_menus_price" class="sub_menus_price"><div class="ewTableHeaderCaption"><?php echo $sub_menus->price->FldCaption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="price" class="<?php echo $sub_menus->price->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $sub_menus->SortUrl($sub_menus->price) ?>',1);"><div id="elh_sub_menus_price" class="sub_menus_price">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $sub_menus->price->FldCaption() ?></span><span class="ewTableHeaderSort"><?php if ($sub_menus->price->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($sub_menus->price->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="name" class="<?php echo $payment_types->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $payment_types->SortUrl($payment_types->name) ?>',1);"><div id="elh_payment_types_name" class="payment_types_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $payment_types->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($payment_types->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($payment_types->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
 <?php
 
 // Render list options (header, right)
-$sub_menus_list->ListOptions->Render("header", "right");
+$payment_types_list->ListOptions->Render("header", "right");
 ?>
 	</tr>
 </thead>
 <tbody>
 <?php
-if ($sub_menus->ExportAll && $sub_menus->Export <> "") {
-	$sub_menus_list->StopRec = $sub_menus_list->TotalRecs;
+if ($payment_types->ExportAll && $payment_types->Export <> "") {
+	$payment_types_list->StopRec = $payment_types_list->TotalRecs;
 } else {
 
 	// Set the last record to display
-	if ($sub_menus_list->TotalRecs > $sub_menus_list->StartRec + $sub_menus_list->DisplayRecs - 1)
-		$sub_menus_list->StopRec = $sub_menus_list->StartRec + $sub_menus_list->DisplayRecs - 1;
+	if ($payment_types_list->TotalRecs > $payment_types_list->StartRec + $payment_types_list->DisplayRecs - 1)
+		$payment_types_list->StopRec = $payment_types_list->StartRec + $payment_types_list->DisplayRecs - 1;
 	else
-		$sub_menus_list->StopRec = $sub_menus_list->TotalRecs;
+		$payment_types_list->StopRec = $payment_types_list->TotalRecs;
 }
-$sub_menus_list->RecCnt = $sub_menus_list->StartRec - 1;
-if ($sub_menus_list->Recordset && !$sub_menus_list->Recordset->EOF) {
-	$sub_menus_list->Recordset->MoveFirst();
-	$bSelectLimit = $sub_menus_list->UseSelectLimit;
-	if (!$bSelectLimit && $sub_menus_list->StartRec > 1)
-		$sub_menus_list->Recordset->Move($sub_menus_list->StartRec - 1);
-} elseif (!$sub_menus->AllowAddDeleteRow && $sub_menus_list->StopRec == 0) {
-	$sub_menus_list->StopRec = $sub_menus->GridAddRowCount;
+$payment_types_list->RecCnt = $payment_types_list->StartRec - 1;
+if ($payment_types_list->Recordset && !$payment_types_list->Recordset->EOF) {
+	$payment_types_list->Recordset->MoveFirst();
+	$bSelectLimit = $payment_types_list->UseSelectLimit;
+	if (!$bSelectLimit && $payment_types_list->StartRec > 1)
+		$payment_types_list->Recordset->Move($payment_types_list->StartRec - 1);
+} elseif (!$payment_types->AllowAddDeleteRow && $payment_types_list->StopRec == 0) {
+	$payment_types_list->StopRec = $payment_types->GridAddRowCount;
 }
 
 // Initialize aggregate
-$sub_menus->RowType = EW_ROWTYPE_AGGREGATEINIT;
-$sub_menus->ResetAttrs();
-$sub_menus_list->RenderRow();
-while ($sub_menus_list->RecCnt < $sub_menus_list->StopRec) {
-	$sub_menus_list->RecCnt++;
-	if (intval($sub_menus_list->RecCnt) >= intval($sub_menus_list->StartRec)) {
-		$sub_menus_list->RowCnt++;
+$payment_types->RowType = EW_ROWTYPE_AGGREGATEINIT;
+$payment_types->ResetAttrs();
+$payment_types_list->RenderRow();
+while ($payment_types_list->RecCnt < $payment_types_list->StopRec) {
+	$payment_types_list->RecCnt++;
+	if (intval($payment_types_list->RecCnt) >= intval($payment_types_list->StartRec)) {
+		$payment_types_list->RowCnt++;
 
 		// Set up key count
-		$sub_menus_list->KeyCount = $sub_menus_list->RowIndex;
+		$payment_types_list->KeyCount = $payment_types_list->RowIndex;
 
 		// Init row class and style
-		$sub_menus->ResetAttrs();
-		$sub_menus->CssClass = "";
-		if ($sub_menus->CurrentAction == "gridadd") {
+		$payment_types->ResetAttrs();
+		$payment_types->CssClass = "";
+		if ($payment_types->CurrentAction == "gridadd") {
 		} else {
-			$sub_menus_list->LoadRowValues($sub_menus_list->Recordset); // Load row values
+			$payment_types_list->LoadRowValues($payment_types_list->Recordset); // Load row values
 		}
-		$sub_menus->RowType = EW_ROWTYPE_VIEW; // Render view
+		$payment_types->RowType = EW_ROWTYPE_VIEW; // Render view
 
 		// Set up row id / data-rowindex
-		$sub_menus->RowAttrs = array_merge($sub_menus->RowAttrs, array('data-rowindex'=>$sub_menus_list->RowCnt, 'id'=>'r' . $sub_menus_list->RowCnt . '_sub_menus', 'data-rowtype'=>$sub_menus->RowType));
+		$payment_types->RowAttrs = array_merge($payment_types->RowAttrs, array('data-rowindex'=>$payment_types_list->RowCnt, 'id'=>'r' . $payment_types_list->RowCnt . '_payment_types', 'data-rowtype'=>$payment_types->RowType));
 
 		// Render row
-		$sub_menus_list->RenderRow();
+		$payment_types_list->RenderRow();
 
 		// Render list options
-		$sub_menus_list->RenderListOptions();
+		$payment_types_list->RenderListOptions();
 ?>
-	<tr<?php echo $sub_menus->RowAttributes() ?>>
+	<tr<?php echo $payment_types->RowAttributes() ?>>
 <?php
 
 // Render list options (body, left)
-$sub_menus_list->ListOptions->Render("body", "left", $sub_menus_list->RowCnt);
+$payment_types_list->ListOptions->Render("body", "left", $payment_types_list->RowCnt);
 ?>
-	<?php if ($sub_menus->menu_id->Visible) { // menu_id ?>
-		<td data-name="menu_id"<?php echo $sub_menus->menu_id->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_list->RowCnt ?>_sub_menus_menu_id" class="sub_menus_menu_id">
-<span<?php echo $sub_menus->menu_id->ViewAttributes() ?>>
-<?php echo $sub_menus->menu_id->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($sub_menus->name->Visible) { // name ?>
-		<td data-name="name"<?php echo $sub_menus->name->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_list->RowCnt ?>_sub_menus_name" class="sub_menus_name">
-<span<?php echo $sub_menus->name->ViewAttributes() ?>>
-<?php echo $sub_menus->name->ListViewValue() ?></span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($sub_menus->picture->Visible) { // picture ?>
-		<td data-name="picture"<?php echo $sub_menus->picture->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_list->RowCnt ?>_sub_menus_picture" class="sub_menus_picture">
-<span>
-<?php echo ew_GetFileViewTag($sub_menus->picture, $sub_menus->picture->ListViewValue()) ?>
-</span>
-</span>
-</td>
-	<?php } ?>
-	<?php if ($sub_menus->price->Visible) { // price ?>
-		<td data-name="price"<?php echo $sub_menus->price->CellAttributes() ?>>
-<span id="el<?php echo $sub_menus_list->RowCnt ?>_sub_menus_price" class="sub_menus_price">
-<span<?php echo $sub_menus->price->ViewAttributes() ?>>
-<?php echo $sub_menus->price->ListViewValue() ?></span>
+	<?php if ($payment_types->name->Visible) { // name ?>
+		<td data-name="name"<?php echo $payment_types->name->CellAttributes() ?>>
+<span id="el<?php echo $payment_types_list->RowCnt ?>_payment_types_name" class="payment_types_name">
+<span<?php echo $payment_types->name->ViewAttributes() ?>>
+<?php echo $payment_types->name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
 <?php
 
 // Render list options (body, right)
-$sub_menus_list->ListOptions->Render("body", "right", $sub_menus_list->RowCnt);
+$payment_types_list->ListOptions->Render("body", "right", $payment_types_list->RowCnt);
 ?>
 	</tr>
 <?php
 	}
-	if ($sub_menus->CurrentAction <> "gridadd")
-		$sub_menus_list->Recordset->MoveNext();
+	if ($payment_types->CurrentAction <> "gridadd")
+		$payment_types_list->Recordset->MoveNext();
 }
 ?>
 </tbody>
 </table>
 <?php } ?>
-<?php if ($sub_menus->CurrentAction == "") { ?>
+<?php if ($payment_types->CurrentAction == "") { ?>
 <input type="hidden" name="a_list" id="a_list" value="">
 <?php } ?>
 </div>
@@ -2496,65 +2001,65 @@ $sub_menus_list->ListOptions->Render("body", "right", $sub_menus_list->RowCnt);
 <?php
 
 // Close recordset
-if ($sub_menus_list->Recordset)
-	$sub_menus_list->Recordset->Close();
+if ($payment_types_list->Recordset)
+	$payment_types_list->Recordset->Close();
 ?>
 <div class="box-footer ewGridLowerPanel">
-<?php if ($sub_menus->CurrentAction <> "gridadd" && $sub_menus->CurrentAction <> "gridedit") { ?>
+<?php if ($payment_types->CurrentAction <> "gridadd" && $payment_types->CurrentAction <> "gridedit") { ?>
 <form name="ewPagerForm" class="ewForm form-inline ewPagerForm" action="<?php echo ew_CurrentPage() ?>">
-<?php if (!isset($sub_menus_list->Pager)) $sub_menus_list->Pager = new cPrevNextPager($sub_menus_list->StartRec, $sub_menus_list->DisplayRecs, $sub_menus_list->TotalRecs, $sub_menus_list->AutoHidePager) ?>
-<?php if ($sub_menus_list->Pager->RecordCount > 0 && $sub_menus_list->Pager->Visible) { ?>
+<?php if (!isset($payment_types_list->Pager)) $payment_types_list->Pager = new cPrevNextPager($payment_types_list->StartRec, $payment_types_list->DisplayRecs, $payment_types_list->TotalRecs, $payment_types_list->AutoHidePager) ?>
+<?php if ($payment_types_list->Pager->RecordCount > 0 && $payment_types_list->Pager->Visible) { ?>
 <div class="ewPager">
 <span><?php echo $Language->Phrase("Page") ?>&nbsp;</span>
 <div class="ewPrevNext"><div class="input-group">
 <div class="input-group-btn">
 <!--first page button-->
-	<?php if ($sub_menus_list->Pager->FirstButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->FirstButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerFirst") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->FirstButton->Start ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerFirst") ?>"><span class="icon-first ewIcon"></span></a>
 	<?php } ?>
 <!--previous page button-->
-	<?php if ($sub_menus_list->Pager->PrevButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->PrevButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerPrevious") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->PrevButton->Start ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerPrevious") ?>"><span class="icon-prev ewIcon"></span></a>
 	<?php } ?>
 </div>
 <!--current page number-->
-	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $sub_menus_list->Pager->CurrentPage ?>">
+	<input class="form-control input-sm" type="text" name="<?php echo EW_TABLE_PAGE_NO ?>" value="<?php echo $payment_types_list->Pager->CurrentPage ?>">
 <div class="input-group-btn">
 <!--next page button-->
-	<?php if ($sub_menus_list->Pager->NextButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->NextButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerNext") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->NextButton->Start ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerNext") ?>"><span class="icon-next ewIcon"></span></a>
 	<?php } ?>
 <!--last page button-->
-	<?php if ($sub_menus_list->Pager->LastButton->Enabled) { ?>
-	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $sub_menus_list->PageUrl() ?>start=<?php echo $sub_menus_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
+	<?php if ($payment_types_list->Pager->LastButton->Enabled) { ?>
+	<a class="btn btn-default btn-sm" title="<?php echo $Language->Phrase("PagerLast") ?>" href="<?php echo $payment_types_list->PageUrl() ?>start=<?php echo $payment_types_list->Pager->LastButton->Start ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } else { ?>
 	<a class="btn btn-default btn-sm disabled" title="<?php echo $Language->Phrase("PagerLast") ?>"><span class="icon-last ewIcon"></span></a>
 	<?php } ?>
 </div>
 </div>
 </div>
-<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $sub_menus_list->Pager->PageCount ?></span>
+<span>&nbsp;<?php echo $Language->Phrase("of") ?>&nbsp;<?php echo $payment_types_list->Pager->PageCount ?></span>
 </div>
 <?php } ?>
-<?php if ($sub_menus_list->Pager->RecordCount > 0) { ?>
+<?php if ($payment_types_list->Pager->RecordCount > 0) { ?>
 <div class="ewPager ewRec">
-	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $sub_menus_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $sub_menus_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $sub_menus_list->Pager->RecordCount ?></span>
+	<span><?php echo $Language->Phrase("Record") ?>&nbsp;<?php echo $payment_types_list->Pager->FromIndex ?>&nbsp;<?php echo $Language->Phrase("To") ?>&nbsp;<?php echo $payment_types_list->Pager->ToIndex ?>&nbsp;<?php echo $Language->Phrase("Of") ?>&nbsp;<?php echo $payment_types_list->Pager->RecordCount ?></span>
 </div>
 <?php } ?>
-<?php if ($sub_menus_list->TotalRecs > 0 && (!$sub_menus_list->AutoHidePageSizeSelector || $sub_menus_list->Pager->Visible)) { ?>
+<?php if ($payment_types_list->TotalRecs > 0 && (!$payment_types_list->AutoHidePageSizeSelector || $payment_types_list->Pager->Visible)) { ?>
 <div class="ewPager">
-<input type="hidden" name="t" value="sub_menus">
+<input type="hidden" name="t" value="payment_types">
 <select name="<?php echo EW_TABLE_REC_PER_PAGE ?>" class="form-control input-sm ewTooltip" title="<?php echo $Language->Phrase("RecordsPerPage") ?>" onchange="this.form.submit();">
-<option value="20"<?php if ($sub_menus_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
-<option value="30"<?php if ($sub_menus_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
-<option value="50"<?php if ($sub_menus_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
-<option value="ALL"<?php if ($sub_menus->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
+<option value="20"<?php if ($payment_types_list->DisplayRecs == 20) { ?> selected<?php } ?>>20</option>
+<option value="30"<?php if ($payment_types_list->DisplayRecs == 30) { ?> selected<?php } ?>>30</option>
+<option value="50"<?php if ($payment_types_list->DisplayRecs == 50) { ?> selected<?php } ?>>50</option>
+<option value="ALL"<?php if ($payment_types->getRecordsPerPage() == -1) { ?> selected<?php } ?>><?php echo $Language->Phrase("AllRecords") ?></option>
 </select>
 </div>
 <?php } ?>
@@ -2562,7 +2067,7 @@ if ($sub_menus_list->Recordset)
 <?php } ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($sub_menus_list->OtherOptions as &$option)
+	foreach ($payment_types_list->OtherOptions as &$option)
 		$option->Render("body", "bottom");
 ?>
 </div>
@@ -2570,10 +2075,10 @@ if ($sub_menus_list->Recordset)
 </div>
 </div>
 <?php } ?>
-<?php if ($sub_menus_list->TotalRecs == 0 && $sub_menus->CurrentAction == "") { // Show other options ?>
+<?php if ($payment_types_list->TotalRecs == 0 && $payment_types->CurrentAction == "") { // Show other options ?>
 <div class="ewListOtherOptions">
 <?php
-	foreach ($sub_menus_list->OtherOptions as &$option) {
+	foreach ($payment_types_list->OtherOptions as &$option) {
 		$option->ButtonClass = "";
 		$option->Render("body", "");
 	}
@@ -2582,12 +2087,12 @@ if ($sub_menus_list->Recordset)
 <div class="clearfix"></div>
 <?php } ?>
 <script type="text/javascript">
-fsub_menuslistsrch.FilterList = <?php echo $sub_menus_list->GetFilterList() ?>;
-fsub_menuslistsrch.Init();
-fsub_menuslist.Init();
+fpayment_typeslistsrch.FilterList = <?php echo $payment_types_list->GetFilterList() ?>;
+fpayment_typeslistsrch.Init();
+fpayment_typeslist.Init();
 </script>
 <?php
-$sub_menus_list->ShowPageFooter();
+$payment_types_list->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -2599,5 +2104,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$sub_menus_list->Page_Terminate();
+$payment_types_list->Page_Terminate();
 ?>

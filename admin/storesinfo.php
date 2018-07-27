@@ -7,11 +7,11 @@ $stores = NULL;
 // Table class for stores
 //
 class cstores extends cTable {
-	var $StoreID;
-	var $Name;
-	var $ProvinceID;
-	var $Address;
-	var $ZipCode;
+	var $store_id;
+	var $name;
+	var $province_id;
+	var $address;
+	var $zip_code;
 
 	//
 	// Table class constructor
@@ -45,34 +45,34 @@ class cstores extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// StoreID
-		$this->StoreID = new cField('stores', 'stores', 'x_StoreID', 'StoreID', '`StoreID`', '`StoreID`', 3, -1, FALSE, '`StoreID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->StoreID->Sortable = FALSE; // Allow sort
-		$this->StoreID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['StoreID'] = &$this->StoreID;
+		// store_id
+		$this->store_id = new cField('stores', 'stores', 'x_store_id', 'store_id', '`store_id`', '`store_id`', 3, -1, FALSE, '`store_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->store_id->Sortable = FALSE; // Allow sort
+		$this->store_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['store_id'] = &$this->store_id;
 
-		// Name
-		$this->Name = new cField('stores', 'stores', 'x_Name', 'Name', '`Name`', '`Name`', 200, -1, FALSE, '`Name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Name->Sortable = TRUE; // Allow sort
-		$this->fields['Name'] = &$this->Name;
+		// name
+		$this->name = new cField('stores', 'stores', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->name->Sortable = TRUE; // Allow sort
+		$this->fields['name'] = &$this->name;
 
-		// ProvinceID
-		$this->ProvinceID = new cField('stores', 'stores', 'x_ProvinceID', 'ProvinceID', '`ProvinceID`', '`ProvinceID`', 3, -1, FALSE, '`ProvinceID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->ProvinceID->Sortable = TRUE; // Allow sort
-		$this->ProvinceID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->ProvinceID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->ProvinceID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['ProvinceID'] = &$this->ProvinceID;
+		// province_id
+		$this->province_id = new cField('stores', 'stores', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->province_id->Sortable = TRUE; // Allow sort
+		$this->province_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->province_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['province_id'] = &$this->province_id;
 
-		// Address
-		$this->Address = new cField('stores', 'stores', 'x_Address', 'Address', '`Address`', '`Address`', 200, -1, FALSE, '`Address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Address->Sortable = TRUE; // Allow sort
-		$this->fields['Address'] = &$this->Address;
+		// address
+		$this->address = new cField('stores', 'stores', 'x_address', 'address', '`address`', '`address`', 200, -1, FALSE, '`address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->address->Sortable = TRUE; // Allow sort
+		$this->fields['address'] = &$this->address;
 
-		// ZipCode
-		$this->ZipCode = new cField('stores', 'stores', 'x_ZipCode', 'ZipCode', '`ZipCode`', '`ZipCode`', 200, -1, FALSE, '`ZipCode`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->ZipCode->Sortable = TRUE; // Allow sort
-		$this->fields['ZipCode'] = &$this->ZipCode;
+		// zip_code
+		$this->zip_code = new cField('stores', 'stores', 'x_zip_code', 'zip_code', '`zip_code`', '`zip_code`', 200, -1, FALSE, '`zip_code`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->zip_code->Sortable = TRUE; // Allow sort
+		$this->fields['zip_code'] = &$this->zip_code;
 	}
 
 	// Field Visibility
@@ -344,8 +344,8 @@ class cstores extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->StoreID->setDbValue($conn->Insert_ID());
-			$rs['StoreID'] = $this->StoreID->DbValue;
+			$this->store_id->setDbValue($conn->Insert_ID());
+			$rs['store_id'] = $this->store_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -381,8 +381,8 @@ class cstores extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('StoreID', $rs))
-				ew_AddFilter($where, ew_QuotedName('StoreID', $this->DBID) . '=' . ew_QuotedValue($rs['StoreID'], $this->StoreID->FldDataType, $this->DBID));
+			if (array_key_exists('store_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('store_id', $this->DBID) . '=' . ew_QuotedValue($rs['store_id'], $this->store_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -404,18 +404,18 @@ class cstores extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`StoreID` = @StoreID@";
+		return "`store_id` = @store_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->StoreID->CurrentValue))
+		if (!is_numeric($this->store_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->StoreID->CurrentValue))
+		if (is_null($this->store_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@StoreID@", ew_AdjustSql($this->StoreID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@store_id@", ew_AdjustSql($this->store_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -509,7 +509,7 @@ class cstores extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "StoreID:" . ew_VarToJson($this->StoreID->CurrentValue, "number", "'");
+		$json .= "store_id:" . ew_VarToJson($this->store_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -517,8 +517,8 @@ class cstores extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->StoreID->CurrentValue)) {
-			$sUrl .= "StoreID=" . urlencode($this->StoreID->CurrentValue);
+		if (!is_null($this->store_id->CurrentValue)) {
+			$sUrl .= "store_id=" . urlencode($this->store_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -551,10 +551,10 @@ class cstores extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["StoreID"]))
-				$arKeys[] = $_POST["StoreID"];
-			elseif (isset($_GET["StoreID"]))
-				$arKeys[] = $_GET["StoreID"];
+			if ($isPost && isset($_POST["store_id"]))
+				$arKeys[] = $_POST["store_id"];
+			elseif (isset($_GET["store_id"]))
+				$arKeys[] = $_GET["store_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -579,7 +579,7 @@ class cstores extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->StoreID->CurrentValue = $key;
+			$this->store_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -600,11 +600,11 @@ class cstores extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->StoreID->setDbValue($rs->fields('StoreID'));
-		$this->Name->setDbValue($rs->fields('Name'));
-		$this->ProvinceID->setDbValue($rs->fields('ProvinceID'));
-		$this->Address->setDbValue($rs->fields('Address'));
-		$this->ZipCode->setDbValue($rs->fields('ZipCode'));
+		$this->store_id->setDbValue($rs->fields('store_id'));
+		$this->name->setDbValue($rs->fields('name'));
+		$this->province_id->setDbValue($rs->fields('province_id'));
+		$this->address->setDbValue($rs->fields('address'));
+		$this->zip_code->setDbValue($rs->fields('zip_code'));
 	}
 
 	// Render list row values
@@ -615,76 +615,76 @@ class cstores extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// StoreID
-		// Name
-		// ProvinceID
-		// Address
-		// ZipCode
-		// StoreID
+		// store_id
+		// name
+		// province_id
+		// address
+		// zip_code
+		// store_id
 
-		$this->StoreID->ViewValue = $this->StoreID->CurrentValue;
-		$this->StoreID->ViewCustomAttributes = "";
+		$this->store_id->ViewValue = $this->store_id->CurrentValue;
+		$this->store_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-		// StoreID
-		$this->StoreID->LinkCustomAttributes = "";
-		$this->StoreID->HrefValue = "";
-		$this->StoreID->TooltipValue = "";
+		// store_id
+		$this->store_id->LinkCustomAttributes = "";
+		$this->store_id->HrefValue = "";
+		$this->store_id->TooltipValue = "";
 
-		// Name
-		$this->Name->LinkCustomAttributes = "";
-		$this->Name->HrefValue = "";
-		$this->Name->TooltipValue = "";
+		// name
+		$this->name->LinkCustomAttributes = "";
+		$this->name->HrefValue = "";
+		$this->name->TooltipValue = "";
 
-		// ProvinceID
-		$this->ProvinceID->LinkCustomAttributes = "";
-		$this->ProvinceID->HrefValue = "";
-		$this->ProvinceID->TooltipValue = "";
+		// province_id
+		$this->province_id->LinkCustomAttributes = "";
+		$this->province_id->HrefValue = "";
+		$this->province_id->TooltipValue = "";
 
-		// Address
-		$this->Address->LinkCustomAttributes = "";
-		$this->Address->HrefValue = "";
-		$this->Address->TooltipValue = "";
+		// address
+		$this->address->LinkCustomAttributes = "";
+		$this->address->HrefValue = "";
+		$this->address->TooltipValue = "";
 
-		// ZipCode
-		$this->ZipCode->LinkCustomAttributes = "";
-		$this->ZipCode->HrefValue = "";
-		$this->ZipCode->TooltipValue = "";
+		// zip_code
+		$this->zip_code->LinkCustomAttributes = "";
+		$this->zip_code->HrefValue = "";
+		$this->zip_code->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -700,33 +700,33 @@ class cstores extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// StoreID
-		$this->StoreID->EditAttrs["class"] = "form-control";
-		$this->StoreID->EditCustomAttributes = "";
-		$this->StoreID->EditValue = $this->StoreID->CurrentValue;
-		$this->StoreID->ViewCustomAttributes = "";
+		// store_id
+		$this->store_id->EditAttrs["class"] = "form-control";
+		$this->store_id->EditCustomAttributes = "";
+		$this->store_id->EditValue = $this->store_id->CurrentValue;
+		$this->store_id->ViewCustomAttributes = "";
 
-		// Name
-		$this->Name->EditAttrs["class"] = "form-control";
-		$this->Name->EditCustomAttributes = "";
-		$this->Name->EditValue = $this->Name->CurrentValue;
-		$this->Name->PlaceHolder = ew_RemoveHtml($this->Name->FldCaption());
+		// name
+		$this->name->EditAttrs["class"] = "form-control";
+		$this->name->EditCustomAttributes = "";
+		$this->name->EditValue = $this->name->CurrentValue;
+		$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
-		// ProvinceID
-		$this->ProvinceID->EditAttrs["class"] = "form-control";
-		$this->ProvinceID->EditCustomAttributes = "";
+		// province_id
+		$this->province_id->EditAttrs["class"] = "form-control";
+		$this->province_id->EditCustomAttributes = "";
 
-		// Address
-		$this->Address->EditAttrs["class"] = "form-control";
-		$this->Address->EditCustomAttributes = "";
-		$this->Address->EditValue = $this->Address->CurrentValue;
-		$this->Address->PlaceHolder = ew_RemoveHtml($this->Address->FldCaption());
+		// address
+		$this->address->EditAttrs["class"] = "form-control";
+		$this->address->EditCustomAttributes = "";
+		$this->address->EditValue = $this->address->CurrentValue;
+		$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
 
-		// ZipCode
-		$this->ZipCode->EditAttrs["class"] = "form-control";
-		$this->ZipCode->EditCustomAttributes = "";
-		$this->ZipCode->EditValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->PlaceHolder = ew_RemoveHtml($this->ZipCode->FldCaption());
+		// zip_code
+		$this->zip_code->EditAttrs["class"] = "form-control";
+		$this->zip_code->EditCustomAttributes = "";
+		$this->zip_code->EditValue = $this->zip_code->CurrentValue;
+		$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -755,16 +755,16 @@ class cstores extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->StoreID->Exportable) $Doc->ExportCaption($this->StoreID);
-					if ($this->Name->Exportable) $Doc->ExportCaption($this->Name);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->Address->Exportable) $Doc->ExportCaption($this->Address);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
+					if ($this->store_id->Exportable) $Doc->ExportCaption($this->store_id);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
 				} else {
-					if ($this->Name->Exportable) $Doc->ExportCaption($this->Name);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->Address->Exportable) $Doc->ExportCaption($this->Address);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
+					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
 				}
 				$Doc->EndExportRow();
 			}
@@ -796,16 +796,16 @@ class cstores extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->StoreID->Exportable) $Doc->ExportField($this->StoreID);
-						if ($this->Name->Exportable) $Doc->ExportField($this->Name);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->Address->Exportable) $Doc->ExportField($this->Address);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
+						if ($this->store_id->Exportable) $Doc->ExportField($this->store_id);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->address->Exportable) $Doc->ExportField($this->address);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
 					} else {
-						if ($this->Name->Exportable) $Doc->ExportField($this->Name);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->Address->Exportable) $Doc->ExportField($this->Address);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
+						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->address->Exportable) $Doc->ExportField($this->address);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}

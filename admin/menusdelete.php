@@ -315,8 +315,8 @@ class cmenus_delete extends cmenus {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->Name->SetVisibility();
-		$this->Picture->SetVisibility();
+		$this->name->SetVisibility();
+		$this->picture->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -496,18 +496,18 @@ class cmenus_delete extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->MenuID->setDbValue($row['MenuID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->Picture->Upload->DbValue = $row['Picture'];
-		$this->Picture->setDbValue($this->Picture->Upload->DbValue);
+		$this->menu_id->setDbValue($row['menu_id']);
+		$this->name->setDbValue($row['name']);
+		$this->picture->Upload->DbValue = $row['picture'];
+		$this->picture->setDbValue($this->picture->Upload->DbValue);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['MenuID'] = NULL;
-		$row['Name'] = NULL;
-		$row['Picture'] = NULL;
+		$row['menu_id'] = NULL;
+		$row['name'] = NULL;
+		$row['picture'] = NULL;
 		return $row;
 	}
 
@@ -516,9 +516,9 @@ class cmenus_delete extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->MenuID->DbValue = $row['MenuID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->Picture->Upload->DbValue = $row['Picture'];
+		$this->menu_id->DbValue = $row['menu_id'];
+		$this->name->DbValue = $row['name'];
+		$this->picture->Upload->DbValue = $row['picture'];
 	}
 
 	// Render row values based on field settings
@@ -531,48 +531,48 @@ class cmenus_delete extends cmenus {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// MenuID
-		// Name
-		// Picture
+		// menu_id
+		// name
+		// picture
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// Picture
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->ImageWidth = 100;
-			$this->Picture->ImageHeight = 100;
-			$this->Picture->ImageAlt = $this->Picture->FldAlt();
-			$this->Picture->ViewValue = $this->Picture->Upload->DbValue;
+		// picture
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->ImageWidth = 100;
+			$this->picture->ImageHeight = 100;
+			$this->picture->ImageAlt = $this->picture->FldAlt();
+			$this->picture->ViewValue = $this->picture->Upload->DbValue;
 		} else {
-			$this->Picture->ViewValue = "";
+			$this->picture->ViewValue = "";
 		}
-		$this->Picture->ViewCustomAttributes = "";
+		$this->picture->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// Picture
-			$this->Picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->Picture->Upload->DbValue)) {
-				$this->Picture->HrefValue = ew_GetFileUploadUrl($this->Picture, $this->Picture->Upload->DbValue); // Add prefix/suffix
-				$this->Picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->Picture->HrefValue = ew_FullUrl($this->Picture->HrefValue, "href");
+			// picture
+			$this->picture->LinkCustomAttributes = "";
+			if (!ew_Empty($this->picture->Upload->DbValue)) {
+				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
+				$this->picture->LinkAttrs["target"] = ""; // Add target
+				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
 			} else {
-				$this->Picture->HrefValue = "";
+				$this->picture->HrefValue = "";
 			}
-			$this->Picture->HrefValue2 = $this->Picture->UploadPath . $this->Picture->Upload->DbValue;
-			$this->Picture->TooltipValue = "";
-			if ($this->Picture->UseColorbox) {
-				if (ew_Empty($this->Picture->TooltipValue))
-					$this->Picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->Picture->LinkAttrs["data-rel"] = "menus_x_Picture";
-				ew_AppendClass($this->Picture->LinkAttrs["class"], "ewLightbox");
+			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
+			$this->picture->TooltipValue = "";
+			if ($this->picture->UseColorbox) {
+				if (ew_Empty($this->picture->TooltipValue))
+					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
+				$this->picture->LinkAttrs["data-rel"] = "menus_x_picture";
+				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
 			}
 		}
 
@@ -623,7 +623,7 @@ class cmenus_delete extends cmenus {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['MenuID'];
+				$sThisKey .= $row['menu_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -811,11 +811,11 @@ $menus_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($menus->Name->Visible) { // Name ?>
-		<th class="<?php echo $menus->Name->HeaderCellClass() ?>"><span id="elh_menus_Name" class="menus_Name"><?php echo $menus->Name->FldCaption() ?></span></th>
+<?php if ($menus->name->Visible) { // name ?>
+		<th class="<?php echo $menus->name->HeaderCellClass() ?>"><span id="elh_menus_name" class="menus_name"><?php echo $menus->name->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($menus->Picture->Visible) { // Picture ?>
-		<th class="<?php echo $menus->Picture->HeaderCellClass() ?>"><span id="elh_menus_Picture" class="menus_Picture"><?php echo $menus->Picture->FldCaption() ?></span></th>
+<?php if ($menus->picture->Visible) { // picture ?>
+		<th class="<?php echo $menus->picture->HeaderCellClass() ?>"><span id="elh_menus_picture" class="menus_picture"><?php echo $menus->picture->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -838,19 +838,19 @@ while (!$menus_delete->Recordset->EOF) {
 	$menus_delete->RenderRow();
 ?>
 	<tr<?php echo $menus->RowAttributes() ?>>
-<?php if ($menus->Name->Visible) { // Name ?>
-		<td<?php echo $menus->Name->CellAttributes() ?>>
-<span id="el<?php echo $menus_delete->RowCnt ?>_menus_Name" class="menus_Name">
-<span<?php echo $menus->Name->ViewAttributes() ?>>
-<?php echo $menus->Name->ListViewValue() ?></span>
+<?php if ($menus->name->Visible) { // name ?>
+		<td<?php echo $menus->name->CellAttributes() ?>>
+<span id="el<?php echo $menus_delete->RowCnt ?>_menus_name" class="menus_name">
+<span<?php echo $menus->name->ViewAttributes() ?>>
+<?php echo $menus->name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($menus->Picture->Visible) { // Picture ?>
-		<td<?php echo $menus->Picture->CellAttributes() ?>>
-<span id="el<?php echo $menus_delete->RowCnt ?>_menus_Picture" class="menus_Picture">
+<?php if ($menus->picture->Visible) { // picture ?>
+		<td<?php echo $menus->picture->CellAttributes() ?>>
+<span id="el<?php echo $menus_delete->RowCnt ?>_menus_picture" class="menus_picture">
 <span>
-<?php echo ew_GetFileViewTag($menus->Picture, $menus->Picture->ListViewValue()) ?>
+<?php echo ew_GetFileViewTag($menus->picture, $menus->picture->ListViewValue()) ?>
 </span>
 </span>
 </td>

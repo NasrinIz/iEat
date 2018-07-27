@@ -288,21 +288,21 @@ class ctimings_view extends ctimings {
 			$GLOBALS["Table"] = &$GLOBALS["timings"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["StoreID"] <> "") {
-			$this->RecKey["StoreID"] = $_GET["StoreID"];
-			$KeyUrl .= "&amp;StoreID=" . urlencode($this->RecKey["StoreID"]);
+		if (@$_GET["store_id"] <> "") {
+			$this->RecKey["store_id"] = $_GET["store_id"];
+			$KeyUrl .= "&amp;store_id=" . urlencode($this->RecKey["store_id"]);
 		}
-		if (@$_GET["DayoftheWeek"] <> "") {
-			$this->RecKey["DayoftheWeek"] = $_GET["DayoftheWeek"];
-			$KeyUrl .= "&amp;DayoftheWeek=" . urlencode($this->RecKey["DayoftheWeek"]);
+		if (@$_GET["day_of_the_week"] <> "") {
+			$this->RecKey["day_of_the_week"] = $_GET["day_of_the_week"];
+			$KeyUrl .= "&amp;day_of_the_week=" . urlencode($this->RecKey["day_of_the_week"]);
 		}
-		if (@$_GET["OrderTimeFrom"] <> "") {
-			$this->RecKey["OrderTimeFrom"] = $_GET["OrderTimeFrom"];
-			$KeyUrl .= "&amp;OrderTimeFrom=" . urlencode($this->RecKey["OrderTimeFrom"]);
+		if (@$_GET["order_time_from"] <> "") {
+			$this->RecKey["order_time_from"] = $_GET["order_time_from"];
+			$KeyUrl .= "&amp;order_time_from=" . urlencode($this->RecKey["order_time_from"]);
 		}
-		if (@$_GET["OrderTimeTo"] <> "") {
-			$this->RecKey["OrderTimeTo"] = $_GET["OrderTimeTo"];
-			$KeyUrl .= "&amp;OrderTimeTo=" . urlencode($this->RecKey["OrderTimeTo"]);
+		if (@$_GET["order_time_to"] <> "") {
+			$this->RecKey["order_time_to"] = $_GET["order_time_to"];
+			$KeyUrl .= "&amp;order_time_to=" . urlencode($this->RecKey["order_time_to"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -404,21 +404,21 @@ class ctimings_view extends ctimings {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["StoreID"] <> "") {
+		if (@$_GET["store_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["StoreID"];
+			$gsExportFile .= $_GET["store_id"];
 		}
-		if (@$_GET["DayoftheWeek"] <> "") {
+		if (@$_GET["day_of_the_week"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["DayoftheWeek"];
+			$gsExportFile .= $_GET["day_of_the_week"];
 		}
-		if (@$_GET["OrderTimeFrom"] <> "") {
+		if (@$_GET["order_time_from"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["OrderTimeFrom"];
+			$gsExportFile .= $_GET["order_time_from"];
 		}
-		if (@$_GET["OrderTimeTo"] <> "") {
+		if (@$_GET["order_time_to"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["OrderTimeTo"];
+			$gsExportFile .= $_GET["order_time_to"];
 		}
 
 		// Get custom export parameters
@@ -444,10 +444,10 @@ class ctimings_view extends ctimings {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->StoreID->SetVisibility();
-		$this->DayoftheWeek->SetVisibility();
-		$this->OrderTimeFrom->SetVisibility();
-		$this->OrderTimeTo->SetVisibility();
+		$this->store_id->SetVisibility();
+		$this->day_of_the_week->SetVisibility();
+		$this->order_time_from->SetVisibility();
+		$this->order_time_to->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -555,39 +555,39 @@ class ctimings_view extends ctimings {
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["StoreID"] <> "") {
-				$this->StoreID->setQueryStringValue($_GET["StoreID"]);
-				$this->RecKey["StoreID"] = $this->StoreID->QueryStringValue;
-			} elseif (@$_POST["StoreID"] <> "") {
-				$this->StoreID->setFormValue($_POST["StoreID"]);
-				$this->RecKey["StoreID"] = $this->StoreID->FormValue;
+			if (@$_GET["store_id"] <> "") {
+				$this->store_id->setQueryStringValue($_GET["store_id"]);
+				$this->RecKey["store_id"] = $this->store_id->QueryStringValue;
+			} elseif (@$_POST["store_id"] <> "") {
+				$this->store_id->setFormValue($_POST["store_id"]);
+				$this->RecKey["store_id"] = $this->store_id->FormValue;
 			} else {
 				$sReturnUrl = "timingslist.php"; // Return to list
 			}
-			if (@$_GET["DayoftheWeek"] <> "") {
-				$this->DayoftheWeek->setQueryStringValue($_GET["DayoftheWeek"]);
-				$this->RecKey["DayoftheWeek"] = $this->DayoftheWeek->QueryStringValue;
-			} elseif (@$_POST["DayoftheWeek"] <> "") {
-				$this->DayoftheWeek->setFormValue($_POST["DayoftheWeek"]);
-				$this->RecKey["DayoftheWeek"] = $this->DayoftheWeek->FormValue;
+			if (@$_GET["day_of_the_week"] <> "") {
+				$this->day_of_the_week->setQueryStringValue($_GET["day_of_the_week"]);
+				$this->RecKey["day_of_the_week"] = $this->day_of_the_week->QueryStringValue;
+			} elseif (@$_POST["day_of_the_week"] <> "") {
+				$this->day_of_the_week->setFormValue($_POST["day_of_the_week"]);
+				$this->RecKey["day_of_the_week"] = $this->day_of_the_week->FormValue;
 			} else {
 				$sReturnUrl = "timingslist.php"; // Return to list
 			}
-			if (@$_GET["OrderTimeFrom"] <> "") {
-				$this->OrderTimeFrom->setQueryStringValue($_GET["OrderTimeFrom"]);
-				$this->RecKey["OrderTimeFrom"] = $this->OrderTimeFrom->QueryStringValue;
-			} elseif (@$_POST["OrderTimeFrom"] <> "") {
-				$this->OrderTimeFrom->setFormValue($_POST["OrderTimeFrom"]);
-				$this->RecKey["OrderTimeFrom"] = $this->OrderTimeFrom->FormValue;
+			if (@$_GET["order_time_from"] <> "") {
+				$this->order_time_from->setQueryStringValue($_GET["order_time_from"]);
+				$this->RecKey["order_time_from"] = $this->order_time_from->QueryStringValue;
+			} elseif (@$_POST["order_time_from"] <> "") {
+				$this->order_time_from->setFormValue($_POST["order_time_from"]);
+				$this->RecKey["order_time_from"] = $this->order_time_from->FormValue;
 			} else {
 				$sReturnUrl = "timingslist.php"; // Return to list
 			}
-			if (@$_GET["OrderTimeTo"] <> "") {
-				$this->OrderTimeTo->setQueryStringValue($_GET["OrderTimeTo"]);
-				$this->RecKey["OrderTimeTo"] = $this->OrderTimeTo->QueryStringValue;
-			} elseif (@$_POST["OrderTimeTo"] <> "") {
-				$this->OrderTimeTo->setFormValue($_POST["OrderTimeTo"]);
-				$this->RecKey["OrderTimeTo"] = $this->OrderTimeTo->FormValue;
+			if (@$_GET["order_time_to"] <> "") {
+				$this->order_time_to->setQueryStringValue($_GET["order_time_to"]);
+				$this->RecKey["order_time_to"] = $this->order_time_to->QueryStringValue;
+			} elseif (@$_POST["order_time_to"] <> "") {
+				$this->order_time_to->setFormValue($_POST["order_time_to"]);
+				$this->RecKey["order_time_to"] = $this->order_time_to->FormValue;
 			} else {
 				$sReturnUrl = "timingslist.php"; // Return to list
 			}
@@ -772,19 +772,19 @@ class ctimings_view extends ctimings {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->StoreID->setDbValue($row['StoreID']);
-		$this->DayoftheWeek->setDbValue($row['DayoftheWeek']);
-		$this->OrderTimeFrom->setDbValue($row['OrderTimeFrom']);
-		$this->OrderTimeTo->setDbValue($row['OrderTimeTo']);
+		$this->store_id->setDbValue($row['store_id']);
+		$this->day_of_the_week->setDbValue($row['day_of_the_week']);
+		$this->order_time_from->setDbValue($row['order_time_from']);
+		$this->order_time_to->setDbValue($row['order_time_to']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['StoreID'] = NULL;
-		$row['DayoftheWeek'] = NULL;
-		$row['OrderTimeFrom'] = NULL;
-		$row['OrderTimeTo'] = NULL;
+		$row['store_id'] = NULL;
+		$row['day_of_the_week'] = NULL;
+		$row['order_time_from'] = NULL;
+		$row['order_time_to'] = NULL;
 		return $row;
 	}
 
@@ -793,10 +793,10 @@ class ctimings_view extends ctimings {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->StoreID->DbValue = $row['StoreID'];
-		$this->DayoftheWeek->DbValue = $row['DayoftheWeek'];
-		$this->OrderTimeFrom->DbValue = $row['OrderTimeFrom'];
-		$this->OrderTimeTo->DbValue = $row['OrderTimeTo'];
+		$this->store_id->DbValue = $row['store_id'];
+		$this->day_of_the_week->DbValue = $row['day_of_the_week'];
+		$this->order_time_from->DbValue = $row['order_time_from'];
+		$this->order_time_to->DbValue = $row['order_time_to'];
 	}
 
 	// Render row values based on field settings
@@ -815,74 +815,74 @@ class ctimings_view extends ctimings {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// StoreID
-		// DayoftheWeek
-		// OrderTimeFrom
-		// OrderTimeTo
+		// store_id
+		// day_of_the_week
+		// order_time_from
+		// order_time_to
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// StoreID
-		if (strval($this->StoreID->CurrentValue) <> "") {
-			$sFilterWrk = "`StoreID`" . ew_SearchString("=", $this->StoreID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `StoreID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
+		// store_id
+		if (strval($this->store_id->CurrentValue) <> "") {
+			$sFilterWrk = "`store_id`" . ew_SearchString("=", $this->store_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `store_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
 		$sWhereWrk = "";
-		$this->StoreID->LookupFilters = array();
+		$this->store_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->StoreID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->store_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->StoreID->ViewValue = $this->StoreID->DisplayValue($arwrk);
+				$this->store_id->ViewValue = $this->store_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->StoreID->ViewValue = $this->StoreID->CurrentValue;
+				$this->store_id->ViewValue = $this->store_id->CurrentValue;
 			}
 		} else {
-			$this->StoreID->ViewValue = NULL;
+			$this->store_id->ViewValue = NULL;
 		}
-		$this->StoreID->ViewCustomAttributes = "";
+		$this->store_id->ViewCustomAttributes = "";
 
-		// DayoftheWeek
-		if (strval($this->DayoftheWeek->CurrentValue) <> "") {
-			$this->DayoftheWeek->ViewValue = $this->DayoftheWeek->OptionCaption($this->DayoftheWeek->CurrentValue);
+		// day_of_the_week
+		if (strval($this->day_of_the_week->CurrentValue) <> "") {
+			$this->day_of_the_week->ViewValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
 		} else {
-			$this->DayoftheWeek->ViewValue = NULL;
+			$this->day_of_the_week->ViewValue = NULL;
 		}
-		$this->DayoftheWeek->ViewCustomAttributes = "";
+		$this->day_of_the_week->ViewCustomAttributes = "";
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom->ViewValue = $this->OrderTimeFrom->CurrentValue;
-		$this->OrderTimeFrom->ViewValue = ew_FormatDateTime($this->OrderTimeFrom->ViewValue, 4);
-		$this->OrderTimeFrom->ViewCustomAttributes = "";
+		// order_time_from
+		$this->order_time_from->ViewValue = $this->order_time_from->CurrentValue;
+		$this->order_time_from->ViewValue = ew_FormatDateTime($this->order_time_from->ViewValue, 4);
+		$this->order_time_from->ViewCustomAttributes = "";
 
-		// OrderTimeTo
-		$this->OrderTimeTo->ViewValue = $this->OrderTimeTo->CurrentValue;
-		$this->OrderTimeTo->ViewValue = ew_FormatDateTime($this->OrderTimeTo->ViewValue, 4);
-		$this->OrderTimeTo->ViewCustomAttributes = "";
+		// order_time_to
+		$this->order_time_to->ViewValue = $this->order_time_to->CurrentValue;
+		$this->order_time_to->ViewValue = ew_FormatDateTime($this->order_time_to->ViewValue, 4);
+		$this->order_time_to->ViewCustomAttributes = "";
 
-			// StoreID
-			$this->StoreID->LinkCustomAttributes = "";
-			$this->StoreID->HrefValue = "";
-			$this->StoreID->TooltipValue = "";
+			// store_id
+			$this->store_id->LinkCustomAttributes = "";
+			$this->store_id->HrefValue = "";
+			$this->store_id->TooltipValue = "";
 
-			// DayoftheWeek
-			$this->DayoftheWeek->LinkCustomAttributes = "";
-			$this->DayoftheWeek->HrefValue = "";
-			$this->DayoftheWeek->TooltipValue = "";
+			// day_of_the_week
+			$this->day_of_the_week->LinkCustomAttributes = "";
+			$this->day_of_the_week->HrefValue = "";
+			$this->day_of_the_week->TooltipValue = "";
 
-			// OrderTimeFrom
-			$this->OrderTimeFrom->LinkCustomAttributes = "";
-			$this->OrderTimeFrom->HrefValue = "";
-			$this->OrderTimeFrom->TooltipValue = "";
+			// order_time_from
+			$this->order_time_from->LinkCustomAttributes = "";
+			$this->order_time_from->HrefValue = "";
+			$this->order_time_from->TooltipValue = "";
 
-			// OrderTimeTo
-			$this->OrderTimeTo->LinkCustomAttributes = "";
-			$this->OrderTimeTo->HrefValue = "";
-			$this->OrderTimeTo->TooltipValue = "";
+			// order_time_to
+			$this->order_time_to->LinkCustomAttributes = "";
+			$this->order_time_to->HrefValue = "";
+			$this->order_time_to->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1178,10 +1178,10 @@ ftimingsview.Form_CustomValidate =
 ftimingsview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-ftimingsview.Lists["x_StoreID"] = {"LinkField":"x_StoreID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"stores"};
-ftimingsview.Lists["x_StoreID"].Data = "<?php echo $timings_view->StoreID->LookupFilterQuery(FALSE, "view") ?>";
-ftimingsview.Lists["x_DayoftheWeek"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
-ftimingsview.Lists["x_DayoftheWeek"].Options = <?php echo json_encode($timings_view->DayoftheWeek->Options()) ?>;
+ftimingsview.Lists["x_store_id"] = {"LinkField":"x_store_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"stores"};
+ftimingsview.Lists["x_store_id"].Data = "<?php echo $timings_view->store_id->LookupFilterQuery(FALSE, "view") ?>";
+ftimingsview.Lists["x_day_of_the_week"] = {"LinkField":"","Ajax":null,"AutoFill":false,"DisplayFields":["","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":""};
+ftimingsview.Lists["x_day_of_the_week"].Options = <?php echo json_encode($timings_view->day_of_the_week->Options()) ?>;
 
 // Form object for search
 </script>
@@ -1211,46 +1211,46 @@ $timings_view->ShowMessage();
 <input type="hidden" name="t" value="timings">
 <input type="hidden" name="modal" value="<?php echo intval($timings_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($timings->StoreID->Visible) { // StoreID ?>
-	<tr id="r_StoreID">
-		<td class="col-sm-2"><span id="elh_timings_StoreID"><?php echo $timings->StoreID->FldCaption() ?></span></td>
-		<td data-name="StoreID"<?php echo $timings->StoreID->CellAttributes() ?>>
-<span id="el_timings_StoreID">
-<span<?php echo $timings->StoreID->ViewAttributes() ?>>
-<?php echo $timings->StoreID->ViewValue ?></span>
+<?php if ($timings->store_id->Visible) { // store_id ?>
+	<tr id="r_store_id">
+		<td class="col-sm-2"><span id="elh_timings_store_id"><?php echo $timings->store_id->FldCaption() ?></span></td>
+		<td data-name="store_id"<?php echo $timings->store_id->CellAttributes() ?>>
+<span id="el_timings_store_id">
+<span<?php echo $timings->store_id->ViewAttributes() ?>>
+<?php echo $timings->store_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($timings->DayoftheWeek->Visible) { // DayoftheWeek ?>
-	<tr id="r_DayoftheWeek">
-		<td class="col-sm-2"><span id="elh_timings_DayoftheWeek"><?php echo $timings->DayoftheWeek->FldCaption() ?></span></td>
-		<td data-name="DayoftheWeek"<?php echo $timings->DayoftheWeek->CellAttributes() ?>>
-<span id="el_timings_DayoftheWeek">
-<span<?php echo $timings->DayoftheWeek->ViewAttributes() ?>>
-<?php echo $timings->DayoftheWeek->ViewValue ?></span>
+<?php if ($timings->day_of_the_week->Visible) { // day_of_the_week ?>
+	<tr id="r_day_of_the_week">
+		<td class="col-sm-2"><span id="elh_timings_day_of_the_week"><?php echo $timings->day_of_the_week->FldCaption() ?></span></td>
+		<td data-name="day_of_the_week"<?php echo $timings->day_of_the_week->CellAttributes() ?>>
+<span id="el_timings_day_of_the_week">
+<span<?php echo $timings->day_of_the_week->ViewAttributes() ?>>
+<?php echo $timings->day_of_the_week->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($timings->OrderTimeFrom->Visible) { // OrderTimeFrom ?>
-	<tr id="r_OrderTimeFrom">
-		<td class="col-sm-2"><span id="elh_timings_OrderTimeFrom"><?php echo $timings->OrderTimeFrom->FldCaption() ?></span></td>
-		<td data-name="OrderTimeFrom"<?php echo $timings->OrderTimeFrom->CellAttributes() ?>>
-<span id="el_timings_OrderTimeFrom">
-<span<?php echo $timings->OrderTimeFrom->ViewAttributes() ?>>
-<?php echo $timings->OrderTimeFrom->ViewValue ?></span>
+<?php if ($timings->order_time_from->Visible) { // order_time_from ?>
+	<tr id="r_order_time_from">
+		<td class="col-sm-2"><span id="elh_timings_order_time_from"><?php echo $timings->order_time_from->FldCaption() ?></span></td>
+		<td data-name="order_time_from"<?php echo $timings->order_time_from->CellAttributes() ?>>
+<span id="el_timings_order_time_from">
+<span<?php echo $timings->order_time_from->ViewAttributes() ?>>
+<?php echo $timings->order_time_from->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($timings->OrderTimeTo->Visible) { // OrderTimeTo ?>
-	<tr id="r_OrderTimeTo">
-		<td class="col-sm-2"><span id="elh_timings_OrderTimeTo"><?php echo $timings->OrderTimeTo->FldCaption() ?></span></td>
-		<td data-name="OrderTimeTo"<?php echo $timings->OrderTimeTo->CellAttributes() ?>>
-<span id="el_timings_OrderTimeTo">
-<span<?php echo $timings->OrderTimeTo->ViewAttributes() ?>>
-<?php echo $timings->OrderTimeTo->ViewValue ?></span>
+<?php if ($timings->order_time_to->Visible) { // order_time_to ?>
+	<tr id="r_order_time_to">
+		<td class="col-sm-2"><span id="elh_timings_order_time_to"><?php echo $timings->order_time_to->FldCaption() ?></span></td>
+		<td data-name="order_time_to"<?php echo $timings->order_time_to->CellAttributes() ?>>
+<span id="el_timings_order_time_to">
+<span<?php echo $timings->order_time_to->ViewAttributes() ?>>
+<?php echo $timings->order_time_to->ViewValue ?></span>
 </span>
 </td>
 	</tr>

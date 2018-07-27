@@ -315,10 +315,10 @@ class cstores_delete extends cstores {
 		// 
 
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
-		$this->Name->SetVisibility();
-		$this->ProvinceID->SetVisibility();
-		$this->Address->SetVisibility();
-		$this->ZipCode->SetVisibility();
+		$this->name->SetVisibility();
+		$this->province_id->SetVisibility();
+		$this->address->SetVisibility();
+		$this->zip_code->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -498,21 +498,21 @@ class cstores_delete extends cstores {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->StoreID->setDbValue($row['StoreID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->ProvinceID->setDbValue($row['ProvinceID']);
-		$this->Address->setDbValue($row['Address']);
-		$this->ZipCode->setDbValue($row['ZipCode']);
+		$this->store_id->setDbValue($row['store_id']);
+		$this->name->setDbValue($row['name']);
+		$this->province_id->setDbValue($row['province_id']);
+		$this->address->setDbValue($row['address']);
+		$this->zip_code->setDbValue($row['zip_code']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['StoreID'] = NULL;
-		$row['Name'] = NULL;
-		$row['ProvinceID'] = NULL;
-		$row['Address'] = NULL;
-		$row['ZipCode'] = NULL;
+		$row['store_id'] = NULL;
+		$row['name'] = NULL;
+		$row['province_id'] = NULL;
+		$row['address'] = NULL;
+		$row['zip_code'] = NULL;
 		return $row;
 	}
 
@@ -521,11 +521,11 @@ class cstores_delete extends cstores {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->StoreID->DbValue = $row['StoreID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->ProvinceID->DbValue = $row['ProvinceID'];
-		$this->Address->DbValue = $row['Address'];
-		$this->ZipCode->DbValue = $row['ZipCode'];
+		$this->store_id->DbValue = $row['store_id'];
+		$this->name->DbValue = $row['name'];
+		$this->province_id->DbValue = $row['province_id'];
+		$this->address->DbValue = $row['address'];
+		$this->zip_code->DbValue = $row['zip_code'];
 	}
 
 	// Render row values based on field settings
@@ -538,69 +538,69 @@ class cstores_delete extends cstores {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// StoreID
-		// Name
-		// ProvinceID
-		// Address
-		// ZipCode
+		// store_id
+		// name
+		// province_id
+		// address
+		// zip_code
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// ProvinceID
-			$this->ProvinceID->LinkCustomAttributes = "";
-			$this->ProvinceID->HrefValue = "";
-			$this->ProvinceID->TooltipValue = "";
+			// province_id
+			$this->province_id->LinkCustomAttributes = "";
+			$this->province_id->HrefValue = "";
+			$this->province_id->TooltipValue = "";
 
-			// Address
-			$this->Address->LinkCustomAttributes = "";
-			$this->Address->HrefValue = "";
-			$this->Address->TooltipValue = "";
+			// address
+			$this->address->LinkCustomAttributes = "";
+			$this->address->HrefValue = "";
+			$this->address->TooltipValue = "";
 
-			// ZipCode
-			$this->ZipCode->LinkCustomAttributes = "";
-			$this->ZipCode->HrefValue = "";
-			$this->ZipCode->TooltipValue = "";
+			// zip_code
+			$this->zip_code->LinkCustomAttributes = "";
+			$this->zip_code->HrefValue = "";
+			$this->zip_code->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -650,7 +650,7 @@ class cstores_delete extends cstores {
 			foreach ($rsold as $row) {
 				$sThisKey = "";
 				if ($sThisKey <> "") $sThisKey .= $GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"];
-				$sThisKey .= $row['StoreID'];
+				$sThisKey .= $row['store_id'];
 				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
 				$DeleteRows = $this->Delete($row); // Delete
 				$conn->raiseErrorFn = '';
@@ -812,8 +812,8 @@ fstoresdelete.Form_CustomValidate =
 fstoresdelete.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fstoresdelete.Lists["x_ProvinceID"] = {"LinkField":"x_ProvinceID","Ajax":true,"AutoFill":false,"DisplayFields":["x_Name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fstoresdelete.Lists["x_ProvinceID"].Data = "<?php echo $stores_delete->ProvinceID->LookupFilterQuery(FALSE, "delete") ?>";
+fstoresdelete.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
+fstoresdelete.Lists["x_province_id"].Data = "<?php echo $stores_delete->province_id->LookupFilterQuery(FALSE, "delete") ?>";
 
 // Form object for search
 </script>
@@ -840,17 +840,17 @@ $stores_delete->ShowMessage();
 <table class="table ewTable">
 	<thead>
 	<tr class="ewTableHeader">
-<?php if ($stores->Name->Visible) { // Name ?>
-		<th class="<?php echo $stores->Name->HeaderCellClass() ?>"><span id="elh_stores_Name" class="stores_Name"><?php echo $stores->Name->FldCaption() ?></span></th>
+<?php if ($stores->name->Visible) { // name ?>
+		<th class="<?php echo $stores->name->HeaderCellClass() ?>"><span id="elh_stores_name" class="stores_name"><?php echo $stores->name->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($stores->ProvinceID->Visible) { // ProvinceID ?>
-		<th class="<?php echo $stores->ProvinceID->HeaderCellClass() ?>"><span id="elh_stores_ProvinceID" class="stores_ProvinceID"><?php echo $stores->ProvinceID->FldCaption() ?></span></th>
+<?php if ($stores->province_id->Visible) { // province_id ?>
+		<th class="<?php echo $stores->province_id->HeaderCellClass() ?>"><span id="elh_stores_province_id" class="stores_province_id"><?php echo $stores->province_id->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($stores->Address->Visible) { // Address ?>
-		<th class="<?php echo $stores->Address->HeaderCellClass() ?>"><span id="elh_stores_Address" class="stores_Address"><?php echo $stores->Address->FldCaption() ?></span></th>
+<?php if ($stores->address->Visible) { // address ?>
+		<th class="<?php echo $stores->address->HeaderCellClass() ?>"><span id="elh_stores_address" class="stores_address"><?php echo $stores->address->FldCaption() ?></span></th>
 <?php } ?>
-<?php if ($stores->ZipCode->Visible) { // ZipCode ?>
-		<th class="<?php echo $stores->ZipCode->HeaderCellClass() ?>"><span id="elh_stores_ZipCode" class="stores_ZipCode"><?php echo $stores->ZipCode->FldCaption() ?></span></th>
+<?php if ($stores->zip_code->Visible) { // zip_code ?>
+		<th class="<?php echo $stores->zip_code->HeaderCellClass() ?>"><span id="elh_stores_zip_code" class="stores_zip_code"><?php echo $stores->zip_code->FldCaption() ?></span></th>
 <?php } ?>
 	</tr>
 	</thead>
@@ -873,35 +873,35 @@ while (!$stores_delete->Recordset->EOF) {
 	$stores_delete->RenderRow();
 ?>
 	<tr<?php echo $stores->RowAttributes() ?>>
-<?php if ($stores->Name->Visible) { // Name ?>
-		<td<?php echo $stores->Name->CellAttributes() ?>>
-<span id="el<?php echo $stores_delete->RowCnt ?>_stores_Name" class="stores_Name">
-<span<?php echo $stores->Name->ViewAttributes() ?>>
-<?php echo $stores->Name->ListViewValue() ?></span>
+<?php if ($stores->name->Visible) { // name ?>
+		<td<?php echo $stores->name->CellAttributes() ?>>
+<span id="el<?php echo $stores_delete->RowCnt ?>_stores_name" class="stores_name">
+<span<?php echo $stores->name->ViewAttributes() ?>>
+<?php echo $stores->name->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($stores->ProvinceID->Visible) { // ProvinceID ?>
-		<td<?php echo $stores->ProvinceID->CellAttributes() ?>>
-<span id="el<?php echo $stores_delete->RowCnt ?>_stores_ProvinceID" class="stores_ProvinceID">
-<span<?php echo $stores->ProvinceID->ViewAttributes() ?>>
-<?php echo $stores->ProvinceID->ListViewValue() ?></span>
+<?php if ($stores->province_id->Visible) { // province_id ?>
+		<td<?php echo $stores->province_id->CellAttributes() ?>>
+<span id="el<?php echo $stores_delete->RowCnt ?>_stores_province_id" class="stores_province_id">
+<span<?php echo $stores->province_id->ViewAttributes() ?>>
+<?php echo $stores->province_id->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($stores->Address->Visible) { // Address ?>
-		<td<?php echo $stores->Address->CellAttributes() ?>>
-<span id="el<?php echo $stores_delete->RowCnt ?>_stores_Address" class="stores_Address">
-<span<?php echo $stores->Address->ViewAttributes() ?>>
-<?php echo $stores->Address->ListViewValue() ?></span>
+<?php if ($stores->address->Visible) { // address ?>
+		<td<?php echo $stores->address->CellAttributes() ?>>
+<span id="el<?php echo $stores_delete->RowCnt ?>_stores_address" class="stores_address">
+<span<?php echo $stores->address->ViewAttributes() ?>>
+<?php echo $stores->address->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>
-<?php if ($stores->ZipCode->Visible) { // ZipCode ?>
-		<td<?php echo $stores->ZipCode->CellAttributes() ?>>
-<span id="el<?php echo $stores_delete->RowCnt ?>_stores_ZipCode" class="stores_ZipCode">
-<span<?php echo $stores->ZipCode->ViewAttributes() ?>>
-<?php echo $stores->ZipCode->ListViewValue() ?></span>
+<?php if ($stores->zip_code->Visible) { // zip_code ?>
+		<td<?php echo $stores->zip_code->CellAttributes() ?>>
+<span id="el<?php echo $stores_delete->RowCnt ?>_stores_zip_code" class="stores_zip_code">
+<span<?php echo $stores->zip_code->ViewAttributes() ?>>
+<?php echo $stores->zip_code->ListViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

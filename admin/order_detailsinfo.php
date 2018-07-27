@@ -1,14 +1,18 @@
 <?php
 
 // Global variable for table object
-$provinces = NULL;
+$order_details = NULL;
 
 //
-// Table class for provinces
+// Table class for order_details
 //
-class cprovinces extends cTable {
-	var $province_id;
-	var $name;
+class corder_details extends cTable {
+	var $order_detail_id;
+	var $order_id;
+	var $quantity;
+	var $menu_id;
+	var $sub_menu_id;
+	var $price;
 
 	//
 	// Table class constructor
@@ -18,12 +22,12 @@ class cprovinces extends cTable {
 
 		// Language object
 		if (!isset($Language)) $Language = new cLanguage();
-		$this->TableVar = 'provinces';
-		$this->TableName = 'provinces';
+		$this->TableVar = 'order_details';
+		$this->TableName = 'order_details';
 		$this->TableType = 'TABLE';
 
 		// Update Table
-		$this->UpdateTable = "`provinces`";
+		$this->UpdateTable = "`order_details`";
 		$this->DBID = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -42,16 +46,47 @@ class cprovinces extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// province_id
-		$this->province_id = new cField('provinces', 'provinces', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->province_id->Sortable = FALSE; // Allow sort
-		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['province_id'] = &$this->province_id;
+		// order_detail_id
+		$this->order_detail_id = new cField('order_details', 'order_details', 'x_order_detail_id', 'order_detail_id', '`order_detail_id`', '`order_detail_id`', 3, -1, FALSE, '`order_detail_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->order_detail_id->Sortable = FALSE; // Allow sort
+		$this->order_detail_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['order_detail_id'] = &$this->order_detail_id;
 
-		// name
-		$this->name = new cField('provinces', 'provinces', 'x_name', 'name', '`name`', '`name`', 200, -1, FALSE, '`name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->name->Sortable = TRUE; // Allow sort
-		$this->fields['name'] = &$this->name;
+		// order_id
+		$this->order_id = new cField('order_details', 'order_details', 'x_order_id', 'order_id', '`order_id`', '`order_id`', 3, -1, FALSE, '`order_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->order_id->Sortable = FALSE; // Allow sort
+		$this->order_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->order_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->order_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['order_id'] = &$this->order_id;
+
+		// quantity
+		$this->quantity = new cField('order_details', 'order_details', 'x_quantity', 'quantity', '`quantity`', '`quantity`', 3, -1, FALSE, '`quantity`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->quantity->Sortable = TRUE; // Allow sort
+		$this->quantity->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['quantity'] = &$this->quantity;
+
+		// menu_id
+		$this->menu_id = new cField('order_details', 'order_details', 'x_menu_id', 'menu_id', '`menu_id`', '`menu_id`', 3, -1, FALSE, '`menu_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->menu_id->Sortable = TRUE; // Allow sort
+		$this->menu_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->menu_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->menu_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['menu_id'] = &$this->menu_id;
+
+		// sub_menu_id
+		$this->sub_menu_id = new cField('order_details', 'order_details', 'x_sub_menu_id', 'sub_menu_id', '`sub_menu_id`', '`sub_menu_id`', 3, -1, FALSE, '`sub_menu_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->sub_menu_id->Sortable = TRUE; // Allow sort
+		$this->sub_menu_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->sub_menu_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->sub_menu_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['sub_menu_id'] = &$this->sub_menu_id;
+
+		// price
+		$this->price = new cField('order_details', 'order_details', 'x_price', 'price', '`price`', '`price`', 5, -1, FALSE, '`price`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->price->Sortable = TRUE; // Allow sort
+		$this->price->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['price'] = &$this->price;
 	}
 
 	// Field Visibility
@@ -91,11 +126,58 @@ class cprovinces extends cTable {
 		}
 	}
 
+	// Current master table name
+	function getCurrentMasterTable() {
+		return @$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE];
+	}
+
+	function setCurrentMasterTable($v) {
+		$_SESSION[EW_PROJECT_NAME . "_" . $this->TableVar . "_" . EW_TABLE_MASTER_TABLE] = $v;
+	}
+
+	// Session master WHERE clause
+	function GetMasterFilter() {
+
+		// Master filter
+		$sMasterFilter = "";
+		if ($this->getCurrentMasterTable() == "orders") {
+			if ($this->order_id->getSessionValue() <> "")
+				$sMasterFilter .= "`order_id`=" . ew_QuotedValue($this->order_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		return $sMasterFilter;
+	}
+
+	// Session detail WHERE clause
+	function GetDetailFilter() {
+
+		// Detail filter
+		$sDetailFilter = "";
+		if ($this->getCurrentMasterTable() == "orders") {
+			if ($this->order_id->getSessionValue() <> "")
+				$sDetailFilter .= "`order_id`=" . ew_QuotedValue($this->order_id->getSessionValue(), EW_DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		return $sDetailFilter;
+	}
+
+	// Master filter
+	function SqlMasterFilter_orders() {
+		return "`order_id`=@order_id@";
+	}
+
+	// Detail filter
+	function SqlDetailFilter_orders() {
+		return "`order_id`=@order_id@";
+	}
+
 	// Table level SQL
 	var $_SqlFrom = "";
 
 	function getSqlFrom() { // From
-		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`provinces`";
+		return ($this->_SqlFrom <> "") ? $this->_SqlFrom : "`order_details`";
 	}
 
 	function SqlFrom() { // For backward compatibility
@@ -323,8 +405,8 @@ class cprovinces extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->province_id->setDbValue($conn->Insert_ID());
-			$rs['province_id'] = $this->province_id->DbValue;
+			$this->order_detail_id->setDbValue($conn->Insert_ID());
+			$rs['order_detail_id'] = $this->order_detail_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -360,8 +442,8 @@ class cprovinces extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('province_id', $rs))
-				ew_AddFilter($where, ew_QuotedName('province_id', $this->DBID) . '=' . ew_QuotedValue($rs['province_id'], $this->province_id->FldDataType, $this->DBID));
+			if (array_key_exists('order_detail_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('order_detail_id', $this->DBID) . '=' . ew_QuotedValue($rs['order_detail_id'], $this->order_detail_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -383,18 +465,18 @@ class cprovinces extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`province_id` = @province_id@";
+		return "`order_detail_id` = @order_detail_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->province_id->CurrentValue))
+		if (!is_numeric($this->order_detail_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->province_id->CurrentValue))
+		if (is_null($this->order_detail_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@province_id@", ew_AdjustSql($this->province_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@order_detail_id@", ew_AdjustSql($this->order_detail_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -408,7 +490,7 @@ class cprovinces extends cTable {
 		if (@$_SESSION[$name] <> "") {
 			return $_SESSION[$name];
 		} else {
-			return "provinceslist.php";
+			return "order_detailslist.php";
 		}
 	}
 
@@ -419,11 +501,11 @@ class cprovinces extends cTable {
 	// Get modal caption
 	function GetModalCaption($pageName) {
 		global $Language;
-		if ($pageName == "provincesview.php")
+		if ($pageName == "order_detailsview.php")
 			return $Language->Phrase("View");
-		elseif ($pageName == "provincesedit.php")
+		elseif ($pageName == "order_detailsedit.php")
 			return $Language->Phrase("Edit");
-		elseif ($pageName == "provincesadd.php")
+		elseif ($pageName == "order_detailsadd.php")
 			return $Language->Phrase("Add");
 		else
 			return "";
@@ -431,30 +513,30 @@ class cprovinces extends cTable {
 
 	// List URL
 	function GetListUrl() {
-		return "provinceslist.php";
+		return "order_detailslist.php";
 	}
 
 	// View URL
 	function GetViewUrl($parm = "") {
 		if ($parm <> "")
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm($parm));
+			$url = $this->KeyUrl("order_detailsview.php", $this->UrlParm($parm));
 		else
-			$url = $this->KeyUrl("provincesview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
+			$url = $this->KeyUrl("order_detailsview.php", $this->UrlParm(EW_TABLE_SHOW_DETAIL . "="));
 		return $this->AddMasterUrl($url);
 	}
 
 	// Add URL
 	function GetAddUrl($parm = "") {
 		if ($parm <> "")
-			$url = "provincesadd.php?" . $this->UrlParm($parm);
+			$url = "order_detailsadd.php?" . $this->UrlParm($parm);
 		else
-			$url = "provincesadd.php";
+			$url = "order_detailsadd.php";
 		return $this->AddMasterUrl($url);
 	}
 
 	// Edit URL
 	function GetEditUrl($parm = "") {
-		$url = $this->KeyUrl("provincesedit.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("order_detailsedit.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -466,7 +548,7 @@ class cprovinces extends cTable {
 
 	// Copy URL
 	function GetCopyUrl($parm = "") {
-		$url = $this->KeyUrl("provincesadd.php", $this->UrlParm($parm));
+		$url = $this->KeyUrl("order_detailsadd.php", $this->UrlParm($parm));
 		return $this->AddMasterUrl($url);
 	}
 
@@ -478,17 +560,21 @@ class cprovinces extends cTable {
 
 	// Delete URL
 	function GetDeleteUrl() {
-		return $this->KeyUrl("provincesdelete.php", $this->UrlParm());
+		return $this->KeyUrl("order_detailsdelete.php", $this->UrlParm());
 	}
 
 	// Add master url
 	function AddMasterUrl($url) {
+		if ($this->getCurrentMasterTable() == "orders" && strpos($url, EW_TABLE_SHOW_MASTER . "=") === FALSE) {
+			$url .= (strpos($url, "?") !== FALSE ? "&" : "?") . EW_TABLE_SHOW_MASTER . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_order_id=" . urlencode($this->order_id->CurrentValue);
+		}
 		return $url;
 	}
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "province_id:" . ew_VarToJson($this->province_id->CurrentValue, "number", "'");
+		$json .= "order_detail_id:" . ew_VarToJson($this->order_detail_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -496,8 +582,8 @@ class cprovinces extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->province_id->CurrentValue)) {
-			$sUrl .= "province_id=" . urlencode($this->province_id->CurrentValue);
+		if (!is_null($this->order_detail_id->CurrentValue)) {
+			$sUrl .= "order_detail_id=" . urlencode($this->order_detail_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -530,10 +616,10 @@ class cprovinces extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["province_id"]))
-				$arKeys[] = $_POST["province_id"];
-			elseif (isset($_GET["province_id"]))
-				$arKeys[] = $_GET["province_id"];
+			if ($isPost && isset($_POST["order_detail_id"]))
+				$arKeys[] = $_POST["order_detail_id"];
+			elseif (isset($_GET["order_detail_id"]))
+				$arKeys[] = $_GET["order_detail_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -558,7 +644,7 @@ class cprovinces extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->province_id->CurrentValue = $key;
+			$this->order_detail_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -579,8 +665,12 @@ class cprovinces extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->province_id->setDbValue($rs->fields('province_id'));
-		$this->name->setDbValue($rs->fields('name'));
+		$this->order_detail_id->setDbValue($rs->fields('order_detail_id'));
+		$this->order_id->setDbValue($rs->fields('order_id'));
+		$this->quantity->setDbValue($rs->fields('quantity'));
+		$this->menu_id->setDbValue($rs->fields('menu_id'));
+		$this->sub_menu_id->setDbValue($rs->fields('sub_menu_id'));
+		$this->price->setDbValue($rs->fields('price'));
 	}
 
 	// Render list row values
@@ -591,26 +681,127 @@ class cprovinces extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// province_id
-		// name
-		// province_id
+		// order_detail_id
+		// order_id
+		// quantity
+		// menu_id
+		// sub_menu_id
+		// price
+		// order_detail_id
 
-		$this->province_id->ViewValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		$this->order_detail_id->ViewValue = $this->order_detail_id->CurrentValue;
+		$this->order_detail_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
+		// order_id
+		if (strval($this->order_id->CurrentValue) <> "") {
+			$sFilterWrk = "`order_id`" . ew_SearchString("=", $this->order_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `order_id`, `order_id` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `orders`";
+		$sWhereWrk = "";
+		$this->order_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->order_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `order_id`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->order_id->ViewValue = $this->order_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->order_id->ViewValue = $this->order_id->CurrentValue;
+			}
+		} else {
+			$this->order_id->ViewValue = NULL;
+		}
+		$this->order_id->ViewCustomAttributes = "";
 
-		// province_id
-		$this->province_id->LinkCustomAttributes = "";
-		$this->province_id->HrefValue = "";
-		$this->province_id->TooltipValue = "";
+		// quantity
+		$this->quantity->ViewValue = $this->quantity->CurrentValue;
+		$this->quantity->ViewCustomAttributes = "";
 
-		// name
-		$this->name->LinkCustomAttributes = "";
-		$this->name->HrefValue = "";
-		$this->name->TooltipValue = "";
+		// menu_id
+		if (strval($this->menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
+		$sWhereWrk = "";
+		$this->menu_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `name`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
+			}
+		} else {
+			$this->menu_id->ViewValue = NULL;
+		}
+		$this->menu_id->ViewCustomAttributes = "";
+
+		// sub_menu_id
+		if (strval($this->sub_menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`sub_menu_id`" . ew_SearchString("=", $this->sub_menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `sub_menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `sub_menus`";
+		$sWhereWrk = "";
+		$this->sub_menu_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sub_menu_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `name`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->CurrentValue;
+			}
+		} else {
+			$this->sub_menu_id->ViewValue = NULL;
+		}
+		$this->sub_menu_id->ViewCustomAttributes = "";
+
+		// price
+		$this->price->ViewValue = $this->price->CurrentValue;
+		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+		$this->price->ViewCustomAttributes = "";
+
+		// order_detail_id
+		$this->order_detail_id->LinkCustomAttributes = "";
+		$this->order_detail_id->HrefValue = "";
+		$this->order_detail_id->TooltipValue = "";
+
+		// order_id
+		$this->order_id->LinkCustomAttributes = "";
+		$this->order_id->HrefValue = "";
+		$this->order_id->TooltipValue = "";
+
+		// quantity
+		$this->quantity->LinkCustomAttributes = "";
+		$this->quantity->HrefValue = "";
+		$this->quantity->TooltipValue = "";
+
+		// menu_id
+		$this->menu_id->LinkCustomAttributes = "";
+		$this->menu_id->HrefValue = "";
+		$this->menu_id->TooltipValue = "";
+
+		// sub_menu_id
+		$this->sub_menu_id->LinkCustomAttributes = "";
+		$this->sub_menu_id->HrefValue = "";
+		$this->sub_menu_id->TooltipValue = "";
+
+		// price
+		$this->price->LinkCustomAttributes = "";
+		$this->price->HrefValue = "";
+		$this->price->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -626,17 +817,62 @@ class cprovinces extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// province_id
-		$this->province_id->EditAttrs["class"] = "form-control";
-		$this->province_id->EditCustomAttributes = "";
-		$this->province_id->EditValue = $this->province_id->CurrentValue;
-		$this->province_id->ViewCustomAttributes = "";
+		// order_detail_id
+		$this->order_detail_id->EditAttrs["class"] = "form-control";
+		$this->order_detail_id->EditCustomAttributes = "";
+		$this->order_detail_id->EditValue = $this->order_detail_id->CurrentValue;
+		$this->order_detail_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->EditAttrs["class"] = "form-control";
-		$this->name->EditCustomAttributes = "";
-		$this->name->EditValue = $this->name->CurrentValue;
-		$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
+		// order_id
+		$this->order_id->EditAttrs["class"] = "form-control";
+		$this->order_id->EditCustomAttributes = "";
+		if ($this->order_id->getSessionValue() <> "") {
+			$this->order_id->CurrentValue = $this->order_id->getSessionValue();
+		if (strval($this->order_id->CurrentValue) <> "") {
+			$sFilterWrk = "`order_id`" . ew_SearchString("=", $this->order_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `order_id`, `order_id` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `orders`";
+		$sWhereWrk = "";
+		$this->order_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->order_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `order_id`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->order_id->ViewValue = $this->order_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->order_id->ViewValue = $this->order_id->CurrentValue;
+			}
+		} else {
+			$this->order_id->ViewValue = NULL;
+		}
+		$this->order_id->ViewCustomAttributes = "";
+		} else {
+		}
+
+		// quantity
+		$this->quantity->EditAttrs["class"] = "form-control";
+		$this->quantity->EditCustomAttributes = "";
+		$this->quantity->EditValue = $this->quantity->CurrentValue;
+		$this->quantity->PlaceHolder = ew_RemoveHtml($this->quantity->FldCaption());
+
+		// menu_id
+		$this->menu_id->EditAttrs["class"] = "form-control";
+		$this->menu_id->EditCustomAttributes = "";
+
+		// sub_menu_id
+		$this->sub_menu_id->EditAttrs["class"] = "form-control";
+		$this->sub_menu_id->EditCustomAttributes = "";
+
+		// price
+		$this->price->EditAttrs["class"] = "form-control";
+		$this->price->EditCustomAttributes = "";
+		$this->price->EditValue = $this->price->CurrentValue;
+		$this->price->PlaceHolder = ew_RemoveHtml($this->price->FldCaption());
+		if (strval($this->price->EditValue) <> "" && is_numeric($this->price->EditValue)) $this->price->EditValue = ew_FormatNumber($this->price->EditValue, -2, -2, -2, -2);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -644,10 +880,17 @@ class cprovinces extends cTable {
 
 	// Aggregate list row values
 	function AggregateListRowValues() {
+			if (is_numeric($this->price->CurrentValue))
+				$this->price->Total += $this->price->CurrentValue; // Accumulate total
 	}
 
 	// Aggregate list row (for rendering)
 	function AggregateListRow() {
+			$this->price->CurrentValue = $this->price->Total;
+			$this->price->ViewValue = $this->price->CurrentValue;
+			$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+			$this->price->ViewCustomAttributes = "";
+			$this->price->HrefValue = ""; // Clear href value
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -665,10 +908,17 @@ class cprovinces extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
-					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->order_detail_id->Exportable) $Doc->ExportCaption($this->order_detail_id);
+					if ($this->order_id->Exportable) $Doc->ExportCaption($this->order_id);
+					if ($this->quantity->Exportable) $Doc->ExportCaption($this->quantity);
+					if ($this->menu_id->Exportable) $Doc->ExportCaption($this->menu_id);
+					if ($this->sub_menu_id->Exportable) $Doc->ExportCaption($this->sub_menu_id);
+					if ($this->price->Exportable) $Doc->ExportCaption($this->price);
 				} else {
-					if ($this->name->Exportable) $Doc->ExportCaption($this->name);
+					if ($this->quantity->Exportable) $Doc->ExportCaption($this->quantity);
+					if ($this->menu_id->Exportable) $Doc->ExportCaption($this->menu_id);
+					if ($this->sub_menu_id->Exportable) $Doc->ExportCaption($this->sub_menu_id);
+					if ($this->price->Exportable) $Doc->ExportCaption($this->price);
 				}
 				$Doc->EndExportRow();
 			}
@@ -692,6 +942,7 @@ class cprovinces extends cTable {
 						$Doc->ExportPageBreak();
 				}
 				$this->LoadListRowValues($Recordset);
+				$this->AggregateListRowValues(); // Aggregate row values
 
 				// Render row
 				$this->RowType = EW_ROWTYPE_VIEW; // Render view
@@ -700,10 +951,17 @@ class cprovinces extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
-						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->order_detail_id->Exportable) $Doc->ExportField($this->order_detail_id);
+						if ($this->order_id->Exportable) $Doc->ExportField($this->order_id);
+						if ($this->quantity->Exportable) $Doc->ExportField($this->quantity);
+						if ($this->menu_id->Exportable) $Doc->ExportField($this->menu_id);
+						if ($this->sub_menu_id->Exportable) $Doc->ExportField($this->sub_menu_id);
+						if ($this->price->Exportable) $Doc->ExportField($this->price);
 					} else {
-						if ($this->name->Exportable) $Doc->ExportField($this->name);
+						if ($this->quantity->Exportable) $Doc->ExportField($this->quantity);
+						if ($this->menu_id->Exportable) $Doc->ExportField($this->menu_id);
+						if ($this->sub_menu_id->Exportable) $Doc->ExportField($this->sub_menu_id);
+						if ($this->price->Exportable) $Doc->ExportField($this->price);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
@@ -713,6 +971,21 @@ class cprovinces extends cTable {
 			if ($Doc->ExportCustom)
 				$this->Row_Export($Recordset->fields);
 			$Recordset->MoveNext();
+		}
+
+		// Export aggregates (horizontal format only)
+		if ($Doc->Horizontal) {
+			$this->RowType = EW_ROWTYPE_AGGREGATE;
+			$this->ResetAttrs();
+			$this->AggregateListRow();
+			if (!$Doc->ExportCustom) {
+				$Doc->BeginExportRow(-1);
+				if ($this->quantity->Exportable) $Doc->ExportAggregate($this->quantity, '');
+				if ($this->menu_id->Exportable) $Doc->ExportAggregate($this->menu_id, '');
+				if ($this->sub_menu_id->Exportable) $Doc->ExportAggregate($this->sub_menu_id, '');
+				if ($this->price->Exportable) $Doc->ExportAggregate($this->price, 'TOTAL');
+				$Doc->EndExportRow();
+			}
 		}
 		if (!$Doc->ExportCustom) {
 			$Doc->ExportTableFooter();

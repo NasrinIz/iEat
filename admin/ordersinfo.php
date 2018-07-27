@@ -7,20 +7,20 @@ $orders = NULL;
 // Table class for orders
 //
 class corders extends cTable {
-	var $OrderID;
-	var $CustomerID;
-	var $FullName;
-	var $ProvinceID;
-	var $Address;
-	var $ZipCode;
-	var $Phone;
-	var $Discount;
-	var $TotalPrice;
-	var $PaymentTypeID;
-	var $DeliveryTypeID;
-	var $Description;
-	var $FeedBack;
-	var $OrderDateTime;
+	var $order_id;
+	var $customer_id;
+	var $full_name;
+	var $province_id;
+	var $address;
+	var $zip_code;
+	var $phone;
+	var $discount;
+	var $total_price;
+	var $payment_type_id;
+	var $delivery_type_id;
+	var $description;
+	var $feedback;
+	var $order_date_time;
 
 	//
 	// Table class constructor
@@ -54,91 +54,91 @@ class corders extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// OrderID
-		$this->OrderID = new cField('orders', 'orders', 'x_OrderID', 'OrderID', '`OrderID`', '`OrderID`', 3, -1, FALSE, '`OrderID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
-		$this->OrderID->Sortable = TRUE; // Allow sort
-		$this->OrderID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['OrderID'] = &$this->OrderID;
+		// order_id
+		$this->order_id = new cField('orders', 'orders', 'x_order_id', 'order_id', '`order_id`', '`order_id`', 3, -1, FALSE, '`order_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->order_id->Sortable = TRUE; // Allow sort
+		$this->order_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['order_id'] = &$this->order_id;
 
-		// CustomerID
-		$this->CustomerID = new cField('orders', 'orders', 'x_CustomerID', 'CustomerID', '`CustomerID`', '`CustomerID`', 3, -1, FALSE, '`CustomerID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->CustomerID->Sortable = TRUE; // Allow sort
-		$this->CustomerID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->CustomerID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->CustomerID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['CustomerID'] = &$this->CustomerID;
+		// customer_id
+		$this->customer_id = new cField('orders', 'orders', 'x_customer_id', 'customer_id', '`customer_id`', '`customer_id`', 3, -1, FALSE, '`customer_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->customer_id->Sortable = TRUE; // Allow sort
+		$this->customer_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->customer_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->customer_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['customer_id'] = &$this->customer_id;
 
-		// FullName
-		$this->FullName = new cField('orders', 'orders', 'x_FullName', 'FullName', '`FullName`', '`FullName`', 200, -1, FALSE, '`FullName`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->FullName->Sortable = TRUE; // Allow sort
-		$this->fields['FullName'] = &$this->FullName;
+		// full_name
+		$this->full_name = new cField('orders', 'orders', 'x_full_name', 'full_name', '`full_name`', '`full_name`', 200, -1, FALSE, '`full_name`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->full_name->Sortable = TRUE; // Allow sort
+		$this->fields['full_name'] = &$this->full_name;
 
-		// ProvinceID
-		$this->ProvinceID = new cField('orders', 'orders', 'x_ProvinceID', 'ProvinceID', '`ProvinceID`', '`ProvinceID`', 3, -1, FALSE, '`ProvinceID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->ProvinceID->Sortable = TRUE; // Allow sort
-		$this->ProvinceID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->ProvinceID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->ProvinceID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['ProvinceID'] = &$this->ProvinceID;
+		// province_id
+		$this->province_id = new cField('orders', 'orders', 'x_province_id', 'province_id', '`province_id`', '`province_id`', 3, -1, FALSE, '`province_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->province_id->Sortable = TRUE; // Allow sort
+		$this->province_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->province_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->province_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['province_id'] = &$this->province_id;
 
-		// Address
-		$this->Address = new cField('orders', 'orders', 'x_Address', 'Address', '`Address`', '`Address`', 201, -1, FALSE, '`Address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->Address->Sortable = TRUE; // Allow sort
-		$this->fields['Address'] = &$this->Address;
+		// address
+		$this->address = new cField('orders', 'orders', 'x_address', 'address', '`address`', '`address`', 201, -1, FALSE, '`address`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
+		$this->address->Sortable = TRUE; // Allow sort
+		$this->fields['address'] = &$this->address;
 
-		// ZipCode
-		$this->ZipCode = new cField('orders', 'orders', 'x_ZipCode', 'ZipCode', '`ZipCode`', '`ZipCode`', 200, -1, FALSE, '`ZipCode`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->ZipCode->Sortable = TRUE; // Allow sort
-		$this->fields['ZipCode'] = &$this->ZipCode;
+		// zip_code
+		$this->zip_code = new cField('orders', 'orders', 'x_zip_code', 'zip_code', '`zip_code`', '`zip_code`', 200, -1, FALSE, '`zip_code`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->zip_code->Sortable = TRUE; // Allow sort
+		$this->fields['zip_code'] = &$this->zip_code;
 
-		// Phone
-		$this->Phone = new cField('orders', 'orders', 'x_Phone', 'Phone', '`Phone`', '`Phone`', 200, -1, FALSE, '`Phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Phone->Sortable = TRUE; // Allow sort
-		$this->fields['Phone'] = &$this->Phone;
+		// phone
+		$this->phone = new cField('orders', 'orders', 'x_phone', 'phone', '`phone`', '`phone`', 200, -1, FALSE, '`phone`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->phone->Sortable = TRUE; // Allow sort
+		$this->fields['phone'] = &$this->phone;
 
-		// Discount
-		$this->Discount = new cField('orders', 'orders', 'x_Discount', 'Discount', '`Discount`', '`Discount`', 5, -1, FALSE, '`Discount`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->Discount->Sortable = TRUE; // Allow sort
-		$this->Discount->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['Discount'] = &$this->Discount;
+		// discount
+		$this->discount = new cField('orders', 'orders', 'x_discount', 'discount', '`discount`', '`discount`', 5, -1, FALSE, '`discount`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->discount->Sortable = TRUE; // Allow sort
+		$this->discount->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['discount'] = &$this->discount;
 
-		// TotalPrice
-		$this->TotalPrice = new cField('orders', 'orders', 'x_TotalPrice', 'TotalPrice', '`TotalPrice`', '`TotalPrice`', 5, -1, FALSE, '`TotalPrice`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->TotalPrice->Sortable = TRUE; // Allow sort
-		$this->TotalPrice->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
-		$this->fields['TotalPrice'] = &$this->TotalPrice;
+		// total_price
+		$this->total_price = new cField('orders', 'orders', 'x_total_price', 'total_price', '`total_price`', '`total_price`', 5, -1, FALSE, '`total_price`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->total_price->Sortable = TRUE; // Allow sort
+		$this->total_price->FldDefaultErrMsg = $Language->Phrase("IncorrectFloat");
+		$this->fields['total_price'] = &$this->total_price;
 
-		// PaymentTypeID
-		$this->PaymentTypeID = new cField('orders', 'orders', 'x_PaymentTypeID', 'PaymentTypeID', '`PaymentTypeID`', '`PaymentTypeID`', 3, -1, FALSE, '`PaymentTypeID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->PaymentTypeID->Sortable = TRUE; // Allow sort
-		$this->PaymentTypeID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->PaymentTypeID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->PaymentTypeID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['PaymentTypeID'] = &$this->PaymentTypeID;
+		// payment_type_id
+		$this->payment_type_id = new cField('orders', 'orders', 'x_payment_type_id', 'payment_type_id', '`payment_type_id`', '`payment_type_id`', 3, -1, FALSE, '`payment_type_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->payment_type_id->Sortable = TRUE; // Allow sort
+		$this->payment_type_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->payment_type_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->payment_type_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['payment_type_id'] = &$this->payment_type_id;
 
-		// DeliveryTypeID
-		$this->DeliveryTypeID = new cField('orders', 'orders', 'x_DeliveryTypeID', 'DeliveryTypeID', '`DeliveryTypeID`', '`DeliveryTypeID`', 3, -1, FALSE, '`DeliveryTypeID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->DeliveryTypeID->Sortable = TRUE; // Allow sort
-		$this->DeliveryTypeID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->DeliveryTypeID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->DeliveryTypeID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['DeliveryTypeID'] = &$this->DeliveryTypeID;
+		// delivery_type_id
+		$this->delivery_type_id = new cField('orders', 'orders', 'x_delivery_type_id', 'delivery_type_id', '`delivery_type_id`', '`delivery_type_id`', 3, -1, FALSE, '`delivery_type_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->delivery_type_id->Sortable = TRUE; // Allow sort
+		$this->delivery_type_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->delivery_type_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->delivery_type_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['delivery_type_id'] = &$this->delivery_type_id;
 
-		// Description
-		$this->Description = new cField('orders', 'orders', 'x_Description', 'Description', '`Description`', '`Description`', 201, -1, FALSE, '`Description`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->Description->Sortable = TRUE; // Allow sort
-		$this->fields['Description'] = &$this->Description;
+		// description
+		$this->description = new cField('orders', 'orders', 'x_description', 'description', '`description`', '`description`', 201, -1, FALSE, '`description`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
+		$this->description->Sortable = TRUE; // Allow sort
+		$this->fields['description'] = &$this->description;
 
-		// FeedBack
-		$this->FeedBack = new cField('orders', 'orders', 'x_FeedBack', 'FeedBack', '`FeedBack`', '`FeedBack`', 201, -1, FALSE, '`FeedBack`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
-		$this->FeedBack->Sortable = TRUE; // Allow sort
-		$this->fields['FeedBack'] = &$this->FeedBack;
+		// feedback
+		$this->feedback = new cField('orders', 'orders', 'x_feedback', 'feedback', '`feedback`', '`feedback`', 201, -1, FALSE, '`feedback`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXTAREA');
+		$this->feedback->Sortable = TRUE; // Allow sort
+		$this->fields['feedback'] = &$this->feedback;
 
-		// OrderDateTime
-		$this->OrderDateTime = new cField('orders', 'orders', 'x_OrderDateTime', 'OrderDateTime', '`OrderDateTime`', ew_CastDateFieldForLike('`OrderDateTime`', 0, "DB"), 135, 0, FALSE, '`OrderDateTime`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->OrderDateTime->Sortable = TRUE; // Allow sort
-		$this->OrderDateTime->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
-		$this->fields['OrderDateTime'] = &$this->OrderDateTime;
+		// order_date_time
+		$this->order_date_time = new cField('orders', 'orders', 'x_order_date_time', 'order_date_time', '`order_date_time`', ew_CastDateFieldForLike('`order_date_time`', 0, "DB"), 135, 0, FALSE, '`order_date_time`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->order_date_time->Sortable = TRUE; // Allow sort
+		$this->order_date_time->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_DATE_FORMAT"], $Language->Phrase("IncorrectDate"));
+		$this->fields['order_date_time'] = &$this->order_date_time;
 	}
 
 	// Field Visibility
@@ -192,9 +192,9 @@ class corders extends cTable {
 
 		// Detail url
 		$sDetailUrl = "";
-		if ($this->getCurrentDetailTable() == "orderdetails") {
-			$sDetailUrl = $GLOBALS["orderdetails"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
-			$sDetailUrl .= "&fk_OrderID=" . urlencode($this->OrderID->CurrentValue);
+		if ($this->getCurrentDetailTable() == "order_details") {
+			$sDetailUrl = $GLOBALS["order_details"]->GetListUrl() . "?" . EW_TABLE_SHOW_MASTER . "=" . $this->TableVar;
+			$sDetailUrl .= "&fk_order_id=" . urlencode($this->order_id->CurrentValue);
 		}
 		if ($sDetailUrl == "") {
 			$sDetailUrl = "orderslist.php";
@@ -434,8 +434,8 @@ class corders extends cTable {
 		if ($bInsert) {
 
 			// Get insert id if necessary
-			$this->OrderID->setDbValue($conn->Insert_ID());
-			$rs['OrderID'] = $this->OrderID->DbValue;
+			$this->order_id->setDbValue($conn->Insert_ID());
+			$rs['order_id'] = $this->order_id->DbValue;
 		}
 		return $bInsert;
 	}
@@ -471,8 +471,8 @@ class corders extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('OrderID', $rs))
-				ew_AddFilter($where, ew_QuotedName('OrderID', $this->DBID) . '=' . ew_QuotedValue($rs['OrderID'], $this->OrderID->FldDataType, $this->DBID));
+			if (array_key_exists('order_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('order_id', $this->DBID) . '=' . ew_QuotedValue($rs['order_id'], $this->order_id->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -494,18 +494,18 @@ class corders extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`OrderID` = @OrderID@";
+		return "`order_id` = @order_id@";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->OrderID->CurrentValue))
+		if (!is_numeric($this->order_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->OrderID->CurrentValue))
+		if (is_null($this->order_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@OrderID@", ew_AdjustSql($this->OrderID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@order_id@", ew_AdjustSql($this->order_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -605,7 +605,7 @@ class corders extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "OrderID:" . ew_VarToJson($this->OrderID->CurrentValue, "number", "'");
+		$json .= "order_id:" . ew_VarToJson($this->order_id->CurrentValue, "number", "'");
 		return "{" . $json . "}";
 	}
 
@@ -613,8 +613,8 @@ class corders extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->OrderID->CurrentValue)) {
-			$sUrl .= "OrderID=" . urlencode($this->OrderID->CurrentValue);
+		if (!is_null($this->order_id->CurrentValue)) {
+			$sUrl .= "order_id=" . urlencode($this->order_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -647,10 +647,10 @@ class corders extends cTable {
 			$cnt = count($arKeys);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["OrderID"]))
-				$arKeys[] = $_POST["OrderID"];
-			elseif (isset($_GET["OrderID"]))
-				$arKeys[] = $_GET["OrderID"];
+			if ($isPost && isset($_POST["order_id"]))
+				$arKeys[] = $_POST["order_id"];
+			elseif (isset($_GET["order_id"]))
+				$arKeys[] = $_GET["order_id"];
 			else
 				$arKeys = NULL; // Do not setup
 
@@ -675,7 +675,7 @@ class corders extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->OrderID->CurrentValue = $key;
+			$this->order_id->CurrentValue = $key;
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -696,20 +696,20 @@ class corders extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->OrderID->setDbValue($rs->fields('OrderID'));
-		$this->CustomerID->setDbValue($rs->fields('CustomerID'));
-		$this->FullName->setDbValue($rs->fields('FullName'));
-		$this->ProvinceID->setDbValue($rs->fields('ProvinceID'));
-		$this->Address->setDbValue($rs->fields('Address'));
-		$this->ZipCode->setDbValue($rs->fields('ZipCode'));
-		$this->Phone->setDbValue($rs->fields('Phone'));
-		$this->Discount->setDbValue($rs->fields('Discount'));
-		$this->TotalPrice->setDbValue($rs->fields('TotalPrice'));
-		$this->PaymentTypeID->setDbValue($rs->fields('PaymentTypeID'));
-		$this->DeliveryTypeID->setDbValue($rs->fields('DeliveryTypeID'));
-		$this->Description->setDbValue($rs->fields('Description'));
-		$this->FeedBack->setDbValue($rs->fields('FeedBack'));
-		$this->OrderDateTime->setDbValue($rs->fields('OrderDateTime'));
+		$this->order_id->setDbValue($rs->fields('order_id'));
+		$this->customer_id->setDbValue($rs->fields('customer_id'));
+		$this->full_name->setDbValue($rs->fields('full_name'));
+		$this->province_id->setDbValue($rs->fields('province_id'));
+		$this->address->setDbValue($rs->fields('address'));
+		$this->zip_code->setDbValue($rs->fields('zip_code'));
+		$this->phone->setDbValue($rs->fields('phone'));
+		$this->discount->setDbValue($rs->fields('discount'));
+		$this->total_price->setDbValue($rs->fields('total_price'));
+		$this->payment_type_id->setDbValue($rs->fields('payment_type_id'));
+		$this->delivery_type_id->setDbValue($rs->fields('delivery_type_id'));
+		$this->description->setDbValue($rs->fields('description'));
+		$this->feedback->setDbValue($rs->fields('feedback'));
+		$this->order_date_time->setDbValue($rs->fields('order_date_time'));
 	}
 
 	// Render list row values
@@ -720,228 +720,228 @@ class corders extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// OrderID
-		// CustomerID
-		// FullName
-		// ProvinceID
-		// Address
-		// ZipCode
-		// Phone
-		// Discount
-		// TotalPrice
-		// PaymentTypeID
-		// DeliveryTypeID
-		// Description
-		// FeedBack
-		// OrderDateTime
-		// OrderID
+		// order_id
+		// customer_id
+		// full_name
+		// province_id
+		// address
+		// zip_code
+		// phone
+		// discount
+		// total_price
+		// payment_type_id
+		// delivery_type_id
+		// description
+		// feedback
+		// order_date_time
+		// order_id
 
-		$this->OrderID->ViewValue = $this->OrderID->CurrentValue;
-		$this->OrderID->ViewCustomAttributes = "";
+		$this->order_id->ViewValue = $this->order_id->CurrentValue;
+		$this->order_id->ViewCustomAttributes = "";
 
-		// CustomerID
-		if (strval($this->CustomerID->CurrentValue) <> "") {
-			$sFilterWrk = "`CustomerID`" . ew_SearchString("=", $this->CustomerID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `CustomerID`, `FullName` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
+		// customer_id
+		if (strval($this->customer_id->CurrentValue) <> "") {
+			$sFilterWrk = "`customer_id`" . ew_SearchString("=", $this->customer_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `customer_id`, `full_name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `customers`";
 		$sWhereWrk = "";
-		$this->CustomerID->LookupFilters = array();
+		$this->customer_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->CustomerID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->customer_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `FullName`";
+		$sSqlWrk .= " ORDER BY `full_name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->CustomerID->ViewValue = $this->CustomerID->DisplayValue($arwrk);
+				$this->customer_id->ViewValue = $this->customer_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->CustomerID->ViewValue = $this->CustomerID->CurrentValue;
+				$this->customer_id->ViewValue = $this->customer_id->CurrentValue;
 			}
 		} else {
-			$this->CustomerID->ViewValue = NULL;
+			$this->customer_id->ViewValue = NULL;
 		}
-		$this->CustomerID->ViewCustomAttributes = "";
+		$this->customer_id->ViewCustomAttributes = "";
 
-		// FullName
-		$this->FullName->ViewValue = $this->FullName->CurrentValue;
-		$this->FullName->ViewCustomAttributes = "";
+		// full_name
+		$this->full_name->ViewValue = $this->full_name->CurrentValue;
+		$this->full_name->ViewCustomAttributes = "";
 
-		// ProvinceID
-		if (strval($this->ProvinceID->CurrentValue) <> "") {
-			$sFilterWrk = "`ProvinceID`" . ew_SearchString("=", $this->ProvinceID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `ProvinceID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
+		// province_id
+		if (strval($this->province_id->CurrentValue) <> "") {
+			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
 		$sWhereWrk = "";
-		$this->ProvinceID->LookupFilters = array();
+		$this->province_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->ProvinceID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->ProvinceID->ViewValue = $this->ProvinceID->DisplayValue($arwrk);
+				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->ProvinceID->ViewValue = $this->ProvinceID->CurrentValue;
+				$this->province_id->ViewValue = $this->province_id->CurrentValue;
 			}
 		} else {
-			$this->ProvinceID->ViewValue = NULL;
+			$this->province_id->ViewValue = NULL;
 		}
-		$this->ProvinceID->ViewCustomAttributes = "";
+		$this->province_id->ViewCustomAttributes = "";
 
-		// Address
-		$this->Address->ViewValue = $this->Address->CurrentValue;
-		$this->Address->ViewCustomAttributes = "";
+		// address
+		$this->address->ViewValue = $this->address->CurrentValue;
+		$this->address->ViewCustomAttributes = "";
 
-		// ZipCode
-		$this->ZipCode->ViewValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->ViewCustomAttributes = "";
+		// zip_code
+		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
+		$this->zip_code->ViewCustomAttributes = "";
 
-		// Phone
-		$this->Phone->ViewValue = $this->Phone->CurrentValue;
-		$this->Phone->ViewCustomAttributes = "";
+		// phone
+		$this->phone->ViewValue = $this->phone->CurrentValue;
+		$this->phone->ViewCustomAttributes = "";
 
-		// Discount
-		$this->Discount->ViewValue = $this->Discount->CurrentValue;
-		$this->Discount->ViewCustomAttributes = "";
+		// discount
+		$this->discount->ViewValue = $this->discount->CurrentValue;
+		$this->discount->ViewCustomAttributes = "";
 
-		// TotalPrice
-		$this->TotalPrice->ViewValue = $this->TotalPrice->CurrentValue;
-		$this->TotalPrice->ViewValue = ew_FormatCurrency($this->TotalPrice->ViewValue, 0, -2, -2, -2);
-		$this->TotalPrice->ViewCustomAttributes = "";
+		// total_price
+		$this->total_price->ViewValue = $this->total_price->CurrentValue;
+		$this->total_price->ViewValue = ew_FormatCurrency($this->total_price->ViewValue, 0, -2, -2, -2);
+		$this->total_price->ViewCustomAttributes = "";
 
-		// PaymentTypeID
-		if (strval($this->PaymentTypeID->CurrentValue) <> "") {
-			$sFilterWrk = "`PaymentTypeID`" . ew_SearchString("=", $this->PaymentTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `PaymentTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `paymenttypes`";
+		// payment_type_id
+		if (strval($this->payment_type_id->CurrentValue) <> "") {
+			$sFilterWrk = "`payment_type_id`" . ew_SearchString("=", $this->payment_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `payment_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `payment_types`";
 		$sWhereWrk = "";
-		$this->PaymentTypeID->LookupFilters = array();
+		$this->payment_type_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->PaymentTypeID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->payment_type_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->PaymentTypeID->ViewValue = $this->PaymentTypeID->DisplayValue($arwrk);
+				$this->payment_type_id->ViewValue = $this->payment_type_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->PaymentTypeID->ViewValue = $this->PaymentTypeID->CurrentValue;
+				$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
 			}
 		} else {
-			$this->PaymentTypeID->ViewValue = NULL;
+			$this->payment_type_id->ViewValue = NULL;
 		}
-		$this->PaymentTypeID->ViewCustomAttributes = "";
+		$this->payment_type_id->ViewCustomAttributes = "";
 
-		// DeliveryTypeID
-		if (strval($this->DeliveryTypeID->CurrentValue) <> "") {
-			$sFilterWrk = "`DeliveryTypeID`" . ew_SearchString("=", $this->DeliveryTypeID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `DeliveryTypeID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `deliverytypes`";
+		// delivery_type_id
+		if (strval($this->delivery_type_id->CurrentValue) <> "") {
+			$sFilterWrk = "`delivery_type_id`" . ew_SearchString("=", $this->delivery_type_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `delivery_type_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `delivery_types`";
 		$sWhereWrk = "";
-		$this->DeliveryTypeID->LookupFilters = array();
+		$this->delivery_type_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->DeliveryTypeID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->delivery_type_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->DeliveryTypeID->ViewValue = $this->DeliveryTypeID->DisplayValue($arwrk);
+				$this->delivery_type_id->ViewValue = $this->delivery_type_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->DeliveryTypeID->ViewValue = $this->DeliveryTypeID->CurrentValue;
+				$this->delivery_type_id->ViewValue = $this->delivery_type_id->CurrentValue;
 			}
 		} else {
-			$this->DeliveryTypeID->ViewValue = NULL;
+			$this->delivery_type_id->ViewValue = NULL;
 		}
-		$this->DeliveryTypeID->ViewCustomAttributes = "";
+		$this->delivery_type_id->ViewCustomAttributes = "";
 
-		// Description
-		$this->Description->ViewValue = $this->Description->CurrentValue;
-		$this->Description->ViewCustomAttributes = "";
+		// description
+		$this->description->ViewValue = $this->description->CurrentValue;
+		$this->description->ViewCustomAttributes = "";
 
-		// FeedBack
-		$this->FeedBack->ViewValue = $this->FeedBack->CurrentValue;
-		$this->FeedBack->ViewCustomAttributes = "";
+		// feedback
+		$this->feedback->ViewValue = $this->feedback->CurrentValue;
+		$this->feedback->ViewCustomAttributes = "";
 
-		// OrderDateTime
-		$this->OrderDateTime->ViewValue = $this->OrderDateTime->CurrentValue;
-		$this->OrderDateTime->ViewValue = ew_FormatDateTime($this->OrderDateTime->ViewValue, 0);
-		$this->OrderDateTime->ViewCustomAttributes = "";
+		// order_date_time
+		$this->order_date_time->ViewValue = $this->order_date_time->CurrentValue;
+		$this->order_date_time->ViewValue = ew_FormatDateTime($this->order_date_time->ViewValue, 0);
+		$this->order_date_time->ViewCustomAttributes = "";
 
-		// OrderID
-		$this->OrderID->LinkCustomAttributes = "";
-		$this->OrderID->HrefValue = "";
-		$this->OrderID->TooltipValue = "";
+		// order_id
+		$this->order_id->LinkCustomAttributes = "";
+		$this->order_id->HrefValue = "";
+		$this->order_id->TooltipValue = "";
 
-		// CustomerID
-		$this->CustomerID->LinkCustomAttributes = "";
-		$this->CustomerID->HrefValue = "";
-		$this->CustomerID->TooltipValue = "";
+		// customer_id
+		$this->customer_id->LinkCustomAttributes = "";
+		$this->customer_id->HrefValue = "";
+		$this->customer_id->TooltipValue = "";
 
-		// FullName
-		$this->FullName->LinkCustomAttributes = "";
-		$this->FullName->HrefValue = "";
-		$this->FullName->TooltipValue = "";
+		// full_name
+		$this->full_name->LinkCustomAttributes = "";
+		$this->full_name->HrefValue = "";
+		$this->full_name->TooltipValue = "";
 
-		// ProvinceID
-		$this->ProvinceID->LinkCustomAttributes = "";
-		$this->ProvinceID->HrefValue = "";
-		$this->ProvinceID->TooltipValue = "";
+		// province_id
+		$this->province_id->LinkCustomAttributes = "";
+		$this->province_id->HrefValue = "";
+		$this->province_id->TooltipValue = "";
 
-		// Address
-		$this->Address->LinkCustomAttributes = "";
-		$this->Address->HrefValue = "";
-		$this->Address->TooltipValue = "";
+		// address
+		$this->address->LinkCustomAttributes = "";
+		$this->address->HrefValue = "";
+		$this->address->TooltipValue = "";
 
-		// ZipCode
-		$this->ZipCode->LinkCustomAttributes = "";
-		$this->ZipCode->HrefValue = "";
-		$this->ZipCode->TooltipValue = "";
+		// zip_code
+		$this->zip_code->LinkCustomAttributes = "";
+		$this->zip_code->HrefValue = "";
+		$this->zip_code->TooltipValue = "";
 
-		// Phone
-		$this->Phone->LinkCustomAttributes = "";
-		$this->Phone->HrefValue = "";
-		$this->Phone->TooltipValue = "";
+		// phone
+		$this->phone->LinkCustomAttributes = "";
+		$this->phone->HrefValue = "";
+		$this->phone->TooltipValue = "";
 
-		// Discount
-		$this->Discount->LinkCustomAttributes = "";
-		$this->Discount->HrefValue = "";
-		$this->Discount->TooltipValue = "";
+		// discount
+		$this->discount->LinkCustomAttributes = "";
+		$this->discount->HrefValue = "";
+		$this->discount->TooltipValue = "";
 
-		// TotalPrice
-		$this->TotalPrice->LinkCustomAttributes = "";
-		$this->TotalPrice->HrefValue = "";
-		$this->TotalPrice->TooltipValue = "";
+		// total_price
+		$this->total_price->LinkCustomAttributes = "";
+		$this->total_price->HrefValue = "";
+		$this->total_price->TooltipValue = "";
 
-		// PaymentTypeID
-		$this->PaymentTypeID->LinkCustomAttributes = "";
-		$this->PaymentTypeID->HrefValue = "";
-		$this->PaymentTypeID->TooltipValue = "";
+		// payment_type_id
+		$this->payment_type_id->LinkCustomAttributes = "";
+		$this->payment_type_id->HrefValue = "";
+		$this->payment_type_id->TooltipValue = "";
 
-		// DeliveryTypeID
-		$this->DeliveryTypeID->LinkCustomAttributes = "";
-		$this->DeliveryTypeID->HrefValue = "";
-		$this->DeliveryTypeID->TooltipValue = "";
+		// delivery_type_id
+		$this->delivery_type_id->LinkCustomAttributes = "";
+		$this->delivery_type_id->HrefValue = "";
+		$this->delivery_type_id->TooltipValue = "";
 
-		// Description
-		$this->Description->LinkCustomAttributes = "";
-		$this->Description->HrefValue = "";
-		$this->Description->TooltipValue = "";
+		// description
+		$this->description->LinkCustomAttributes = "";
+		$this->description->HrefValue = "";
+		$this->description->TooltipValue = "";
 
-		// FeedBack
-		$this->FeedBack->LinkCustomAttributes = "";
-		$this->FeedBack->HrefValue = "";
-		$this->FeedBack->TooltipValue = "";
+		// feedback
+		$this->feedback->LinkCustomAttributes = "";
+		$this->feedback->HrefValue = "";
+		$this->feedback->TooltipValue = "";
 
-		// OrderDateTime
-		$this->OrderDateTime->LinkCustomAttributes = "";
-		$this->OrderDateTime->HrefValue = "";
-		$this->OrderDateTime->TooltipValue = "";
+		// order_date_time
+		$this->order_date_time->LinkCustomAttributes = "";
+		$this->order_date_time->HrefValue = "";
+		$this->order_date_time->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -957,79 +957,79 @@ class corders extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// OrderID
-		$this->OrderID->EditAttrs["class"] = "form-control";
-		$this->OrderID->EditCustomAttributes = "";
-		$this->OrderID->EditValue = $this->OrderID->CurrentValue;
-		$this->OrderID->ViewCustomAttributes = "";
+		// order_id
+		$this->order_id->EditAttrs["class"] = "form-control";
+		$this->order_id->EditCustomAttributes = "";
+		$this->order_id->EditValue = $this->order_id->CurrentValue;
+		$this->order_id->ViewCustomAttributes = "";
 
-		// CustomerID
-		$this->CustomerID->EditAttrs["class"] = "form-control";
-		$this->CustomerID->EditCustomAttributes = "";
+		// customer_id
+		$this->customer_id->EditAttrs["class"] = "form-control";
+		$this->customer_id->EditCustomAttributes = "";
 
-		// FullName
-		$this->FullName->EditAttrs["class"] = "form-control";
-		$this->FullName->EditCustomAttributes = "";
-		$this->FullName->EditValue = $this->FullName->CurrentValue;
-		$this->FullName->PlaceHolder = ew_RemoveHtml($this->FullName->FldCaption());
+		// full_name
+		$this->full_name->EditAttrs["class"] = "form-control";
+		$this->full_name->EditCustomAttributes = "";
+		$this->full_name->EditValue = $this->full_name->CurrentValue;
+		$this->full_name->PlaceHolder = ew_RemoveHtml($this->full_name->FldCaption());
 
-		// ProvinceID
-		$this->ProvinceID->EditAttrs["class"] = "form-control";
-		$this->ProvinceID->EditCustomAttributes = "";
+		// province_id
+		$this->province_id->EditAttrs["class"] = "form-control";
+		$this->province_id->EditCustomAttributes = "";
 
-		// Address
-		$this->Address->EditAttrs["class"] = "form-control";
-		$this->Address->EditCustomAttributes = "";
-		$this->Address->EditValue = $this->Address->CurrentValue;
-		$this->Address->PlaceHolder = ew_RemoveHtml($this->Address->FldCaption());
+		// address
+		$this->address->EditAttrs["class"] = "form-control";
+		$this->address->EditCustomAttributes = "";
+		$this->address->EditValue = $this->address->CurrentValue;
+		$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
 
-		// ZipCode
-		$this->ZipCode->EditAttrs["class"] = "form-control";
-		$this->ZipCode->EditCustomAttributes = "";
-		$this->ZipCode->EditValue = $this->ZipCode->CurrentValue;
-		$this->ZipCode->PlaceHolder = ew_RemoveHtml($this->ZipCode->FldCaption());
+		// zip_code
+		$this->zip_code->EditAttrs["class"] = "form-control";
+		$this->zip_code->EditCustomAttributes = "";
+		$this->zip_code->EditValue = $this->zip_code->CurrentValue;
+		$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
 
-		// Phone
-		$this->Phone->EditAttrs["class"] = "form-control";
-		$this->Phone->EditCustomAttributes = "";
-		$this->Phone->EditValue = $this->Phone->CurrentValue;
-		$this->Phone->PlaceHolder = ew_RemoveHtml($this->Phone->FldCaption());
+		// phone
+		$this->phone->EditAttrs["class"] = "form-control";
+		$this->phone->EditCustomAttributes = "";
+		$this->phone->EditValue = $this->phone->CurrentValue;
+		$this->phone->PlaceHolder = ew_RemoveHtml($this->phone->FldCaption());
 
-		// Discount
-		$this->Discount->EditAttrs["class"] = "form-control";
-		$this->Discount->EditCustomAttributes = "";
-		$this->Discount->EditValue = $this->Discount->CurrentValue;
-		$this->Discount->PlaceHolder = ew_RemoveHtml($this->Discount->FldCaption());
-		if (strval($this->Discount->EditValue) <> "" && is_numeric($this->Discount->EditValue)) $this->Discount->EditValue = ew_FormatNumber($this->Discount->EditValue, -2, -1, -2, 0);
+		// discount
+		$this->discount->EditAttrs["class"] = "form-control";
+		$this->discount->EditCustomAttributes = "";
+		$this->discount->EditValue = $this->discount->CurrentValue;
+		$this->discount->PlaceHolder = ew_RemoveHtml($this->discount->FldCaption());
+		if (strval($this->discount->EditValue) <> "" && is_numeric($this->discount->EditValue)) $this->discount->EditValue = ew_FormatNumber($this->discount->EditValue, -2, -1, -2, 0);
 
-		// TotalPrice
-		$this->TotalPrice->EditAttrs["class"] = "form-control";
-		$this->TotalPrice->EditCustomAttributes = "";
-		$this->TotalPrice->EditValue = $this->TotalPrice->CurrentValue;
-		$this->TotalPrice->PlaceHolder = ew_RemoveHtml($this->TotalPrice->FldCaption());
-		if (strval($this->TotalPrice->EditValue) <> "" && is_numeric($this->TotalPrice->EditValue)) $this->TotalPrice->EditValue = ew_FormatNumber($this->TotalPrice->EditValue, -2, -2, -2, -2);
+		// total_price
+		$this->total_price->EditAttrs["class"] = "form-control";
+		$this->total_price->EditCustomAttributes = "";
+		$this->total_price->EditValue = $this->total_price->CurrentValue;
+		$this->total_price->PlaceHolder = ew_RemoveHtml($this->total_price->FldCaption());
+		if (strval($this->total_price->EditValue) <> "" && is_numeric($this->total_price->EditValue)) $this->total_price->EditValue = ew_FormatNumber($this->total_price->EditValue, -2, -2, -2, -2);
 
-		// PaymentTypeID
-		$this->PaymentTypeID->EditAttrs["class"] = "form-control";
-		$this->PaymentTypeID->EditCustomAttributes = "";
+		// payment_type_id
+		$this->payment_type_id->EditAttrs["class"] = "form-control";
+		$this->payment_type_id->EditCustomAttributes = "";
 
-		// DeliveryTypeID
-		$this->DeliveryTypeID->EditAttrs["class"] = "form-control";
-		$this->DeliveryTypeID->EditCustomAttributes = "";
+		// delivery_type_id
+		$this->delivery_type_id->EditAttrs["class"] = "form-control";
+		$this->delivery_type_id->EditCustomAttributes = "";
 
-		// Description
-		$this->Description->EditAttrs["class"] = "form-control";
-		$this->Description->EditCustomAttributes = "";
-		$this->Description->EditValue = $this->Description->CurrentValue;
-		$this->Description->PlaceHolder = ew_RemoveHtml($this->Description->FldCaption());
+		// description
+		$this->description->EditAttrs["class"] = "form-control";
+		$this->description->EditCustomAttributes = "";
+		$this->description->EditValue = $this->description->CurrentValue;
+		$this->description->PlaceHolder = ew_RemoveHtml($this->description->FldCaption());
 
-		// FeedBack
-		$this->FeedBack->EditAttrs["class"] = "form-control";
-		$this->FeedBack->EditCustomAttributes = "";
-		$this->FeedBack->EditValue = $this->FeedBack->CurrentValue;
-		$this->FeedBack->PlaceHolder = ew_RemoveHtml($this->FeedBack->FldCaption());
+		// feedback
+		$this->feedback->EditAttrs["class"] = "form-control";
+		$this->feedback->EditCustomAttributes = "";
+		$this->feedback->EditValue = $this->feedback->CurrentValue;
+		$this->feedback->PlaceHolder = ew_RemoveHtml($this->feedback->FldCaption());
 
-		// OrderDateTime
+		// order_date_time
 		// Call Row Rendered event
 
 		$this->Row_Rendered();
@@ -1037,17 +1037,17 @@ class corders extends cTable {
 
 	// Aggregate list row values
 	function AggregateListRowValues() {
-			if (is_numeric($this->TotalPrice->CurrentValue))
-				$this->TotalPrice->Total += $this->TotalPrice->CurrentValue; // Accumulate total
+			if (is_numeric($this->total_price->CurrentValue))
+				$this->total_price->Total += $this->total_price->CurrentValue; // Accumulate total
 	}
 
 	// Aggregate list row (for rendering)
 	function AggregateListRow() {
-			$this->TotalPrice->CurrentValue = $this->TotalPrice->Total;
-			$this->TotalPrice->ViewValue = $this->TotalPrice->CurrentValue;
-			$this->TotalPrice->ViewValue = ew_FormatCurrency($this->TotalPrice->ViewValue, 0, -2, -2, -2);
-			$this->TotalPrice->ViewCustomAttributes = "";
-			$this->TotalPrice->HrefValue = ""; // Clear href value
+			$this->total_price->CurrentValue = $this->total_price->Total;
+			$this->total_price->ViewValue = $this->total_price->CurrentValue;
+			$this->total_price->ViewValue = ew_FormatCurrency($this->total_price->ViewValue, 0, -2, -2, -2);
+			$this->total_price->ViewCustomAttributes = "";
+			$this->total_price->HrefValue = ""; // Clear href value
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1065,32 +1065,32 @@ class corders extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->OrderID->Exportable) $Doc->ExportCaption($this->OrderID);
-					if ($this->CustomerID->Exportable) $Doc->ExportCaption($this->CustomerID);
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->Address->Exportable) $Doc->ExportCaption($this->Address);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Discount->Exportable) $Doc->ExportCaption($this->Discount);
-					if ($this->TotalPrice->Exportable) $Doc->ExportCaption($this->TotalPrice);
-					if ($this->PaymentTypeID->Exportable) $Doc->ExportCaption($this->PaymentTypeID);
-					if ($this->DeliveryTypeID->Exportable) $Doc->ExportCaption($this->DeliveryTypeID);
-					if ($this->Description->Exportable) $Doc->ExportCaption($this->Description);
-					if ($this->FeedBack->Exportable) $Doc->ExportCaption($this->FeedBack);
-					if ($this->OrderDateTime->Exportable) $Doc->ExportCaption($this->OrderDateTime);
+					if ($this->order_id->Exportable) $Doc->ExportCaption($this->order_id);
+					if ($this->customer_id->Exportable) $Doc->ExportCaption($this->customer_id);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->address->Exportable) $Doc->ExportCaption($this->address);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->discount->Exportable) $Doc->ExportCaption($this->discount);
+					if ($this->total_price->Exportable) $Doc->ExportCaption($this->total_price);
+					if ($this->payment_type_id->Exportable) $Doc->ExportCaption($this->payment_type_id);
+					if ($this->delivery_type_id->Exportable) $Doc->ExportCaption($this->delivery_type_id);
+					if ($this->description->Exportable) $Doc->ExportCaption($this->description);
+					if ($this->feedback->Exportable) $Doc->ExportCaption($this->feedback);
+					if ($this->order_date_time->Exportable) $Doc->ExportCaption($this->order_date_time);
 				} else {
-					if ($this->OrderID->Exportable) $Doc->ExportCaption($this->OrderID);
-					if ($this->CustomerID->Exportable) $Doc->ExportCaption($this->CustomerID);
-					if ($this->FullName->Exportable) $Doc->ExportCaption($this->FullName);
-					if ($this->ProvinceID->Exportable) $Doc->ExportCaption($this->ProvinceID);
-					if ($this->ZipCode->Exportable) $Doc->ExportCaption($this->ZipCode);
-					if ($this->Phone->Exportable) $Doc->ExportCaption($this->Phone);
-					if ($this->Discount->Exportable) $Doc->ExportCaption($this->Discount);
-					if ($this->TotalPrice->Exportable) $Doc->ExportCaption($this->TotalPrice);
-					if ($this->PaymentTypeID->Exportable) $Doc->ExportCaption($this->PaymentTypeID);
-					if ($this->DeliveryTypeID->Exportable) $Doc->ExportCaption($this->DeliveryTypeID);
-					if ($this->OrderDateTime->Exportable) $Doc->ExportCaption($this->OrderDateTime);
+					if ($this->order_id->Exportable) $Doc->ExportCaption($this->order_id);
+					if ($this->customer_id->Exportable) $Doc->ExportCaption($this->customer_id);
+					if ($this->full_name->Exportable) $Doc->ExportCaption($this->full_name);
+					if ($this->province_id->Exportable) $Doc->ExportCaption($this->province_id);
+					if ($this->zip_code->Exportable) $Doc->ExportCaption($this->zip_code);
+					if ($this->phone->Exportable) $Doc->ExportCaption($this->phone);
+					if ($this->discount->Exportable) $Doc->ExportCaption($this->discount);
+					if ($this->total_price->Exportable) $Doc->ExportCaption($this->total_price);
+					if ($this->payment_type_id->Exportable) $Doc->ExportCaption($this->payment_type_id);
+					if ($this->delivery_type_id->Exportable) $Doc->ExportCaption($this->delivery_type_id);
+					if ($this->order_date_time->Exportable) $Doc->ExportCaption($this->order_date_time);
 				}
 				$Doc->EndExportRow();
 			}
@@ -1123,32 +1123,32 @@ class corders extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->OrderID->Exportable) $Doc->ExportField($this->OrderID);
-						if ($this->CustomerID->Exportable) $Doc->ExportField($this->CustomerID);
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->Address->Exportable) $Doc->ExportField($this->Address);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Discount->Exportable) $Doc->ExportField($this->Discount);
-						if ($this->TotalPrice->Exportable) $Doc->ExportField($this->TotalPrice);
-						if ($this->PaymentTypeID->Exportable) $Doc->ExportField($this->PaymentTypeID);
-						if ($this->DeliveryTypeID->Exportable) $Doc->ExportField($this->DeliveryTypeID);
-						if ($this->Description->Exportable) $Doc->ExportField($this->Description);
-						if ($this->FeedBack->Exportable) $Doc->ExportField($this->FeedBack);
-						if ($this->OrderDateTime->Exportable) $Doc->ExportField($this->OrderDateTime);
+						if ($this->order_id->Exportable) $Doc->ExportField($this->order_id);
+						if ($this->customer_id->Exportable) $Doc->ExportField($this->customer_id);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->address->Exportable) $Doc->ExportField($this->address);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->discount->Exportable) $Doc->ExportField($this->discount);
+						if ($this->total_price->Exportable) $Doc->ExportField($this->total_price);
+						if ($this->payment_type_id->Exportable) $Doc->ExportField($this->payment_type_id);
+						if ($this->delivery_type_id->Exportable) $Doc->ExportField($this->delivery_type_id);
+						if ($this->description->Exportable) $Doc->ExportField($this->description);
+						if ($this->feedback->Exportable) $Doc->ExportField($this->feedback);
+						if ($this->order_date_time->Exportable) $Doc->ExportField($this->order_date_time);
 					} else {
-						if ($this->OrderID->Exportable) $Doc->ExportField($this->OrderID);
-						if ($this->CustomerID->Exportable) $Doc->ExportField($this->CustomerID);
-						if ($this->FullName->Exportable) $Doc->ExportField($this->FullName);
-						if ($this->ProvinceID->Exportable) $Doc->ExportField($this->ProvinceID);
-						if ($this->ZipCode->Exportable) $Doc->ExportField($this->ZipCode);
-						if ($this->Phone->Exportable) $Doc->ExportField($this->Phone);
-						if ($this->Discount->Exportable) $Doc->ExportField($this->Discount);
-						if ($this->TotalPrice->Exportable) $Doc->ExportField($this->TotalPrice);
-						if ($this->PaymentTypeID->Exportable) $Doc->ExportField($this->PaymentTypeID);
-						if ($this->DeliveryTypeID->Exportable) $Doc->ExportField($this->DeliveryTypeID);
-						if ($this->OrderDateTime->Exportable) $Doc->ExportField($this->OrderDateTime);
+						if ($this->order_id->Exportable) $Doc->ExportField($this->order_id);
+						if ($this->customer_id->Exportable) $Doc->ExportField($this->customer_id);
+						if ($this->full_name->Exportable) $Doc->ExportField($this->full_name);
+						if ($this->province_id->Exportable) $Doc->ExportField($this->province_id);
+						if ($this->zip_code->Exportable) $Doc->ExportField($this->zip_code);
+						if ($this->phone->Exportable) $Doc->ExportField($this->phone);
+						if ($this->discount->Exportable) $Doc->ExportField($this->discount);
+						if ($this->total_price->Exportable) $Doc->ExportField($this->total_price);
+						if ($this->payment_type_id->Exportable) $Doc->ExportField($this->payment_type_id);
+						if ($this->delivery_type_id->Exportable) $Doc->ExportField($this->delivery_type_id);
+						if ($this->order_date_time->Exportable) $Doc->ExportField($this->order_date_time);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
@@ -1167,17 +1167,17 @@ class corders extends cTable {
 			$this->AggregateListRow();
 			if (!$Doc->ExportCustom) {
 				$Doc->BeginExportRow(-1);
-				if ($this->OrderID->Exportable) $Doc->ExportAggregate($this->OrderID, '');
-				if ($this->CustomerID->Exportable) $Doc->ExportAggregate($this->CustomerID, '');
-				if ($this->FullName->Exportable) $Doc->ExportAggregate($this->FullName, '');
-				if ($this->ProvinceID->Exportable) $Doc->ExportAggregate($this->ProvinceID, '');
-				if ($this->ZipCode->Exportable) $Doc->ExportAggregate($this->ZipCode, '');
-				if ($this->Phone->Exportable) $Doc->ExportAggregate($this->Phone, '');
-				if ($this->Discount->Exportable) $Doc->ExportAggregate($this->Discount, '');
-				if ($this->TotalPrice->Exportable) $Doc->ExportAggregate($this->TotalPrice, 'TOTAL');
-				if ($this->PaymentTypeID->Exportable) $Doc->ExportAggregate($this->PaymentTypeID, '');
-				if ($this->DeliveryTypeID->Exportable) $Doc->ExportAggregate($this->DeliveryTypeID, '');
-				if ($this->OrderDateTime->Exportable) $Doc->ExportAggregate($this->OrderDateTime, '');
+				if ($this->order_id->Exportable) $Doc->ExportAggregate($this->order_id, '');
+				if ($this->customer_id->Exportable) $Doc->ExportAggregate($this->customer_id, '');
+				if ($this->full_name->Exportable) $Doc->ExportAggregate($this->full_name, '');
+				if ($this->province_id->Exportable) $Doc->ExportAggregate($this->province_id, '');
+				if ($this->zip_code->Exportable) $Doc->ExportAggregate($this->zip_code, '');
+				if ($this->phone->Exportable) $Doc->ExportAggregate($this->phone, '');
+				if ($this->discount->Exportable) $Doc->ExportAggregate($this->discount, '');
+				if ($this->total_price->Exportable) $Doc->ExportAggregate($this->total_price, 'TOTAL');
+				if ($this->payment_type_id->Exportable) $Doc->ExportAggregate($this->payment_type_id, '');
+				if ($this->delivery_type_id->Exportable) $Doc->ExportAggregate($this->delivery_type_id, '');
+				if ($this->order_date_time->Exportable) $Doc->ExportAggregate($this->order_date_time, '');
 				$Doc->EndExportRow();
 			}
 		}

@@ -7,7 +7,6 @@ ob_start(); // Turn on output buffering
 <?php include_once "phpfn14.php" ?>
 <?php include_once "menusinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
-<?php include_once "sub_menusgridcls.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
 
@@ -305,7 +304,7 @@ class cmenus_list extends cmenus {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml";
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv";
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf";
-		$this->AddUrl = "menusadd.php?" . EW_TABLE_SHOW_DETAIL . "=";
+		$this->AddUrl = "menusadd.php";
 		$this->InlineAddUrl = $this->PageUrl() . "a=add";
 		$this->GridAddUrl = $this->PageUrl() . "a=gridadd";
 		$this->GridEditUrl = $this->PageUrl() . "a=gridedit";
@@ -404,8 +403,8 @@ class cmenus_list extends cmenus {
 
 		// Set up list options
 		$this->SetupListOptions();
-		$this->Name->SetVisibility();
-		$this->Picture->SetVisibility();
+		$this->name->SetVisibility();
+		$this->picture->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -422,22 +421,6 @@ class cmenus_list extends cmenus {
 
 		// Process auto fill
 		if (@$_POST["ajax"] == "autofill") {
-
-			// Get the keys for master table
-			$sDetailTblVar = $this->getCurrentDetailTable();
-			if ($sDetailTblVar <> "") {
-				$DetailTblVar = explode(",", $sDetailTblVar);
-				if (in_array("sub_menus", $DetailTblVar)) {
-
-					// Process auto fill for detail table 'sub_menus'
-					if (preg_match('/^fsub_menus(grid|add|addopt|edit|update|search)$/', @$_POST["form"])) {
-						if (!isset($GLOBALS["sub_menus_grid"])) $GLOBALS["sub_menus_grid"] = new csub_menus_grid;
-						$GLOBALS["sub_menus_grid"]->Page_Init();
-						$this->Page_Terminate();
-						exit();
-					}
-				}
-			}
 			$results = $this->GetAutoFill(@$_POST["name"], @$_POST["q"]);
 			if ($results) {
 
@@ -753,8 +736,8 @@ class cmenus_list extends cmenus {
 	function SetupKeyValues($key) {
 		$arrKeyFlds = explode($GLOBALS["EW_COMPOSITE_KEY_SEPARATOR"], $key);
 		if (count($arrKeyFlds) >= 1) {
-			$this->MenuID->setFormValue($arrKeyFlds[0]);
-			if (!is_numeric($this->MenuID->FormValue))
+			$this->menu_id->setFormValue($arrKeyFlds[0]);
+			if (!is_numeric($this->menu_id->FormValue))
 				return FALSE;
 		}
 		return TRUE;
@@ -767,9 +750,9 @@ class cmenus_list extends cmenus {
 		// Initialize
 		$sFilterList = "";
 		$sSavedFilterList = "";
-		$sFilterList = ew_Concat($sFilterList, $this->MenuID->AdvancedSearch->ToJson(), ","); // Field MenuID
-		$sFilterList = ew_Concat($sFilterList, $this->Name->AdvancedSearch->ToJson(), ","); // Field Name
-		$sFilterList = ew_Concat($sFilterList, $this->Picture->AdvancedSearch->ToJson(), ","); // Field Picture
+		$sFilterList = ew_Concat($sFilterList, $this->menu_id->AdvancedSearch->ToJson(), ","); // Field menu_id
+		$sFilterList = ew_Concat($sFilterList, $this->name->AdvancedSearch->ToJson(), ","); // Field name
+		$sFilterList = ew_Concat($sFilterList, $this->picture->AdvancedSearch->ToJson(), ","); // Field picture
 		if ($this->BasicSearch->Keyword <> "") {
 			$sWrk = "\"" . EW_TABLE_BASIC_SEARCH . "\":\"" . ew_JsEncode2($this->BasicSearch->Keyword) . "\",\"" . EW_TABLE_BASIC_SEARCH_TYPE . "\":\"" . ew_JsEncode2($this->BasicSearch->Type) . "\"";
 			$sFilterList = ew_Concat($sFilterList, $sWrk, ",");
@@ -814,29 +797,29 @@ class cmenus_list extends cmenus {
 		$filter = json_decode(@$_POST["filter"], TRUE);
 		$this->Command = "search";
 
-		// Field MenuID
-		$this->MenuID->AdvancedSearch->SearchValue = @$filter["x_MenuID"];
-		$this->MenuID->AdvancedSearch->SearchOperator = @$filter["z_MenuID"];
-		$this->MenuID->AdvancedSearch->SearchCondition = @$filter["v_MenuID"];
-		$this->MenuID->AdvancedSearch->SearchValue2 = @$filter["y_MenuID"];
-		$this->MenuID->AdvancedSearch->SearchOperator2 = @$filter["w_MenuID"];
-		$this->MenuID->AdvancedSearch->Save();
+		// Field menu_id
+		$this->menu_id->AdvancedSearch->SearchValue = @$filter["x_menu_id"];
+		$this->menu_id->AdvancedSearch->SearchOperator = @$filter["z_menu_id"];
+		$this->menu_id->AdvancedSearch->SearchCondition = @$filter["v_menu_id"];
+		$this->menu_id->AdvancedSearch->SearchValue2 = @$filter["y_menu_id"];
+		$this->menu_id->AdvancedSearch->SearchOperator2 = @$filter["w_menu_id"];
+		$this->menu_id->AdvancedSearch->Save();
 
-		// Field Name
-		$this->Name->AdvancedSearch->SearchValue = @$filter["x_Name"];
-		$this->Name->AdvancedSearch->SearchOperator = @$filter["z_Name"];
-		$this->Name->AdvancedSearch->SearchCondition = @$filter["v_Name"];
-		$this->Name->AdvancedSearch->SearchValue2 = @$filter["y_Name"];
-		$this->Name->AdvancedSearch->SearchOperator2 = @$filter["w_Name"];
-		$this->Name->AdvancedSearch->Save();
+		// Field name
+		$this->name->AdvancedSearch->SearchValue = @$filter["x_name"];
+		$this->name->AdvancedSearch->SearchOperator = @$filter["z_name"];
+		$this->name->AdvancedSearch->SearchCondition = @$filter["v_name"];
+		$this->name->AdvancedSearch->SearchValue2 = @$filter["y_name"];
+		$this->name->AdvancedSearch->SearchOperator2 = @$filter["w_name"];
+		$this->name->AdvancedSearch->Save();
 
-		// Field Picture
-		$this->Picture->AdvancedSearch->SearchValue = @$filter["x_Picture"];
-		$this->Picture->AdvancedSearch->SearchOperator = @$filter["z_Picture"];
-		$this->Picture->AdvancedSearch->SearchCondition = @$filter["v_Picture"];
-		$this->Picture->AdvancedSearch->SearchValue2 = @$filter["y_Picture"];
-		$this->Picture->AdvancedSearch->SearchOperator2 = @$filter["w_Picture"];
-		$this->Picture->AdvancedSearch->Save();
+		// Field picture
+		$this->picture->AdvancedSearch->SearchValue = @$filter["x_picture"];
+		$this->picture->AdvancedSearch->SearchOperator = @$filter["z_picture"];
+		$this->picture->AdvancedSearch->SearchCondition = @$filter["v_picture"];
+		$this->picture->AdvancedSearch->SearchValue2 = @$filter["y_picture"];
+		$this->picture->AdvancedSearch->SearchOperator2 = @$filter["w_picture"];
+		$this->picture->AdvancedSearch->Save();
 		$this->BasicSearch->setKeyword(@$filter[EW_TABLE_BASIC_SEARCH]);
 		$this->BasicSearch->setType(@$filter[EW_TABLE_BASIC_SEARCH_TYPE]);
 	}
@@ -844,8 +827,8 @@ class cmenus_list extends cmenus {
 	// Return basic search SQL
 	function BasicSearchSQL($arKeywords, $type) {
 		$sWhere = "";
-		$this->BuildBasicSearchSQL($sWhere, $this->Name, $arKeywords, $type);
-		$this->BuildBasicSearchSQL($sWhere, $this->Picture, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->name, $arKeywords, $type);
+		$this->BuildBasicSearchSQL($sWhere, $this->picture, $arKeywords, $type);
 		return $sWhere;
 	}
 
@@ -992,8 +975,8 @@ class cmenus_list extends cmenus {
 		if (@$_GET["order"] <> "") {
 			$this->CurrentOrder = @$_GET["order"];
 			$this->CurrentOrderType = @$_GET["ordertype"];
-			$this->UpdateSort($this->Name); // Name
-			$this->UpdateSort($this->Picture); // Picture
+			$this->UpdateSort($this->name); // name
+			$this->UpdateSort($this->picture); // picture
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1026,8 +1009,8 @@ class cmenus_list extends cmenus {
 			if ($this->Command == "resetsort") {
 				$sOrderBy = "";
 				$this->setSessionOrderBy($sOrderBy);
-				$this->Name->setSort("");
-				$this->Picture->setSort("");
+				$this->name->setSort("");
+				$this->picture->setSort("");
 			}
 
 			// Reset start position
@@ -1069,28 +1052,6 @@ class cmenus_list extends cmenus {
 		$item->CssClass = "text-nowrap";
 		$item->Visible = $Security->CanDelete();
 		$item->OnLeft = TRUE;
-
-		// "detail_sub_menus"
-		$item = &$this->ListOptions->Add("detail_sub_menus");
-		$item->CssClass = "text-nowrap";
-		$item->Visible = $Security->AllowList(CurrentProjectID() . 'sub_menus') && !$this->ShowMultipleDetails;
-		$item->OnLeft = TRUE;
-		$item->ShowInButtonGroup = FALSE;
-		if (!isset($GLOBALS["sub_menus_grid"])) $GLOBALS["sub_menus_grid"] = new csub_menus_grid;
-
-		// Multiple details
-		if ($this->ShowMultipleDetails) {
-			$item = &$this->ListOptions->Add("details");
-			$item->CssClass = "text-nowrap";
-			$item->Visible = $this->ShowMultipleDetails;
-			$item->OnLeft = TRUE;
-			$item->ShowInButtonGroup = FALSE;
-		}
-
-		// Set up detail pages
-		$pages = new cSubPages();
-		$pages->Add("sub_menus");
-		$this->DetailPages = $pages;
 
 		// List actions
 		$item = &$this->ListOptions->Add("listactions");
@@ -1195,72 +1156,10 @@ class cmenus_list extends cmenus {
 				$oListOpt->Visible = TRUE;
 			}
 		}
-		$DetailViewTblVar = "";
-		$DetailCopyTblVar = "";
-		$DetailEditTblVar = "";
-
-		// "detail_sub_menus"
-		$oListOpt = &$this->ListOptions->Items["detail_sub_menus"];
-		if ($Security->AllowList(CurrentProjectID() . 'sub_menus')) {
-			$body = $Language->Phrase("DetailLink") . $Language->TablePhrase("sub_menus", "TblCaption");
-			$body = "<a class=\"btn btn-default btn-sm ewRowLink ewDetail\" data-action=\"list\" href=\"" . ew_HtmlEncode("sub_menuslist.php?" . EW_TABLE_SHOW_MASTER . "=menus&fk_MenuID=" . urlencode(strval($this->MenuID->CurrentValue)) . "") . "\">" . $body . "</a>";
-			$links = "";
-			if ($GLOBALS["sub_menus_grid"]->DetailView && $Security->CanView() && $Security->AllowView(CurrentProjectID() . 'sub_menus')) {
-				$caption = $Language->Phrase("MasterDetailViewLink");
-				$url = $this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=sub_menus");
-				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . ew_HtmlImageAndText($caption) . "</a></li>";
-				if ($DetailViewTblVar <> "") $DetailViewTblVar .= ",";
-				$DetailViewTblVar .= "sub_menus";
-			}
-			if ($GLOBALS["sub_menus_grid"]->DetailEdit && $Security->CanEdit() && $Security->AllowEdit(CurrentProjectID() . 'sub_menus')) {
-				$caption = $Language->Phrase("MasterDetailEditLink");
-				$url = $this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=sub_menus");
-				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . ew_HtmlImageAndText($caption) . "</a></li>";
-				if ($DetailEditTblVar <> "") $DetailEditTblVar .= ",";
-				$DetailEditTblVar .= "sub_menus";
-			}
-			if ($GLOBALS["sub_menus_grid"]->DetailAdd && $Security->CanAdd() && $Security->AllowAdd(CurrentProjectID() . 'sub_menus')) {
-				$caption = $Language->Phrase("MasterDetailCopyLink");
-				$url = $this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=sub_menus");
-				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . ew_HtmlImageAndText($caption) . "</a></li>";
-				if ($DetailCopyTblVar <> "") $DetailCopyTblVar .= ",";
-				$DetailCopyTblVar .= "sub_menus";
-			}
-			if ($links <> "") {
-				$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewDetail\" data-toggle=\"dropdown\"><b class=\"caret\"></b></button>";
-				$body .= "<ul class=\"dropdown-menu\">". $links . "</ul>";
-			}
-			$body = "<div class=\"btn-group\">" . $body . "</div>";
-			$oListOpt->Body = $body;
-			if ($this->ShowMultipleDetails) $oListOpt->Visible = FALSE;
-		}
-		if ($this->ShowMultipleDetails) {
-			$body = $Language->Phrase("MultipleMasterDetails");
-			$body = "<div class=\"btn-group\">";
-			$links = "";
-			if ($DetailViewTblVar <> "") {
-				$links .= "<li><a class=\"ewRowLink ewDetailView\" data-action=\"view\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailViewLink")) . "\" href=\"" . ew_HtmlEncode($this->GetViewUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailViewTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailViewLink")) . "</a></li>";
-			}
-			if ($DetailEditTblVar <> "") {
-				$links .= "<li><a class=\"ewRowLink ewDetailEdit\" data-action=\"edit\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailEditLink")) . "\" href=\"" . ew_HtmlEncode($this->GetEditUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailEditTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailEditLink")) . "</a></li>";
-			}
-			if ($DetailCopyTblVar <> "") {
-				$links .= "<li><a class=\"ewRowLink ewDetailCopy\" data-action=\"add\" data-caption=\"" . ew_HtmlTitle($Language->Phrase("MasterDetailCopyLink")) . "\" href=\"" . ew_HtmlEncode($this->GetCopyUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailCopyTblVar)) . "\">" . ew_HtmlImageAndText($Language->Phrase("MasterDetailCopyLink")) . "</a></li>";
-			}
-			if ($links <> "") {
-				$body .= "<button class=\"dropdown-toggle btn btn-default btn-sm ewMasterDetail\" title=\"" . ew_HtmlTitle($Language->Phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->Phrase("MultipleMasterDetails") . "<b class=\"caret\"></b></button>";
-				$body .= "<ul class=\"dropdown-menu ewMenu\">". $links . "</ul>";
-			}
-			$body .= "</div>";
-
-			// Multiple details
-			$oListOpt = &$this->ListOptions->Items["details"];
-			$oListOpt->Body = $body;
-		}
 
 		// "checkbox"
 		$oListOpt = &$this->ListOptions->Items["checkbox"];
-		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->MenuID->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
+		$oListOpt->Body = "<input type=\"checkbox\" name=\"key_m[]\" class=\"ewMultiSelect\" value=\"" . ew_HtmlEncode($this->menu_id->CurrentValue) . "\" onclick=\"ew_ClickMultiCheckbox(event);\">";
 		$this->RenderListOptionsExt();
 
 		// Call ListOptions_Rendered event
@@ -1278,34 +1177,6 @@ class cmenus_list extends cmenus {
 		$addcaption = ew_HtmlTitle($Language->Phrase("AddLink"));
 		$item->Body = "<a class=\"ewAddEdit ewAdd\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . ew_HtmlEncode($this->AddUrl) . "\">" . $Language->Phrase("AddLink") . "</a>";
 		$item->Visible = ($this->AddUrl <> "" && $Security->CanAdd());
-		$option = $options["detail"];
-		$DetailTableLink = "";
-		$item = &$option->Add("detailadd_sub_menus");
-		$url = $this->GetAddUrl(EW_TABLE_SHOW_DETAIL . "=sub_menus");
-		$caption = $Language->Phrase("Add") . "&nbsp;" . $this->TableCaption() . "/" . $GLOBALS["sub_menus"]->TableCaption();
-		$item->Body = "<a class=\"ewDetailAddGroup ewDetailAdd\" title=\"" . ew_HtmlTitle($caption) . "\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . $caption . "</a>";
-		$item->Visible = ($GLOBALS["sub_menus"]->DetailAdd && $Security->AllowAdd(CurrentProjectID() . 'sub_menus') && $Security->CanAdd());
-		if ($item->Visible) {
-			if ($DetailTableLink <> "") $DetailTableLink .= ",";
-			$DetailTableLink .= "sub_menus";
-		}
-
-		// Add multiple details
-		if ($this->ShowMultipleDetails) {
-			$item = &$option->Add("detailsadd");
-			$url = $this->GetAddUrl(EW_TABLE_SHOW_DETAIL . "=" . $DetailTableLink);
-			$caption = $Language->Phrase("AddMasterDetailLink");
-			$item->Body = "<a class=\"ewDetailAddGroup ewDetailAdd\" title=\"" . ew_HtmlTitle($caption) . "\" data-caption=\"" . ew_HtmlTitle($caption) . "\" href=\"" . ew_HtmlEncode($url) . "\">" . $caption . "</a>";
-			$item->Visible = ($DetailTableLink <> "" && $Security->CanAdd());
-
-			// Hide single master/detail items
-			$ar = explode(",", $DetailTableLink);
-			$cnt = count($ar);
-			for ($i = 0; $i < $cnt; $i++) {
-				if ($item = &$option->GetItem("detailadd_" . $ar[$i]))
-					$item->Visible = FALSE;
-			}
-		}
 		$option = $options["action"];
 
 		// Set up options default
@@ -1594,18 +1465,18 @@ class cmenus_list extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->MenuID->setDbValue($row['MenuID']);
-		$this->Name->setDbValue($row['Name']);
-		$this->Picture->Upload->DbValue = $row['Picture'];
-		$this->Picture->setDbValue($this->Picture->Upload->DbValue);
+		$this->menu_id->setDbValue($row['menu_id']);
+		$this->name->setDbValue($row['name']);
+		$this->picture->Upload->DbValue = $row['picture'];
+		$this->picture->setDbValue($this->picture->Upload->DbValue);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
-		$row['MenuID'] = NULL;
-		$row['Name'] = NULL;
-		$row['Picture'] = NULL;
+		$row['menu_id'] = NULL;
+		$row['name'] = NULL;
+		$row['picture'] = NULL;
 		return $row;
 	}
 
@@ -1614,9 +1485,9 @@ class cmenus_list extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->MenuID->DbValue = $row['MenuID'];
-		$this->Name->DbValue = $row['Name'];
-		$this->Picture->Upload->DbValue = $row['Picture'];
+		$this->menu_id->DbValue = $row['menu_id'];
+		$this->name->DbValue = $row['name'];
+		$this->picture->Upload->DbValue = $row['picture'];
 	}
 
 	// Load old record
@@ -1624,8 +1495,8 @@ class cmenus_list extends cmenus {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("MenuID")) <> "")
-			$this->MenuID->CurrentValue = $this->getKey("MenuID"); // MenuID
+		if (strval($this->getKey("menu_id")) <> "")
+			$this->menu_id->CurrentValue = $this->getKey("menu_id"); // menu_id
 		else
 			$bValidKey = FALSE;
 
@@ -1657,48 +1528,48 @@ class cmenus_list extends cmenus {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// MenuID
-		// Name
-		// Picture
+		// menu_id
+		// name
+		// picture
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
-		// Name
-		$this->Name->ViewValue = $this->Name->CurrentValue;
-		$this->Name->ViewCustomAttributes = "";
+		// name
+		$this->name->ViewValue = $this->name->CurrentValue;
+		$this->name->ViewCustomAttributes = "";
 
-		// Picture
-		if (!ew_Empty($this->Picture->Upload->DbValue)) {
-			$this->Picture->ImageWidth = 100;
-			$this->Picture->ImageHeight = 100;
-			$this->Picture->ImageAlt = $this->Picture->FldAlt();
-			$this->Picture->ViewValue = $this->Picture->Upload->DbValue;
+		// picture
+		if (!ew_Empty($this->picture->Upload->DbValue)) {
+			$this->picture->ImageWidth = 100;
+			$this->picture->ImageHeight = 100;
+			$this->picture->ImageAlt = $this->picture->FldAlt();
+			$this->picture->ViewValue = $this->picture->Upload->DbValue;
 		} else {
-			$this->Picture->ViewValue = "";
+			$this->picture->ViewValue = "";
 		}
-		$this->Picture->ViewCustomAttributes = "";
+		$this->picture->ViewCustomAttributes = "";
 
-			// Name
-			$this->Name->LinkCustomAttributes = "";
-			$this->Name->HrefValue = "";
-			$this->Name->TooltipValue = "";
+			// name
+			$this->name->LinkCustomAttributes = "";
+			$this->name->HrefValue = "";
+			$this->name->TooltipValue = "";
 
-			// Picture
-			$this->Picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->Picture->Upload->DbValue)) {
-				$this->Picture->HrefValue = ew_GetFileUploadUrl($this->Picture, $this->Picture->Upload->DbValue); // Add prefix/suffix
-				$this->Picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->Picture->HrefValue = ew_FullUrl($this->Picture->HrefValue, "href");
+			// picture
+			$this->picture->LinkCustomAttributes = "";
+			if (!ew_Empty($this->picture->Upload->DbValue)) {
+				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
+				$this->picture->LinkAttrs["target"] = ""; // Add target
+				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
 			} else {
-				$this->Picture->HrefValue = "";
+				$this->picture->HrefValue = "";
 			}
-			$this->Picture->HrefValue2 = $this->Picture->UploadPath . $this->Picture->Upload->DbValue;
-			$this->Picture->TooltipValue = "";
-			if ($this->Picture->UseColorbox) {
-				if (ew_Empty($this->Picture->TooltipValue))
-					$this->Picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->Picture->LinkAttrs["data-rel"] = "menus_x" . $this->RowCnt . "_Picture";
-				ew_AppendClass($this->Picture->LinkAttrs["class"], "ewLightbox");
+			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
+			$this->picture->TooltipValue = "";
+			if ($this->picture->UseColorbox) {
+				if (ew_Empty($this->picture->TooltipValue))
+					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
+				$this->picture->LinkAttrs["data-rel"] = "menus_x" . $this->RowCnt . "_picture";
+				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
 			}
 		}
 
@@ -2072,21 +1943,21 @@ $menus_list->RenderListOptions();
 // Render list options (header, left)
 $menus_list->ListOptions->Render("header", "left");
 ?>
-<?php if ($menus->Name->Visible) { // Name ?>
-	<?php if ($menus->SortUrl($menus->Name) == "") { ?>
-		<th data-name="Name" class="<?php echo $menus->Name->HeaderCellClass() ?>"><div id="elh_menus_Name" class="menus_Name"><div class="ewTableHeaderCaption"><?php echo $menus->Name->FldCaption() ?></div></div></th>
+<?php if ($menus->name->Visible) { // name ?>
+	<?php if ($menus->SortUrl($menus->name) == "") { ?>
+		<th data-name="name" class="<?php echo $menus->name->HeaderCellClass() ?>"><div id="elh_menus_name" class="menus_name"><div class="ewTableHeaderCaption"><?php echo $menus->name->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Name" class="<?php echo $menus->Name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $menus->SortUrl($menus->Name) ?>',1);"><div id="elh_menus_Name" class="menus_Name">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $menus->Name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($menus->Name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($menus->Name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="name" class="<?php echo $menus->name->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $menus->SortUrl($menus->name) ?>',1);"><div id="elh_menus_name" class="menus_name">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $menus->name->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($menus->name->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($menus->name->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
-<?php if ($menus->Picture->Visible) { // Picture ?>
-	<?php if ($menus->SortUrl($menus->Picture) == "") { ?>
-		<th data-name="Picture" class="<?php echo $menus->Picture->HeaderCellClass() ?>"><div id="elh_menus_Picture" class="menus_Picture"><div class="ewTableHeaderCaption"><?php echo $menus->Picture->FldCaption() ?></div></div></th>
+<?php if ($menus->picture->Visible) { // picture ?>
+	<?php if ($menus->SortUrl($menus->picture) == "") { ?>
+		<th data-name="picture" class="<?php echo $menus->picture->HeaderCellClass() ?>"><div id="elh_menus_picture" class="menus_picture"><div class="ewTableHeaderCaption"><?php echo $menus->picture->FldCaption() ?></div></div></th>
 	<?php } else { ?>
-		<th data-name="Picture" class="<?php echo $menus->Picture->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $menus->SortUrl($menus->Picture) ?>',1);"><div id="elh_menus_Picture" class="menus_Picture">
-			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $menus->Picture->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($menus->Picture->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($menus->Picture->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
+		<th data-name="picture" class="<?php echo $menus->picture->HeaderCellClass() ?>"><div class="ewPointer" onclick="ew_Sort(event,'<?php echo $menus->SortUrl($menus->picture) ?>',1);"><div id="elh_menus_picture" class="menus_picture">
+			<div class="ewTableHeaderBtn"><span class="ewTableHeaderCaption"><?php echo $menus->picture->FldCaption() ?><?php echo $Language->Phrase("SrchLegend") ?></span><span class="ewTableHeaderSort"><?php if ($menus->picture->getSort() == "ASC") { ?><span class="caret ewSortUp"></span><?php } elseif ($menus->picture->getSort() == "DESC") { ?><span class="caret"></span><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -2155,19 +2026,19 @@ while ($menus_list->RecCnt < $menus_list->StopRec) {
 // Render list options (body, left)
 $menus_list->ListOptions->Render("body", "left", $menus_list->RowCnt);
 ?>
-	<?php if ($menus->Name->Visible) { // Name ?>
-		<td data-name="Name"<?php echo $menus->Name->CellAttributes() ?>>
-<span id="el<?php echo $menus_list->RowCnt ?>_menus_Name" class="menus_Name">
-<span<?php echo $menus->Name->ViewAttributes() ?>>
-<?php echo $menus->Name->ListViewValue() ?></span>
+	<?php if ($menus->name->Visible) { // name ?>
+		<td data-name="name"<?php echo $menus->name->CellAttributes() ?>>
+<span id="el<?php echo $menus_list->RowCnt ?>_menus_name" class="menus_name">
+<span<?php echo $menus->name->ViewAttributes() ?>>
+<?php echo $menus->name->ListViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>
-	<?php if ($menus->Picture->Visible) { // Picture ?>
-		<td data-name="Picture"<?php echo $menus->Picture->CellAttributes() ?>>
-<span id="el<?php echo $menus_list->RowCnt ?>_menus_Picture" class="menus_Picture">
+	<?php if ($menus->picture->Visible) { // picture ?>
+		<td data-name="picture"<?php echo $menus->picture->CellAttributes() ?>>
+<span id="el<?php echo $menus_list->RowCnt ?>_menus_picture" class="menus_picture">
 <span>
-<?php echo ew_GetFileViewTag($menus->Picture, $menus->Picture->ListViewValue()) ?>
+<?php echo ew_GetFileViewTag($menus->picture, $menus->picture->ListViewValue()) ?>
 </span>
 </span>
 </td>

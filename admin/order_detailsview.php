@@ -5,7 +5,8 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "menusinfo.php" ?>
+<?php include_once "order_detailsinfo.php" ?>
+<?php include_once "ordersinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,9 +15,9 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$menus_view = NULL; // Initialize page object first
+$order_details_view = NULL; // Initialize page object first
 
-class cmenus_view extends cmenus {
+class corder_details_view extends corder_details {
 
 	// Page ID
 	var $PageID = 'view';
@@ -25,10 +26,10 @@ class cmenus_view extends cmenus {
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'menus';
+	var $TableName = 'order_details';
 
 	// Page object name
-	var $PageObjName = 'menus_view';
+	var $PageObjName = 'order_details_view';
 
 	// Page headings
 	var $Heading = '';
@@ -282,15 +283,15 @@ class cmenus_view extends cmenus {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (menus)
-		if (!isset($GLOBALS["menus"]) || get_class($GLOBALS["menus"]) == "cmenus") {
-			$GLOBALS["menus"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["menus"];
+		// Table object (order_details)
+		if (!isset($GLOBALS["order_details"]) || get_class($GLOBALS["order_details"]) == "corder_details") {
+			$GLOBALS["order_details"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["order_details"];
 		}
 		$KeyUrl = "";
-		if (@$_GET["menu_id"] <> "") {
-			$this->RecKey["menu_id"] = $_GET["menu_id"];
-			$KeyUrl .= "&amp;menu_id=" . urlencode($this->RecKey["menu_id"]);
+		if (@$_GET["order_detail_id"] <> "") {
+			$this->RecKey["order_detail_id"] = $_GET["order_detail_id"];
+			$KeyUrl .= "&amp;order_detail_id=" . urlencode($this->RecKey["order_detail_id"]);
 		}
 		$this->ExportPrintUrl = $this->PageUrl() . "export=print" . $KeyUrl;
 		$this->ExportHtmlUrl = $this->PageUrl() . "export=html" . $KeyUrl;
@@ -299,6 +300,9 @@ class cmenus_view extends cmenus {
 		$this->ExportXmlUrl = $this->PageUrl() . "export=xml" . $KeyUrl;
 		$this->ExportCsvUrl = $this->PageUrl() . "export=csv" . $KeyUrl;
 		$this->ExportPdfUrl = $this->PageUrl() . "export=pdf" . $KeyUrl;
+
+		// Table object (orders)
+		if (!isset($GLOBALS['orders'])) $GLOBALS['orders'] = new corders();
 
 		// Table object (employees)
 		if (!isset($GLOBALS['employees'])) $GLOBALS['employees'] = new cemployees();
@@ -309,7 +313,7 @@ class cmenus_view extends cmenus {
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'menus', TRUE);
+			define("EW_TABLE_NAME", 'order_details', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -364,7 +368,7 @@ class cmenus_view extends cmenus {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("menuslist.php"));
+				$this->Page_Terminate(ew_GetUrl("order_detailslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -392,9 +396,9 @@ class cmenus_view extends cmenus {
 			$this->setExportReturnUrl(ew_CurrentUrl());
 		}
 		$gsExportFile = $this->TableVar; // Get export file, used in header
-		if (@$_GET["menu_id"] <> "") {
+		if (@$_GET["order_detail_id"] <> "") {
 			if ($gsExportFile <> "") $gsExportFile .= "_";
-			$gsExportFile .= $_GET["menu_id"];
+			$gsExportFile .= $_GET["order_detail_id"];
 		}
 
 		// Get custom export parameters
@@ -420,11 +424,14 @@ class cmenus_view extends cmenus {
 
 		// Setup export options
 		$this->SetupExportOptions();
-		$this->menu_id->SetVisibility();
+		$this->order_detail_id->SetVisibility();
 		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
-			$this->menu_id->Visible = FALSE;
-		$this->name->SetVisibility();
-		$this->picture->SetVisibility();
+			$this->order_detail_id->Visible = FALSE;
+		$this->order_id->SetVisibility();
+		$this->quantity->SetVisibility();
+		$this->menu_id->SetVisibility();
+		$this->sub_menu_id->SetVisibility();
+		$this->price->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -456,13 +463,13 @@ class cmenus_view extends cmenus {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $menus;
+		global $EW_EXPORT, $order_details;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($menus);
+				$doc = new $class($order_details);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -488,7 +495,7 @@ class cmenus_view extends cmenus {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "menusview.php")
+					if ($pageName == "order_detailsview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -531,15 +538,18 @@ class cmenus_view extends cmenus {
 		$bLoadCurrentRecord = FALSE;
 		$sReturnUrl = "";
 		$bMatchRecord = FALSE;
+
+		// Set up master/detail parameters
+		$this->SetupMasterParms();
 		if ($this->IsPageRequest()) { // Validate request
-			if (@$_GET["menu_id"] <> "") {
-				$this->menu_id->setQueryStringValue($_GET["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->QueryStringValue;
-			} elseif (@$_POST["menu_id"] <> "") {
-				$this->menu_id->setFormValue($_POST["menu_id"]);
-				$this->RecKey["menu_id"] = $this->menu_id->FormValue;
+			if (@$_GET["order_detail_id"] <> "") {
+				$this->order_detail_id->setQueryStringValue($_GET["order_detail_id"]);
+				$this->RecKey["order_detail_id"] = $this->order_detail_id->QueryStringValue;
+			} elseif (@$_POST["order_detail_id"] <> "") {
+				$this->order_detail_id->setFormValue($_POST["order_detail_id"]);
+				$this->RecKey["order_detail_id"] = $this->order_detail_id->FormValue;
 			} else {
-				$sReturnUrl = "menuslist.php"; // Return to list
+				$sReturnUrl = "order_detailslist.php"; // Return to list
 			}
 
 			// Get action
@@ -549,7 +559,7 @@ class cmenus_view extends cmenus {
 					if (!$this->LoadRow()) { // Load record based on key
 						if ($this->getSuccessMessage() == "" && $this->getFailureMessage() == "")
 							$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
-						$sReturnUrl = "menuslist.php"; // No matching record, return to list
+						$sReturnUrl = "order_detailslist.php"; // No matching record, return to list
 					}
 			}
 
@@ -560,7 +570,7 @@ class cmenus_view extends cmenus {
 				exit();
 			}
 		} else {
-			$sReturnUrl = "menuslist.php"; // Not page request, return to list
+			$sReturnUrl = "order_detailslist.php"; // Not page request, return to list
 		}
 		if ($sReturnUrl <> "")
 			$this->Page_Terminate($sReturnUrl);
@@ -722,18 +732,23 @@ class cmenus_view extends cmenus {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
+		$this->order_detail_id->setDbValue($row['order_detail_id']);
+		$this->order_id->setDbValue($row['order_id']);
+		$this->quantity->setDbValue($row['quantity']);
 		$this->menu_id->setDbValue($row['menu_id']);
-		$this->name->setDbValue($row['name']);
-		$this->picture->Upload->DbValue = $row['picture'];
-		$this->picture->setDbValue($this->picture->Upload->DbValue);
+		$this->sub_menu_id->setDbValue($row['sub_menu_id']);
+		$this->price->setDbValue($row['price']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
 		$row = array();
+		$row['order_detail_id'] = NULL;
+		$row['order_id'] = NULL;
+		$row['quantity'] = NULL;
 		$row['menu_id'] = NULL;
-		$row['name'] = NULL;
-		$row['picture'] = NULL;
+		$row['sub_menu_id'] = NULL;
+		$row['price'] = NULL;
 		return $row;
 	}
 
@@ -742,9 +757,12 @@ class cmenus_view extends cmenus {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
+		$this->order_detail_id->DbValue = $row['order_detail_id'];
+		$this->order_id->DbValue = $row['order_id'];
+		$this->quantity->DbValue = $row['quantity'];
 		$this->menu_id->DbValue = $row['menu_id'];
-		$this->name->DbValue = $row['name'];
-		$this->picture->Upload->DbValue = $row['picture'];
+		$this->sub_menu_id->DbValue = $row['sub_menu_id'];
+		$this->price->DbValue = $row['price'];
 	}
 
 	// Render row values based on field settings
@@ -759,62 +777,137 @@ class cmenus_view extends cmenus {
 		$this->ListUrl = $this->GetListUrl();
 		$this->SetupOtherOptions();
 
+		// Convert decimal values if posted back
+		if ($this->price->FormValue == $this->price->CurrentValue && is_numeric(ew_StrToFloat($this->price->CurrentValue)))
+			$this->price->CurrentValue = ew_StrToFloat($this->price->CurrentValue);
+
 		// Call Row_Rendering event
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
+		// order_detail_id
+		// order_id
+		// quantity
 		// menu_id
-		// name
-		// picture
+		// sub_menu_id
+		// price
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
 
+		// order_detail_id
+		$this->order_detail_id->ViewValue = $this->order_detail_id->CurrentValue;
+		$this->order_detail_id->ViewCustomAttributes = "";
+
+		// order_id
+		if (strval($this->order_id->CurrentValue) <> "") {
+			$sFilterWrk = "`order_id`" . ew_SearchString("=", $this->order_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `order_id`, `order_id` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `orders`";
+		$sWhereWrk = "";
+		$this->order_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->order_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `order_id`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->order_id->ViewValue = $this->order_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->order_id->ViewValue = $this->order_id->CurrentValue;
+			}
+		} else {
+			$this->order_id->ViewValue = NULL;
+		}
+		$this->order_id->ViewCustomAttributes = "";
+
+		// quantity
+		$this->quantity->ViewValue = $this->quantity->CurrentValue;
+		$this->quantity->ViewCustomAttributes = "";
+
 		// menu_id
-		$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
+		if (strval($this->menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`menu_id`" . ew_SearchString("=", $this->menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `menus`";
+		$sWhereWrk = "";
+		$this->menu_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->menu_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `name`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->menu_id->ViewValue = $this->menu_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->menu_id->ViewValue = $this->menu_id->CurrentValue;
+			}
+		} else {
+			$this->menu_id->ViewValue = NULL;
+		}
 		$this->menu_id->ViewCustomAttributes = "";
 
-		// name
-		$this->name->ViewValue = $this->name->CurrentValue;
-		$this->name->ViewCustomAttributes = "";
-
-		// picture
-		if (!ew_Empty($this->picture->Upload->DbValue)) {
-			$this->picture->ImageWidth = 100;
-			$this->picture->ImageHeight = 100;
-			$this->picture->ImageAlt = $this->picture->FldAlt();
-			$this->picture->ViewValue = $this->picture->Upload->DbValue;
+		// sub_menu_id
+		if (strval($this->sub_menu_id->CurrentValue) <> "") {
+			$sFilterWrk = "`sub_menu_id`" . ew_SearchString("=", $this->sub_menu_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `sub_menu_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `sub_menus`";
+		$sWhereWrk = "";
+		$this->sub_menu_id->LookupFilters = array();
+		ew_AddFilter($sWhereWrk, $sFilterWrk);
+		$this->Lookup_Selecting($this->sub_menu_id, $sWhereWrk); // Call Lookup Selecting
+		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
+		$sSqlWrk .= " ORDER BY `name`";
+			$rswrk = Conn()->Execute($sSqlWrk);
+			if ($rswrk && !$rswrk->EOF) { // Lookup values found
+				$arwrk = array();
+				$arwrk[1] = $rswrk->fields('DispFld');
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->DisplayValue($arwrk);
+				$rswrk->Close();
+			} else {
+				$this->sub_menu_id->ViewValue = $this->sub_menu_id->CurrentValue;
+			}
 		} else {
-			$this->picture->ViewValue = "";
+			$this->sub_menu_id->ViewValue = NULL;
 		}
-		$this->picture->ViewCustomAttributes = "";
+		$this->sub_menu_id->ViewCustomAttributes = "";
+
+		// price
+		$this->price->ViewValue = $this->price->CurrentValue;
+		$this->price->ViewValue = ew_FormatCurrency($this->price->ViewValue, 0, -2, -2, -2);
+		$this->price->ViewCustomAttributes = "";
+
+			// order_detail_id
+			$this->order_detail_id->LinkCustomAttributes = "";
+			$this->order_detail_id->HrefValue = "";
+			$this->order_detail_id->TooltipValue = "";
+
+			// order_id
+			$this->order_id->LinkCustomAttributes = "";
+			$this->order_id->HrefValue = "";
+			$this->order_id->TooltipValue = "";
+
+			// quantity
+			$this->quantity->LinkCustomAttributes = "";
+			$this->quantity->HrefValue = "";
+			$this->quantity->TooltipValue = "";
 
 			// menu_id
 			$this->menu_id->LinkCustomAttributes = "";
 			$this->menu_id->HrefValue = "";
 			$this->menu_id->TooltipValue = "";
 
-			// name
-			$this->name->LinkCustomAttributes = "";
-			$this->name->HrefValue = "";
-			$this->name->TooltipValue = "";
+			// sub_menu_id
+			$this->sub_menu_id->LinkCustomAttributes = "";
+			$this->sub_menu_id->HrefValue = "";
+			$this->sub_menu_id->TooltipValue = "";
 
-			// picture
-			$this->picture->LinkCustomAttributes = "";
-			if (!ew_Empty($this->picture->Upload->DbValue)) {
-				$this->picture->HrefValue = ew_GetFileUploadUrl($this->picture, $this->picture->Upload->DbValue); // Add prefix/suffix
-				$this->picture->LinkAttrs["target"] = ""; // Add target
-				if ($this->Export <> "") $this->picture->HrefValue = ew_FullUrl($this->picture->HrefValue, "href");
-			} else {
-				$this->picture->HrefValue = "";
-			}
-			$this->picture->HrefValue2 = $this->picture->UploadPath . $this->picture->Upload->DbValue;
-			$this->picture->TooltipValue = "";
-			if ($this->picture->UseColorbox) {
-				if (ew_Empty($this->picture->TooltipValue))
-					$this->picture->LinkAttrs["title"] = $Language->Phrase("ViewImageGallery");
-				$this->picture->LinkAttrs["data-rel"] = "menus_x_picture";
-				ew_AppendClass($this->picture->LinkAttrs["class"], "ewLightbox");
-			}
+			// price
+			$this->price->LinkCustomAttributes = "";
+			$this->price->HrefValue = "";
+			$this->price->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -864,7 +957,7 @@ class cmenus_view extends cmenus {
 		// Export to Email
 		$item = &$this->ExportOptions->Add("email");
 		$url = "";
-		$item->Body = "<button id=\"emf_menus\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_menus',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.fmenusview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
+		$item->Body = "<button id=\"emf_order_details\" class=\"ewExportLink ewEmail\" title=\"" . $Language->Phrase("ExportToEmailText") . "\" data-caption=\"" . $Language->Phrase("ExportToEmailText") . "\" onclick=\"ew_EmailDialogShow({lnk:'emf_order_details',hdr:ewLanguage.Phrase('ExportToEmailText'),f:document.forder_detailsview,key:" . ew_ArrayToJsonAttr($this->RecKey) . ",sel:false" . $url . "});\">" . $Language->Phrase("ExportToEmail") . "</button>";
 		$item->Visible = FALSE;
 
 		// Drop down button for export
@@ -959,12 +1052,75 @@ class cmenus_view extends cmenus {
 		$Doc->Export();
 	}
 
+	// Set up master/detail based on QueryString
+	function SetupMasterParms() {
+		$bValidMaster = FALSE;
+
+		// Get the keys for master table
+		if (isset($_GET[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_GET[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_GET["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setQueryStringValue($_GET["fk_order_id"]);
+					$this->order_id->setQueryStringValue($GLOBALS["orders"]->order_id->QueryStringValue);
+					$this->order_id->setSessionValue($this->order_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->QueryStringValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		} elseif (isset($_POST[EW_TABLE_SHOW_MASTER])) {
+			$sMasterTblVar = $_POST[EW_TABLE_SHOW_MASTER];
+			if ($sMasterTblVar == "") {
+				$bValidMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($sMasterTblVar == "orders") {
+				$bValidMaster = TRUE;
+				if (@$_POST["fk_order_id"] <> "") {
+					$GLOBALS["orders"]->order_id->setFormValue($_POST["fk_order_id"]);
+					$this->order_id->setFormValue($GLOBALS["orders"]->order_id->FormValue);
+					$this->order_id->setSessionValue($this->order_id->FormValue);
+					if (!is_numeric($GLOBALS["orders"]->order_id->FormValue)) $bValidMaster = FALSE;
+				} else {
+					$bValidMaster = FALSE;
+				}
+			}
+		}
+		if ($bValidMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($sMasterTblVar);
+			$this->setSessionWhere($this->GetDetailFilter());
+
+			// Reset start record counter (new master key)
+			if (!$this->IsAddOrEdit()) {
+				$this->StartRec = 1;
+				$this->setStartRecordNumber($this->StartRec);
+			}
+
+			// Clear previous master key from Session
+			if ($sMasterTblVar <> "orders") {
+				if ($this->order_id->CurrentValue == "") $this->order_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->GetMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->GetDetailFilter(); // Get detail filter
+	}
+
 	// Set up Breadcrumb
 	function SetupBreadcrumb() {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("menuslist.php"), "", $this->TableVar, TRUE);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("order_detailslist.php"), "", $this->TableVar, TRUE);
 		$PageId = "view";
 		$Breadcrumb->Add("view", $PageId, $url);
 	}
@@ -1076,30 +1232,30 @@ class cmenus_view extends cmenus {
 <?php
 
 // Create page object
-if (!isset($menus_view)) $menus_view = new cmenus_view();
+if (!isset($order_details_view)) $order_details_view = new corder_details_view();
 
 // Page init
-$menus_view->Page_Init();
+$order_details_view->Page_Init();
 
 // Page main
-$menus_view->Page_Main();
+$order_details_view->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$menus_view->Page_Render();
+$order_details_view->Page_Render();
 ?>
 <?php include_once "header.php" ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($order_details->Export == "") { ?>
 <script type="text/javascript">
 
 // Form object
 var CurrentPageID = EW_PAGE_ID = "view";
-var CurrentForm = fmenusview = new ew_Form("fmenusview", "view");
+var CurrentForm = forder_detailsview = new ew_Form("forder_detailsview", "view");
 
 // Form_CustomValidate event
-fmenusview.Form_CustomValidate = 
+forder_detailsview.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1107,85 +1263,123 @@ fmenusview.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fmenusview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+forder_detailsview.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-// Form object for search
+forder_detailsview.Lists["x_order_id"] = {"LinkField":"x_order_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_order_id","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"orders"};
+forder_detailsview.Lists["x_order_id"].Data = "<?php echo $order_details_view->order_id->LookupFilterQuery(FALSE, "view") ?>";
+forder_detailsview.Lists["x_menu_id"] = {"LinkField":"x_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"menus"};
+forder_detailsview.Lists["x_menu_id"].Data = "<?php echo $order_details_view->menu_id->LookupFilterQuery(FALSE, "view") ?>";
+forder_detailsview.Lists["x_sub_menu_id"] = {"LinkField":"x_sub_menu_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"sub_menus"};
+forder_detailsview.Lists["x_sub_menu_id"].Data = "<?php echo $order_details_view->sub_menu_id->LookupFilterQuery(FALSE, "view") ?>";
 
+// Form object for search
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
 <?php } ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($order_details->Export == "") { ?>
 <div class="ewToolbar">
-<?php $menus_view->ExportOptions->Render("body") ?>
+<?php $order_details_view->ExportOptions->Render("body") ?>
 <?php
-	foreach ($menus_view->OtherOptions as &$option)
+	foreach ($order_details_view->OtherOptions as &$option)
 		$option->Render("body");
 ?>
 <div class="clearfix"></div>
 </div>
 <?php } ?>
-<?php $menus_view->ShowPageHeader(); ?>
+<?php $order_details_view->ShowPageHeader(); ?>
 <?php
-$menus_view->ShowMessage();
+$order_details_view->ShowMessage();
 ?>
-<form name="fmenusview" id="fmenusview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($menus_view->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $menus_view->Token ?>">
+<form name="forder_detailsview" id="forder_detailsview" class="form-inline ewForm ewViewForm" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($order_details_view->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $order_details_view->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="menus">
-<input type="hidden" name="modal" value="<?php echo intval($menus_view->IsModal) ?>">
+<input type="hidden" name="t" value="order_details">
+<input type="hidden" name="modal" value="<?php echo intval($order_details_view->IsModal) ?>">
 <table class="table table-striped table-bordered table-hover table-condensed ewViewTable">
-<?php if ($menus->menu_id->Visible) { // menu_id ?>
+<?php if ($order_details->order_detail_id->Visible) { // order_detail_id ?>
+	<tr id="r_order_detail_id">
+		<td class="col-sm-2"><span id="elh_order_details_order_detail_id"><?php echo $order_details->order_detail_id->FldCaption() ?></span></td>
+		<td data-name="order_detail_id"<?php echo $order_details->order_detail_id->CellAttributes() ?>>
+<span id="el_order_details_order_detail_id">
+<span<?php echo $order_details->order_detail_id->ViewAttributes() ?>>
+<?php echo $order_details->order_detail_id->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($order_details->order_id->Visible) { // order_id ?>
+	<tr id="r_order_id">
+		<td class="col-sm-2"><span id="elh_order_details_order_id"><?php echo $order_details->order_id->FldCaption() ?></span></td>
+		<td data-name="order_id"<?php echo $order_details->order_id->CellAttributes() ?>>
+<span id="el_order_details_order_id">
+<span<?php echo $order_details->order_id->ViewAttributes() ?>>
+<?php echo $order_details->order_id->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($order_details->quantity->Visible) { // quantity ?>
+	<tr id="r_quantity">
+		<td class="col-sm-2"><span id="elh_order_details_quantity"><?php echo $order_details->quantity->FldCaption() ?></span></td>
+		<td data-name="quantity"<?php echo $order_details->quantity->CellAttributes() ?>>
+<span id="el_order_details_quantity">
+<span<?php echo $order_details->quantity->ViewAttributes() ?>>
+<?php echo $order_details->quantity->ViewValue ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($order_details->menu_id->Visible) { // menu_id ?>
 	<tr id="r_menu_id">
-		<td class="col-sm-2"><span id="elh_menus_menu_id"><?php echo $menus->menu_id->FldCaption() ?></span></td>
-		<td data-name="menu_id"<?php echo $menus->menu_id->CellAttributes() ?>>
-<span id="el_menus_menu_id">
-<span<?php echo $menus->menu_id->ViewAttributes() ?>>
-<?php echo $menus->menu_id->ViewValue ?></span>
+		<td class="col-sm-2"><span id="elh_order_details_menu_id"><?php echo $order_details->menu_id->FldCaption() ?></span></td>
+		<td data-name="menu_id"<?php echo $order_details->menu_id->CellAttributes() ?>>
+<span id="el_order_details_menu_id">
+<span<?php echo $order_details->menu_id->ViewAttributes() ?>>
+<?php echo $order_details->menu_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($menus->name->Visible) { // name ?>
-	<tr id="r_name">
-		<td class="col-sm-2"><span id="elh_menus_name"><?php echo $menus->name->FldCaption() ?></span></td>
-		<td data-name="name"<?php echo $menus->name->CellAttributes() ?>>
-<span id="el_menus_name">
-<span<?php echo $menus->name->ViewAttributes() ?>>
-<?php echo $menus->name->ViewValue ?></span>
+<?php if ($order_details->sub_menu_id->Visible) { // sub_menu_id ?>
+	<tr id="r_sub_menu_id">
+		<td class="col-sm-2"><span id="elh_order_details_sub_menu_id"><?php echo $order_details->sub_menu_id->FldCaption() ?></span></td>
+		<td data-name="sub_menu_id"<?php echo $order_details->sub_menu_id->CellAttributes() ?>>
+<span id="el_order_details_sub_menu_id">
+<span<?php echo $order_details->sub_menu_id->ViewAttributes() ?>>
+<?php echo $order_details->sub_menu_id->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
-<?php if ($menus->picture->Visible) { // picture ?>
-	<tr id="r_picture">
-		<td class="col-sm-2"><span id="elh_menus_picture"><?php echo $menus->picture->FldCaption() ?></span></td>
-		<td data-name="picture"<?php echo $menus->picture->CellAttributes() ?>>
-<span id="el_menus_picture">
-<span>
-<?php echo ew_GetFileViewTag($menus->picture, $menus->picture->ViewValue) ?>
-</span>
+<?php if ($order_details->price->Visible) { // price ?>
+	<tr id="r_price">
+		<td class="col-sm-2"><span id="elh_order_details_price"><?php echo $order_details->price->FldCaption() ?></span></td>
+		<td data-name="price"<?php echo $order_details->price->CellAttributes() ?>>
+<span id="el_order_details_price">
+<span<?php echo $order_details->price->ViewAttributes() ?>>
+<?php echo $order_details->price->ViewValue ?></span>
 </span>
 </td>
 	</tr>
 <?php } ?>
 </table>
 </form>
-<?php if ($menus->Export == "") { ?>
+<?php if ($order_details->Export == "") { ?>
 <script type="text/javascript">
-fmenusview.Init();
+forder_detailsview.Init();
 </script>
 <?php } ?>
 <?php
-$menus_view->ShowPageFooter();
+$order_details_view->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
-<?php if ($menus->Export == "") { ?>
+<?php if ($order_details->Export == "") { ?>
 <script type="text/javascript">
 
 // Write your table-specific startup script here
@@ -1195,5 +1389,5 @@ if (EW_DEBUG_ENABLED)
 <?php } ?>
 <?php include_once "footer.php" ?>
 <?php
-$menus_view->Page_Terminate();
+$order_details_view->Page_Terminate();
 ?>

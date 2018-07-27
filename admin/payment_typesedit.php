@@ -5,7 +5,7 @@ ob_start(); // Turn on output buffering
 <?php include_once "ewcfg14.php" ?>
 <?php include_once ((EW_USE_ADODB) ? "adodb5/adodb.inc.php" : "ewmysql14.php") ?>
 <?php include_once "phpfn14.php" ?>
-<?php include_once "storesinfo.php" ?>
+<?php include_once "payment_typesinfo.php" ?>
 <?php include_once "employeesinfo.php" ?>
 <?php include_once "userfn14.php" ?>
 <?php
@@ -14,21 +14,21 @@ ob_start(); // Turn on output buffering
 // Page class
 //
 
-$stores_add = NULL; // Initialize page object first
+$payment_types_edit = NULL; // Initialize page object first
 
-class cstores_add extends cstores {
+class cpayment_types_edit extends cpayment_types {
 
 	// Page ID
-	var $PageID = 'add';
+	var $PageID = 'edit';
 
 	// Project ID
 	var $ProjectID = '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}';
 
 	// Table name
-	var $TableName = 'stores';
+	var $TableName = 'payment_types';
 
 	// Page object name
-	var $PageObjName = 'stores_add';
+	var $PageObjName = 'payment_types_edit';
 
 	// Page headings
 	var $Heading = '';
@@ -250,10 +250,10 @@ class cstores_add extends cstores {
 		// Parent constuctor
 		parent::__construct();
 
-		// Table object (stores)
-		if (!isset($GLOBALS["stores"]) || get_class($GLOBALS["stores"]) == "cstores") {
-			$GLOBALS["stores"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["stores"];
+		// Table object (payment_types)
+		if (!isset($GLOBALS["payment_types"]) || get_class($GLOBALS["payment_types"]) == "cpayment_types") {
+			$GLOBALS["payment_types"] = &$this;
+			$GLOBALS["Table"] = &$GLOBALS["payment_types"];
 		}
 
 		// Table object (employees)
@@ -261,11 +261,11 @@ class cstores_add extends cstores {
 
 		// Page ID
 		if (!defined("EW_PAGE_ID"))
-			define("EW_PAGE_ID", 'add', TRUE);
+			define("EW_PAGE_ID", 'edit', TRUE);
 
 		// Table name (for backward compatibility)
 		if (!defined("EW_TABLE_NAME"))
-			define("EW_TABLE_NAME", 'stores', TRUE);
+			define("EW_TABLE_NAME", 'payment_types', TRUE);
 
 		// Start timer
 		if (!isset($GLOBALS["gTimer"]))
@@ -303,11 +303,11 @@ class cstores_add extends cstores {
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loading();
 		$Security->LoadCurrentUserLevel($this->ProjectID . $this->TableName);
 		if ($Security->IsLoggedIn()) $Security->TablePermission_Loaded();
-		if (!$Security->CanAdd()) {
+		if (!$Security->CanEdit()) {
 			$Security->SaveLastUrl();
 			$this->setFailureMessage(ew_DeniedMsg()); // Set no permission
 			if ($Security->CanList())
-				$this->Page_Terminate(ew_GetUrl("storeslist.php"));
+				$this->Page_Terminate(ew_GetUrl("payment_typeslist.php"));
 			else
 				$this->Page_Terminate(ew_GetUrl("login.php"));
 		}
@@ -320,10 +320,10 @@ class cstores_add extends cstores {
 
 		$objForm = new cFormObj();
 		$this->CurrentAction = (@$_GET["a"] <> "") ? $_GET["a"] : @$_POST["a_list"]; // Set up current action
+		$this->payment_type_id->SetVisibility();
+		if ($this->IsAdd() || $this->IsCopy() || $this->IsGridAdd())
+			$this->payment_type_id->Visible = FALSE;
 		$this->name->SetVisibility();
-		$this->province_id->SetVisibility();
-		$this->address->SetVisibility();
-		$this->zip_code->SetVisibility();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -369,13 +369,13 @@ class cstores_add extends cstores {
 		Page_Unloaded();
 
 		// Export
-		global $EW_EXPORT, $stores;
+		global $EW_EXPORT, $payment_types;
 		if ($this->CustomExport <> "" && $this->CustomExport == $this->Export && array_key_exists($this->CustomExport, $EW_EXPORT)) {
 				$sContent = ob_get_contents();
 			if ($gsExportFile == "") $gsExportFile = $this->TableVar;
 			$class = $EW_EXPORT[$this->CustomExport];
 			if (class_exists($class)) {
-				$doc = new $class($stores);
+				$doc = new $class($payment_types);
 				$doc->Text = $sContent;
 				if ($this->Export == "email")
 					echo $this->ExportEmail($doc->Text);
@@ -401,7 +401,7 @@ class cstores_add extends cstores {
 				$pageName = ew_GetPageName($url);
 				if ($pageName != $this->GetListUrl()) { // Not List page
 					$row["caption"] = $this->GetModalCaption($pageName);
-					if ($pageName == "storesview.php")
+					if ($pageName == "payment_typesview.php")
 						$row["view"] = "1";
 				} else { // List page should not be shown as modal => error
 					$row["error"] = $this->getFailureMessage();
@@ -416,104 +416,136 @@ class cstores_add extends cstores {
 		}
 		exit();
 	}
-	var $FormClassName = "form-horizontal ewForm ewAddForm";
+	var $FormClassName = "form-horizontal ewForm ewEditForm";
 	var $IsModal = FALSE;
 	var $IsMobileOrModal = FALSE;
-	var $DbMasterFilter = "";
-	var $DbDetailFilter = "";
-	var $StartRec;
-	var $Priv = 0;
-	var $OldRecordset;
-	var $CopyRecord;
+	var $DbMasterFilter;
+	var $DbDetailFilter;
 
 	//
 	// Page main
 	//
 	function Page_Main() {
-		global $objForm, $Language, $gsFormError;
-		global $gbSkipHeaderFooter;
+		global $objForm, $Language, $gsFormError, $gbSkipHeaderFooter;
 
 		// Check modal
 		if ($this->IsModal)
 			$gbSkipHeaderFooter = TRUE;
 		$this->IsMobileOrModal = ew_IsMobile() || $this->IsModal;
-		$this->FormClassName = "ewForm ewAddForm form-horizontal";
+		$this->FormClassName = "ewForm ewEditForm form-horizontal";
+		$sReturnUrl = "";
+		$loaded = FALSE;
+		$postBack = FALSE;
 
-		// Set up current action
-		if (@$_POST["a_add"] <> "") {
-			$this->CurrentAction = $_POST["a_add"]; // Get form action
-		} else { // Not post back
+		// Set up current action and primary key
+		if (@$_POST["a_edit"] <> "") {
+			$this->CurrentAction = $_POST["a_edit"]; // Get action code
+			if ($this->CurrentAction <> "I") // Not reload record, handle as postback
+				$postBack = TRUE;
 
-			// Load key values from QueryString
-			$this->CopyRecord = TRUE;
-			if (@$_GET["store_id"] != "") {
-				$this->store_id->setQueryStringValue($_GET["store_id"]);
-				$this->setKey("store_id", $this->store_id->CurrentValue); // Set up key
-			} else {
-				$this->setKey("store_id", ""); // Clear key
-				$this->CopyRecord = FALSE;
+			// Load key from Form
+			if ($objForm->HasValue("x_payment_type_id")) {
+				$this->payment_type_id->setFormValue($objForm->GetValue("x_payment_type_id"));
 			}
-			if ($this->CopyRecord) {
-				$this->CurrentAction = "C"; // Copy record
+		} else {
+			$this->CurrentAction = "I"; // Default action is display
+
+			// Load key from QueryString
+			$loadByQuery = FALSE;
+			if (isset($_GET["payment_type_id"])) {
+				$this->payment_type_id->setQueryStringValue($_GET["payment_type_id"]);
+				$loadByQuery = TRUE;
 			} else {
-				$this->CurrentAction = "I"; // Display blank record
+				$this->payment_type_id->CurrentValue = NULL;
 			}
 		}
 
-		// Load old record / default values
-		$loaded = $this->LoadOldRecord();
+		// Load current record
+		$loaded = $this->LoadRow();
 
-		// Load form values
-		if (@$_POST["a_add"] <> "") {
-			$this->LoadFormValues(); // Load form values
+		// Process form if post back
+		if ($postBack) {
+			$this->LoadFormValues(); // Get form values
 		}
 
 		// Validate form if post back
-		if (@$_POST["a_add"] <> "") {
+		if ($postBack) {
 			if (!$this->ValidateForm()) {
-				$this->CurrentAction = "I"; // Form error, reset action
-				$this->EventCancelled = TRUE; // Event cancelled
-				$this->RestoreFormValues(); // Restore form values
+				$this->CurrentAction = ""; // Form error, reset action
 				$this->setFailureMessage($gsFormError);
+				$this->EventCancelled = TRUE; // Event cancelled
+				$this->RestoreFormValues();
 			}
 		}
 
 		// Perform current action
 		switch ($this->CurrentAction) {
-			case "I": // Blank record
-				break;
-			case "C": // Copy an existing record
-				if (!$loaded) { // Record not loaded
+			case "I": // Get a record to display
+				if (!$loaded) { // Load record based on key
 					if ($this->getFailureMessage() == "") $this->setFailureMessage($Language->Phrase("NoRecord")); // No record found
-					$this->Page_Terminate("storeslist.php"); // No matching record, return to list
+					$this->Page_Terminate("payment_typeslist.php"); // No matching record, return to list
 				}
 				break;
-			case "A": // Add new record
-				$this->SendEmail = TRUE; // Send email on add success
-				if ($this->AddRow($this->OldRecordset)) { // Add successful
+			Case "U": // Update
+				$sReturnUrl = $this->getReturnUrl();
+				if (ew_GetPageName($sReturnUrl) == "payment_typeslist.php")
+					$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to List page with correct master key if necessary
+				$this->SendEmail = TRUE; // Send email on update success
+				if ($this->EditRow()) { // Update record based on key
 					if ($this->getSuccessMessage() == "")
-						$this->setSuccessMessage($Language->Phrase("AddSuccess")); // Set up success message
-					$sReturnUrl = $this->getReturnUrl();
-					if (ew_GetPageName($sReturnUrl) == "storeslist.php")
-						$sReturnUrl = $this->AddMasterUrl($sReturnUrl); // List page, return to List page with correct master key if necessary
-					elseif (ew_GetPageName($sReturnUrl) == "storesview.php")
-						$sReturnUrl = $this->GetViewUrl(); // View page, return to View page with keyurl directly
-					$this->Page_Terminate($sReturnUrl); // Clean up and return
+						$this->setSuccessMessage($Language->Phrase("UpdateSuccess")); // Update success
+					$this->Page_Terminate($sReturnUrl); // Return to caller
+				} elseif ($this->getFailureMessage() == $Language->Phrase("NoRecord")) {
+					$this->Page_Terminate($sReturnUrl); // Return to caller
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
-					$this->RestoreFormValues(); // Add failed, restore form values
+					$this->RestoreFormValues(); // Restore form values if update failed
 				}
 		}
 
 		// Set up Breadcrumb
 		$this->SetupBreadcrumb();
 
-		// Render row based on row type
-		$this->RowType = EW_ROWTYPE_ADD; // Render add type
-
-		// Render row
+		// Render the record
+		$this->RowType = EW_ROWTYPE_EDIT; // Render as Edit
 		$this->ResetAttrs();
 		$this->RenderRow();
+	}
+
+	// Set up starting record parameters
+	function SetupStartRec() {
+		if ($this->DisplayRecs == 0)
+			return;
+		if ($this->IsPageRequest()) { // Validate request
+			if (@$_GET[EW_TABLE_START_REC] <> "") { // Check for "start" parameter
+				$this->StartRec = $_GET[EW_TABLE_START_REC];
+				$this->setStartRecordNumber($this->StartRec);
+			} elseif (@$_GET[EW_TABLE_PAGE_NO] <> "") {
+				$PageNo = $_GET[EW_TABLE_PAGE_NO];
+				if (is_numeric($PageNo)) {
+					$this->StartRec = ($PageNo-1)*$this->DisplayRecs+1;
+					if ($this->StartRec <= 0) {
+						$this->StartRec = 1;
+					} elseif ($this->StartRec >= intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1) {
+						$this->StartRec = intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1;
+					}
+					$this->setStartRecordNumber($this->StartRec);
+				}
+			}
+		}
+		$this->StartRec = $this->getStartRecordNumber();
+
+		// Check if correct start record counter
+		if (!is_numeric($this->StartRec) || $this->StartRec == "") { // Avoid invalid start record counter
+			$this->StartRec = 1; // Reset start record counter
+			$this->setStartRecordNumber($this->StartRec);
+		} elseif (intval($this->StartRec) > intval($this->TotalRecs)) { // Avoid starting record > total records
+			$this->StartRec = intval(($this->TotalRecs-1)/$this->DisplayRecs)*$this->DisplayRecs+1; // Point to last page first record
+			$this->setStartRecordNumber($this->StartRec);
+		} elseif (($this->StartRec-1) % $this->DisplayRecs <> 0) {
+			$this->StartRec = intval(($this->StartRec-1)/$this->DisplayRecs)*$this->DisplayRecs+1; // Point to page boundary
+			$this->setStartRecordNumber($this->StartRec);
+		}
 	}
 
 	// Get upload files
@@ -523,46 +555,23 @@ class cstores_add extends cstores {
 		// Get upload data
 	}
 
-	// Load default values
-	function LoadDefaultValues() {
-		$this->store_id->CurrentValue = NULL;
-		$this->store_id->OldValue = $this->store_id->CurrentValue;
-		$this->name->CurrentValue = NULL;
-		$this->name->OldValue = $this->name->CurrentValue;
-		$this->province_id->CurrentValue = NULL;
-		$this->province_id->OldValue = $this->province_id->CurrentValue;
-		$this->address->CurrentValue = NULL;
-		$this->address->OldValue = $this->address->CurrentValue;
-		$this->zip_code->CurrentValue = NULL;
-		$this->zip_code->OldValue = $this->zip_code->CurrentValue;
-	}
-
 	// Load form values
 	function LoadFormValues() {
 
 		// Load from form
 		global $objForm;
+		if (!$this->payment_type_id->FldIsDetailKey)
+			$this->payment_type_id->setFormValue($objForm->GetValue("x_payment_type_id"));
 		if (!$this->name->FldIsDetailKey) {
 			$this->name->setFormValue($objForm->GetValue("x_name"));
-		}
-		if (!$this->province_id->FldIsDetailKey) {
-			$this->province_id->setFormValue($objForm->GetValue("x_province_id"));
-		}
-		if (!$this->address->FldIsDetailKey) {
-			$this->address->setFormValue($objForm->GetValue("x_address"));
-		}
-		if (!$this->zip_code->FldIsDetailKey) {
-			$this->zip_code->setFormValue($objForm->GetValue("x_zip_code"));
 		}
 	}
 
 	// Restore form values
 	function RestoreFormValues() {
 		global $objForm;
+		$this->payment_type_id->CurrentValue = $this->payment_type_id->FormValue;
 		$this->name->CurrentValue = $this->name->FormValue;
-		$this->province_id->CurrentValue = $this->province_id->FormValue;
-		$this->address->CurrentValue = $this->address->FormValue;
-		$this->zip_code->CurrentValue = $this->zip_code->FormValue;
 	}
 
 	// Load row based on key values
@@ -598,22 +607,15 @@ class cstores_add extends cstores {
 		$this->Row_Selected($row);
 		if (!$rs || $rs->EOF)
 			return;
-		$this->store_id->setDbValue($row['store_id']);
+		$this->payment_type_id->setDbValue($row['payment_type_id']);
 		$this->name->setDbValue($row['name']);
-		$this->province_id->setDbValue($row['province_id']);
-		$this->address->setDbValue($row['address']);
-		$this->zip_code->setDbValue($row['zip_code']);
 	}
 
 	// Return a row with default values
 	function NewRow() {
-		$this->LoadDefaultValues();
 		$row = array();
-		$row['store_id'] = $this->store_id->CurrentValue;
-		$row['name'] = $this->name->CurrentValue;
-		$row['province_id'] = $this->province_id->CurrentValue;
-		$row['address'] = $this->address->CurrentValue;
-		$row['zip_code'] = $this->zip_code->CurrentValue;
+		$row['payment_type_id'] = NULL;
+		$row['name'] = NULL;
 		return $row;
 	}
 
@@ -622,11 +624,8 @@ class cstores_add extends cstores {
 		if (!$rs || !is_array($rs) && $rs->EOF)
 			return;
 		$row = is_array($rs) ? $rs : $rs->fields;
-		$this->store_id->DbValue = $row['store_id'];
+		$this->payment_type_id->DbValue = $row['payment_type_id'];
 		$this->name->DbValue = $row['name'];
-		$this->province_id->DbValue = $row['province_id'];
-		$this->address->DbValue = $row['address'];
-		$this->zip_code->DbValue = $row['zip_code'];
 	}
 
 	// Load old record
@@ -634,8 +633,8 @@ class cstores_add extends cstores {
 
 		// Load key values from Session
 		$bValidKey = TRUE;
-		if (strval($this->getKey("store_id")) <> "")
-			$this->store_id->CurrentValue = $this->getKey("store_id"); // store_id
+		if (strval($this->getKey("payment_type_id")) <> "")
+			$this->payment_type_id->CurrentValue = $this->getKey("payment_type_id"); // payment_type_id
 		else
 			$bValidKey = FALSE;
 
@@ -661,70 +660,35 @@ class cstores_add extends cstores {
 		$this->Row_Rendering();
 
 		// Common render codes for all row types
-		// store_id
+		// payment_type_id
 		// name
-		// province_id
-		// address
-		// zip_code
 
 		if ($this->RowType == EW_ROWTYPE_VIEW) { // View row
+
+		// payment_type_id
+		$this->payment_type_id->ViewValue = $this->payment_type_id->CurrentValue;
+		$this->payment_type_id->ViewCustomAttributes = "";
 
 		// name
 		$this->name->ViewValue = $this->name->CurrentValue;
 		$this->name->ViewCustomAttributes = "";
 
-		// province_id
-		if (strval($this->province_id->CurrentValue) <> "") {
-			$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-		$sWhereWrk = "";
-		$this->province_id->LookupFilters = array();
-		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			if ($rswrk && !$rswrk->EOF) { // Lookup values found
-				$arwrk = array();
-				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->province_id->ViewValue = $this->province_id->DisplayValue($arwrk);
-				$rswrk->Close();
-			} else {
-				$this->province_id->ViewValue = $this->province_id->CurrentValue;
-			}
-		} else {
-			$this->province_id->ViewValue = NULL;
-		}
-		$this->province_id->ViewCustomAttributes = "";
-
-		// address
-		$this->address->ViewValue = $this->address->CurrentValue;
-		$this->address->ViewCustomAttributes = "";
-
-		// zip_code
-		$this->zip_code->ViewValue = $this->zip_code->CurrentValue;
-		$this->zip_code->ViewCustomAttributes = "";
+			// payment_type_id
+			$this->payment_type_id->LinkCustomAttributes = "";
+			$this->payment_type_id->HrefValue = "";
+			$this->payment_type_id->TooltipValue = "";
 
 			// name
 			$this->name->LinkCustomAttributes = "";
 			$this->name->HrefValue = "";
 			$this->name->TooltipValue = "";
+		} elseif ($this->RowType == EW_ROWTYPE_EDIT) { // Edit row
 
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-			$this->province_id->TooltipValue = "";
-
-			// address
-			$this->address->LinkCustomAttributes = "";
-			$this->address->HrefValue = "";
-			$this->address->TooltipValue = "";
-
-			// zip_code
-			$this->zip_code->LinkCustomAttributes = "";
-			$this->zip_code->HrefValue = "";
-			$this->zip_code->TooltipValue = "";
-		} elseif ($this->RowType == EW_ROWTYPE_ADD) { // Add row
+			// payment_type_id
+			$this->payment_type_id->EditAttrs["class"] = "form-control";
+			$this->payment_type_id->EditCustomAttributes = "";
+			$this->payment_type_id->EditValue = $this->payment_type_id->CurrentValue;
+			$this->payment_type_id->ViewCustomAttributes = "";
 
 			// name
 			$this->name->EditAttrs["class"] = "form-control";
@@ -732,55 +696,15 @@ class cstores_add extends cstores {
 			$this->name->EditValue = ew_HtmlEncode($this->name->CurrentValue);
 			$this->name->PlaceHolder = ew_RemoveHtml($this->name->FldCaption());
 
-			// province_id
-			$this->province_id->EditAttrs["class"] = "form-control";
-			$this->province_id->EditCustomAttributes = "";
-			if (trim(strval($this->province_id->CurrentValue)) == "") {
-				$sFilterWrk = "0=1";
-			} else {
-				$sFilterWrk = "`province_id`" . ew_SearchString("=", $this->province_id->CurrentValue, EW_DATATYPE_NUMBER, "");
-			}
-			$sSqlWrk = "SELECT `province_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld`, '' AS `SelectFilterFld`, '' AS `SelectFilterFld2`, '' AS `SelectFilterFld3`, '' AS `SelectFilterFld4` FROM `provinces`";
-			$sWhereWrk = "";
-			$this->province_id->LookupFilters = array();
-			ew_AddFilter($sWhereWrk, $sFilterWrk);
-			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `name`";
-			$rswrk = Conn()->Execute($sSqlWrk);
-			$arwrk = ($rswrk) ? $rswrk->GetRows() : array();
-			if ($rswrk) $rswrk->Close();
-			$this->province_id->EditValue = $arwrk;
+			// Edit refer script
+			// payment_type_id
 
-			// address
-			$this->address->EditAttrs["class"] = "form-control";
-			$this->address->EditCustomAttributes = "";
-			$this->address->EditValue = ew_HtmlEncode($this->address->CurrentValue);
-			$this->address->PlaceHolder = ew_RemoveHtml($this->address->FldCaption());
+			$this->payment_type_id->LinkCustomAttributes = "";
+			$this->payment_type_id->HrefValue = "";
 
-			// zip_code
-			$this->zip_code->EditAttrs["class"] = "form-control";
-			$this->zip_code->EditCustomAttributes = "";
-			$this->zip_code->EditValue = ew_HtmlEncode($this->zip_code->CurrentValue);
-			$this->zip_code->PlaceHolder = ew_RemoveHtml($this->zip_code->FldCaption());
-
-			// Add refer script
 			// name
-
 			$this->name->LinkCustomAttributes = "";
 			$this->name->HrefValue = "";
-
-			// province_id
-			$this->province_id->LinkCustomAttributes = "";
-			$this->province_id->HrefValue = "";
-
-			// address
-			$this->address->LinkCustomAttributes = "";
-			$this->address->HrefValue = "";
-
-			// zip_code
-			$this->zip_code->LinkCustomAttributes = "";
-			$this->zip_code->HrefValue = "";
 		}
 		if ($this->RowType == EW_ROWTYPE_ADD || $this->RowType == EW_ROWTYPE_EDIT || $this->RowType == EW_ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->SetupFieldTitles();
@@ -803,15 +727,6 @@ class cstores_add extends cstores {
 		if (!$this->name->FldIsDetailKey && !is_null($this->name->FormValue) && $this->name->FormValue == "") {
 			ew_AddMessage($gsFormError, str_replace("%s", $this->name->FldCaption(), $this->name->ReqErrMsg));
 		}
-		if (!$this->province_id->FldIsDetailKey && !is_null($this->province_id->FormValue) && $this->province_id->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->province_id->FldCaption(), $this->province_id->ReqErrMsg));
-		}
-		if (!$this->address->FldIsDetailKey && !is_null($this->address->FormValue) && $this->address->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->address->FldCaption(), $this->address->ReqErrMsg));
-		}
-		if (!$this->zip_code->FldIsDetailKey && !is_null($this->zip_code->FormValue) && $this->zip_code->FormValue == "") {
-			ew_AddMessage($gsFormError, str_replace("%s", $this->zip_code->FldCaption(), $this->zip_code->ReqErrMsg));
-		}
 
 		// Return validate result
 		$ValidateForm = ($gsFormError == "");
@@ -825,57 +740,62 @@ class cstores_add extends cstores {
 		return $ValidateForm;
 	}
 
-	// Add record
-	function AddRow($rsold = NULL) {
-		global $Language, $Security;
+	// Update record based on key values
+	function EditRow() {
+		global $Security, $Language;
+		$sFilter = $this->KeyFilter();
+		$sFilter = $this->ApplyUserIDFilters($sFilter);
 		$conn = &$this->Connection();
-
-		// Load db values from rsold
-		$this->LoadDbValues($rsold);
-		if ($rsold) {
-		}
-		$rsnew = array();
-
-		// name
-		$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", FALSE);
-
-		// province_id
-		$this->province_id->SetDbValueDef($rsnew, $this->province_id->CurrentValue, 0, FALSE);
-
-		// address
-		$this->address->SetDbValueDef($rsnew, $this->address->CurrentValue, "", FALSE);
-
-		// zip_code
-		$this->zip_code->SetDbValueDef($rsnew, $this->zip_code->CurrentValue, "", FALSE);
-
-		// Call Row Inserting event
-		$rs = ($rsold == NULL) ? NULL : $rsold->fields;
-		$bInsertRow = $this->Row_Inserting($rs, $rsnew);
-		if ($bInsertRow) {
-			$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
-			$AddRow = $this->Insert($rsnew);
-			$conn->raiseErrorFn = '';
-			if ($AddRow) {
-			}
+		$this->CurrentFilter = $sFilter;
+		$sSql = $this->SQL();
+		$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
+		$rs = $conn->Execute($sSql);
+		$conn->raiseErrorFn = '';
+		if ($rs === FALSE)
+			return FALSE;
+		if ($rs->EOF) {
+			$this->setFailureMessage($Language->Phrase("NoRecord")); // Set no record message
+			$EditRow = FALSE; // Update Failed
 		} else {
-			if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
 
-				// Use the message, do nothing
-			} elseif ($this->CancelMessage <> "") {
-				$this->setFailureMessage($this->CancelMessage);
-				$this->CancelMessage = "";
+			// Save old values
+			$rsold = &$rs->fields;
+			$this->LoadDbValues($rsold);
+			$rsnew = array();
+
+			// name
+			$this->name->SetDbValueDef($rsnew, $this->name->CurrentValue, "", $this->name->ReadOnly);
+
+			// Call Row Updating event
+			$bUpdateRow = $this->Row_Updating($rsold, $rsnew);
+			if ($bUpdateRow) {
+				$conn->raiseErrorFn = $GLOBALS["EW_ERROR_FN"];
+				if (count($rsnew) > 0)
+					$EditRow = $this->Update($rsnew, "", $rsold);
+				else
+					$EditRow = TRUE; // No field to update
+				$conn->raiseErrorFn = '';
+				if ($EditRow) {
+				}
 			} else {
-				$this->setFailureMessage($Language->Phrase("InsertCancelled"));
-			}
-			$AddRow = FALSE;
-		}
-		if ($AddRow) {
+				if ($this->getSuccessMessage() <> "" || $this->getFailureMessage() <> "") {
 
-			// Call Row Inserted event
-			$rs = ($rsold == NULL) ? NULL : $rsold->fields;
-			$this->Row_Inserted($rs, $rsnew);
+					// Use the message, do nothing
+				} elseif ($this->CancelMessage <> "") {
+					$this->setFailureMessage($this->CancelMessage);
+					$this->CancelMessage = "";
+				} else {
+					$this->setFailureMessage($Language->Phrase("UpdateCancelled"));
+				}
+				$EditRow = FALSE;
+			}
 		}
-		return $AddRow;
+
+		// Call Row_Updated event
+		if ($EditRow)
+			$this->Row_Updated($rsold, $rsnew);
+		$rs->Close();
+		return $EditRow;
 	}
 
 	// Set up Breadcrumb
@@ -883,9 +803,9 @@ class cstores_add extends cstores {
 		global $Breadcrumb, $Language;
 		$Breadcrumb = new cBreadcrumb();
 		$url = substr(ew_CurrentUrl(), strrpos(ew_CurrentUrl(), "/")+1);
-		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("storeslist.php"), "", $this->TableVar, TRUE);
-		$PageId = ($this->CurrentAction == "C") ? "Copy" : "Add";
-		$Breadcrumb->Add("add", $PageId, $url);
+		$Breadcrumb->Add("list", $this->TableVar, $this->AddMasterUrl("payment_typeslist.php"), "", $this->TableVar, TRUE);
+		$PageId = "edit";
+		$Breadcrumb->Add("edit", $PageId, $url);
 	}
 
 	// Setup lookup filters of a field
@@ -893,19 +813,6 @@ class cstores_add extends cstores {
 		global $gsLanguage;
 		$pageId = $pageId ?: $this->PageID;
 		switch ($fld->FldVar) {
-		case "x_province_id":
-			$sSqlWrk = "";
-			$sSqlWrk = "SELECT `province_id` AS `LinkFld`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `provinces`";
-			$sWhereWrk = "";
-			$fld->LookupFilters = array();
-			$fld->LookupFilters += array("s" => $sSqlWrk, "d" => "", "f0" => '`province_id` IN ({filter_value})', "t0" => "3", "fn0" => "");
-			$sSqlWrk = "";
-			$this->Lookup_Selecting($this->province_id, $sWhereWrk); // Call Lookup Selecting
-			if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-			$sSqlWrk .= " ORDER BY `name`";
-			if ($sSqlWrk <> "")
-				$fld->LookupFilters["s"] .= $sSqlWrk;
-			break;
 		}
 	}
 
@@ -989,29 +896,29 @@ class cstores_add extends cstores {
 <?php
 
 // Create page object
-if (!isset($stores_add)) $stores_add = new cstores_add();
+if (!isset($payment_types_edit)) $payment_types_edit = new cpayment_types_edit();
 
 // Page init
-$stores_add->Page_Init();
+$payment_types_edit->Page_Init();
 
 // Page main
-$stores_add->Page_Main();
+$payment_types_edit->Page_Main();
 
 // Global Page Rendering event (in userfn*.php)
 Page_Rendering();
 
 // Page Rendering event
-$stores_add->Page_Render();
+$payment_types_edit->Page_Render();
 ?>
 <?php include_once "header.php" ?>
 <script type="text/javascript">
 
 // Form object
-var CurrentPageID = EW_PAGE_ID = "add";
-var CurrentForm = fstoresadd = new ew_Form("fstoresadd", "add");
+var CurrentPageID = EW_PAGE_ID = "edit";
+var CurrentForm = fpayment_typesedit = new ew_Form("fpayment_typesedit", "edit");
 
 // Validate form
-fstoresadd.Validate = function() {
+fpayment_typesedit.Validate = function() {
 	if (!this.ValidateRequired)
 		return true; // Ignore validation
 	var $ = jQuery, fobj = this.GetForm(), $fobj = $(fobj);
@@ -1027,16 +934,7 @@ fstoresadd.Validate = function() {
 		$fobj.data("rowindex", infix);
 			elm = this.GetElements("x" + infix + "_name");
 			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->name->FldCaption(), $stores->name->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_province_id");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->province_id->FldCaption(), $stores->province_id->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_address");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->address->FldCaption(), $stores->address->ReqErrMsg)) ?>");
-			elm = this.GetElements("x" + infix + "_zip_code");
-			if (elm && !ew_IsHidden(elm) && !ew_HasValue(elm))
-				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $stores->zip_code->FldCaption(), $stores->zip_code->ReqErrMsg)) ?>");
+				return this.OnError(elm, "<?php echo ew_JsEncode2(str_replace("%s", $payment_types->name->FldCaption(), $payment_types->name->ReqErrMsg)) ?>");
 
 			// Fire Form_CustomValidate event
 			if (!this.Form_CustomValidate(fobj))
@@ -1055,7 +953,7 @@ fstoresadd.Validate = function() {
 }
 
 // Form_CustomValidate event
-fstoresadd.Form_CustomValidate = 
+fpayment_typesedit.Form_CustomValidate = 
  function(fobj) { // DO NOT CHANGE THIS LINE!
 
  	// Your custom validation code here, return false if invalid.
@@ -1063,87 +961,65 @@ fstoresadd.Form_CustomValidate =
  }
 
 // Use JavaScript validation or not
-fstoresadd.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
+fpayment_typesedit.ValidateRequired = <?php echo json_encode(EW_CLIENT_VALIDATE) ?>;
 
 // Dynamic selection lists
-fstoresadd.Lists["x_province_id"] = {"LinkField":"x_province_id","Ajax":true,"AutoFill":false,"DisplayFields":["x_name","","",""],"ParentFields":[],"ChildFields":[],"FilterFields":[],"Options":[],"Template":"","LinkTable":"provinces"};
-fstoresadd.Lists["x_province_id"].Data = "<?php echo $stores_add->province_id->LookupFilterQuery(FALSE, "add") ?>";
-
 // Form object for search
+
 </script>
 <script type="text/javascript">
 
 // Write your client script here, no need to add script tags.
 </script>
-<?php $stores_add->ShowPageHeader(); ?>
+<?php $payment_types_edit->ShowPageHeader(); ?>
 <?php
-$stores_add->ShowMessage();
+$payment_types_edit->ShowMessage();
 ?>
-<form name="fstoresadd" id="fstoresadd" class="<?php echo $stores_add->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
-<?php if ($stores_add->CheckToken) { ?>
-<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $stores_add->Token ?>">
+<form name="fpayment_typesedit" id="fpayment_typesedit" class="<?php echo $payment_types_edit->FormClassName ?>" action="<?php echo ew_CurrentPage() ?>" method="post">
+<?php if ($payment_types_edit->CheckToken) { ?>
+<input type="hidden" name="<?php echo EW_TOKEN_NAME ?>" value="<?php echo $payment_types_edit->Token ?>">
 <?php } ?>
-<input type="hidden" name="t" value="stores">
-<input type="hidden" name="a_add" id="a_add" value="A">
-<input type="hidden" name="modal" value="<?php echo intval($stores_add->IsModal) ?>">
-<div class="ewAddDiv"><!-- page* -->
-<?php if ($stores->name->Visible) { // name ?>
+<input type="hidden" name="t" value="payment_types">
+<input type="hidden" name="a_edit" id="a_edit" value="U">
+<input type="hidden" name="modal" value="<?php echo intval($payment_types_edit->IsModal) ?>">
+<div class="ewEditDiv"><!-- page* -->
+<?php if ($payment_types->payment_type_id->Visible) { // payment_type_id ?>
+	<div id="r_payment_type_id" class="form-group">
+		<label id="elh_payment_types_payment_type_id" class="<?php echo $payment_types_edit->LeftColumnClass ?>"><?php echo $payment_types->payment_type_id->FldCaption() ?></label>
+		<div class="<?php echo $payment_types_edit->RightColumnClass ?>"><div<?php echo $payment_types->payment_type_id->CellAttributes() ?>>
+<span id="el_payment_types_payment_type_id">
+<span<?php echo $payment_types->payment_type_id->ViewAttributes() ?>>
+<p class="form-control-static"><?php echo $payment_types->payment_type_id->EditValue ?></p></span>
+</span>
+<input type="hidden" data-table="payment_types" data-field="x_payment_type_id" name="x_payment_type_id" id="x_payment_type_id" value="<?php echo ew_HtmlEncode($payment_types->payment_type_id->CurrentValue) ?>">
+<?php echo $payment_types->payment_type_id->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($payment_types->name->Visible) { // name ?>
 	<div id="r_name" class="form-group">
-		<label id="elh_stores_name" for="x_name" class="<?php echo $stores_add->LeftColumnClass ?>"><?php echo $stores->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_add->RightColumnClass ?>"><div<?php echo $stores->name->CellAttributes() ?>>
-<span id="el_stores_name">
-<input type="text" data-table="stores" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->name->getPlaceHolder()) ?>" value="<?php echo $stores->name->EditValue ?>"<?php echo $stores->name->EditAttributes() ?>>
+		<label id="elh_payment_types_name" for="x_name" class="<?php echo $payment_types_edit->LeftColumnClass ?>"><?php echo $payment_types->name->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
+		<div class="<?php echo $payment_types_edit->RightColumnClass ?>"><div<?php echo $payment_types->name->CellAttributes() ?>>
+<span id="el_payment_types_name">
+<input type="text" data-table="payment_types" data-field="x_name" name="x_name" id="x_name" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($payment_types->name->getPlaceHolder()) ?>" value="<?php echo $payment_types->name->EditValue ?>"<?php echo $payment_types->name->EditAttributes() ?>>
 </span>
-<?php echo $stores->name->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($stores->province_id->Visible) { // province_id ?>
-	<div id="r_province_id" class="form-group">
-		<label id="elh_stores_province_id" for="x_province_id" class="<?php echo $stores_add->LeftColumnClass ?>"><?php echo $stores->province_id->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_add->RightColumnClass ?>"><div<?php echo $stores->province_id->CellAttributes() ?>>
-<span id="el_stores_province_id">
-<select data-table="stores" data-field="x_province_id" data-value-separator="<?php echo $stores->province_id->DisplayValueSeparatorAttribute() ?>" id="x_province_id" name="x_province_id"<?php echo $stores->province_id->EditAttributes() ?>>
-<?php echo $stores->province_id->SelectOptionListHtml("x_province_id") ?>
-</select>
-</span>
-<?php echo $stores->province_id->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($stores->address->Visible) { // address ?>
-	<div id="r_address" class="form-group">
-		<label id="elh_stores_address" for="x_address" class="<?php echo $stores_add->LeftColumnClass ?>"><?php echo $stores->address->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_add->RightColumnClass ?>"><div<?php echo $stores->address->CellAttributes() ?>>
-<span id="el_stores_address">
-<input type="text" data-table="stores" data-field="x_address" name="x_address" id="x_address" size="30" maxlength="60" placeholder="<?php echo ew_HtmlEncode($stores->address->getPlaceHolder()) ?>" value="<?php echo $stores->address->EditValue ?>"<?php echo $stores->address->EditAttributes() ?>>
-</span>
-<?php echo $stores->address->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($stores->zip_code->Visible) { // zip_code ?>
-	<div id="r_zip_code" class="form-group">
-		<label id="elh_stores_zip_code" for="x_zip_code" class="<?php echo $stores_add->LeftColumnClass ?>"><?php echo $stores->zip_code->FldCaption() ?><?php echo $Language->Phrase("FieldRequiredIndicator") ?></label>
-		<div class="<?php echo $stores_add->RightColumnClass ?>"><div<?php echo $stores->zip_code->CellAttributes() ?>>
-<span id="el_stores_zip_code">
-<input type="text" data-table="stores" data-field="x_zip_code" name="x_zip_code" id="x_zip_code" size="30" maxlength="6" placeholder="<?php echo ew_HtmlEncode($stores->zip_code->getPlaceHolder()) ?>" value="<?php echo $stores->zip_code->EditValue ?>"<?php echo $stores->zip_code->EditAttributes() ?>>
-</span>
-<?php echo $stores->zip_code->CustomMsg ?></div></div>
+<?php echo $payment_types->name->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->
-<?php if (!$stores_add->IsModal) { ?>
+<?php if (!$payment_types_edit->IsModal) { ?>
 <div class="form-group"><!-- buttons .form-group -->
-	<div class="<?php echo $stores_add->OffsetColumnClass ?>"><!-- buttons offset -->
-<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("AddBtn") ?></button>
-<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $stores_add->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
+	<div class="<?php echo $payment_types_edit->OffsetColumnClass ?>"><!-- buttons offset -->
+<button class="btn btn-primary ewButton" name="btnAction" id="btnAction" type="submit"><?php echo $Language->Phrase("SaveBtn") ?></button>
+<button class="btn btn-default ewButton" name="btnCancel" id="btnCancel" type="button" data-href="<?php echo $payment_types_edit->getReturnUrl() ?>"><?php echo $Language->Phrase("CancelBtn") ?></button>
 	</div><!-- /buttons offset -->
 </div><!-- /buttons .form-group -->
 <?php } ?>
 </form>
 <script type="text/javascript">
-fstoresadd.Init();
+fpayment_typesedit.Init();
 </script>
 <?php
-$stores_add->ShowPageFooter();
+$payment_types_edit->ShowPageFooter();
 if (EW_DEBUG_ENABLED)
 	echo ew_DebugMsg();
 ?>
@@ -1155,5 +1031,5 @@ if (EW_DEBUG_ENABLED)
 </script>
 <?php include_once "footer.php" ?>
 <?php
-$stores_add->Page_Terminate();
+$payment_types_edit->Page_Terminate();
 ?>

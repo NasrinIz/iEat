@@ -7,10 +7,10 @@ $timings = NULL;
 // Table class for timings
 //
 class ctimings extends cTable {
-	var $StoreID;
-	var $DayoftheWeek;
-	var $OrderTimeFrom;
-	var $OrderTimeTo;
+	var $store_id;
+	var $day_of_the_week;
+	var $order_time_from;
+	var $order_time_to;
 
 	//
 	// Table class constructor
@@ -44,34 +44,34 @@ class ctimings extends cTable {
 		$this->UserIDAllowSecurity = 0; // User ID Allow
 		$this->BasicSearch = new cBasicSearch($this->TableVar);
 
-		// StoreID
-		$this->StoreID = new cField('timings', 'timings', 'x_StoreID', 'StoreID', '`StoreID`', '`StoreID`', 3, -1, FALSE, '`StoreID`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->StoreID->Sortable = FALSE; // Allow sort
-		$this->StoreID->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->StoreID->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->StoreID->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['StoreID'] = &$this->StoreID;
+		// store_id
+		$this->store_id = new cField('timings', 'timings', 'x_store_id', 'store_id', '`store_id`', '`store_id`', 3, -1, FALSE, '`store_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->store_id->Sortable = FALSE; // Allow sort
+		$this->store_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->store_id->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->store_id->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['store_id'] = &$this->store_id;
 
-		// DayoftheWeek
-		$this->DayoftheWeek = new cField('timings', 'timings', 'x_DayoftheWeek', 'DayoftheWeek', '`DayoftheWeek`', '`DayoftheWeek`', 3, -1, FALSE, '`DayoftheWeek`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->DayoftheWeek->Sortable = TRUE; // Allow sort
-		$this->DayoftheWeek->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->DayoftheWeek->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
-		$this->DayoftheWeek->OptionCount = 7;
-		$this->DayoftheWeek->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
-		$this->fields['DayoftheWeek'] = &$this->DayoftheWeek;
+		// day_of_the_week
+		$this->day_of_the_week = new cField('timings', 'timings', 'x_day_of_the_week', 'day_of_the_week', '`day_of_the_week`', '`day_of_the_week`', 3, -1, FALSE, '`day_of_the_week`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->day_of_the_week->Sortable = TRUE; // Allow sort
+		$this->day_of_the_week->UsePleaseSelect = TRUE; // Use PleaseSelect by default
+		$this->day_of_the_week->PleaseSelectText = $Language->Phrase("PleaseSelect"); // PleaseSelect text
+		$this->day_of_the_week->OptionCount = 7;
+		$this->day_of_the_week->FldDefaultErrMsg = $Language->Phrase("IncorrectInteger");
+		$this->fields['day_of_the_week'] = &$this->day_of_the_week;
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom = new cField('timings', 'timings', 'x_OrderTimeFrom', 'OrderTimeFrom', '`OrderTimeFrom`', ew_CastDateFieldForLike('`OrderTimeFrom`', 4, "DB"), 134, 4, FALSE, '`OrderTimeFrom`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->OrderTimeFrom->Sortable = TRUE; // Allow sort
-		$this->OrderTimeFrom->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_TIME_SEPARATOR"], $Language->Phrase("IncorrectTime"));
-		$this->fields['OrderTimeFrom'] = &$this->OrderTimeFrom;
+		// order_time_from
+		$this->order_time_from = new cField('timings', 'timings', 'x_order_time_from', 'order_time_from', '`order_time_from`', ew_CastDateFieldForLike('`order_time_from`', 4, "DB"), 134, 4, FALSE, '`order_time_from`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->order_time_from->Sortable = TRUE; // Allow sort
+		$this->order_time_from->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_TIME_SEPARATOR"], $Language->Phrase("IncorrectTime"));
+		$this->fields['order_time_from'] = &$this->order_time_from;
 
-		// OrderTimeTo
-		$this->OrderTimeTo = new cField('timings', 'timings', 'x_OrderTimeTo', 'OrderTimeTo', '`OrderTimeTo`', ew_CastDateFieldForLike('`OrderTimeTo`', 4, "DB"), 134, 4, FALSE, '`OrderTimeTo`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
-		$this->OrderTimeTo->Sortable = TRUE; // Allow sort
-		$this->OrderTimeTo->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_TIME_SEPARATOR"], $Language->Phrase("IncorrectTime"));
-		$this->fields['OrderTimeTo'] = &$this->OrderTimeTo;
+		// order_time_to
+		$this->order_time_to = new cField('timings', 'timings', 'x_order_time_to', 'order_time_to', '`order_time_to`', ew_CastDateFieldForLike('`order_time_to`', 4, "DB"), 134, 4, FALSE, '`order_time_to`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->order_time_to->Sortable = TRUE; // Allow sort
+		$this->order_time_to->FldDefaultErrMsg = str_replace("%s", $GLOBALS["EW_TIME_SEPARATOR"], $Language->Phrase("IncorrectTime"));
+		$this->fields['order_time_to'] = &$this->order_time_to;
 	}
 
 	// Field Visibility
@@ -376,14 +376,14 @@ class ctimings extends cTable {
 		if (is_array($where))
 			$where = $this->ArrayToFilter($where);
 		if ($rs) {
-			if (array_key_exists('StoreID', $rs))
-				ew_AddFilter($where, ew_QuotedName('StoreID', $this->DBID) . '=' . ew_QuotedValue($rs['StoreID'], $this->StoreID->FldDataType, $this->DBID));
-			if (array_key_exists('DayoftheWeek', $rs))
-				ew_AddFilter($where, ew_QuotedName('DayoftheWeek', $this->DBID) . '=' . ew_QuotedValue($rs['DayoftheWeek'], $this->DayoftheWeek->FldDataType, $this->DBID));
-			if (array_key_exists('OrderTimeFrom', $rs))
-				ew_AddFilter($where, ew_QuotedName('OrderTimeFrom', $this->DBID) . '=' . ew_QuotedValue($rs['OrderTimeFrom'], $this->OrderTimeFrom->FldDataType, $this->DBID));
-			if (array_key_exists('OrderTimeTo', $rs))
-				ew_AddFilter($where, ew_QuotedName('OrderTimeTo', $this->DBID) . '=' . ew_QuotedValue($rs['OrderTimeTo'], $this->OrderTimeTo->FldDataType, $this->DBID));
+			if (array_key_exists('store_id', $rs))
+				ew_AddFilter($where, ew_QuotedName('store_id', $this->DBID) . '=' . ew_QuotedValue($rs['store_id'], $this->store_id->FldDataType, $this->DBID));
+			if (array_key_exists('day_of_the_week', $rs))
+				ew_AddFilter($where, ew_QuotedName('day_of_the_week', $this->DBID) . '=' . ew_QuotedValue($rs['day_of_the_week'], $this->day_of_the_week->FldDataType, $this->DBID));
+			if (array_key_exists('order_time_from', $rs))
+				ew_AddFilter($where, ew_QuotedName('order_time_from', $this->DBID) . '=' . ew_QuotedValue($rs['order_time_from'], $this->order_time_from->FldDataType, $this->DBID));
+			if (array_key_exists('order_time_to', $rs))
+				ew_AddFilter($where, ew_QuotedName('order_time_to', $this->DBID) . '=' . ew_QuotedValue($rs['order_time_to'], $this->order_time_to->FldDataType, $this->DBID));
 		}
 		$filter = ($curfilter) ? $this->CurrentFilter : "";
 		ew_AddFilter($filter, $where);
@@ -405,32 +405,32 @@ class ctimings extends cTable {
 
 	// Key filter WHERE clause
 	function SqlKeyFilter() {
-		return "`StoreID` = @StoreID@ AND `DayoftheWeek` = @DayoftheWeek@ AND `OrderTimeFrom` = '@OrderTimeFrom@' AND `OrderTimeTo` = '@OrderTimeTo@'";
+		return "`store_id` = @store_id@ AND `day_of_the_week` = @day_of_the_week@ AND `order_time_from` = '@order_time_from@' AND `order_time_to` = '@order_time_to@'";
 	}
 
 	// Key filter
 	function KeyFilter() {
 		$sKeyFilter = $this->SqlKeyFilter();
-		if (!is_numeric($this->StoreID->CurrentValue))
+		if (!is_numeric($this->store_id->CurrentValue))
 			return "0=1"; // Invalid key
-		if (is_null($this->StoreID->CurrentValue))
-			return "0=1"; // Invalid key
-		else
-			$sKeyFilter = str_replace("@StoreID@", ew_AdjustSql($this->StoreID->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
-		if (!is_numeric($this->DayoftheWeek->CurrentValue))
-			return "0=1"; // Invalid key
-		if (is_null($this->DayoftheWeek->CurrentValue))
+		if (is_null($this->store_id->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@DayoftheWeek@", ew_AdjustSql($this->DayoftheWeek->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
-		if (is_null($this->OrderTimeFrom->CurrentValue))
+			$sKeyFilter = str_replace("@store_id@", ew_AdjustSql($this->store_id->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+		if (!is_numeric($this->day_of_the_week->CurrentValue))
+			return "0=1"; // Invalid key
+		if (is_null($this->day_of_the_week->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@OrderTimeFrom@", ew_AdjustSql($this->OrderTimeFrom->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
-		if (is_null($this->OrderTimeTo->CurrentValue))
+			$sKeyFilter = str_replace("@day_of_the_week@", ew_AdjustSql($this->day_of_the_week->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+		if (is_null($this->order_time_from->CurrentValue))
 			return "0=1"; // Invalid key
 		else
-			$sKeyFilter = str_replace("@OrderTimeTo@", ew_AdjustSql($this->OrderTimeTo->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+			$sKeyFilter = str_replace("@order_time_from@", ew_AdjustSql($this->order_time_from->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
+		if (is_null($this->order_time_to->CurrentValue))
+			return "0=1"; // Invalid key
+		else
+			$sKeyFilter = str_replace("@order_time_to@", ew_AdjustSql($this->order_time_to->CurrentValue, $this->DBID), $sKeyFilter); // Replace key value
 		return $sKeyFilter;
 	}
 
@@ -524,10 +524,10 @@ class ctimings extends cTable {
 
 	function KeyToJson() {
 		$json = "";
-		$json .= "StoreID:" . ew_VarToJson($this->StoreID->CurrentValue, "number", "'");
-		$json .= ",DayoftheWeek:" . ew_VarToJson($this->DayoftheWeek->CurrentValue, "number", "'");
-		$json .= ",OrderTimeFrom:" . ew_VarToJson($this->OrderTimeFrom->CurrentValue, "string", "'");
-		$json .= ",OrderTimeTo:" . ew_VarToJson($this->OrderTimeTo->CurrentValue, "string", "'");
+		$json .= "store_id:" . ew_VarToJson($this->store_id->CurrentValue, "number", "'");
+		$json .= ",day_of_the_week:" . ew_VarToJson($this->day_of_the_week->CurrentValue, "number", "'");
+		$json .= ",order_time_from:" . ew_VarToJson($this->order_time_from->CurrentValue, "string", "'");
+		$json .= ",order_time_to:" . ew_VarToJson($this->order_time_to->CurrentValue, "string", "'");
 		return "{" . $json . "}";
 	}
 
@@ -535,23 +535,23 @@ class ctimings extends cTable {
 	function KeyUrl($url, $parm = "") {
 		$sUrl = $url . "?";
 		if ($parm <> "") $sUrl .= $parm . "&";
-		if (!is_null($this->StoreID->CurrentValue)) {
-			$sUrl .= "StoreID=" . urlencode($this->StoreID->CurrentValue);
+		if (!is_null($this->store_id->CurrentValue)) {
+			$sUrl .= "store_id=" . urlencode($this->store_id->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->DayoftheWeek->CurrentValue)) {
-			$sUrl .= "&DayoftheWeek=" . urlencode($this->DayoftheWeek->CurrentValue);
+		if (!is_null($this->day_of_the_week->CurrentValue)) {
+			$sUrl .= "&day_of_the_week=" . urlencode($this->day_of_the_week->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->OrderTimeFrom->CurrentValue)) {
-			$sUrl .= "&OrderTimeFrom=" . urlencode($this->OrderTimeFrom->CurrentValue);
+		if (!is_null($this->order_time_from->CurrentValue)) {
+			$sUrl .= "&order_time_from=" . urlencode($this->order_time_from->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
-		if (!is_null($this->OrderTimeTo->CurrentValue)) {
-			$sUrl .= "&OrderTimeTo=" . urlencode($this->OrderTimeTo->CurrentValue);
+		if (!is_null($this->order_time_to->CurrentValue)) {
+			$sUrl .= "&order_time_to=" . urlencode($this->order_time_to->CurrentValue);
 		} else {
 			return "javascript:ew_Alert(ewLanguage.Phrase('InvalidRecord'));";
 		}
@@ -588,28 +588,28 @@ class ctimings extends cTable {
 				$arKeys[$i] = explode($EW_COMPOSITE_KEY_SEPARATOR, $arKeys[$i]);
 		} elseif (!empty($_GET) || !empty($_POST)) {
 			$isPost = ew_IsPost();
-			if ($isPost && isset($_POST["StoreID"]))
-				$arKey[] = $_POST["StoreID"];
-			elseif (isset($_GET["StoreID"]))
-				$arKey[] = $_GET["StoreID"];
+			if ($isPost && isset($_POST["store_id"]))
+				$arKey[] = $_POST["store_id"];
+			elseif (isset($_GET["store_id"]))
+				$arKey[] = $_GET["store_id"];
 			else
 				$arKeys = NULL; // Do not setup
-			if ($isPost && isset($_POST["DayoftheWeek"]))
-				$arKey[] = $_POST["DayoftheWeek"];
-			elseif (isset($_GET["DayoftheWeek"]))
-				$arKey[] = $_GET["DayoftheWeek"];
+			if ($isPost && isset($_POST["day_of_the_week"]))
+				$arKey[] = $_POST["day_of_the_week"];
+			elseif (isset($_GET["day_of_the_week"]))
+				$arKey[] = $_GET["day_of_the_week"];
 			else
 				$arKeys = NULL; // Do not setup
-			if ($isPost && isset($_POST["OrderTimeFrom"]))
-				$arKey[] = $_POST["OrderTimeFrom"];
-			elseif (isset($_GET["OrderTimeFrom"]))
-				$arKey[] = $_GET["OrderTimeFrom"];
+			if ($isPost && isset($_POST["order_time_from"]))
+				$arKey[] = $_POST["order_time_from"];
+			elseif (isset($_GET["order_time_from"]))
+				$arKey[] = $_GET["order_time_from"];
 			else
 				$arKeys = NULL; // Do not setup
-			if ($isPost && isset($_POST["OrderTimeTo"]))
-				$arKey[] = $_POST["OrderTimeTo"];
-			elseif (isset($_GET["OrderTimeTo"]))
-				$arKey[] = $_GET["OrderTimeTo"];
+			if ($isPost && isset($_POST["order_time_to"]))
+				$arKey[] = $_POST["order_time_to"];
+			elseif (isset($_GET["order_time_to"]))
+				$arKey[] = $_GET["order_time_to"];
 			else
 				$arKeys = NULL; // Do not setup
 			if (is_array($arKeys)) $arKeys[] = $arKey;
@@ -623,9 +623,9 @@ class ctimings extends cTable {
 			foreach ($arKeys as $key) {
 				if (!is_array($key) || count($key) <> 4)
 					continue; // Just skip so other keys will still work
-				if (!is_numeric($key[0])) // StoreID
+				if (!is_numeric($key[0])) // store_id
 					continue;
-				if (!is_numeric($key[1])) // DayoftheWeek
+				if (!is_numeric($key[1])) // day_of_the_week
 					continue;
 				$ar[] = $key;
 			}
@@ -639,10 +639,10 @@ class ctimings extends cTable {
 		$sKeyFilter = "";
 		foreach ($arKeys as $key) {
 			if ($sKeyFilter <> "") $sKeyFilter .= " OR ";
-			$this->StoreID->CurrentValue = $key[0];
-			$this->DayoftheWeek->CurrentValue = $key[1];
-			$this->OrderTimeFrom->CurrentValue = $key[2];
-			$this->OrderTimeTo->CurrentValue = $key[3];
+			$this->store_id->CurrentValue = $key[0];
+			$this->day_of_the_week->CurrentValue = $key[1];
+			$this->order_time_from->CurrentValue = $key[2];
+			$this->order_time_to->CurrentValue = $key[3];
 			$sKeyFilter .= "(" . $this->KeyFilter() . ")";
 		}
 		return $sKeyFilter;
@@ -663,10 +663,10 @@ class ctimings extends cTable {
 
 	// Load row values from recordset
 	function LoadListRowValues(&$rs) {
-		$this->StoreID->setDbValue($rs->fields('StoreID'));
-		$this->DayoftheWeek->setDbValue($rs->fields('DayoftheWeek'));
-		$this->OrderTimeFrom->setDbValue($rs->fields('OrderTimeFrom'));
-		$this->OrderTimeTo->setDbValue($rs->fields('OrderTimeTo'));
+		$this->store_id->setDbValue($rs->fields('store_id'));
+		$this->day_of_the_week->setDbValue($rs->fields('day_of_the_week'));
+		$this->order_time_from->setDbValue($rs->fields('order_time_from'));
+		$this->order_time_to->setDbValue($rs->fields('order_time_to'));
 	}
 
 	// Render list row values
@@ -677,72 +677,72 @@ class ctimings extends cTable {
 		$this->Row_Rendering();
 
 	// Common render codes
-		// StoreID
-		// DayoftheWeek
-		// OrderTimeFrom
-		// OrderTimeTo
-		// StoreID
+		// store_id
+		// day_of_the_week
+		// order_time_from
+		// order_time_to
+		// store_id
 
-		if (strval($this->StoreID->CurrentValue) <> "") {
-			$sFilterWrk = "`StoreID`" . ew_SearchString("=", $this->StoreID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `StoreID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
+		if (strval($this->store_id->CurrentValue) <> "") {
+			$sFilterWrk = "`store_id`" . ew_SearchString("=", $this->store_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `store_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
 		$sWhereWrk = "";
-		$this->StoreID->LookupFilters = array();
+		$this->store_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->StoreID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->store_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->StoreID->ViewValue = $this->StoreID->DisplayValue($arwrk);
+				$this->store_id->ViewValue = $this->store_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->StoreID->ViewValue = $this->StoreID->CurrentValue;
+				$this->store_id->ViewValue = $this->store_id->CurrentValue;
 			}
 		} else {
-			$this->StoreID->ViewValue = NULL;
+			$this->store_id->ViewValue = NULL;
 		}
-		$this->StoreID->ViewCustomAttributes = "";
+		$this->store_id->ViewCustomAttributes = "";
 
-		// DayoftheWeek
-		if (strval($this->DayoftheWeek->CurrentValue) <> "") {
-			$this->DayoftheWeek->ViewValue = $this->DayoftheWeek->OptionCaption($this->DayoftheWeek->CurrentValue);
+		// day_of_the_week
+		if (strval($this->day_of_the_week->CurrentValue) <> "") {
+			$this->day_of_the_week->ViewValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
 		} else {
-			$this->DayoftheWeek->ViewValue = NULL;
+			$this->day_of_the_week->ViewValue = NULL;
 		}
-		$this->DayoftheWeek->ViewCustomAttributes = "";
+		$this->day_of_the_week->ViewCustomAttributes = "";
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom->ViewValue = $this->OrderTimeFrom->CurrentValue;
-		$this->OrderTimeFrom->ViewValue = ew_FormatDateTime($this->OrderTimeFrom->ViewValue, 4);
-		$this->OrderTimeFrom->ViewCustomAttributes = "";
+		// order_time_from
+		$this->order_time_from->ViewValue = $this->order_time_from->CurrentValue;
+		$this->order_time_from->ViewValue = ew_FormatDateTime($this->order_time_from->ViewValue, 4);
+		$this->order_time_from->ViewCustomAttributes = "";
 
-		// OrderTimeTo
-		$this->OrderTimeTo->ViewValue = $this->OrderTimeTo->CurrentValue;
-		$this->OrderTimeTo->ViewValue = ew_FormatDateTime($this->OrderTimeTo->ViewValue, 4);
-		$this->OrderTimeTo->ViewCustomAttributes = "";
+		// order_time_to
+		$this->order_time_to->ViewValue = $this->order_time_to->CurrentValue;
+		$this->order_time_to->ViewValue = ew_FormatDateTime($this->order_time_to->ViewValue, 4);
+		$this->order_time_to->ViewCustomAttributes = "";
 
-		// StoreID
-		$this->StoreID->LinkCustomAttributes = "";
-		$this->StoreID->HrefValue = "";
-		$this->StoreID->TooltipValue = "";
+		// store_id
+		$this->store_id->LinkCustomAttributes = "";
+		$this->store_id->HrefValue = "";
+		$this->store_id->TooltipValue = "";
 
-		// DayoftheWeek
-		$this->DayoftheWeek->LinkCustomAttributes = "";
-		$this->DayoftheWeek->HrefValue = "";
-		$this->DayoftheWeek->TooltipValue = "";
+		// day_of_the_week
+		$this->day_of_the_week->LinkCustomAttributes = "";
+		$this->day_of_the_week->HrefValue = "";
+		$this->day_of_the_week->TooltipValue = "";
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom->LinkCustomAttributes = "";
-		$this->OrderTimeFrom->HrefValue = "";
-		$this->OrderTimeFrom->TooltipValue = "";
+		// order_time_from
+		$this->order_time_from->LinkCustomAttributes = "";
+		$this->order_time_from->HrefValue = "";
+		$this->order_time_from->TooltipValue = "";
 
-		// OrderTimeTo
-		$this->OrderTimeTo->LinkCustomAttributes = "";
-		$this->OrderTimeTo->HrefValue = "";
-		$this->OrderTimeTo->TooltipValue = "";
+		// order_time_to
+		$this->order_time_to->LinkCustomAttributes = "";
+		$this->order_time_to->HrefValue = "";
+		$this->order_time_to->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -758,55 +758,55 @@ class ctimings extends cTable {
 		// Call Row Rendering event
 		$this->Row_Rendering();
 
-		// StoreID
-		$this->StoreID->EditAttrs["class"] = "form-control";
-		$this->StoreID->EditCustomAttributes = "";
-		if (strval($this->StoreID->CurrentValue) <> "") {
-			$sFilterWrk = "`StoreID`" . ew_SearchString("=", $this->StoreID->CurrentValue, EW_DATATYPE_NUMBER, "");
-		$sSqlWrk = "SELECT `StoreID`, `Name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
+		// store_id
+		$this->store_id->EditAttrs["class"] = "form-control";
+		$this->store_id->EditCustomAttributes = "";
+		if (strval($this->store_id->CurrentValue) <> "") {
+			$sFilterWrk = "`store_id`" . ew_SearchString("=", $this->store_id->CurrentValue, EW_DATATYPE_NUMBER, "");
+		$sSqlWrk = "SELECT `store_id`, `name` AS `DispFld`, '' AS `Disp2Fld`, '' AS `Disp3Fld`, '' AS `Disp4Fld` FROM `stores`";
 		$sWhereWrk = "";
-		$this->StoreID->LookupFilters = array();
+		$this->store_id->LookupFilters = array();
 		ew_AddFilter($sWhereWrk, $sFilterWrk);
-		$this->Lookup_Selecting($this->StoreID, $sWhereWrk); // Call Lookup Selecting
+		$this->Lookup_Selecting($this->store_id, $sWhereWrk); // Call Lookup Selecting
 		if ($sWhereWrk <> "") $sSqlWrk .= " WHERE " . $sWhereWrk;
-		$sSqlWrk .= " ORDER BY `Name`";
+		$sSqlWrk .= " ORDER BY `name`";
 			$rswrk = Conn()->Execute($sSqlWrk);
 			if ($rswrk && !$rswrk->EOF) { // Lookup values found
 				$arwrk = array();
 				$arwrk[1] = $rswrk->fields('DispFld');
-				$this->StoreID->EditValue = $this->StoreID->DisplayValue($arwrk);
+				$this->store_id->EditValue = $this->store_id->DisplayValue($arwrk);
 				$rswrk->Close();
 			} else {
-				$this->StoreID->EditValue = $this->StoreID->CurrentValue;
+				$this->store_id->EditValue = $this->store_id->CurrentValue;
 			}
 		} else {
-			$this->StoreID->EditValue = NULL;
+			$this->store_id->EditValue = NULL;
 		}
-		$this->StoreID->ViewCustomAttributes = "";
+		$this->store_id->ViewCustomAttributes = "";
 
-		// DayoftheWeek
-		$this->DayoftheWeek->EditAttrs["class"] = "form-control";
-		$this->DayoftheWeek->EditCustomAttributes = "";
-		if (strval($this->DayoftheWeek->CurrentValue) <> "") {
-			$this->DayoftheWeek->EditValue = $this->DayoftheWeek->OptionCaption($this->DayoftheWeek->CurrentValue);
+		// day_of_the_week
+		$this->day_of_the_week->EditAttrs["class"] = "form-control";
+		$this->day_of_the_week->EditCustomAttributes = "";
+		if (strval($this->day_of_the_week->CurrentValue) <> "") {
+			$this->day_of_the_week->EditValue = $this->day_of_the_week->OptionCaption($this->day_of_the_week->CurrentValue);
 		} else {
-			$this->DayoftheWeek->EditValue = NULL;
+			$this->day_of_the_week->EditValue = NULL;
 		}
-		$this->DayoftheWeek->ViewCustomAttributes = "";
+		$this->day_of_the_week->ViewCustomAttributes = "";
 
-		// OrderTimeFrom
-		$this->OrderTimeFrom->EditAttrs["class"] = "form-control";
-		$this->OrderTimeFrom->EditCustomAttributes = "";
-		$this->OrderTimeFrom->EditValue = $this->OrderTimeFrom->CurrentValue;
-		$this->OrderTimeFrom->EditValue = ew_FormatDateTime($this->OrderTimeFrom->EditValue, 4);
-		$this->OrderTimeFrom->ViewCustomAttributes = "";
+		// order_time_from
+		$this->order_time_from->EditAttrs["class"] = "form-control";
+		$this->order_time_from->EditCustomAttributes = "";
+		$this->order_time_from->EditValue = $this->order_time_from->CurrentValue;
+		$this->order_time_from->EditValue = ew_FormatDateTime($this->order_time_from->EditValue, 4);
+		$this->order_time_from->ViewCustomAttributes = "";
 
-		// OrderTimeTo
-		$this->OrderTimeTo->EditAttrs["class"] = "form-control";
-		$this->OrderTimeTo->EditCustomAttributes = "";
-		$this->OrderTimeTo->EditValue = $this->OrderTimeTo->CurrentValue;
-		$this->OrderTimeTo->EditValue = ew_FormatDateTime($this->OrderTimeTo->EditValue, 4);
-		$this->OrderTimeTo->ViewCustomAttributes = "";
+		// order_time_to
+		$this->order_time_to->EditAttrs["class"] = "form-control";
+		$this->order_time_to->EditCustomAttributes = "";
+		$this->order_time_to->EditValue = $this->order_time_to->CurrentValue;
+		$this->order_time_to->EditValue = ew_FormatDateTime($this->order_time_to->EditValue, 4);
+		$this->order_time_to->ViewCustomAttributes = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -835,14 +835,14 @@ class ctimings extends cTable {
 			if ($Doc->Horizontal) { // Horizontal format, write header
 				$Doc->BeginExportRow();
 				if ($ExportPageType == "view") {
-					if ($this->StoreID->Exportable) $Doc->ExportCaption($this->StoreID);
-					if ($this->DayoftheWeek->Exportable) $Doc->ExportCaption($this->DayoftheWeek);
-					if ($this->OrderTimeFrom->Exportable) $Doc->ExportCaption($this->OrderTimeFrom);
-					if ($this->OrderTimeTo->Exportable) $Doc->ExportCaption($this->OrderTimeTo);
+					if ($this->store_id->Exportable) $Doc->ExportCaption($this->store_id);
+					if ($this->day_of_the_week->Exportable) $Doc->ExportCaption($this->day_of_the_week);
+					if ($this->order_time_from->Exportable) $Doc->ExportCaption($this->order_time_from);
+					if ($this->order_time_to->Exportable) $Doc->ExportCaption($this->order_time_to);
 				} else {
-					if ($this->DayoftheWeek->Exportable) $Doc->ExportCaption($this->DayoftheWeek);
-					if ($this->OrderTimeFrom->Exportable) $Doc->ExportCaption($this->OrderTimeFrom);
-					if ($this->OrderTimeTo->Exportable) $Doc->ExportCaption($this->OrderTimeTo);
+					if ($this->day_of_the_week->Exportable) $Doc->ExportCaption($this->day_of_the_week);
+					if ($this->order_time_from->Exportable) $Doc->ExportCaption($this->order_time_from);
+					if ($this->order_time_to->Exportable) $Doc->ExportCaption($this->order_time_to);
 				}
 				$Doc->EndExportRow();
 			}
@@ -874,14 +874,14 @@ class ctimings extends cTable {
 				if (!$Doc->ExportCustom) {
 					$Doc->BeginExportRow($RowCnt); // Allow CSS styles if enabled
 					if ($ExportPageType == "view") {
-						if ($this->StoreID->Exportable) $Doc->ExportField($this->StoreID);
-						if ($this->DayoftheWeek->Exportable) $Doc->ExportField($this->DayoftheWeek);
-						if ($this->OrderTimeFrom->Exportable) $Doc->ExportField($this->OrderTimeFrom);
-						if ($this->OrderTimeTo->Exportable) $Doc->ExportField($this->OrderTimeTo);
+						if ($this->store_id->Exportable) $Doc->ExportField($this->store_id);
+						if ($this->day_of_the_week->Exportable) $Doc->ExportField($this->day_of_the_week);
+						if ($this->order_time_from->Exportable) $Doc->ExportField($this->order_time_from);
+						if ($this->order_time_to->Exportable) $Doc->ExportField($this->order_time_to);
 					} else {
-						if ($this->DayoftheWeek->Exportable) $Doc->ExportField($this->DayoftheWeek);
-						if ($this->OrderTimeFrom->Exportable) $Doc->ExportField($this->OrderTimeFrom);
-						if ($this->OrderTimeTo->Exportable) $Doc->ExportField($this->OrderTimeTo);
+						if ($this->day_of_the_week->Exportable) $Doc->ExportField($this->day_of_the_week);
+						if ($this->order_time_from->Exportable) $Doc->ExportField($this->order_time_from);
+						if ($this->order_time_to->Exportable) $Doc->ExportField($this->order_time_to);
 					}
 					$Doc->EndExportRow($RowCnt);
 				}
