@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<configuration date="2018/07/26" author="e.World Technology Ltd.">
-  <project id="{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}" file="E:\U\SOEN 6011\Project\admin\project6011.pmp" name="project6011" product="PHPMaker" version="14.0" datetime="2018/07/26 16:08:13" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
+<configuration date="2018/07/27" author="e.World Technology Ltd.">
+  <project id="{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}" file="E:\works\U\admin\project6011.pmp" name="project6011" product="PHPMaker" version="14.0" datetime="2018/07/27 13:01:25" languagefolder="phplang" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0">
     <table id="orders" name="orders" caption="Orders" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="orderdetails" name="orderdetails" caption="Order Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="deliverytypes" name="deliverytypes" caption="Delivery Types" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="order_details" name="order_details" caption="Order Details" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="delivery_types" name="delivery_types" caption="Delivery Types" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="customers" name="customers" caption="Customers" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="employees" name="employees" caption="Employees" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="menus" name="menus" caption="Menus" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="sub_menus" name="sub_menus" caption="Sub Menus" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="paymenttypes" name="paymenttypes" caption="Payment Types" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="payment_types" name="payment_types" caption="Payment Types" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="provinces" name="provinces" caption="Provinces" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="stores" name="stores" caption="Stores" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="timings" name="timings" caption="Timings" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="userlevelpermissions" name="userlevelpermissions" caption="userlevelpermissions" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
-    <table id="userlevels" name="userlevels" caption="userlevels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="user_level_permissions" name="user_level_permissions" caption="userlevelpermissions" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
+    <table id="user_levels" name="user_levels" caption="userlevels" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
     <table id="addresses" name="addresses" caption="Addresses" userlevel="-2,&quot;Anonymous&quot;,0;0,&quot;Default&quot;,0" priv="1" />
   </project>
 </configuration>

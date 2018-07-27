@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2018/7/26" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2018/7/27" version="14.0.0" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -665,22 +665,22 @@
     </menu>
     <table id="orders">
       <phrase id="tblcaption" value="Orders" />
-      <field id="orderid">
+      <field id="order_id">
         <phrase id="fldcaption" value="Order ID" />
       </field>
-      <field id="customerid">
+      <field id="customer_id">
         <phrase id="fldcaption" value="Customer ID" />
       </field>
-      <field id="fullname">
+      <field id="full_name">
         <phrase id="fldcaption" value="Full Name" />
       </field>
-      <field id="provinceid">
+      <field id="province_id">
         <phrase id="fldcaption" value="Province ID" />
       </field>
       <field id="address">
         <phrase id="fldcaption" value="Address" />
       </field>
-      <field id="zipcode">
+      <field id="zip_code">
         <phrase id="fldcaption" value="Zip Code" />
       </field>
       <field id="phone">
@@ -689,13 +689,13 @@
       <field id="discount">
         <phrase id="fldcaption" value="Discount" />
       </field>
-      <field id="totalprice">
+      <field id="total_price">
         <phrase id="fldcaption" value="Total Price" />
       </field>
-      <field id="paymenttypeid">
+      <field id="payment_type_id">
         <phrase id="fldcaption" value="Payment Type" />
       </field>
-      <field id="deliverytypeid">
+      <field id="delivery_type_id">
         <phrase id="fldcaption" value="Delivery Type" />
       </field>
       <field id="description">
@@ -704,34 +704,34 @@
       <field id="feedback">
         <phrase id="fldcaption" value="Feed Back" />
       </field>
-      <field id="orderdatetime">
+      <field id="order_date_time">
         <phrase id="fldcaption" value="Order Date Time" />
       </field>
     </table>
-    <table id="orderdetails">
+    <table id="order_details">
       <phrase id="tblcaption" value="Order Details" />
-      <field id="orderdetailid">
+      <field id="order_detail_id">
         <phrase id="fldcaption" value="Order Detail ID" />
       </field>
-      <field id="orderid">
+      <field id="order_id">
         <phrase id="fldcaption" value="Order" />
       </field>
       <field id="quantity">
         <phrase id="fldcaption" value="Quantity" />
       </field>
-      <field id="menuid">
+      <field id="menu_id">
         <phrase id="fldcaption" value="Menu ID" />
       </field>
-      <field id="submenu">
+      <field id="sub_menu_id">
         <phrase id="fldcaption" value="Sub Menu" />
       </field>
       <field id="price">
         <phrase id="fldcaption" value="Price" />
       </field>
     </table>
-    <table id="deliverytypes">
+    <table id="delivery_types">
       <phrase id="tblcaption" value="Delivery Types" />
-      <field id="deliverytypeid">
+      <field id="delivery_type_id">
         <phrase id="fldcaption" value="Delivery Type ID" />
       </field>
       <field id="name">
@@ -740,10 +740,10 @@
     </table>
     <table id="customers">
       <phrase id="tblcaption" value="Customers" />
-      <field id="customerid">
+      <field id="customer_id">
         <phrase id="fldcaption" value="Customer ID" />
       </field>
-      <field id="fullname">
+      <field id="full_name">
         <phrase id="fldcaption" value="Full Name" />
       </field>
       <field id="phone">
@@ -755,13 +755,13 @@
       <field id="reward">
         <phrase id="fldcaption" value="Reward" />
       </field>
-      <field id="username">
+      <field id="user_name">
         <phrase id="fldcaption" value="User Name" />
       </field>
-      <field id="userpass">
+      <field id="user_pass">
         <phrase id="fldcaption" value="User Pass" />
       </field>
-      <field id="activitystatus">
+      <field id="activity_status">
         <phrase id="fldcaption" value="Activity Status" />
         <phrase id="fldtagvalue1" value="0" />
         <phrase id="fldtagcaption1" value="Inactive" />
@@ -771,16 +771,16 @@
     </table>
     <table id="employees">
       <phrase id="tblcaption" value="Employees" />
-      <field id="employeeid">
+      <field id="employee_id">
         <phrase id="fldcaption" value="Employee ID" />
       </field>
-      <field id="fullname">
+      <field id="full_name">
         <phrase id="fldcaption" value="Full Name" />
       </field>
-      <field id="username">
+      <field id="user_name">
         <phrase id="fldcaption" value="User Name" />
       </field>
-      <field id="userpass">
+      <field id="user_pass">
         <phrase id="fldcaption" value="User Pass" />
       </field>
       <field id="phone">
@@ -789,22 +789,22 @@
       <field id="mobile">
         <phrase id="fldcaption" value="Mobile" />
       </field>
-      <field id="provinceid">
+      <field id="province_id">
         <phrase id="fldcaption" value="Province ID" />
       </field>
       <field id="address">
         <phrase id="fldcaption" value="Address" />
       </field>
-      <field id="zipcode">
+      <field id="zip_code">
         <phrase id="fldcaption" value="Zip Code" />
       </field>
-      <field id="level">
+      <field id="level_no">
         <phrase id="fldcaption" value="Level" />
       </field>
     </table>
     <table id="menus">
       <phrase id="tblcaption" value="Menus" />
-      <field id="menuid">
+      <field id="menu_id">
         <phrase id="fldcaption" value="Menu ID" />
       </field>
       <field id="name">
@@ -816,10 +816,10 @@
     </table>
     <table id="sub_menus">
       <phrase id="tblcaption" value="Sub Menus" />
-      <field id="submenuid">
+      <field id="sub_menu_id">
         <phrase id="fldcaption" value="Sub Menu ID" />
       </field>
-      <field id="menuid">
+      <field id="menu_id">
         <phrase id="fldcaption" value="Menu ID" />
       </field>
       <field id="name">
@@ -835,9 +835,9 @@
         <phrase id="fldcaption" value="Description" />
       </field>
     </table>
-    <table id="paymenttypes">
+    <table id="payment_types">
       <phrase id="tblcaption" value="Payment Types" />
-      <field id="paymenttypeid">
+      <field id="payment_type_id">
         <phrase id="fldcaption" value="Payment Type ID" />
       </field>
       <field id="name">
@@ -846,7 +846,7 @@
     </table>
     <table id="provinces">
       <phrase id="tblcaption" value="Provinces" />
-      <field id="provinceid">
+      <field id="province_id">
         <phrase id="fldcaption" value="Province ID" />
       </field>
       <field id="name">
@@ -855,28 +855,28 @@
     </table>
     <table id="stores">
       <phrase id="tblcaption" value="Stores" />
-      <field id="storeid">
+      <field id="store_id">
         <phrase id="fldcaption" value="Store ID" />
       </field>
       <field id="name">
         <phrase id="fldcaption" value="Name" />
       </field>
-      <field id="provinceid">
+      <field id="province_id">
         <phrase id="fldcaption" value="Province ID" />
       </field>
       <field id="address">
         <phrase id="fldcaption" value="Address" />
       </field>
-      <field id="zipcode">
+      <field id="zip_code">
         <phrase id="fldcaption" value="Zip Code" />
       </field>
     </table>
     <table id="timings">
       <phrase id="tblcaption" value="Timings" />
-      <field id="storeid">
+      <field id="store_id">
         <phrase id="fldcaption" value="Store ID" />
       </field>
-      <field id="dayoftheweek">
+      <field id="day_of_the_week">
         <phrase id="fldcaption" value="Dayofthe Week" />
         <phrase id="fldtagvalue1" value="1" />
         <phrase id="fldtagcaption1" value="Mon" />
@@ -893,49 +893,49 @@
         <phrase id="fldtagvalue7" value="7" />
         <phrase id="fldtagcaption7" value="Sun" />
       </field>
-      <field id="ordertimefrom">
+      <field id="order_time_from">
         <phrase id="fldcaption" value="Order Time From" />
       </field>
-      <field id="ordertimeto">
+      <field id="order_time_to">
         <phrase id="fldcaption" value="Order Time To" />
       </field>
     </table>
-    <table id="userlevelpermissions">
+    <table id="user_level_permissions">
       <phrase id="tblcaption" value="userlevelpermissions" />
-      <field id="userlevelid">
+      <field id="user_level_id">
         <phrase id="fldcaption" value="userlevelid" />
       </field>
-      <field id="_tablename">
+      <field id="table_name">
         <phrase id="fldcaption" value="tablename" />
       </field>
       <field id="permission">
         <phrase id="fldcaption" value="permission" />
       </field>
     </table>
-    <table id="userlevels">
+    <table id="user_levels">
       <phrase id="tblcaption" value="userlevels" />
-      <field id="userlevelid">
+      <field id="user_level_id">
         <phrase id="fldcaption" value="userlevelid" />
       </field>
-      <field id="userlevelname">
+      <field id="user_level_name">
         <phrase id="fldcaption" value="userlevelname" />
       </field>
     </table>
     <table id="addresses">
       <phrase id="tblcaption" value="Addresses" />
-      <field id="addressid">
+      <field id="address_id">
         <phrase id="fldcaption" value="Address ID" />
       </field>
-      <field id="customerid">
+      <field id="customer_id">
         <phrase id="fldcaption" value="Customer" />
       </field>
-      <field id="provinceid">
+      <field id="province_id">
         <phrase id="fldcaption" value="Province" />
       </field>
       <field id="address">
         <phrase id="fldcaption" value="Address" />
       </field>
-      <field id="pobox">
+      <field id="po_box">
         <phrase id="fldcaption" value="POBox" />
       </field>
     </table>
