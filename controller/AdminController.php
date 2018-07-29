@@ -56,7 +56,7 @@ class AdminController
 
     public function showOrderList()
     {
-        $this->orderList = UserModel::getAllOrders();
+        $this->orderList = AdminModel::getAllOrders();
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/orderList.php';
         require_once 'views/admin.tail.inc.php';

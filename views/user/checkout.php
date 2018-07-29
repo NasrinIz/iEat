@@ -13,9 +13,8 @@
             </div>-->
             <a class="heading-elements-toggle"><i class="icon-more"></i></a></div>
 
-        <div id="invoice-editable" contenteditable="true" class="cke_editable cke_editable_inline cke_contents_ltr"
-             tabindex="0" spellcheck="false" role="textbox" aria-label="Rich Text Editor, invoice-editable"
-             title="Rich Text Editor, invoice-editable" aria-describedby="cke_66" style="position: relative;">
+        <div id="invoice-editable" contenteditable="true" class="cke_contents_ltr"
+             tabindex="0" spellcheck="false" role="textbox" aria-describedby="cke_66" style="position: relative;">
             <div class="panel-body no-padding-bottom">
                 <div class="row">
                     <div class="col-sm-6 content-group"><img data-cke-saved-src="assets/images/logo_demo.png"

@@ -219,4 +219,23 @@ class AdminModel
         }
     }
 
+    /**
+     * Get all orders for customer
+     * @return string
+     */
+    public static function getAllOrders()
+    {
+
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM orders";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $result;
+    }
 }

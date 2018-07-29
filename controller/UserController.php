@@ -60,7 +60,7 @@ class UserController
 
     public function showOrderList()
     {
-        $this->orderList = UserModel::getAllOrders();
+        $this->orderList = UserModel::getAllOrders($this->userInformation['id']);
         require_once 'views/title.inc.php';
         require_once 'views/user/orderList.php';
         require_once 'views/tail.inc.php';

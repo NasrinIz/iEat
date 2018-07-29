@@ -29,16 +29,17 @@ class UserModel
     }
 
     /**
-     * Get all orders
+     * Get all orders for customer
+     * @param $customerId
      * @return string
      */
-    public static function getAllOrders()
+    public static function getAllOrders($customerId)
     {
 
         $result = "";
         try {
             $db = Db::getInstance();
-            $sql = "SELECT * FROM orders";
+            $sql = "SELECT * FROM orders WHERE customer_id = $customerId";
             $stmt = $db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
