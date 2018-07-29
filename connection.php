@@ -1,26 +1,37 @@
 <?php
-
-class Db
-{
+class Db {
 
     private static $instance = NULL;
 
     public static function getInstance()
     {
-        if (!isset(self::$instance)) {
+        if (!isset(self::$instance))
+        {
             $pdo_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
-            if (strpos($_SERVER['HTTP_HOST'], "localhost") !== false) { // For Test on Localhost
+            if (strpos($_SERVER['HTTP_HOST'],"localhost")!==false){ // For Test on Localhost
                 $DB_host = "localhost";
-                $DB_user = "admin";
-                $DB_pass = "123456";
+                $DB_user = "root";
+                $DB_pass = "root";
                 $DB_name = "iEat";
+            }elseif (strpos($_SERVER['HTTP_HOST'],"beaveraittesting.site")!==false){ //  # FROM TEST ENVIRONMENT CALLS
+                $DB_host = "localhost";
+                $DB_user = "beaverte_admin";
+                $DB_pass = "mZf@0v%AoE^m";
+                $DB_name = "iliveinx_maintenance";
+            }elseif (strpos($_SERVER['HTTP_HOST'],"ilivein.biz")!==false){ // For Live Ilivein Calls
+                $DB_host = "localhost";
+                $DB_user = "iliveinx_admin";
+                $DB_pass = "mZf@0v%AoE^m";
+                $DB_name = "iliveinx_maintenance";
 
-
-                self::$instance = new PDO(
-                    'mysql:host=' . $DB_host . ';dbname=' . $DB_name . '', $DB_user, $DB_pass, $pdo_options);
+            }else{
+                die("Error");
             }
-            return self::$instance;
+
+            self::$instance = new PDO(
+                'mysql:host='.$DB_host.';dbname='.$DB_name.'', $DB_user, $DB_pass, $pdo_options);
         }
+        return self::$instance;
     }
 }
