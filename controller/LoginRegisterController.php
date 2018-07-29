@@ -8,12 +8,12 @@ class LoginRegisterController
 
     public function __construct()
     {
-       // $this->getUserInformation();
+        // $this->getUserInformation();
     }
 
     private function getUserInformation()
     {
-      //  $this->userInformation = UserModel::getUserById($_POST['id']);
+        //  $this->userInformation = UserModel::getUserById($_POST['id']);
     }
 
     public function showLoginRegister()
@@ -39,8 +39,13 @@ class LoginRegisterController
                 if (password_verify($pass, $userInfo['password'])) {
                     //  $user = CommonFunctions::userData($email);
                     UserModel::_setUserSession($email);
-                    $path = '?controller=user&action=showHomePage';
-                    CommonUtility::redirect($path);
+                    if ($userInfo['is_admin'] == 1) {
+                        $path = '?controller=admin&action=showDashboard';
+                        CommonUtility::redirect($path);
+                    } else {
+                        $path = '?controller=user&action=showHomePage';
+                        CommonUtility::redirect($path);
+                    }
                 } else {
                     $this->notification = CommonUtility::showNotification('Your email and password do not match.', 'danger');
                     $this->showLoginRegister();

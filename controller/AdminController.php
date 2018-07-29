@@ -23,47 +23,15 @@ class AdminController
     public function __construct()
     {
         $this->getUserInformation();
-       // $this->getProfileInformation();
         if ($this->userInformation['is_admin'] != 1) {
             $path = '?controller=user&action=showHomePage';
             CommonUtility::redirect($path);
         }
-      /*  $this->getAllUsers();
-        $this->getAllOwners();
-        $this->getAllVendors();
-        $this->getAllProjects();
-        $this->getAllNews();
-        $this->getAllAdvertisements();*/
     }
 
     private function getUserInformation()
     {
         $this->userInformation = UserModel::getUserByEmail($_SESSION['email']);
-    }
-
-    private function getProfileInformation()
-    {
-        $this->profileInformation = UserModel::getProfileInformationByEmail($_SESSION['email'], $this->userInformation['user_type']);
-    }
-
-    private function getAllUsers()
-    {
-        $this->users = UserModel::getAllUsers();
-    }
-
-    private function getAllOwners()
-    {
-        $this->owners = OwnerModel::getAllOwners();
-    }
-
-    private function getAllVendors()
-    {
-        $this->vendors = vendorModel::getAllVendors();
-    }
-
-    private function getAllProjects()
-    {
-        $this->projects = ProjectModel::getAllProjects();
     }
 
     private function getAllNews()
@@ -145,6 +113,15 @@ class AdminController
         }
 
         $path = '?controller=admin&action=showAdvertisementList';
+        CommonUtility::redirect($path);
+    }
+
+    public function changeStatus()
+    {
+        $status = $_POST['status'];
+        AdminModel::changeStatus($_GET['id'], $status);
+
+        $path = '?controller=admin&action=showOrderList';
         CommonUtility::redirect($path);
     }
 

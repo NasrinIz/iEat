@@ -50,6 +50,8 @@ $controllers = array(
         'showUserList',
         'showBranchList',
         'showMenuList',
+        'showOrderList',
+        'changeStatus',
         'showAddMenuItem',
         'showAdvertisementList',
         'showAddAdvertisement',

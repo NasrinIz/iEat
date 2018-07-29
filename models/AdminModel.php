@@ -122,6 +122,26 @@ class AdminModel
     }
 
     /**
+     * Update Status
+     * @param $id
+     * @param $status
+     */
+    public static function changeStatus($id,$status)
+    {
+        try {
+            $sql = "UPDATE `orders`       
+                SET `status` =  '" . $status . "' 
+                WHERE `id` =  '" . $id . "' ";
+
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
+    /**
      * Get last inserted
      * @return mixed
      */
