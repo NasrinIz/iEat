@@ -12,13 +12,9 @@ class AdminController
     private $notification;
 
     private $userInformation;
-    private $profileInformation;
-    private $owners;
-    private $vendors;
-    private $users;
-    private $projects;
     private $news;
     private $advertisements;
+    private $orderList;
 
     public function __construct()
     {
@@ -60,6 +56,7 @@ class AdminController
 
     public function showOrderList()
     {
+        $this->orderList = UserModel::getAllOrders();
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/orderList.php';
         require_once 'views/admin.tail.inc.php';
@@ -118,11 +115,9 @@ class AdminController
 
     public function changeStatus()
     {
-        $status = $_POST['status'];
-        AdminModel::changeStatus($_GET['id'], $status);
+        AdminModel::changeStatus($_GET['id'], $_GET['status']+ 1);
 
-        $path = '?controller=admin&action=showOrderList';
-        CommonUtility::redirect($path);
+       $this->showOrderList();
     }
 
     public function addMenuItem()

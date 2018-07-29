@@ -126,12 +126,12 @@ class AdminModel
      * @param $id
      * @param $status
      */
-    public static function changeStatus($id,$status)
+    public static function changeStatus($id, $status)
     {
         try {
-            $sql = "UPDATE `orders`       
+           $sql = "UPDATE `orders`       
                 SET `status` =  '" . $status . "' 
-                WHERE `id` =  '" . $id . "' ";
+                WHERE `order_id` =  '" . $id . "' ";
 
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
