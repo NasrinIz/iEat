@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="X-UA-Compatible" content="IE=7">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="YellowPages"/>
-    <meta name="keywords" content="YellowPages"/>
-    <meta name="author" content="YellowPages"/>
+    <meta name="description" content="iEat"/>
+    <meta name="keywords" content="iEat"/>
+    <meta name="author" content="iEat"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
