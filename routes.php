@@ -42,6 +42,7 @@ $controllers = array(
         'showCart',
         'proceedToCheckout',
         'placeOrder',
+        'completeProfile',
         'deleteUser'
     ],
     'admin' => [

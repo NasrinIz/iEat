@@ -84,9 +84,8 @@ class UserController
     public function placeOrder()
     {
         UserModel::addOrder($_POST);
-        require_once 'views/title.inc.php';
-        require_once 'views/user/orderList.php';
-        require_once 'views/tail.inc.php';
+        UserModel::deleteCartInfo();
+        $this->showOrderList();
     }
 
     public function proceedToCheckout()
@@ -105,6 +104,12 @@ class UserController
         $path = '?controller=admin&action=showUserList';
         CommonUtility::redirect($path);
 
+    }
+
+    public function completeProfile()
+    {
+            UserModel::completeProfile($_POST);
+            $this->showProfile();
     }
 
 }

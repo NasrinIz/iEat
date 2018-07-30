@@ -356,23 +356,26 @@ class UserModel
      */
     public static function addOrder($data)
     {
-        echo '<pre>';
-        print_r($data);
-        die();
         try {
-            $sql = "
-                INSERT INTO `cart` (
-                    `name` ,
-                    `count` ,
-                    `amount`,
-                    `comment`
+         $sql = "
+                INSERT INTO `orders` (
+                    `customer_id` ,
+                    `full_name` ,
+                    `address`, 
+                    `phone` ,
+                    `total_price`,
+                    `description`,
+                    `order_date_time`
                     
                 )
                 VALUES (
-                    '" . $data['name'] . "' ,
-                    '" . $data['count'] . "' ,
-                    '" . $data['amount'] . "' ,
-                    '" . $data['comment'] . "' 
+                    '" . $data['customerId'] . "' ,
+                    '" . $data['full_name'] . "' ,
+                    '" . $data['address'] . "' ,
+                    '" . $data['phone'] . "' ,  
+                    '" . $data['total_price'] . "' ,
+                    '" . $data['description'] . "' ,
+                    '" . $data['order_date_time'] . "' 
                 )
             ";
 
@@ -407,16 +410,17 @@ class UserModel
 
 
     /**
-     * Add type to user
+     * Add info for user
      * @param $data
      */
-    public static function addType($data)
+    public static function completeProfile($data)
     {
         $id = $data['id'];
-        $type = $data['type'];
         try {
             $sql = "UPDATE `users`       
-                SET `user_type`=   '" . $type . "'
+                SET `address`=   '" . $data['address'] . "',
+                `phone`=   '" . $data['phone'] . "',
+                `name`=   '" . $data['name'] . "'
                 WHERE `id` = $id";
 
             $db = Db::getInstance();
@@ -450,7 +454,7 @@ class UserModel
     public static function deleteCartInfo()
     {
         try {
-            $sql = "DELETE * FROM cart";
+            $sql = "DELETE FROM cart";
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
             $stmt->execute();

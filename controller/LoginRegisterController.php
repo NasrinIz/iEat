@@ -79,7 +79,6 @@ class LoginRegisterController
 
     public function logOut()
     {
-        UserModel::deleteCartInfo();
         session_destroy();
         $path = '?controller=login&action=showLoginRegister';
         CommonUtility::redirect($path);

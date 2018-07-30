@@ -1,5 +1,6 @@
 <div class="container-fluid">
-
+    <form class="customForm" method="post"
+          action="<?php echo PROJECT_DIR ?>?controller=user&action=placeOrder">
     <div class="panel panel-white">
         <div class="panel-heading">
             <h6 class="panel-title">Bill</h6>
@@ -76,7 +77,12 @@
             </div>
         </div>
     </div>
-    <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
-                    class="fa fa-plus"></i></b>
-        <a href="<?php echo PROJECT_DIR ?>?controller=user&action=placeOrder">Place
-            Order</a></button>
+        <input type="hidden" name="full_name" value="<?php echo $this->userInformation['name']?>"/>
+        <input type="hidden" name="address" value="<?php echo $this->userInformation['address']?>"/>
+        <input type="hidden" name="phone" value="<?php echo $this->userInformation['phone']?>"/>
+        <input type="hidden" name="total_price" value="<?php echo $sum?>"/>
+        <input type="hidden" name="order_date_time" value="<?php echo date("d-m-y h:m")?>"/>
+        <input type="hidden" name="customerId" value="<?php echo $this->userInformation['id']?>"/>
+    <button type="submit" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
+                    class="fa fa-plus"></i></b> Place Order</button>
+    </form>
