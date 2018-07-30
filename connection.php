@@ -14,17 +14,6 @@ class Db {
                 $DB_user = "root";
                 $DB_pass = "root";
                 $DB_name = "iEat";
-            }elseif (strpos($_SERVER['HTTP_HOST'],"beaveraittesting.site")!==false){ //  # FROM TEST ENVIRONMENT CALLS
-                $DB_host = "localhost";
-                $DB_user = "beaverte_admin";
-                $DB_pass = "mZf@0v%AoE^m";
-                $DB_name = "iliveinx_maintenance";
-            }elseif (strpos($_SERVER['HTTP_HOST'],"ilivein.biz")!==false){ // For Live Ilivein Calls
-                $DB_host = "localhost";
-                $DB_user = "iliveinx_admin";
-                $DB_pass = "mZf@0v%AoE^m";
-                $DB_name = "iliveinx_maintenance";
-
             }else{
                 die("Error");
             }
