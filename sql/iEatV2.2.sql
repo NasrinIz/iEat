@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 30, 2018 at 02:32 AM
+-- Generation Time: Jul 30, 2018 at 04:21 AM
 -- Server version: 5.6.35
 -- PHP Version: 7.1.6
 
@@ -33,7 +33,7 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`address_id`, `customer_id`, `province_id`, `address`, `po_box`) VALUES
-(1, 1, 1, '1010 Guy', 'A1B2C3');
+  (1, 1, 1, '1010 Guy', 'A1B2C3');
 
 -- --------------------------------------------------------
 
@@ -61,22 +61,6 @@ CREATE TABLE `cart` (
   `comment` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`id`, `name`, `count`, `amount`, `comment`) VALUES
-(1, 'Paninis & Wraps', 1, 20.00, 'no Sauce'),
-(2, 'Paninis & Wraps', 1, 20.00, 'no Sauce'),
-(3, 'Featured Products', 1, 20.00, 'no Sauce'),
-(4, '', 0, 0.00, ''),
-(5, 'Paninis & Wraps', 1, 20.00, 'No sauce'),
-(6, 'Paninis & Wraps', 1, 20.00, 'No sauce'),
-(7, '', 0, 0.00, ''),
-(8, 'Paninis & Wraps', 1, 20.00, 'No Sauce'),
-(9, 'Paninis & Wraps', 1, 20.00, 'No Sauce'),
-(10, 'Paninis & Wraps', 1, 20.00, 'No Sauce');
-
 -- --------------------------------------------------------
 
 --
@@ -99,7 +83,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`customer_id`, `full_name`, `phone`, `mobile`, `reward`, `user_name`, `user_pass`, `activity_status`) VALUES
-(1, 'Mehran Ishanian', '5149296960', '5149296960', 0, 'superadmin', 'Ad123456', 1);
+  (1, 'Mehran Ishanian', '5149296960', '5149296960', 0, 'superadmin', 'Ad123456', 1);
 
 -- --------------------------------------------------------
 
@@ -117,8 +101,8 @@ CREATE TABLE `delivery_types` (
 --
 
 INSERT INTO `delivery_types` (`delivery_type_id`, `name`) VALUES
-(1, 'PickUp'),
-(2, 'Cash On Delivery');
+  (1, 'PickUp'),
+  (2, 'Cash On Delivery');
 
 -- --------------------------------------------------------
 
@@ -144,8 +128,8 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`employee_id`, `full_name`, `user_name`, `user_pass`, `level_no`, `phone`, `mobile`, `address`, `province_id`, `zip_code`) VALUES
-(1, 'Nasreen', 'nasreen', '1234', 1, NULL, NULL, NULL, 2, NULL),
-(2, 'Golnoosh', 'goli', '123456', -1, NULL, NULL, NULL, 6, NULL);
+  (1, 'Nasreen', 'nasreen', '1234', 1, NULL, NULL, NULL, 2, NULL),
+  (2, 'Golnoosh', 'goli', '123456', -1, NULL, NULL, NULL, 6, NULL);
 
 -- --------------------------------------------------------
 
@@ -164,13 +148,14 @@ CREATE TABLE `menus` (
 --
 
 INSERT INTO `menus` (`menu_id`, `name`, `picture`) VALUES
-(1, 'Paninis & Wraps', 'S1-1.jpg'),
-(2, 'Featured Products', 'S1-2.jpg'),
-(3, 'All Sandwiches', 'S1-3.jpg'),
-(4, '8 Under 6', 'S1-4.jpg'),
-(5, 'Breakfast', 'S1-5.jpg'),
-(6, 'Salads', 'S1-6.jpg'),
-(7, 'Sides', 'S1-7.jpg');
+  (1, 'Paninis & Wraps', 'S1-1.jpg'),
+  (2, 'Featured Products', 'S1-2.jpg'),
+  (3, 'All Sandwiches', 'S1-3.jpg'),
+  (4, '8 Under 6', 'S1-4.jpg'),
+  (5, 'Breakfast', 'S1-5.jpg'),
+  (6, 'Salads', 'S1-6.jpg'),
+  (7, 'Sides', 'S1-7.jpg'),
+  (19, 'Sample Menu', 'natalya-340213-unsplash.jpg');
 
 -- --------------------------------------------------------
 
@@ -181,18 +166,18 @@ INSERT INTO `menus` (`menu_id`, `name`, `picture`) VALUES
 CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `full_name` varchar(60) NOT NULL,
-  `province_id` int(1) NOT NULL,
-  `address` text NOT NULL,
-  `zip_code` varchar(6) NOT NULL,
-  `phone` varchar(10) NOT NULL,
+  `full_name` varchar(60) DEFAULT NULL,
+  `province_id` int(1) DEFAULT NULL,
+  `address` text,
+  `zip_code` varchar(6) DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
   `discount` double(5,2) DEFAULT NULL,
   `total_price` double(7,2) NOT NULL,
-  `payment_type_id` int(1) NOT NULL,
-  `delivery_type_id` int(1) NOT NULL,
+  `payment_type_id` int(1) DEFAULT NULL,
+  `delivery_type_id` int(1) DEFAULT NULL,
   `description` text,
   `feedback` text,
-  `order_date_time` datetime NOT NULL,
+  `order_date_time` datetime DEFAULT NULL,
   `status` int(11) DEFAULT '0' COMMENT '0: waiting, 1: registered, 2: sent, 3: delivered'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -201,7 +186,11 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `province_id`, `address`, `zip_code`, `phone`, `discount`, `total_price`, `payment_type_id`, `delivery_type_id`, `description`, `feedback`, `order_date_time`, `status`) VALUES
-(1, 1, 'Mehran Ishanian', 1, '152 Rene Levesque', 'A1B2C3', '+151412345', 0.00, 50.00, 1, 2, NULL, NULL, '2018-07-26 00:00:00', 6);
+  (1, 1, 'Mehran Ishanian', 1, '152 Rene Levesque', 'A1B2C3', '+151412345', 0.00, 50.00, 1, 2, NULL, NULL, '2018-07-26 00:00:00', 6),
+  (2, 3, '', NULL, '', NULL, '', NULL, 160.00, NULL, NULL, '', NULL, '2030-07-18 03:07:00', 0),
+  (3, 3, '', NULL, '', NULL, '', NULL, 160.00, NULL, NULL, '', NULL, '2030-07-18 03:07:00', 0),
+  (4, 3, 'Nasrin izadi', NULL, 'Towers\r\n607', NULL, '5149991428', NULL, 160.00, NULL, NULL, '', NULL, '2030-07-18 03:07:00', 3),
+  (5, 3, 'Nasrin izadi', NULL, 'Towers\r\n607', NULL, '5149991428', NULL, 20.00, NULL, NULL, '', NULL, '2030-07-18 04:07:00', 0);
 
 -- --------------------------------------------------------
 
@@ -223,8 +212,8 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`order_detail_id`, `order_id`, `quantity`, `menu_id`, `sub_menu_id`, `price`) VALUES
-(1, 1, 1, 1, 4, 6.00),
-(2, 1, 2, 2, 10, 7.00);
+  (1, 1, 1, 1, 4, 6.00),
+  (2, 1, 2, 2, 10, 7.00);
 
 -- --------------------------------------------------------
 
@@ -242,9 +231,9 @@ CREATE TABLE `payment_types` (
 --
 
 INSERT INTO `payment_types` (`payment_type_id`, `name`) VALUES
-(1, 'Cash'),
-(2, 'Credit Card'),
-(3, 'PayPal');
+  (1, 'Cash'),
+  (2, 'Credit Card'),
+  (3, 'PayPal');
 
 -- --------------------------------------------------------
 
@@ -262,16 +251,16 @@ CREATE TABLE `provinces` (
 --
 
 INSERT INTO `provinces` (`province_id`, `name`) VALUES
-(1, 'Quebec'),
-(2, 'Ontario'),
-(3, 'Nova Scotia'),
-(4, 'New Brunswick'),
-(5, 'Manitoba'),
-(6, 'British Columbia'),
-(7, 'Prince Edward Island'),
-(8, 'Saskatchewan'),
-(9, 'Alberta'),
-(10, 'Newfoundland and Labrador');
+  (1, 'Quebec'),
+  (2, 'Ontario'),
+  (3, 'Nova Scotia'),
+  (4, 'New Brunswick'),
+  (5, 'Manitoba'),
+  (6, 'British Columbia'),
+  (7, 'Prince Edward Island'),
+  (8, 'Saskatchewan'),
+  (9, 'Alberta'),
+  (10, 'Newfoundland and Labrador');
 
 -- --------------------------------------------------------
 
@@ -292,9 +281,9 @@ CREATE TABLE `stores` (
 --
 
 INSERT INTO `stores` (`store_id`, `name`, `province_id`, `address`, `zip_code`) VALUES
-(1, 'Guy', 1, '1520 Guy Avenue', 'H3H23Z'),
-(2, 'Sherbrook', 1, '230 Sherbrook Street', 'H2H1S1'),
-(3, 'Rene Levesque', 1, '580 Rene Levesque', 'H4S1S5');
+  (1, 'Guy', 1, '1520 Guy Avenue', 'H3H23Z'),
+  (2, 'Sherbrook', 1, '230 Sherbrook Street', 'H2H1S1'),
+  (3, 'Rene Levesque', 1, '580 Rene Levesque', 'H4S1S5');
 
 -- --------------------------------------------------------
 
@@ -316,18 +305,18 @@ CREATE TABLE `sub_menus` (
 --
 
 INSERT INTO `sub_menus` (`sub_menu_id`, `menu_id`, `name`, `picture`, `price`, `description`) VALUES
-(1, 1, 'Chicken Cordon Bleu Panini', 'S1-1.jpg', 10.00, 'Say “Oui” to our Chicken Cordon Bleu Panini, featuring layers of Black Forest ham and 100% Canadian rotisserie-style chicken drizzled with creamy honey mustard, on our Ciabatta bread. Topped with slices of rich Swiss cheese, baby spinach and tomatoes, and pressed to perfection on our Panini grill, it\'s sure to deliver a distinctly crispy and delicious experience.'),
-(2, 1, 'Chipotle Steak and Cheese Panini', 'S1-2.jpg', 12.00, 'Our Chipotle Steak & Cheese Panini combines exciting flavours all pressed to crispy perfection on our Panini grill.  Featuring our tender, 100% Canadian steak with cheddar cheese, green peppers and red onions, on our Ciabatta bread, it\'s bursting with flavour and will be sure to deliver a crave-worthy and delicious taste experience.'),
-(3, 1, 'Triple Cheese', 'S1-3.jpg', 11.00, 'Satisfy your comfort food cravings with our Triple Grilled Cheese Panini. It’s the classic melty-cheese taste you love, pressed on our Panini grill. We combine cheddar, Swiss and Monterey cheddar cheeses, and load it up with fresh baby spinach, juicy red tomatoes and crunchy red onions on our Ciabatta bread. We then press it to perfection, melding all the flavours together to deliver a warm and crispy grilled cheese experience.'),
-(4, 1, 'B.L.T.', 'S1-4.jpg', 20.00, 'Introducing our new grilled wraps! Bacon, lettuce and tomatoes are topped with mayonnaise, wrapped in a flour tortilla, and grilled to tasty B.L.T. perfection.'),
-(5, 1, 'Chicken & Bacon Ranch', 'S1-5.jpg', 10.00, 'Filled with 100% Canadian rotisserie-style chicken, Maple wood smoked bacon, Monterey Cheddar cheese rolled in a tortilla and grilled to perfection, the Chicken & Bacon Ranch is the perfect combination of crispy and melty.'),
-(6, 1, 'Chipotle Steak & Bacon', 'S1-6.jpg', 11.00, 'The all-new Chipotle Steak & Bacon grilled wrap!  A delight made with 100% Canadian seasoned beef, bacon, Monterey cheddar, topped with creamy Chipotle Southwest sauce, and wrapped in a delicious tortilla that’s grilled to perfection.'),
-(7, 1, 'Chipotle Southwest Steak & Cheese Signature Wrap', 'S1-7.jpg', 6.00, 'Saddle up with this delicious tomato basil wrap jam-packed with a double portion of 100% canadian steak and topped with your favorite tex-mex flavors like Monterey cheddar, guacamole, lettuce, tomatoes, red onions, green peppers and Chipotle Southwest sauce.'),
-(8, 1, 'Turkey, Bacon & Guacamole Wrap', 'S1-8.jpg', 8.00, 'The name says it all. A delicious Tomato Basil wrap filled with a double portion of 100% canadian turkey breast and Maple wood smoked bacon topped with guacamole, lettuce, tomatoes, red onions, and Ranch.'),
-(9, 1, 'Savoury Chicken Caesar Signature Wrap', 'S1-9.jpg', 9.00, 'Who can resist the classic combination of a delicious Spinach wrap filled with a double portion of tender chicken with seasoning and marinade topped with Monterey Cheddar, Parmesan cheese, lettuce, tomatoes and Savory Caesar sauce? It’s fit for an emperor.'),
-(10, 2, 'Chipotle Southwest Steak & Cheese Signature Wrap', 'S2-1.jpg', 7.00, 'Saddle up with this delicious tomato basil wrap jam-packed with a double portion of 100% canadian steak and topped with your favorite tex-mex flavors like Monterey cheddar, guacamole, lettuce, tomatoes, red onions, green peppers and Chipotle Southwest sauce.'),
-(11, 2, 'Savoury Chicken Caesar Signature Wrap', 'S2-2.jpg', 12.00, 'Who can resist the classic combination of a delicious Spinach wrap filled with a double portion of tender chicken with seasoning and marinade topped with Monterey Cheddar, Parmesan cheese, lettuce, tomatoes and Savory Caesar sauce? It’s fit for an emperor.'),
-(12, 2, 'Turkey, Bacon & Guacamole Wrap', 'S2-3.jpg', 11.00, 'The name says it all. A delicious Tomato Basil wrap filled with a double portion of 100% canadian turkey breast and Maple wood smoked bacon topped with guacamole, lettuce, tomatoes, red onions, and Ranch.');
+  (1, 1, 'Chicken Cordon Bleu Panini', 'S1-1.jpg', 10.00, 'Say “Oui” to our Chicken Cordon Bleu Panini, featuring layers of Black Forest ham and 100% Canadian rotisserie-style chicken drizzled with creamy honey mustard, on our Ciabatta bread. Topped with slices of rich Swiss cheese, baby spinach and tomatoes, and pressed to perfection on our Panini grill, it\'s sure to deliver a distinctly crispy and delicious experience.'),
+  (2, 1, 'Chipotle Steak and Cheese Panini', 'S1-2.jpg', 12.00, 'Our Chipotle Steak & Cheese Panini combines exciting flavours all pressed to crispy perfection on our Panini grill.  Featuring our tender, 100% Canadian steak with cheddar cheese, green peppers and red onions, on our Ciabatta bread, it\'s bursting with flavour and will be sure to deliver a crave-worthy and delicious taste experience.'),
+  (3, 1, 'Triple Cheese', 'S1-3.jpg', 11.00, 'Satisfy your comfort food cravings with our Triple Grilled Cheese Panini. It’s the classic melty-cheese taste you love, pressed on our Panini grill. We combine cheddar, Swiss and Monterey cheddar cheeses, and load it up with fresh baby spinach, juicy red tomatoes and crunchy red onions on our Ciabatta bread. We then press it to perfection, melding all the flavours together to deliver a warm and crispy grilled cheese experience.'),
+  (4, 1, 'B.L.T.', 'S1-4.jpg', 20.00, 'Introducing our new grilled wraps! Bacon, lettuce and tomatoes are topped with mayonnaise, wrapped in a flour tortilla, and grilled to tasty B.L.T. perfection.'),
+  (5, 1, 'Chicken & Bacon Ranch', 'S1-5.jpg', 10.00, 'Filled with 100% Canadian rotisserie-style chicken, Maple wood smoked bacon, Monterey Cheddar cheese rolled in a tortilla and grilled to perfection, the Chicken & Bacon Ranch is the perfect combination of crispy and melty.'),
+  (6, 1, 'Chipotle Steak & Bacon', 'S1-6.jpg', 11.00, 'The all-new Chipotle Steak & Bacon grilled wrap!  A delight made with 100% Canadian seasoned beef, bacon, Monterey cheddar, topped with creamy Chipotle Southwest sauce, and wrapped in a delicious tortilla that’s grilled to perfection.'),
+  (7, 1, 'Chipotle Southwest Steak & Cheese Signature Wrap', 'S1-7.jpg', 6.00, 'Saddle up with this delicious tomato basil wrap jam-packed with a double portion of 100% canadian steak and topped with your favorite tex-mex flavors like Monterey cheddar, guacamole, lettuce, tomatoes, red onions, green peppers and Chipotle Southwest sauce.'),
+  (8, 1, 'Turkey, Bacon & Guacamole Wrap', 'S1-8.jpg', 8.00, 'The name says it all. A delicious Tomato Basil wrap filled with a double portion of 100% canadian turkey breast and Maple wood smoked bacon topped with guacamole, lettuce, tomatoes, red onions, and Ranch.'),
+  (9, 1, 'Savoury Chicken Caesar Signature Wrap', 'S1-9.jpg', 9.00, 'Who can resist the classic combination of a delicious Spinach wrap filled with a double portion of tender chicken with seasoning and marinade topped with Monterey Cheddar, Parmesan cheese, lettuce, tomatoes and Savory Caesar sauce? It’s fit for an emperor.'),
+  (10, 2, 'Chipotle Southwest Steak & Cheese Signature Wrap', 'S2-1.jpg', 7.00, 'Saddle up with this delicious tomato basil wrap jam-packed with a double portion of 100% canadian steak and topped with your favorite tex-mex flavors like Monterey cheddar, guacamole, lettuce, tomatoes, red onions, green peppers and Chipotle Southwest sauce.'),
+  (11, 2, 'Savoury Chicken Caesar Signature Wrap', 'S2-2.jpg', 12.00, 'Who can resist the classic combination of a delicious Spinach wrap filled with a double portion of tender chicken with seasoning and marinade topped with Monterey Cheddar, Parmesan cheese, lettuce, tomatoes and Savory Caesar sauce? It’s fit for an emperor.'),
+  (12, 2, 'Turkey, Bacon & Guacamole Wrap', 'S2-3.jpg', 11.00, 'The name says it all. A delicious Tomato Basil wrap filled with a double portion of 100% canadian turkey breast and Maple wood smoked bacon topped with guacamole, lettuce, tomatoes, red onions, and Ranch.');
 
 -- --------------------------------------------------------
 
@@ -347,7 +336,7 @@ CREATE TABLE `timings` (
 --
 
 INSERT INTO `timings` (`store_id`, `day_of_the_week`, `order_time_from`, `order_time_to`) VALUES
-(1, 1, '09:00:00', '20:00:00');
+  (1, 1, '09:00:00', '20:00:00');
 
 -- --------------------------------------------------------
 
@@ -370,9 +359,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `name`, `phone`, `address`, `is_admin`) VALUES
-(1, 'nasrin_ptn@yahoo.com', '$2y$10$07zH7l.FZWhlLxzVTba.5u3KVI/jce3OOwcdPKuihfxUSZ6DEK8Ze', 'Nasrin izadi', '5149991428', 'Towers\r\n607', 0),
-(2, 'admin@test.com', '$2y$10$psQAnBdkrkVM0vskuRDGB.2X64cG.f2mJS1Mx9LcEvIVYs.MBXpme', NULL, NULL, NULL, 1),
-(3, 'nasrin@test.com', '$2y$10$MciS55HjwtHfnH8sY8ogW.aTv4IadPU3RIhuX2d1bUoBJDX97zqLm', NULL, NULL, NULL, 0);
+  (1, 'nasrin_ptn@yahoo.com', '$2y$10$07zH7l.FZWhlLxzVTba.5u3KVI/jce3OOwcdPKuihfxUSZ6DEK8Ze', 'Nasrin izadi', '5149991428', 'Towers\r\n607', 0),
+  (2, 'admin@test.com', '$2y$10$psQAnBdkrkVM0vskuRDGB.2X64cG.f2mJS1Mx9LcEvIVYs.MBXpme', NULL, NULL, NULL, 1),
+  (3, 'nasrin@test.com', '$2y$10$MciS55HjwtHfnH8sY8ogW.aTv4IadPU3RIhuX2d1bUoBJDX97zqLm', 'Nasrin izadi', '5149991428', 'Towers\r\n607', 0);
 
 -- --------------------------------------------------------
 
@@ -390,11 +379,11 @@ CREATE TABLE `user_levels` (
 --
 
 INSERT INTO `user_levels` (`user_level_id`, `user_level_name`) VALUES
-(-2, 'Anonymous'),
-(-1, 'Administrator'),
-(0, 'Default'),
-(1, 'Employee'),
-(2, 'Manager');
+  (-2, 'Anonymous'),
+  (-1, 'Administrator'),
+  (0, 'Default'),
+  (1, 'Employee'),
+  (2, 'Manager');
 
 -- --------------------------------------------------------
 
@@ -413,45 +402,45 @@ CREATE TABLE `user_level_permissions` (
 --
 
 INSERT INTO `user_level_permissions` (`user_level_id`, `table_name`, `permission`) VALUES
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 0),
-(-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 104),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 0),
-(1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 0),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 111),
-(2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 111);
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 0),
+  (-2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 104),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 0),
+  (1, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 0),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}customers', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}deliverytypes', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}employees', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}menus', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orderdetails', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}orders', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}paymenttypes', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}provinces', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}stores', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}sub_menus', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}timings', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevelpermissions', 111),
+  (2, '{C824E0A7-8646-4A04-889E-F8CBDC0FFFC2}userlevels', 111);
 
 --
 -- Indexes for dumped tables
@@ -577,7 +566,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `customers`
 --
@@ -597,12 +586,12 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `menu_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `menu_id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `order_details`
 --
