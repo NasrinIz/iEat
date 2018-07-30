@@ -7,7 +7,7 @@
                 <div><?php echo $this->notification ?></div>
                 <div class="dashboard-content no-print">
                     <fieldset class="bg-white">
-                        <table id="ownerProjectList" class="display table-responsive" style="width:100%">
+                        <table id="tableList" class="display table-responsive" style="width:100%">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -18,16 +18,22 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($this->news as $key => $value) { ?>
+                            <?php foreach ($this->menuList as $key => $value) { ?>
                                 <tr>
                                     <td>
-                                        <?php echo $value['title'] ?>
+                                        <?php echo $value['name'] ?>
                                     </td>
                                     <td>
-                                        <?php echo $value['content'] ?>
+
                                     </td>
                                     <td>
-                                        <?php echo $value['img'] ?>
+
+                                    </td>
+                                    <td>
+                                        <a target="_blank"
+                                           href="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['menu_id'] ?>/<?php echo $value['picture'] ?>">
+                                            <?php echo $value['picture'] ?>
+                                        </a>
                                     </td>
                                     <td>
                                         <ul class="icons-list">
@@ -36,7 +42,7 @@
                                                    aria-expanded="false"><i class="icon-menu7"></i></a>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
-                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteNews&id=<?php echo $value['id'] ?>">
+                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteMenuItem&id=<?php echo $value['menu_id'] ?>">
                                                             Delete<i class="icon-trash"></i></a>
                                                     </li>
                                                 </ul>
@@ -48,11 +54,11 @@
                             </tbody>
                         </table>
                         <br/>
-                        <button type="button" class="btn bg-teal-400 btn-labeled legitRipple"><b><i
+                        <!--   <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
                                         class="fa fa-plus"></i></b>
-                            <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddNews">Add
-                                News</a>
-                        </button>
+                            <a href="<?php /*echo PROJECT_DIR */ ?>?controller=admin&action=addMenuItem">Add
+                                Menu Item</a>
+                        </button>-->
                     </fieldset>
                 </div>
             </div>
@@ -63,5 +69,5 @@
 <!-- /HomePage -->
 
 <script>
-    $('#ownerProjectList').DataTable({});
+    $('#tableList').DataTable({});
 </script>

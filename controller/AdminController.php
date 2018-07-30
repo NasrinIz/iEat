@@ -15,6 +15,7 @@ class AdminController
     private $news;
     private $advertisements;
     private $orderList;
+    private $menuList;
 
     public function __construct()
     {
@@ -71,6 +72,7 @@ class AdminController
 
     public function showMenuList()
     {
+        $this->menuList = AdminModel::getAllMenus();
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/menuList.php';
         require_once 'views/admin.tail.inc.php';
@@ -122,16 +124,16 @@ class AdminController
 
     public function addMenuItem()
     {
-        AdminModel::addNews($_POST);
+        AdminModel::addMenuItem($_POST);
 
-        $adInfo = AdminModel::getLastInsertedNews();
-        $adInfo = $adInfo['id'];
+        $menuInfo = AdminModel::getLastInsertedMenuItem();
+        $menuId = $menuInfo['menu_id'];
 
         if ($_FILES['img01']['name']) {
-            $this->addPicture($adInfo, 'news');
+            $this->addPicture($menuId, 'menus');
         }
 
-        $path = '?controller=admin&action=showNewsList';
+        $path = '?controller=admin&action=showMenuList';
         CommonUtility::redirect($path);
     }
 
@@ -139,7 +141,8 @@ class AdminController
     {
         $image01 = $_FILES['img01']['name'];
         //$image01_ = 1 . substr($image01, strpos($image01, "."));
-        $imgTarget = "uploads/$type/img/" . $id;
+        $imgTarget = "uploads/".$type."/". $id;
+
         if (!file_exists($imgTarget)) {
             mkdir($imgTarget, 0777, true);
         }

@@ -116,6 +116,7 @@
                                 <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="icon-stack2"></i> <span>Customize Menu</span></a>
                                 <ul>
                                     <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddMenuItem"><i class="fa fa-plus"></i> Add Item</a></li>
+                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="fa fa-list"></i> Menu List</a></li>
                                 </ul>
                             </li>
                             <li>

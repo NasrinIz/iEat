@@ -7,7 +7,7 @@
                 <div><?php echo $this->notification ?></div>
                 <div class="dashboard-content no-print">
                     <fieldset class="bg-white">
-                        <table id="ownerProjectList" class="display table-responsive" style="width:100%">
+                        <table id="tableList" class="display table-responsive" style="width:100%">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -49,5 +49,5 @@
 <!-- /HomePage -->
 
 <script>
-    $('#ownerProjectList').DataTable({});
+    $('#tableList').DataTable({});
 </script>

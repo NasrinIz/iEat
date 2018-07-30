@@ -51,17 +51,15 @@ class AdminModel
      * Add news
      * @param $data
      */
-    public static function addNews($data)
+    public static function addMenuItem($data)
     {
         try {
             $sql = "
-                INSERT INTO `news` (
-                    `title` ,
-                    `content` 
+                INSERT INTO `menus` (
+                    `name`  
                 )
                 VALUES (
-                    '" . $data['title'] . "' ,
-                    '" . $data['content'] . "' 
+                    '" . $data['name'] . "'
                 )
             ";
 
@@ -110,8 +108,8 @@ class AdminModel
     {
         try {
             $sql = "UPDATE `$type`       
-                SET `img` =  '" . $img . "' 
-                WHERE `id` =  '" . $id . "' ";
+                SET `picture` =  '" . $img . "' 
+                WHERE `menu_id` =  '" . $id . "' ";
 
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
@@ -145,13 +143,13 @@ class AdminModel
      * Get last inserted
      * @return mixed
      */
-    public static function getLastInsertedNews()
+    public static function getLastInsertedMenuItem()
     {
         $result = [];
         try {
 
             $db = Db::getInstance();
-            $sql = "SELECT * FROM news ORDER BY `news`.`id` DESC
+            $sql = "SELECT * FROM menus ORDER BY `menus`.`menu_id` DESC
             LIMIT 1 ";
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -230,6 +228,26 @@ class AdminModel
         try {
             $db = Db::getInstance();
             $sql = "SELECT * FROM orders";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $result;
+    }
+
+    /**
+     * Get all orders for customer
+     * @return string
+     */
+    public static function getAllMenus()
+    {
+
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM menus";
             $stmt = $db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

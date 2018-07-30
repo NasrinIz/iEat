@@ -12,13 +12,13 @@
                             <div class="card">
                                 <div class="card-body">
                                     <form class="customForm" method="post"
-                                          action="<?php echo PROJECT_DIR ?>?controller=admin&action=addNews" enctype="multipart/form-data">
+                                          action="<?php echo PROJECT_DIR ?>?controller=admin&action=addMenuItem" enctype="multipart/form-data">
                                         <!-- fieldsets -->
                                         <fieldset>
                                             <h2 class="fs-title">Menu Item</h2>
                                             <h3 class="fs-subtitle"></h3>
-                                            <input type="text" name="title"
-                                                   placeholder="Title"
+                                            <input type="text" name="name"
+                                                   placeholder="Name"
                                                    class="menu_field profileInput"/>
                                             <textarea name="description" placeholder="Description"
                                                       class="menu_field profileTextArea"></textarea>
