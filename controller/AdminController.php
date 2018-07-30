@@ -44,7 +44,7 @@ class AdminController
     public function showDashboard()
     {
         require_once 'views/admin.title.inc.php';
-        require_once 'views/admin/admin_panel.php';
+        require_once 'views/admin/adminPanel.php';
         require_once 'views/admin.tail.inc.php';
     }
 
@@ -97,6 +97,18 @@ class AdminController
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/addAdvertisement.php';
         require_once 'views/admin.tail.inc.php';
+    }
+
+    public function showSetTime()
+    {
+        require_once 'views/admin.title.inc.php';
+        require_once 'views/admin/setTime.php';
+        require_once 'views/admin.tail.inc.php';
+    }
+
+    public function setTime()
+    {
+
     }
 
 

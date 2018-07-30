@@ -113,20 +113,24 @@
                                         href="<?php echo PROJECT_DIR ?>?controller=admin&action=showDashboard"><i
                                             class="icon-home4"></i> <span>Dashboard</span></a></li>
                             <li>
-                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="icon-stack2"></i> <span>Customize Menu</span></a>
+                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="icon-stack"></i> <span>Customize Menu</span></a>
                                 <ul>
-                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddMenuItem"><i class="fa fa-plus"></i> Add Item</a></li>
-                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="fa fa-list"></i> Menu List</a></li>
+                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddMenuItem"><i class="icon-plus2"></i> Add Item</a></li>
+                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showMenuList"><i class="icon-list2"></i> Menu List</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAdvertisementList"><i class="icon-stack2"></i> <span>Advertisement</span></a>
+                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAdvertisementList"><i class="icon-stack"></i> <span>Advertisement</span></a>
                                 <ul>
-                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddAdvertisement"><i class="fa fa-plus"></i> Add Advertisement</a></li>
+                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddAdvertisement"><i class="icon-plus2"></i> Add Advertisement</a></li>
+                                    <li><a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAdvertisementList"><i class="icon-list2"></i> Advertisement List</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showOrderList"><i class="icon-stack2"></i> <span>Order List</span></a>
+                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showOrderList"><i class="icon-list"></i> <span>Order List</span></a>
+                            </li>
+                            <li>
+                                <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showSetTime"><i class="icon-database-time2"></i> <span>Set Order Time</span></a>
                             </li>
                             <!-- /main -->
                         </ul>

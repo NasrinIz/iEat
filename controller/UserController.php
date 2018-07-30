@@ -38,7 +38,7 @@ class UserController
     public function showHomePage()
     {
         require_once 'views/title.inc.php';
-        require_once 'views/user/home_page.php';
+        require_once 'views/user/homePage.php';
         require_once 'views/tail.inc.php';
     }
 

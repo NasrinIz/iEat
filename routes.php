@@ -58,6 +58,8 @@ $controllers = array(
         'showAddAdvertisement',
         'addMenuItem',
         'deleteAdvertisement',
+        'showSetTime',
+        'setTime',
         'deleteMenuItem'
     ],
     'login' => [
