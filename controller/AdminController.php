@@ -12,7 +12,6 @@ class AdminController
     private $notification;
 
     private $userInformation;
-    private $news;
     private $advertisements;
     private $adDetail;
     private $orderList;

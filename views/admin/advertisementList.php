@@ -26,7 +26,7 @@
                                         <?php echo $value['content'] ?>
                                     </td>
                                     <td>
-                                        <a href="<?php echo PROJECT_DIR ?>uploads/advertisements/img/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>" target="_blank">
+                                        <a href="<?php echo PROJECT_DIR ?>uploads/advertisements/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>" target="_blank">
                                             <?php echo $value['img'] ?>
                                         </a>
                                     </td>

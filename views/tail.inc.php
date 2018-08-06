@@ -4,7 +4,7 @@
     <?php foreach ($this->advertisements as $key => $value) { ?>
         <div class="item">
             <h4><?php echo $value['title'] ?></h4>
-            <img src="<?php echo PROJECT_DIR ?>uploads/advertisements/img/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>"/>
+            <img src="<?php echo PROJECT_DIR ?>uploads/advertisements/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>"/>
         </div>
     <?php } ?>
 </div>

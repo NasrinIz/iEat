@@ -108,7 +108,7 @@ class AdminModel
     {
         try {
             $sql = "UPDATE `$type`       
-                SET `picture` =  '" . $img . "' 
+                SET `img` =  '" . $img . "' 
                 WHERE `id` =  '" . $id . "' ";
 
             $db = Db::getInstance();
