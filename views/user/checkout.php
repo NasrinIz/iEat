@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-md-6 col-lg-3 content-group"><span class="text-muted">Payment Details:</span>
                         <ul class="list-condensed list-unstyled invoice-payment-details">
-                            <li><h5>Total Due: <span class="text-right text-semibold"></span></h5></li>
+                            <li><h5>Bill Amount: <span class="text-right text-semibold"></span></h5></li>
                             <?php
                             $sum = 0;
                             foreach ($this->cartInfo as $key=>$value){
@@ -52,7 +52,18 @@
                             }
                             echo $sum;
                             ?>
-                        <li></li>
+                        <li><h5>Tax: <span class="text-right text-semibold"></span></h5></li>
+                            <?php $taxFee = ($sum * 15)/100; echo  $taxFee?>
+                            <li><h5>Delivery fee: <span class="text-right text-semibold"></span></h5></li>
+                            <?php
+                            if($sum > 15){
+                                $deliveryFee = 0;
+                            }else{
+                                $deliveryFee = 3;
+                            }
+                            echo $deliveryFee ?>
+                            <li><h5>Total: <span class="text-right text-semibold"></span></h5></li>
+                            <?php  $totalDue =$sum + $taxFee + $deliveryFee; echo $totalDue?>
                         </ul>
                     </div>
                 </div>
@@ -81,7 +92,7 @@
         <input type="hidden" name="full_name" value="<?php echo $this->cartInfo[0]['customer_name']?>"/>
         <input type="hidden" name="address" value="<?php echo $this->cartInfo[0]['address']?>"/>
         <input type="hidden" name="phone" value="<?php echo $this->cartInfo[0]['phone']?>"/>
-        <input type="hidden" name="total_price" value="<?php echo $sum?>"/>
+        <input type="hidden" name="total_price" value="<?php echo $totalDue?>"/>
         <input type="hidden" name="order_date_time" value="<?php echo date("d-m-y h:m")?>"/>
         <input type="hidden" name="customerId" value="<?php echo !empty($this->userInformation['id']) ? $this->userInformation['id'] : 0?>"/>
     <button type="submit" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
