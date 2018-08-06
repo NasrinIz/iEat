@@ -109,7 +109,7 @@ class AdminModel
         try {
             $sql = "UPDATE `$type`       
                 SET `picture` =  '" . $img . "' 
-                WHERE `menu_id` =  '" . $id . "' ";
+                WHERE `id` =  '" . $id . "' ";
 
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
@@ -184,14 +184,17 @@ class AdminModel
     }
 
     /**
-     * Delete news
-     * @param $id
+     * Edit Ad
+     * @param $data
      */
-    public static function deleteNews($id)
+    public static function editAd($data)
     {
         try {
-            $sql = "DELETE FROM news 
-                         WHERE `id` = $id";
+            $sql = "UPDATE `advertisements`       
+                SET `title` =  '" . $data['title'] . "',
+                    `content` =  '" . $data['content'] . "'
+                WHERE `id` =  '" . $data['id'] . "' ";
+
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -199,6 +202,28 @@ class AdminModel
             $e->getMessage();
         }
     }
+
+    /**
+     * Get ad
+     * @param $id
+     * @return string
+     */
+    public static function getAdById($id)
+    {
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM advertisements WHERE id=$id";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $result;
+    }
+
 
     /**
      * Delete Add

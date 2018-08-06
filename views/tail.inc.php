@@ -1,3 +1,34 @@
+
+<br/>
+<div class="owl-carousel owl-theme">
+    <?php foreach ($this->advertisements as $key => $value) { ?>
+        <div class="item">
+            <h4><?php echo $value['title'] ?></h4>
+            <img src="<?php echo PROJECT_DIR ?>uploads/advertisements/img/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>"/>
+        </div>
+    <?php } ?>
+</div>
+<br/>
+
+<script>
+    $('.owl-carousel').owlCarousel({
+        items: 4,
+        loop: true,
+        margin: 10,
+        nav: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 5
+            }
+        }
+    });
+</script>
 <!-- Footer -->
 
 <div class="navbar-collapse" id="footer">

@@ -7,10 +7,9 @@
                 <div><?php echo $this->notification ?></div>
                 <div class="dashboard-content no-print">
                     <fieldset class="bg-white">
-                        <table id="tableList" class="display table-responsive" style="width:100%">
+                        <table id="adTableList" class="display table-responsive" style="width:100%">
                             <thead>
                             <tr>
-                                <th>Name</th>
                                 <th>Title</th>
                                 <th>Content</th>
                                 <th>Image</th>
@@ -27,17 +26,20 @@
                                         <?php echo $value['content'] ?>
                                     </td>
                                     <td>
-                                        <?php echo $value['img'] ?>
+                                        <a href="<?php echo PROJECT_DIR ?>uploads/advertisements/img/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>" target="_blank">
+                                            <?php echo $value['img'] ?>
+                                        </a>
                                     </td>
-                                    <td>
-                                        <a href="<?php echo PROJECT_DIR ?>?controller=vendor&action=showVendorDetail&vendorId=<?php echo $value['vendor_id'] ?>"><?php $vendorInfo = VendorModel::getVendorById($value['vendor_id']);
-                                            echo $vendorInfo['full_name'] ?></a></td>
                                     <td>
                                         <ul class="icons-list">
                                             <li class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                                                    aria-expanded="false"><i class="icon-menu7"></i></a>
                                                 <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li>
+                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showEditAd&id=<?php echo $value['id'] ?>">
+                                                            Edit<i class="icon-pencil"></i></a>
+                                                    </li>
                                                     <li>
                                                         <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteAd&id=<?php echo $value['id'] ?>">
                                                             Delete<i class="icon-trash"></i></a>
@@ -65,5 +67,5 @@
 <!-- /HomePage -->
 
 <script>
-    $('#tableList').DataTable({});
+    $('#adTableList').DataTable({});
 </script>

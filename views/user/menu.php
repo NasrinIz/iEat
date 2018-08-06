@@ -13,7 +13,7 @@
                              data-sort="<?php echo $value['name'] ?>">
                             <figure class="customCard">
                                 <div class="image">
-                                    <img src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['menu_id'] ?>/<?php echo $value['picture'] ?>"
+                                    <img src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['id'] ?>/<?php echo $value['picture'] ?>"
                                          alt="Card image cap">
                                 </div>
                                 <figcaption>
@@ -23,7 +23,7 @@
                                         <i class="icon-stack"></i>
                                     </div>
                                   <button type="submit" class="submit action-button"><a
-                                            href="<?php echo PROJECT_DIR ?>?controller=user&action=showMenuDetail&menuId=<?php echo $value['menu_id'] ?>">
+                                            href="<?php echo PROJECT_DIR ?>?controller=user&action=showMenuDetail&menuId=<?php echo $value['id'] ?>">
                                             Details</a></button>
                                 </figcaption>
                             </figure>

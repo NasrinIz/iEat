@@ -58,7 +58,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <textarea name="comment" placeholder="Comment"
-                                                                      class="menu_field profileTextArea"><?php echo !empty($this->projectInformation['vendor_quotation']) ? $this->projectInformation['vendor_quotation'] : "" ?></textarea>
+                                                                      class="menu_field profileTextArea"></textarea>
 
                                                             <input type="hidden" name="name"
                                                                    value="<?php echo $this->menuDetail['name']; ?>"/>

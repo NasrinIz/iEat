@@ -14,6 +14,7 @@ class AdminController
     private $userInformation;
     private $news;
     private $advertisements;
+    private $adDetail;
     private $orderList;
     private $menuList;
 
@@ -29,11 +30,6 @@ class AdminController
     private function getUserInformation()
     {
         $this->userInformation = UserModel::getUserByEmail($_SESSION['email']);
-    }
-
-    private function getAllNews()
-    {
-        $this->news = AdminModel::getAllNews();
     }
 
     private function getAllAdvertisements()
@@ -96,6 +92,14 @@ class AdminController
     {
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/addAdvertisement.php';
+        require_once 'views/admin.tail.inc.php';
+    }
+
+    public function showAdvertisementList()
+    {
+        $this->getAllAdvertisements();
+        require_once 'views/admin.title.inc.php';
+        require_once 'views/admin/advertisementList.php';
         require_once 'views/admin.tail.inc.php';
     }
 
@@ -162,18 +166,24 @@ class AdminController
         AdminModel::addPicture($id, $image01, $type);
     }
 
-    public function deleteNews()
+    public function editAd()
     {
-        if ($this->userInformation['user_type'] == 'admin') {
-            AdminModel::deleteNews($_GET['id']);
-        }
-        $path = '?controller=admin&action=showNewsList';
+        AdminModel::editAd($_POST);
+        $path = '?controller=admin&action=showAdvertisementList';
         CommonUtility::redirect($path);
-
     }
+
+    public function showEditAd()
+    {
+        $this->adDetail = AdminModel::getAdById($_GET['id']);
+        require_once 'views/admin.title.inc.php';
+        require_once 'views/admin/editAd.php';
+        require_once 'views/admin.tail.inc.php';
+    }
+
     public function deleteAd()
     {
-        if ($this->userInformation['user_type'] == 'admin') {
+        if ($this->userInformation['is_admin'] == 1) {
             AdminModel::deleteAd($_GET['id']);
         }
         $path = '?controller=admin&action=showAdvertisementList';

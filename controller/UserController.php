@@ -17,15 +17,22 @@ class UserController
     private $subMenu;
     private $menuDetail;
     private $cartInfo;
+    private $advertisements;
 
     public function __construct()
     {
         $this->getUserInformation();
+        $this->getAllAdvertisements();
     }
 
     private function getUserInformation()
     {
         $this->userInformation = UserModel::getUserByEmail($_SESSION['email']);
+    }
+
+    private function getAllAdvertisements()
+    {
+        $this->advertisements = AdminModel::getAllAdvertisements();
     }
 
     public function showProfile()
