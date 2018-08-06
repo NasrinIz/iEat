@@ -1,4 +1,5 @@
 <div class="container-fluid">
+    <div><?php echo $this->notification ?></div>
     <form class="customForm" method="post"
           action="<?php echo PROJECT_DIR ?>?controller=user&action=placeOrder">
     <div class="panel panel-white">
@@ -37,8 +38,8 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-9 content-group"><span class="text-muted">Invoice To:</span>
                         <ul class="list-condensed list-unstyled">
-                        <li> <?php echo $this->userInformation['name']?></li>
-                        <li> <?php echo $this->userInformation['address']?></li>
+                        <li> <?php echo $this->cartInfo[0]['customer_name']?></li>
+                        <li> <?php echo $this->cartInfo[0]['address']?></li>
                         </ul>
                     </div>
                     <div class="col-md-6 col-lg-3 content-group"><span class="text-muted">Payment Details:</span>
@@ -77,12 +78,12 @@
             </div>
         </div>
     </div>
-        <input type="hidden" name="full_name" value="<?php echo $this->userInformation['name']?>"/>
-        <input type="hidden" name="address" value="<?php echo $this->userInformation['address']?>"/>
-        <input type="hidden" name="phone" value="<?php echo $this->userInformation['phone']?>"/>
+        <input type="hidden" name="full_name" value="<?php echo $this->cartInfo[0]['customer_name']?>"/>
+        <input type="hidden" name="address" value="<?php echo $this->cartInfo[0]['address']?>"/>
+        <input type="hidden" name="phone" value="<?php echo $this->cartInfo[0]['phone']?>"/>
         <input type="hidden" name="total_price" value="<?php echo $sum?>"/>
         <input type="hidden" name="order_date_time" value="<?php echo date("d-m-y h:m")?>"/>
-        <input type="hidden" name="customerId" value="<?php echo $this->userInformation['id']?>"/>
+        <input type="hidden" name="customerId" value="<?php echo !empty($this->userInformation['id']) ? $this->userInformation['id'] : 0?>"/>
     <button type="submit" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
                     class="fa fa-plus"></i></b> Place Order</button>
     </form>

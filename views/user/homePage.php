@@ -18,6 +18,7 @@
 <body>
 <div class="background">
     <div class="page-container">
+        <div><?php echo $this->notification ?></div>
         <!--MAIN CONTENT-->
 
         <!-- /HomePage -->

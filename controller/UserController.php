@@ -90,9 +90,24 @@ class UserController
 
     public function placeOrder()
     {
-        UserModel::addOrder($_POST);
-        UserModel::deleteCartInfo();
-        $this->showOrderList();
+        $orderTime = AdminModel::getOrderTime(1);
+
+       $currentHour =date('H');
+
+       /* if((strtotime($orderTime['order_time_from']) <= strtotime($currentHour)) AND (strtotime($currentHour)<=strtotime($orderTime['order_time_to']))) {*/
+           UserModel::addOrder($_POST);
+            UserModel::deleteCartInfo();
+        if(!empty($this->userInformation)) {
+            $this->showOrderList();
+        }else{
+            $this->notification = CommonUtility::showNotification('Your order has been registered successfully.', 'success');
+            $this->showHomePage();
+        }
+      /*  }else{
+            $msg = 'The order time is between ' . $orderTime['order_time_from'] . 'and ' .$orderTime['order_time_to'];
+            $this->notification = CommonUtility::showNotification($msg, 'warning');
+            $this->showMenuPage();
+        }*/
     }
 
     public function proceedToCheckout()

@@ -101,7 +101,7 @@ class UserModel
         $result = "";
         try {
             $db = Db::getInstance();
-            $sql = "SELECT * FROM menus WHERE menu_id = $id";
+            $sql = "SELECT * FROM menus WHERE id = $id";
             $stmt = $db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -329,6 +329,9 @@ class UserModel
         try {
             $sql = "
                 INSERT INTO `cart` (
+                    `customer_name` ,
+                    `phone` ,
+                    `address` ,
                     `name` ,
                     `count` ,
                     `amount`,
@@ -336,6 +339,9 @@ class UserModel
                     
                 )
                 VALUES (
+                    '" . $data['customerName'] . "' ,
+                    '" . $data['phone'] . "' ,
+                    '" . $data['address'] . "' ,
                     '" . $data['name'] . "' ,
                     '" . $data['count'] . "' ,
                     '" . $data['amount'] . "' ,

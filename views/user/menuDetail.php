@@ -57,6 +57,18 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <input type="text" name="customerName"
+                                                                   placeholder="Customer Name"
+                                                                   class="menu_field profileTextArea"
+                                                                   value="<?php echo !empty($this->userInformation['name']) ? $this->userInformation['name'] : 'Guest' ?>"/>
+                                                            <?php if (empty($this->userInformation['address'])) { ?>
+                                                                <textarea name="address" placeholder="Address"
+                                                                          class="menu_field profileTextArea"></textarea>
+                                                            <?php } ?>
+                                                            <?php if (empty($this->userInformation['phone'])) { ?>
+                                                                <input type="text" name="phone" placeholder="Phone"
+                                                                       class="menu_field profileTextArea"/>
+                                                            <?php } ?>
                                                             <textarea name="comment" placeholder="Comment"
                                                                       class="menu_field profileTextArea"></textarea>
 
@@ -65,7 +77,7 @@
                                                             <input type="hidden" name="count"
                                                                    value="<?php echo 1 ?>"/>
                                                             <input type="hidden" name="amount"
-                                                                   value="<?php echo 20?>"/>
+                                                                   value="<?php echo 20 ?>"/>
 
 
                                                         </div>
