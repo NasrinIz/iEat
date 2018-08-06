@@ -16,6 +16,7 @@ class AdminController
     private $adDetail;
     private $orderList;
     private $menuList;
+    private $orderTime;
 
     public function __construct()
     {
@@ -29,6 +30,11 @@ class AdminController
     private function getUserInformation()
     {
         $this->userInformation = UserModel::getUserByEmail($_SESSION['email']);
+    }
+
+    private function getOrderTime()
+    {
+        $this->orderTime = AdminModel::getOrderTime(1);
     }
 
     private function getAllAdvertisements()
@@ -104,6 +110,7 @@ class AdminController
 
     public function showSetTime()
     {
+        $this->getOrderTime();
         require_once 'views/admin.title.inc.php';
         require_once 'views/admin/setTime.php';
         require_once 'views/admin.tail.inc.php';
@@ -111,7 +118,10 @@ class AdminController
 
     public function setTime()
     {
+        AdminModel::setOrderTime($_POST, 1);
 
+        $path = '?controller=admin&action=showSetTime';
+        CommonUtility::redirect($path);
     }
 
 

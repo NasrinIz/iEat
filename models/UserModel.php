@@ -154,6 +154,7 @@ class UserModel
     }
 
 
+
     /**
      * Get owner profile info by email
      * @param $type

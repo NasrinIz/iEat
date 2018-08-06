@@ -120,6 +120,48 @@ class AdminModel
     }
 
     /**
+     * Add picture
+     * @param $data
+     * @param $storeId
+     */
+    public static function setOrderTime($data, $storeId)
+    {
+        try {
+            $sql = "UPDATE `timings`       
+                SET `order_time_from` =  '" . $data['order_time_from'] . "' ,
+                `order_time_to` =  '" . $data['order_time_to'] . "' 
+                WHERE `store_id` =  '" . $storeId . "' ";
+
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
+
+    /**
+     * Get user by email
+     * @param $storeId
+     * @return string
+     */
+    public static function getOrderTime($storeId)
+    {
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM timings WHERE store_id = '$storeId'";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $result;
+    }
+
+    /**
      * Update Status
      * @param $id
      * @param $status
