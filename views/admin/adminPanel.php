@@ -18,7 +18,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showUsersList" class="btn border-teal text-teal btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><i class="icon-user"></i></a>
+                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showUsersList" class="btn border-teal text-teal btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="icon-user"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Users</div>
@@ -34,7 +34,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showBrancheList" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><i class="fa fa-project-diagram"></i></a>
+                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showBrancheList" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-project-diagram"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Branches</div>
@@ -50,7 +50,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showOrderList" class="btn border-indigo-400 text-indigo-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><i class="fa fa-shopping-basket"></i></a>
+                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showOrderList" class="btn border-indigo-400 text-indigo-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-shopping-basket"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Orders</div>
@@ -85,21 +85,21 @@
                     <div class="row text-center">
                         <div class="col-md-4">
                             <div class="content-group">
-                                <h5 class="text-semibold no-margin"><i class="icon-calendar5 position-left text-slate"></i></h5>
+                                <h5 class="text-semibold no-margin"><strong><i class="icon-calendar5 position-left text-slate"></i></strong></h5>
                                 <span class="text-muted text-size-small"></span>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="content-group">
-                                <h5 class="text-semibold no-margin"><i class="icon-calendar52 position-left text-slate"></i></h5>
+                                <h5 class="text-semibold no-margin"><strong><i class="icon-calendar52 position-left text-slate"></i></strong></h5>
                                 <span class="text-muted text-size-small"></span>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="content-group">
-                                <h5 class="text-semibold no-margin"><i class="icon-cash3 position-left text-slate"></i></h5>
+                                <h5 class="text-semibold no-margin"><strong><i class="icon-cash3 position-left text-slate"></i></strong></h5>
                                 <span class="text-muted text-size-small"></span>
                             </div>
                         </div>

@@ -19,15 +19,15 @@
                                             <h2 class="fs-title">Profile Details</h2>
                                             <h3 class="fs-subtitle"></h3>
                                             <div id="personalDetail">
-                                                <label class="font-weight-bold">Full Name</label>
+                                                <label for="name" class="font-weight-bold">Full Name</label>
                                                 <input type="text" name="name"
                                                                             placeholder="Full Name"
                                                                             class="menu_field profileInput" value="<?php echo !empty($this->userInformation['name']) ? $this->userInformation['name'] : "" ?>"/>
-                                                <label class="font-weight-bold">Phone</label>
+                                                <label for="phone" class="font-weight-bold">Phone</label>
                                                 <input type="text" name="phone" placeholder="Phone"
                                                        class="menu_field profileInput"
                                                        value="<?php echo !empty($this->userInformation['phone']) ? $this->userInformation['phone'] : "" ?>"/>
-                                                <label class="font-weight-bold">Address</label>
+                                                <label for="address" class="font-weight-bold">Address</label>
                                                 <textarea name="address" placeholder="Address"
                                                           class="menu_field profileTextArea"><?php echo !empty($this->userInformation['address']) ? $this->userInformation['address'] : "" ?></textarea>
                                             </div>

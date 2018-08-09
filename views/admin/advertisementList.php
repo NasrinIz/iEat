@@ -34,15 +34,15 @@
                                         <ul class="icons-list">
                                             <li class="dropdown">
                                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                                                   aria-expanded="false"><i class="icon-menu7"></i></a>
+                                                   aria-expanded="false"><strong><i class="icon-menu7"></i></strong></a>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
                                                         <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showEditAd&id=<?php echo $value['id'] ?>">
-                                                            Edit<i class="icon-pencil"></i></a>
+                                                            Edit<strong><i class="icon-pencil"></i></strong></a>
                                                     </li>
                                                     <li>
                                                         <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteAd&id=<?php echo $value['id'] ?>">
-                                                            Delete<i class="icon-trash"></i></a>
+                                                            Delete<strong><i class="icon-trash"></i></strong></a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -52,8 +52,8 @@
                             <?php } ?>
                             </tbody>
                         </table>
-                        <button type="button" class="btn bg-teal-400 btn-labeled legitRipple"><b><i
-                                        class="fa fa-plus"></i></b>
+                        <button type="button" class="btn bg-teal-400 btn-labeled legitRipple"><strong><i
+                                        class="fa fa-plus"></i></strong>
                             <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddAdvertisement">Add
                                 Advertisement</a>
                         </button>

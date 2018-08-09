@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>iEat</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="X-UA-Compatible" content="IE=7">
@@ -40,7 +41,6 @@
         <div class="form">
 
             <form class="register-form" method="post" action="?controller=login&action=register" onsubmit="">
-                <a href="<?php echo PROJECT_DIR ?>?controller=pages&action=home"></a>
                 <hr>
 
                 <input type="email" id="username" name="email" autocomplete="email" placeholder="* Email address"

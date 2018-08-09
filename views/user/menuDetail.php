@@ -33,8 +33,8 @@
                                         <button type="button"
                                                 class="btn bg-warning-400 btn-labeled legitRipple"
                                                 data-toggle="modal"
-                                                data-target="#applyModal"><b><i
-                                                        class="icon-circle-right2"></i></b> Add To Cart
+                                                data-target="#applyModal"><strong><i
+                                                        class="icon-circle-right2"></i></strong> Add To Cart
                                         </button>
                                     </fieldset>
 

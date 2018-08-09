@@ -20,7 +20,7 @@
                                     <h5><?php echo $value['title'] ?></h5>
                                     <p><?php echo $value['content'] ?></p>
                                     <div class="rectangle">
-                                        <i class="icon-stack"></i>
+                                      <strong><i class="icon-stack"></i></strong>
                                     </div>
                                   <button type="submit" class="submit action-button"><a
                                             href="<?php echo PROJECT_DIR ?>?controller=user&action=showMenuDetail&menuId=<?php echo $value['id'] ?>">

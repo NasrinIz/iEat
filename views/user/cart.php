@@ -35,8 +35,8 @@
                             <?php } ?>
                             </tbody>
                         </table>
-                            <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
-                                        class="fa fa-plus"></i></b>
+                            <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><strong><i
+                                        class="fa fa-plus"></i></strong>
                                 <a href="<?php echo PROJECT_DIR ?>?controller=user&action=proceedToCheckout">
                                     Proceed to Checkout</a></button>
                     </fieldset>
