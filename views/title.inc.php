@@ -83,10 +83,6 @@
             <li class="float-right">
                 <div class="nav toggle">
                     <div class="btn-group">
-                        <p class="navbar-text"><span
-                                    class="label bg-pink-400"> <?php echo $this->userInformation['user_type'] ?></span>
-                        </p>
-                        </a>
                     </div>
 
                     <div class="btn-group">
