@@ -72,16 +72,20 @@
                 <table class="table table-lg cke_show_border">
                     <thead>
                     <tr>
-                        <th>Description</th>
+                        <th>Name</th>
+                        <th class="col-sm-1">Count</th>
                         <th class="col-sm-1">Comment</th>
+                        <th class="col-sm-1">Amount</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
                     foreach ($this->cartInfo as $key=>$value){?>
                         <tr>
-                            <td></td>
+                            <td><?php echo  $value['name']?></td>
+                            <td><?php echo  $value['count']?></td>
                             <td><?php echo  $value['comment']?></td>
+                            <td><?php echo  $value['amount']?></td>
                         </tr>
                   <?php  } ?>
                     </tbody>
