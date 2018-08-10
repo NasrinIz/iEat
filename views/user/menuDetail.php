@@ -27,6 +27,10 @@
                                         echo $this->menuDetail['name'];
                                         echo '<br/>';
                                         echo '<br/>';
+                                        echo '<br/>';
+                                        echo $this->menuDetail['content'];
+                                        echo '<br/>';
+                                        echo '<br/>';
                                         ?>
 
 

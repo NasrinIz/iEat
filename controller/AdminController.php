@@ -14,6 +14,7 @@ class AdminController
     private $userInformation;
     private $advertisements;
     private $adDetail;
+    private $menuItem;
     private $orderList;
     private $menuList;
     private $orderTime;
@@ -152,7 +153,7 @@ class AdminController
         AdminModel::addMenuItem($_POST);
 
         $menuInfo = AdminModel::getLastInsertedMenuItem();
-        $menuId = $menuInfo['menu_id'];
+        $menuId = $menuInfo['id'];
 
         if ($_FILES['img01']['name']) {
             $this->addPicture($menuId, 'menus');
@@ -190,12 +191,37 @@ class AdminController
         require_once 'views/admin.tail.inc.php';
     }
 
+    public function showEditMenuItem()
+    {
+        $this->menuItem = AdminModel::getMenuItemById($_GET['id']);
+        require_once 'views/admin.title.inc.php';
+        require_once 'views/admin/editMenuItem.php';
+        require_once 'views/admin.tail.inc.php';
+    }
+
+    public function editMenuItem()
+    {
+        AdminModel::editMenuItem($_POST);
+        $path = '?controller=admin&action=showMenuList';
+        CommonUtility::redirect($path);
+    }
+
     public function deleteAd()
     {
         if ($this->userInformation['is_admin'] == 1) {
             AdminModel::deleteAd($_GET['id']);
         }
         $path = '?controller=admin&action=showAdvertisementList';
+        CommonUtility::redirect($path);
+
+    }
+
+    public function deleteMenuItem()
+    {
+        if ($this->userInformation['is_admin'] == 1) {
+            AdminModel::deleteMenuItem($_GET['id']);
+        }
+        $path = '?controller=admin&action=showMenuList';
         CommonUtility::redirect($path);
 
     }

@@ -11,8 +11,8 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Title</th>
                                 <th>Content</th>
+                                <th>Calories</th>
                                 <th>Image</th>
                                 <th>Menu</th>
                             </tr>
@@ -24,15 +24,15 @@
                                         <?php echo $value['name'] ?>
                                     </td>
                                     <td>
-
+                                        <?php echo $value['content'] ?>
                                     </td>
                                     <td>
-
+                                        <?php echo $value['calories'] ?>
                                     </td>
                                     <td>
                                         <a target="_blank"
-                                           href="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['menu_id'] ?>/<?php echo $value['picture'] ?>">
-                                            <?php echo $value['picture'] ?>
+                                           href="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>">
+                                            <?php echo $value['img'] ?>
                                         </a>
                                     </td>
                                     <td>
@@ -42,8 +42,12 @@
                                                    aria-expanded="false"><strong><i class="icon-menu7"></i></strong></a>
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
-                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteMenuItem&id=<?php echo $value['menu_id'] ?>">
-                                                            Delete<strong><i class="icon-trash"></i></strong></a>
+                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showEditMenuItem&id=<?php echo $value['id'] ?>">
+                                                             Edit<strong> <i class="icon-pencil"></i></strong></a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteMenuItem&id=<?php echo $value['id'] ?>">
+                                                             Delete<strong> <i class="icon-trash"></i></strong></a>
                                                     </li>
                                                 </ul>
                                             </li>

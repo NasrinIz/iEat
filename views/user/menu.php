@@ -13,7 +13,7 @@
                              data-sort="<?php echo $value['name'] ?>">
                             <figure class="customCard">
                                 <div class="image">
-                                    <img src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['id'] ?>/<?php echo $value['picture'] ?>"
+                                    <img src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>"
                                          alt="Card image cap">
                                 </div>
                                 <figcaption>

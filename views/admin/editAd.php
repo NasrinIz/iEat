@@ -39,9 +39,3 @@
     <!-- end container fluid -->
 </div>
 <!-- /HomePage -->
-
-<script>
-    $('#openVisitDate').datetimepicker({
-        format: 'DD-MM-YYYY'
-    });
-</script>

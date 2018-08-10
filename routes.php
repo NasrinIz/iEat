@@ -63,7 +63,9 @@ $controllers = array(
         'deleteAd',
         'showSetTime',
         'setTime',
-        'deleteMenuItem'
+        'deleteMenuItem',
+        'showEditMenuItem',
+        'editMenuItem'
     ],
     'login' => [
         'showLoginRegister',

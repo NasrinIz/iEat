@@ -28,38 +28,23 @@ class AdminModel
     }
 
     /**
-     * Get all news
-     */
-    public static function getAllNews()
-    {
-        $result = "";
-        try {
-            $db = Db::getInstance();
-            $sql = "SELECT * FROM news";
-
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $e->getMessage();
-        }
-        return $result;
-    }
-
-
-    /**
      * Add news
      * @param $data
      */
     public static function addMenuItem($data)
     {
         try {
-            $sql = "
+          echo  $sql = "
                 INSERT INTO `menus` (
-                    `name`  
+                    `name` ,
+                    `content` ,
+                    `calories` 
                 )
                 VALUES (
-                    '" . $data['name'] . "'
+                    '" . $data['name'] . "' ,
+                    '" . $data['content'] . "' ,
+                    '" . $data['calories'] . "' 
+        
                 )
             ";
 
@@ -70,7 +55,6 @@ class AdminModel
             $e->getMessage();
         }
     }
-
 
     /**
      * Add news
@@ -191,7 +175,7 @@ class AdminModel
         try {
 
             $db = Db::getInstance();
-            $sql = "SELECT * FROM menus ORDER BY `menus`.`menu_id` DESC
+            $sql = "SELECT * FROM menus ORDER BY `menus`.`id` DESC
             LIMIT 1 ";
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -246,6 +230,27 @@ class AdminModel
     }
 
     /**
+     * Edit menu
+     * @param $data
+     */
+    public static function editMenuItem($data)
+    {
+        try {
+            $sql = "UPDATE `menus`       
+                SET `name` =  '" . $data['name'] . "',
+                    `content` =  '" . $data['content'] . "',
+                    `calories` =  '" . $data['calories'] . "'
+                WHERE `id` =  '" . $data['id'] . "' ";
+
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
+    /**
      * Get ad
      * @param $id
      * @return string
@@ -266,6 +271,27 @@ class AdminModel
         return $result;
     }
 
+    /**
+     * Get Menu Item
+     * @param $id
+     * @return string
+     */
+    public static function getMenuItemById($id)
+    {
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM menus WHERE id=$id";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+        return $result;
+    }
+
 
     /**
      * Delete Add
@@ -275,6 +301,23 @@ class AdminModel
     {
         try {
             $sql = "DELETE FROM advertisements
+                         WHERE `id` = $id";
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
+    /**
+     * Delete menu item
+     * @param $id
+     */
+    public static function deleteMenuItem($id)
+    {
+        try {
+            $sql = "DELETE FROM menus
                          WHERE `id` = $id";
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
