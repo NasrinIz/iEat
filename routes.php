@@ -65,7 +65,8 @@ $controllers = array(
         'setTime',
         'deleteMenuItem',
         'showEditMenuItem',
-        'editMenuItem'
+        'editMenuItem',
+        'deleteOrder'
     ],
     'login' => [
         'showLoginRegister',

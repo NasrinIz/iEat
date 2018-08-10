@@ -12,7 +12,8 @@
                         <div class="col-md-8">
                             <div class="card">
                                 <div class="card-body">
-                                    <img class="element-center img-responsive img-fluid" src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $this->menuDetail['id'] ?>/<?php echo $this->menuDetail['img'] ?>"
+                                    <img class="element-center img-responsive img-fluid"
+                                         src="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $this->menuDetail['id'] ?>/<?php echo $this->menuDetail['img'] ?>"
                                          alt="Card image cap">
                                 </div>
                             </div>
@@ -81,10 +82,16 @@
                                                             <?php if (empty($this->userInformation['address'])) { ?>
                                                                 <textarea name="address" placeholder="Address"
                                                                           class="menu_field profileTextArea"></textarea>
+                                                            <?php } else { ?>
+                                                                <input type="hidden" name="address"
+                                                                       value="<?php echo $this->userInformation['address'] ?>"/>
                                                             <?php } ?>
                                                             <?php if (empty($this->userInformation['phone'])) { ?>
                                                                 <input type="text" name="phone" placeholder="Phone"
                                                                        class="menu_field profileTextArea"/>
+                                                            <?php } else { ?>
+                                                                <input type="hidden" name="phone"
+                                                                       value="<?php echo $this->userInformation['phone'] ?>"/>
                                                             <?php } ?>
                                                             <textarea name="comment" placeholder="Comment"
                                                                       class="menu_field profileTextArea"></textarea>

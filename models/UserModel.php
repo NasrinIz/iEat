@@ -381,7 +381,7 @@ class UserModel
                     '" . $data['address'] . "' ,
                     '" . $data['phone'] . "' ,  
                     '" . $data['total_price'] . "' ,
-                    '" . $data['description'] . "' ,
+                    '" . $data['comment'] . "' ,
                     '" . $data['order_date_time'] . "' 
                 )
             ";

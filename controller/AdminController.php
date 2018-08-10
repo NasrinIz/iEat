@@ -226,4 +226,14 @@ class AdminController
 
     }
 
+    public function deleteOrder()
+    {
+        if ($this->userInformation['is_admin'] == 1) {
+            AdminModel::deleteOrder($_GET['id']);
+        }
+        $path = '?controller=admin&action=showOrderList';
+        CommonUtility::redirect($path);
+
+    }
+
 }

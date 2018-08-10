@@ -93,7 +93,7 @@
         <input type="hidden" name="address" value="<?php echo $this->cartInfo[0]['address']?>"/>
         <input type="hidden" name="phone" value="<?php echo $this->cartInfo[0]['phone']?>"/>
         <input type="hidden" name="total_price" value="<?php echo $totalDue?>"/>
-        <input type="hidden" name="order_date_time" value="<?php echo date("d-m-y h:m")?>"/>
+        <input type="hidden" name="order_date_time" value="<?php echo date('Y-m-d H:i:s')?>"/>
         <input type="hidden" name="customerId" value="<?php echo !empty($this->userInformation['id']) ? $this->userInformation['id'] : 0?>"/>
     <button type="submit" class="btn bg-warning-400 btn-labeled legitRipple"><strong><i
                     class="fa fa-plus"></i></strong> Place Order</button>

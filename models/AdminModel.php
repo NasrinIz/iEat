@@ -331,6 +331,23 @@ class AdminModel
     }
 
     /**
+     * Delete order
+     * @param $id
+     */
+    public static function deleteOrder($id)
+    {
+        try {
+            $sql = "DELETE FROM orders
+                         WHERE `order_id` = $id";
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
+    /**
      * Get all orders for customer
      * @return string
      */

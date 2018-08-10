@@ -91,22 +91,22 @@ class UserController
     {
         $orderTime = AdminModel::getOrderTime(1);
 
-       $currentHour =date('H');
+        $currentHour = date('H');
 
-       /* if((strtotime($orderTime['order_time_from']) <= strtotime($currentHour)) AND (strtotime($currentHour)<=strtotime($orderTime['order_time_to']))) {*/
-           UserModel::addOrder($_POST);
-            UserModel::deleteCartInfo();
-        if(!empty($this->userInformation)) {
+        /* if((strtotime($orderTime['order_time_from']) <= strtotime($currentHour)) AND (strtotime($currentHour)<=strtotime($orderTime['order_time_to']))) {*/
+        UserModel::addOrder($_POST);
+        UserModel::deleteCartInfo();
+        if (!empty($this->userInformation)) {
             $this->showOrderList();
-        }else{
+        } else {
             $this->notification = CommonUtility::showNotification('Your order has been registered successfully.', 'success');
             $this->showHomePage();
         }
-      /*  }else{
-            $msg = 'The order time is between ' . $orderTime['order_time_from'] . 'and ' .$orderTime['order_time_to'];
-            $this->notification = CommonUtility::showNotification($msg, 'warning');
-            $this->showMenuPage();
-        }*/
+        /*  }else{
+              $msg = 'The order time is between ' . $orderTime['order_time_from'] . 'and ' .$orderTime['order_time_to'];
+              $this->notification = CommonUtility::showNotification($msg, 'warning');
+              $this->showMenuPage();
+          }*/
     }
 
     public function proceedToCheckout()
@@ -129,8 +129,10 @@ class UserController
 
     public function completeProfile()
     {
-            UserModel::completeProfile($_POST);
-            $this->showProfile();
+        UserModel::completeProfile($_POST);
+        $path = '?controller=user&action=showProfile';
+        CommonUtility::redirect($path);
+
     }
 
 }
