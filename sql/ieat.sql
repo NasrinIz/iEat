@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2018 at 07:02 PM
+-- Generation Time: Aug 10, 2018 at 09:38 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -245,12 +245,13 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `customer_id`, `full_name`, `province_id`, `address`, `zip_code`, `phone`, `discount`, `total_price`, `payment_type_id`, `delivery_type_id`, `description`, `feedback`, `order_date_time`, `status`) VALUES
-(1, 1, 'Mehran Ishanian', 1, '152 Rene Levesque', 'A1B2C3', '+151412345', 0.00, 50.00, 1, 2, NULL, NULL, '2018-07-26 00:00:00', 6),
-(4, 3, 'Nasrin izadi', NULL, 'Towers\r\n607', NULL, '5149991428', NULL, 160.00, NULL, NULL, '', NULL, '2018-07-18 03:07:00', 3),
-(5, 3, 'Nasrin izadi', NULL, 'Towers\r\n607', NULL, '5149991428', NULL, 20.00, NULL, NULL, '', NULL, '2018-07-18 04:07:00', 1),
-(6, 4, 'Nasrin Izadi', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 23.00, NULL, NULL, '', NULL, '2010-08-18 06:08:00', 3),
-(7, 0, 'Nasrin Izadi', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 18.40, NULL, NULL, '', NULL, '2010-08-18 06:08:00', 0),
-(8, 5, 'Nasrin Izadi', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 23.00, NULL, NULL, '', NULL, '2010-08-18 06:08:00', 0);
+(12, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 43.70, NULL, NULL, '', NULL, '2018-08-10 20:52:19', 0),
+(13, 5, 'user2@test.com', NULL, '#607, Towers', NULL, '5149991428', NULL, 41.40, NULL, NULL, '', NULL, '2018-08-10 20:53:38', 3),
+(14, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 20.70, NULL, NULL, '', NULL, '2018-08-10 20:54:53', 2),
+(15, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 43.70, NULL, NULL, '', NULL, '2018-08-10 21:09:00', 1),
+(16, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 63.25, NULL, NULL, '', NULL, '2018-08-10 21:29:09', 1),
+(17, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 40.25, NULL, NULL, '', NULL, '2018-08-10 21:32:32', 1),
+(18, 4, 'user@test.com', NULL, '#409, 198 Ann', NULL, '5149991428', NULL, 40.25, NULL, NULL, '', NULL, '2018-08-10 21:32:32', 0);
 
 -- --------------------------------------------------------
 
@@ -264,16 +265,23 @@ CREATE TABLE `order_details` (
   `quantity` int(2) NOT NULL DEFAULT '1',
   `menu_id` int(3) NOT NULL,
   `sub_menu_id` int(3) NOT NULL,
-  `price` double(6,2) NOT NULL
+  `price` double(6,2) NOT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `count` int(11) DEFAULT NULL,
+  `amount` float(12,2) DEFAULT NULL,
+  `comment` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `order_details`
 --
 
-INSERT INTO `order_details` (`order_detail_id`, `order_id`, `quantity`, `menu_id`, `sub_menu_id`, `price`) VALUES
-(1, 1, 1, 1, 4, 6.00),
-(2, 1, 2, 2, 10, 7.00);
+INSERT INTO `order_details` (`order_detail_id`, `order_id`, `quantity`, `menu_id`, `sub_menu_id`, `price`, `name`, `count`, `amount`, `comment`) VALUES
+(1, 1, 1, 1, 4, 6.00, NULL, NULL, NULL, NULL),
+(2, 1, 2, 2, 10, 7.00, NULL, NULL, NULL, NULL),
+(3, 16, 1, 0, 0, 0.00, '', 0, 0.00, ''),
+(4, 18, 1, 0, 0, 0.00, 'Oven Roasted Chicken ', 1, 15.00, ''),
+(5, 18, 1, 0, 0, 0.00, 'Turkey Breast', 1, 20.00, 'No Onion');
 
 -- --------------------------------------------------------
 
@@ -422,8 +430,14 @@ INSERT INTO `users` (`id`, `username`, `password`, `name`, `phone`, `address`, `
 (1, 'nasrin_ptn@yahoo.com', '$2y$10$07zH7l.FZWhlLxzVTba.5u3KVI/jce3OOwcdPKuihfxUSZ6DEK8Ze', 'Nasrin izadi', '5149991428', 'Towers\r\n607', 0),
 (2, 'admin@test.com', '$2y$10$psQAnBdkrkVM0vskuRDGB.2X64cG.f2mJS1Mx9LcEvIVYs.MBXpme', NULL, NULL, NULL, 1),
 (3, 'nasrin@test.com', '$2y$10$MciS55HjwtHfnH8sY8ogW.aTv4IadPU3RIhuX2d1bUoBJDX97zqLm', 'Nasrin izadi', '5149991428', 'Towers\r\n607', 0),
-(4, 'user@test.com', '$2y$10$QBqFAw.sFJXmkLiNG7qLgeMVTDr1gO89nV6m4c1ydGU7bSVHK2l9O', 'Nasrin Izadi', '5149991428', '#409, 198 Ann', 0),
-(5, 'user2@test.com', '$2y$10$0qlrcNI4.7h99qilvdzmselmvrxShfcrQmtqx1LMVbSAGRQF.5az.', NULL, NULL, NULL, 0);
+(4, 'user@test.com', '$2y$10$QBqFAw.sFJXmkLiNG7qLgeMVTDr1gO89nV6m4c1ydGU7bSVHK2l9O', 'Jane Doe', '5149991428', '#409, 198 Ann', 0),
+(5, 'user2@test.com', '$2y$10$0qlrcNI4.7h99qilvdzmselmvrxShfcrQmtqx1LMVbSAGRQF.5az.', 'John Doe', '5149991428', '#607, Towers', 0),
+(6, 'golnoosh@test.com', '$2y$10$iv.xibZEmxtrCjNj5nyPJekqMVKg4kYMig6AFHJ7KHS93oadTq/xm', NULL, NULL, NULL, 0),
+(7, 'sohrab@test.com', '$2y$10$VxuIvlQ8u/w.4ulF6lWbT.QW5FekyzNNmiTbKmPpJfmD5velwrxRG', NULL, NULL, NULL, 0),
+(8, 'shahram@test.com', '$2y$10$P7Ul2ognb4BL12ooRz/Vqusz9sdvLZJtWMrjrg9LkMAMCk/0CrXqO', NULL, NULL, NULL, 0),
+(9, 'maria@test.com', '$2y$10$LM1M1jpUna1agdrhkt2bD.tYxCjv1D0wE1y5u7NVFdZgRo/kZcaEK', NULL, NULL, NULL, 0),
+(10, 'mehran@test.com', '$2y$10$8QPBCbSpsA9UGmcoIuCNeOHY2j3l231jpauyy91vZfmlhGVbXO/Ii', NULL, NULL, NULL, 0),
+(11, 'maryam@test.com', '$2y$10$QKXcuZyTxin1tNd3TcrFwe7N4w1s.xdJYcN6.uIxtFSFipcZFunwS', NULL, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -654,7 +668,7 @@ ALTER TABLE `advertisements`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `customers`
@@ -684,13 +698,13 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `payment_types`
@@ -720,7 +734,7 @@ ALTER TABLE `sub_menus`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
