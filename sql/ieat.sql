@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2018 at 06:31 PM
+-- Generation Time: Aug 10, 2018 at 07:02 PM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -73,8 +73,8 @@ CREATE TABLE `advertisements` (
 --
 
 INSERT INTO `advertisements` (`id`, `title`, `content`, `img`) VALUES
-(2, 'Sample 2', '', 'eaters-collective-172257-unsplash.jpg'),
-(3, 'Sample ad 3', '', 'daria-nepriakhina-12336-unsplash.jpg');
+(4, 'Sample 1', 'Sample Cotent', 'cherry.jpg'),
+(5, 'Sample 3', '', 'open24.jpg');
 
 -- --------------------------------------------------------
 
@@ -213,7 +213,8 @@ INSERT INTO `menus` (`id`, `name`, `content`, `calories`, `amount`, `img`) VALUE
 (28, 'Turkey Breast', 'Enjoy a low-fat flavor feast of premium sliced turkey breast', 300, 20.00, 'Turkey_Breast_594x334.jpg'),
 (29, 'Chicken & Bacon Ranch Melt ', 'The Chicken & Bacon Ranch Melt sandwich is packed with tender all-white meat chicken with seasoning and marinade, savory bacon, melty Montery cheddar cheese', 400, 16.00, 'RPLC_chicken_bacon_ranch.jpg'),
 (30, 'Steak & Cheese', 'Our Steak & Cheese sandwich is where warm, delicious steak gets topped with melty cheesiness. Get crazy with veggies and sauces to make it what you want.', 300, 15.00, 'SOCT_594x334.jpg'),
-(31, 'Meatball Marinara ', 'The Meatball Marinara sandwich is drenched in irresistible marinara sauce, sprinkled with Parmesan cheese, topped with whatever you want (no judgement) and perfectly toasted just for you.', 300, 17.00, 'RPLC_meatball_marinara.jpg');
+(31, 'Meatball Marinara ', 'The Meatball Marinara sandwich is drenched in irresistible marinara sauce, sprinkled with Parmesan cheese, topped with whatever you want (no judgement) and perfectly toasted just for you.', 300, 17.00, 'RPLC_meatball_marinara.jpg'),
+(32, 'Tuna', 'Our tasty Tuna Sandwich is simply sumptuous. Made with flaked tuna, mixed with mayo and your choice of fresh vegetables served on freshly baked bread. This favourite contains no artificial colours or flavours.', 480, 20.00, 'RPLC-sandwich-Tuna-594x334.jpg');
 
 -- --------------------------------------------------------
 
@@ -647,7 +648,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `advertisements`
 --
 ALTER TABLE `advertisements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `cart`
@@ -677,7 +678,7 @@ ALTER TABLE `employees`
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `orders`
