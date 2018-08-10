@@ -84,9 +84,12 @@ button a {
     background-attachment: fixed;;
 }
 
-.homePageBackground {
-    background-image: url("../img/backgrounds/makeSalsa.jpg");
-    background-repeat: repeat;
+.moreSpaceBackground {
+    background-image: url("../img/backgrounds/moreSpace.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    background-attachment: fixed;;
 }
 
 .adminBackground {
