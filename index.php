@@ -11,8 +11,7 @@ define("PROJECT_DIR","http://".$_SERVER['HTTP_HOST']."/iEat/");
 if (isset($_GET['controller']) && isset($_GET['action'])) {
     $controller = $_GET['controller'];
     $action = $_GET['action'];
-}
-else
+} else
 {
     $controller = 'user';
     $action = 'showHomePage';
