@@ -8,8 +8,7 @@ define("PATH_DIR","http://".$_SERVER['HTTP_HOST']."/");
 define("ROOT_DIR",dirname(__FILE__) ."/");
 define("PROJECT_DIR","http://".$_SERVER['HTTP_HOST']."/iEat/");
 
-if (isset($_GET['controller']) && isset($_GET['action']))
-{
+if (isset($_GET['controller']) && isset($_GET['action'])) {
     $controller = $_GET['controller'];
     $action = $_GET['action'];
 }
