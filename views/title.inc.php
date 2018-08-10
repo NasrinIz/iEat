@@ -64,8 +64,6 @@
         <li><a href="<?php echo PROJECT_DIR ?>?controller=user&action=showHomePage"><i class="fa fa-home"></i> Home</a>
         </li>
 
-        <li><a href="<?php echo PROJECT_DIR ?>?controller=user&action=showOrderList"><i class="icon-stack"></i>
-                Orders</a></li>
 
         <li><a href="<?php echo PROJECT_DIR ?>?controller=user&action=showMenuPage"><i class="icon-stack"></i>
                 Menu</a></li>
@@ -103,10 +101,9 @@
                                                 class="fa fa-user-circle"></i> Your
                                         Profile</a>
                                 </li>
-                            <?php }?>
-                            <li><a href="#"> <i
-                                            class="fa fa-envelope"></i>Messages</a></li>
-
+                            <?php } ?>
+                            <li><a href="<?php echo PROJECT_DIR ?>?controller=user&action=showOrderList"> <i
+                                            class="icon-stack"></i>Order List</a></li>
                             <li><a href="<?php echo PROJECT_DIR ?>?controller=login&action=logOut"> <i
                                             class="fa fa-sign-out-alt"></i>Log Out</a></li>
 
