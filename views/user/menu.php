@@ -1,4 +1,4 @@
-<div class="moreSpaceBackground">
+<div class="background">
     <div class="page-container">
         <!--MAIN CONTENT-->
         <!-- HomePage -->
