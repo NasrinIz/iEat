@@ -92,6 +92,14 @@ button a {
     background-attachment: fixed;;
 }
 
+.open24Background {
+    background-image: url("../img/backgrounds/open24.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    background-attachment: fixed;;
+}
+
 .adminBackground {
     background-image: url("../img/backgrounds/eatHappy.jpg");
     background-size: cover;
@@ -114,6 +122,10 @@ button a {
     background-position: center;
     min-height: 100vh;
     background-attachment: fixed;;
+}
+
+.custom-opacity{
+    opacity: 0.8 !important;
 }
 
 .login-page {
@@ -690,7 +702,7 @@ figure.customCard.hover:after {
 }
 
 .sidebar-user-material .category-content {
-    background: url(../img/backgrounds/makeSalsa.jpg) center center no-repeat;
+    background: #F4511E;
     background-repeat: no-repeat;
     background-position: center center;
     -webkit-background-size: cover;

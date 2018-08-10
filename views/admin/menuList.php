@@ -62,11 +62,6 @@
                             </tbody>
                         </table>
                         <br/>
-                        <!--   <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><b><i
-                                        class="fa fa-plus"></i></b>
-                            <a href="<?php /*echo PROJECT_DIR */ ?>?controller=admin&action=addMenuItem">Add
-                                Menu Item</a>
-                        </button>-->
                     </fieldset>
                 </div>
             </div>

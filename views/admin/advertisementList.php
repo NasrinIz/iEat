@@ -38,11 +38,11 @@
                                                 <ul class="dropdown-menu dropdown-menu-right">
                                                     <li>
                                                         <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showEditAd&id=<?php echo $value['id'] ?>">
-                                                            Edit<strong><i class="icon-pencil"></i></strong></a>
+                                                            Edit <strong><i class="icon-pencil"></i></strong></a>
                                                     </li>
                                                     <li>
                                                         <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=deleteAd&id=<?php echo $value['id'] ?>">
-                                                            Delete<strong><i class="icon-trash"></i></strong></a>
+                                                            Delete <strong><i class="icon-trash"></i></strong></a>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -52,11 +52,6 @@
                             <?php } ?>
                             </tbody>
                         </table>
-                        <button type="button" class="btn bg-teal-400 btn-labeled legitRipple"><strong><i
-                                        class="fa fa-plus"></i></strong>
-                            <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showAddAdvertisement">Add
-                                Advertisement</a>
-                        </button>
                     </fieldset>
                 </div>
             </div>

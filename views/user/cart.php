@@ -1,11 +1,11 @@
-<div class="background">
+<div class="open24Background">
     <div class="container-fluid">
         <!--MAIN CONTENT-->
         <div class="row">
             <div class="col-md-12 bg-color-ddd">
                 <!-- HomePage -->
                 <div><?php echo $this->notification ?></div>
-                <div class="dashboard-content no-print">
+                <div class="dashboard-content no-print custom-opacity">
                     <fieldset class="bg-white">
                         <table id="tableList" class="display table-responsive" style="width:100%">
                             <thead>
