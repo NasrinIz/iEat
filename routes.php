@@ -43,6 +43,7 @@ $controllers = array(
         'proceedToCheckout',
         'placeOrder',
         'completeProfile',
+        'showOrderDetail',
         'deleteUser'
     ],
     'admin' => [
@@ -66,6 +67,7 @@ $controllers = array(
         'deleteMenuItem',
         'showEditMenuItem',
         'editMenuItem',
+        'showOrderDetail',
         'deleteOrder'
     ],
     'login' => [

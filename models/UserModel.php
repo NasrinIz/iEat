@@ -18,7 +18,7 @@ class UserModel
         $result = "";
         try {
             $db = Db::getInstance();
-            $sql = "SELECT * FROM users_info";
+            $sql = "SELECT * FROM users";
             $stmt = $db->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -56,7 +56,6 @@ class UserModel
      */
     public static function getCartInfo()
     {
-
         $result = "";
         try {
             $db = Db::getInstance();
@@ -132,7 +131,7 @@ class UserModel
         return $result;
     }
 
- /**
+    /**
      * Get user by email
      * @param $email
      * @return string
@@ -153,37 +152,6 @@ class UserModel
         return $result;
     }
 
-
-
-    /**
-     * Get owner profile info by email
-     * @param $type
-     * @param $email
-     * @return string
-     */
-    public static function getProfileInformationByEmail($email, $type)
-    {
-
-        if($type == 'vendor'){
-            $db = Db::getInstance();
-            $sql = "SELECT * FROM vendor_infos WHERE email = '$email'";
-        }else if ($type == 'owner'){
-            $db = Db::getInstance();
-            $sql = "SELECT * FROM owner_infos WHERE email = '$email'";
-        }else {
-            $db = Db::getInstance();
-            $sql = "SELECT * FROM users_info WHERE username = '$email'";
-        }
-        $result = "";
-        try {
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $e->getMessage();
-        }
-        return $result;
-    }
     /**
      * Check if user exists
      * @param $username
@@ -196,7 +164,7 @@ class UserModel
         try {
 
             $db = Db::getInstance();
-            $sql = "SELECT * FROM users_info WHERE username = '$username'";
+            $sql = "SELECT * FROM users WHERE username = '$username'";
 
             $stmt = $db->prepare($sql);
             $stmt->execute();
@@ -206,6 +174,28 @@ class UserModel
         }
 
         return !empty($result);
+    }
+
+    /**
+     * Check if user exists
+     * @param $orderId
+     * @return string
+     */
+    public static function getOrderDetailByOrderId($orderId)
+    {
+        $result = "";
+        try {
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM order_details WHERE order_id = '$orderId'";
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $result;
     }
 
     /**
@@ -244,71 +234,6 @@ class UserModel
                 VALUES (
                     '" . $data['email'] . "' ,
                     '" . $data['pass'] . "'
-                )
-            ";
-
-            $db = Db::getInstance();
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            $e->getMessage();
-        }
-    }
-
-    /**
-     * Add regular user
-     * @param $data
-     */
-    public static function addRegularUser($data)
-    {
-        try {
-            $sql = "
-                INSERT INTO `users_info` (
-                    `username` ,
-                    `full_name` ,
-                    `company_name` ,
-                    `phone` ,
-                    `address` ,
-                    `comments`
-                )
-                VALUES (
-                    '" . $data['username'] . "' ,
-                    '" . $data['name'] . "' ,
-                    '" . $data['legalName'] . "' ,
-                    '" . $data['phone'] . "' ,
-                    '" . $data['address'] . "' ,
-                    '" . $data['comments'] . "'
-                )
-            ";
-
-            $db = Db::getInstance();
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            $e->getMessage();
-        }
-    }
-
-    /**
-     * Add comment on vendor
-     * @param $data
-     */
-    public static function addComments($data)
-    {
-        $date = date("y-m-d");
-        try {
-            $sql = "
-                INSERT INTO `user_comments` (
-                    `comment` ,
-                    `stars` ,
-                    `comment_date` ,
-                    `vendor_id`
-                )
-                VALUES (
-                    '" . $data['comment'] . "' ,
-                    '" . $data['star'] . "' ,
-                    '" . $date . "' ,
-                    '" . $data['vendorId'] . "' 
                 )
             ";
 
@@ -364,7 +289,7 @@ class UserModel
     public static function addOrder($data)
     {
         try {
-         $sql = "
+            $sql = "
                 INSERT INTO `orders` (
                     `customer_id` ,
                     `full_name` ,
@@ -394,6 +319,63 @@ class UserModel
         }
     }
 
+
+    /**
+     * Get last inserted
+     * @return mixed
+     */
+    public static function getLastInsertedOrder()
+    {
+        $result = [];
+        try {
+
+            $db = Db::getInstance();
+            $sql = "SELECT * FROM orders ORDER BY `orders`.`order_id` DESC
+            LIMIT 1 ";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Add order
+     * @param $data
+     * @param $orderId
+     */
+    public static function addOrderDetail($data, $orderId)
+    {
+        try {
+            $sql = "
+                INSERT INTO `order_details` (
+                    `name` ,
+                    `count` ,
+                    `amount`, 
+                    `comment` ,
+                    `order_id`
+                    
+                )
+                VALUES (
+                    '" . $data['name'] . "' ,
+                    '" . $data['count'] . "' ,
+                    '" . $data['amount'] . "' ,
+                    '" . $data['comment'] . "' ,
+                    '" . $orderId . "' 
+                )
+            ";
+
+            $db = Db::getInstance();
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            $e->getMessage();
+        }
+    }
+
     /**
      * Update regular user
      * @param $data
@@ -401,7 +383,7 @@ class UserModel
     public static function updateRegularUser($data)
     {
         try {
-          $sql = "UPDATE `users`       
+            $sql = "UPDATE `users`       
                 SET  `name` =  '" . $data['name'] . "'  ,
                     `phone` =  '" . $data['phone'] . "'  ,
                     `address`  =  '" . $data['address'] . "'  
@@ -445,7 +427,7 @@ class UserModel
     public static function deleteUser($id)
     {
         try {
-            $sql = "DELETE FROM users_info 
+            $sql = "DELETE FROM users 
                          WHERE `id` = $id";
             $db = Db::getInstance();
             $stmt = $db->prepare($sql);
@@ -470,25 +452,6 @@ class UserModel
         }
     }
 
-    /**
-     * Get all news
-     * @return string
-     */
-    public static function getAllNews()
-    {
-        $result = "";
-        try {
-            $db = Db::getInstance();
-            $sql = "SELECT * FROM news";
-
-            $stmt = $db->prepare($sql);
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $e->getMessage();
-        }
-        return $result;
-    }
     /**
      * Set User session
      * @param $data

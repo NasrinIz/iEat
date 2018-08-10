@@ -18,6 +18,7 @@ class AdminController
     private $orderList;
     private $menuList;
     private $orderTime;
+    private $orderDetail;
 
     public function __construct()
     {
@@ -233,7 +234,14 @@ class AdminController
         }
         $path = '?controller=admin&action=showOrderList';
         CommonUtility::redirect($path);
+    }
 
+    public function showOrderDetail()
+    {
+        $this->orderDetail = UserModel::getOrderDetailByOrderId($_GET['id']);
+        require_once 'views/admin.title.inc.php';
+        require_once 'views/admin/orderDetail.php';
+        require_once 'views/admin.tail.inc.php';
     }
 
 }

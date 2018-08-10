@@ -18,6 +18,7 @@ class UserController
     private $menuDetail;
     private $cartInfo;
     private $advertisements;
+    private $orderDetail;
 
     public function __construct()
     {
@@ -94,7 +95,13 @@ class UserController
         $currentHour = date('H');
 
         /* if((strtotime($orderTime['order_time_from']) <= strtotime($currentHour)) AND (strtotime($currentHour)<=strtotime($orderTime['order_time_to']))) {*/
+
         UserModel::addOrder($_POST);
+        $cartInfo = UserModel::getCartInfo();
+        $orderInfo = UserModel::getLastInsertedOrder();
+        foreach ($cartInfo as $key=>$value){
+            UserModel::addOrderDetail($value, $orderInfo['order_id']);
+        }
         UserModel::deleteCartInfo();
         if (!empty($this->userInformation)) {
             $this->showOrderList();
@@ -125,6 +132,14 @@ class UserController
         $path = '?controller=admin&action=showUserList';
         CommonUtility::redirect($path);
 
+    }
+
+    public function showOrderDetail()
+    {
+        $this->orderDetail = UserModel::getOrderDetailByOrderId($_GET['id']);
+        require_once 'views/title.inc.php';
+        require_once 'views/user/orderDetail.php';
+        require_once 'views/tail.inc.php';
     }
 
     public function completeProfile()
