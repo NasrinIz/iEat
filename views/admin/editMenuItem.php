@@ -24,6 +24,9 @@
                                             <input type="text" name="calories"
                                                    placeholder="Calories"
                                                    class="menu_field profileInput" value="<?php echo $this->menuItem['calories']?>"/>
+                                            <input type="text" name="amount"
+                                                   placeholder="Amount"
+                                                   class="menu_field profileInput" value="<?php echo $this->menuItem['amount']?>"/>
                                             <input type="hidden" name="id" value="<?php echo $this->menuItem['id']?>"/>
                                             <!--    <label class="text-bold">Advertisement Picture</label>
                                                 <input type="file" class="menu_field profileInput" name="img01" id="img01">-->

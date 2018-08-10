@@ -25,6 +25,9 @@
                                             <input type="text" name="calories"
                                                    placeholder="Calories"
                                                    class="menu_field profileInput"/>
+                                            <input type="text" name="amount"
+                                                   placeholder="Amount"
+                                                   class="menu_field profileInput"/>
                                             <label class="text-bold">Item Picture</label>
                                             <input type="file" class="menu_field profileInput" name="img01" id="img01">
                                             <input type="submit" name="submit" class="submit action-button"

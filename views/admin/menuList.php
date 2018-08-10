@@ -13,6 +13,7 @@
                                 <th>Name</th>
                                 <th>Content</th>
                                 <th>Calories</th>
+                                <th>Amount</th>
                                 <th>Image</th>
                                 <th>Menu</th>
                             </tr>
@@ -30,9 +31,12 @@
                                         <?php echo $value['calories'] ?>
                                     </td>
                                     <td>
+                                        <?php echo $value['amount'] ?>
+                                    </td>
+                                    <td>
                                         <a target="_blank"
                                            href="<?php echo PROJECT_DIR ?>uploads/menus/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>">
-                                            <?php echo $value['img'] ?>
+                                           img
                                         </a>
                                     </td>
                                     <td>

@@ -75,7 +75,6 @@ class UserController
 
     public function addToCart()
     {
-
         UserModel::addToCart($_POST);
         $this->showCart();
     }

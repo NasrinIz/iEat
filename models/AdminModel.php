@@ -38,12 +38,14 @@ class AdminModel
                 INSERT INTO `menus` (
                     `name` ,
                     `content` ,
-                    `calories` 
+                    `calories` ,
+                    `amount` 
                 )
                 VALUES (
                     '" . $data['name'] . "' ,
                     '" . $data['content'] . "' ,
-                    '" . $data['calories'] . "' 
+                    '" . $data['calories'] . "' ,
+                    '" . $data['amount'] . "' 
         
                 )
             ";
@@ -239,7 +241,8 @@ class AdminModel
             $sql = "UPDATE `menus`       
                 SET `name` =  '" . $data['name'] . "',
                     `content` =  '" . $data['content'] . "',
-                    `calories` =  '" . $data['calories'] . "'
+                    `calories` =  '" . $data['calories'] . "',
+                    `amount` =  '" . $data['amount'] . "'
                 WHERE `id` =  '" . $data['id'] . "' ";
 
             $db = Db::getInstance();
