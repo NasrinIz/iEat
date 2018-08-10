@@ -18,7 +18,7 @@ class LoginRegisterController
 
     public function showLoginRegister()
     {
-        require_once('views/login_register/login_register.php');
+        require_once('views/login_register/loginRegister.php');
     }
 
     /**
