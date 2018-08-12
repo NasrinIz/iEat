@@ -6,7 +6,7 @@
         <div class="col-lg-7">
 
             <!-- Traffic sources -->
-            <div class="panel panel-flat">
+            <div class="panel panel-flat" data-intro="You can see the overview here" data-step="1">
                 <div class="panel-heading">
                     <h6 class="panel-title">Overview</h6>
                     <div class="heading-elements">
@@ -74,7 +74,7 @@
         <div class="col-lg-5">
 
             <!-- Sales stats -->
-            <div class="panel panel-flat">
+            <div class="panel panel-flat"  data-intro="You can see the report here" data-step="2">
                 <div class="panel-heading">
                     <h6 class="panel-title">Report</h6>
                     <div class="heading-elements">

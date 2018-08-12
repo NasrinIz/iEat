@@ -29,6 +29,7 @@
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/core.css">
     <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/OwlCarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/css/introjs.min.css">
     <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/OwlCarousel/owl.theme.default.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/responsive.css">
@@ -46,6 +47,7 @@
             crossorigin="anonymous"></script>
 
     <script src="<?php echo PROJECT_DIR ?>views/assets/OwlCarousel/owl.carousel.js"></script>
+    <script src="<?php echo PROJECT_DIR ?>views/assets/js/intro.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
@@ -75,10 +77,12 @@
         if ($_SESSION['logged_in'] != 1) {
             ?>
             <li class="float-right"><a href="<?php echo PROJECT_DIR ?>?controller=login&action=showLoginRegister"> <i
-                            class="fa fa-sign-in"></i> Login
+                            class="icon-lock"></i> Login
                     /
                     Register</a></li>
-        <?php } else { ?>
+            <li class="float-right"><a href="#" onclick="startIntroJs()"> <i
+                            class="icon-question3"></i> Help</a></li>
+          <?php } else { ?>
             <li class="float-right">
                 <div class="nav toggle">
                     <div class="btn-group">
