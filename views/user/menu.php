@@ -4,8 +4,8 @@
         <!-- HomePage -->
         <div><?php echo $this->notification ?></div>
         <div class="dashboard-content no-print customForm">
-            <input type="text" class="menu_field profileInput " name="search" placeholder="Search..."
-                   data-search>
+          <!--  <input type="text" class="menu_field profileInput " name="search" placeholder="Search..."
+                   data-search>-->
             <div class="row" data-intro='Choose your menu here.' data-step="1">
                 <div class="filtr-container customForm">
                     <?php foreach ($this->menuList as $key => $value) { ?>
