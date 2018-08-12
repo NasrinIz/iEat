@@ -21,6 +21,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet"
           type="text/css">
     <link href="<?php echo PROJECT_DIR ?>/views/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/css/introjs.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/normalize.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/effects.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/colors.css">
@@ -42,6 +43,8 @@
             crossorigin="anonymous"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
+
+    <script src="<?php echo PROJECT_DIR ?>views/assets/js/intro.min.js"></script>
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
@@ -61,6 +64,8 @@
         <ul class="nav navbar-nav visible-xs-block">
             <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
         </ul>
+        <li class="float-left margin-right" style="list-style: none; color: #fff !important;"><a href="#" onclick="startIntroJs()"> <i
+                        class="icon-question3"></i> Help</a></li>
     </div>
 </div>
 <!-- /main navbar -->

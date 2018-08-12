@@ -10,6 +10,11 @@
     </div>
 </div>
 <!-- /footer -->
+<script>
+    function startIntroJs(){
+        introJs().start();
+    }
+</script>
 
 <script src="<?php echo PROJECT_DIR ?>views/assets/js/custom.js"></script>
 </body>

@@ -28,6 +28,10 @@
             }
         }
     });
+    function startIntroJs(){
+        introJs().start();
+    }
+
 </script>
 <!-- Footer -->
 

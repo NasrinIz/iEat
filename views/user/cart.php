@@ -7,7 +7,7 @@
                 <div><?php echo $this->notification ?></div>
                 <div class="dashboard-content no-print custom-opacity">
                     <fieldset class="bg-white">
-                        <table id="tableList" class="display table-responsive" style="width:100%">
+                        <table id="tableList" class="display table-responsive" style="width:100%"  data-intro='You can see the details of your cart.' data-step="1">
                             <thead>
                             <tr>
                                 <th>Name</th>
@@ -35,7 +35,7 @@
                             <?php } ?>
                             </tbody>
                         </table>
-                            <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"><strong><i
+                            <button type="button" class="btn bg-warning-400 btn-labeled legitRipple"  data-intro='Click on checkout to place order.' data-step="2"><strong><i
                                         class="fa fa-plus"></i></strong>
                                 <a href="<?php echo PROJECT_DIR ?>?controller=user&action=proceedToCheckout">
                                     Proceed to Checkout</a></button>
