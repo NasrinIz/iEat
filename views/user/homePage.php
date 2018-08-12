@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>iEat</title>
     <link rel="stylesheet" href="https://use.typekit.net/bsg5ydy.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/css/base.css"/>
+
     <script>
         document.documentElement.className = "js";
         var supportsCssVars = function () {

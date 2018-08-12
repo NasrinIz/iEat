@@ -1,10 +1,10 @@
 
 <br/>
-<div class="owl-carousel owl-theme">
+<div role="banner"  class="owl-carousel owl-theme">
     <?php foreach ($this->advertisements as $key => $value) { ?>
         <div class="item">
             <h4><?php echo $value['title'] ?></h4>
-            <img src="<?php echo PROJECT_DIR ?>uploads/advertisements/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>"/>
+            <img src="<?php echo PROJECT_DIR ?>uploads/advertisements/<?php echo $value['id'] ?>/<?php echo $value['img'] ?>" alt="<?php echo $value['id'] ?>" />
         </div>
     <?php } ?>
 </div>
@@ -31,10 +31,10 @@
 </script>
 <!-- Footer -->
 
-<div class="navbar-collapse" id="footer">
+<div class="navbar-collapse" id="footer" role="main">
     <div class="container">
         <div class="navbar-text">
-            &copy; 2018. <a href="#" class="navbar-link">iEat</a> by <a href="#"
+            &copy; 2018. <a href="#" class="navbar-link"><h1>iEat</h1></a> by <a href="#"
                                                                         class="navbar-link" target="_blank">Team I</a>
             <p>Acknowledgment: Content and pictures of this website are copy righted by Subway and are for educational
                 purpose only.</p>

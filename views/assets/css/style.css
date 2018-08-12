@@ -405,7 +405,7 @@ svg circle {
 ============================*/
 nav {
     width: 100%;
-    background-color: #F15421;
+    background-color: #d13d0d;
 }
 
 nav ul {
@@ -808,3 +808,15 @@ figure.customCard.hover:after {
 /*===========================
        End Admin
 ============================*/
+/*===========================
+       ACCESSIBLITY
+============================*/
+a.navbar-link {
+    color: #1069ef !important
+}
+a h1{
+    font-weight: normal !important;
+    display: inline !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+}
