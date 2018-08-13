@@ -34,7 +34,7 @@ class AdminModel
     public static function addMenuItem($data)
     {
         try {
-          echo  $sql = "
+         $sql = "
                 INSERT INTO `menus` (
                     `name` ,
                     `content` ,
