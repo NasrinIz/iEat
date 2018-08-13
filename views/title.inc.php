@@ -61,8 +61,8 @@
 </head>
 <!-- Main navbar -->
 <nav>
-<!--
- <a href="#" class="menu-trigger"><i class="fa fa-bars"></i></a>  -->
+
+ <a href="#" class="menu-trigger"><i class="fa fa-bars"></i></a>  
     <ul>
         <li><a href="<?php echo PROJECT_DIR ?>?controller=user&action=showHomePage"><i class="fa fa-home"></i> Home</a>
         </li>
