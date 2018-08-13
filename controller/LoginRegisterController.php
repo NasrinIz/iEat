@@ -26,6 +26,7 @@ class LoginRegisterController
      */
     public function login()
     {
+        UserModel::deleteCartInfo();
         if (!empty(filter_input(INPUT_POST, 'login_form'))) {
             $email = CommonUtility::filterInputPost("email");
             $pass = CommonUtility::filterInputPost("pass");
@@ -79,6 +80,7 @@ class LoginRegisterController
 
     public function logOut()
     {
+        UserModel::deleteCartInfo();
         session_destroy();
         $path = '?controller=login&action=showLoginRegister';
         CommonUtility::redirect($path);
