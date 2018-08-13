@@ -5,6 +5,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,su
 	box-sizing: border-box;
 }
 
+/*
 html {
 	background: #fff;
 }
@@ -28,6 +29,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	padding-top: 5rem;
 }
+*/
 
 /* Page Loader */
 .js .loader {

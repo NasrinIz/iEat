@@ -32,15 +32,6 @@
             </symbol>
         </svg>
         <main>
-            <div class="message"></div>
-            <div class="content content--fixed">
-                <header class="codrops-header margin-top">
-                    <a href="<?php echo PROJECT_DIR?>?controller=vendor&action=showVendorsList">
-                        <h1 class="codrops-header__title">iEat</h1>
-                        <span class="info">Online Ordering</span>
-                    </a>
-                </header>
-            </div>
             <div class="slideshow">
                 <div class="slide">
                     <div class="slide__img-wrap">
