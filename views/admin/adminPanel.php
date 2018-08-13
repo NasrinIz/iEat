@@ -18,7 +18,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showUsersList" class="btn border-teal text-teal btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="icon-user"></i></strong></a>
+                                    <a href="#" class="btn border-teal text-teal btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="icon-user"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Users</div>
@@ -34,7 +34,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showBrancheList" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-project-diagram"></i></strong></a>
+                                    <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-project-diagram"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Branches</div>
@@ -50,7 +50,7 @@
                         <div class="col-lg-4">
                             <ul class="list-inline text-center">
                                 <li class="no-padding-right">
-                                    <a href="<?php echo PROJECT_DIR ?>?controller=admin&action=showOrderList" class="btn border-indigo-400 text-indigo-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-shopping-basket"></i></strong></a>
+                                    <a href="#" class="btn border-indigo-400 text-indigo-400 btn-flat btn-rounded btn-icon btn-xs valign-text-bottom"><strong><i class="fa fa-shopping-basket"></i></strong></a>
                                 </li>
                                 <li class="text-left">
                                     <div class="text-semibold text-center">Orders</div>
