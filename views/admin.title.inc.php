@@ -64,7 +64,7 @@
         <ul class="nav navbar-nav visible-xs-block">
             <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
         </ul>
-        <li class="float-left margin-right" style="list-style: none; color: #fff !important;"><a href="#" onclick="startIntroJs()"> <i
+        <li class="float-left margin-left" style="list-style: none; color: #fff !important;"><a href="#" style="color: #fff !important;" onclick="startIntroJs()"> <i
                         class="icon-question3"></i> Help</a></li>
     </div>
 </div>

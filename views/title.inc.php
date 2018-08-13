@@ -29,6 +29,7 @@
     <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/core.css">
     <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/OwlCarousel/owl.carousel.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR?>views/assets/HomeSlideShow/css/base.css" />
     <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/css/introjs.min.css">
     <link rel="stylesheet" href="<?php echo PROJECT_DIR ?>views/assets/OwlCarousel/owl.theme.default.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo PROJECT_DIR ?>views/assets/css/style.css">

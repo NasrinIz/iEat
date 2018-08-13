@@ -47,6 +47,9 @@
 </div>
 <!-- /footer -->
 
+<script src="<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/js/imagesloaded.pkgd.min.js"></script>
+<script src="<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/js/TweenMax.min.js"></script>
+<script src="<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/js/demo.js"></script>
 <script src="<?php echo PROJECT_DIR ?>views/assets/js/custom.js"></script>
 </body>
 </html>
