@@ -84,6 +84,12 @@ button a {
     background-attachment: fixed;;
 }
 
+.boxedBackground {
+    background-image: url("../img/backgrounds/boxed_bg.png");
+    background-repeat: repeat-x;
+    background-repeat: repeat-y;
+}
+
 .moreSpaceBackground {
     background-image: url("../img/backgrounds/moreSpace.jpg");
     background-size: cover;

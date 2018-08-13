@@ -16,7 +16,7 @@
     </script>
 </head>
 <body>
-<div class="">
+<div class="background">
     <div class="page-container">
         <div><?php echo $this->notification ?></div>
         <!--MAIN CONTENT-->
@@ -36,7 +36,7 @@
                 <div class="slide">
                     <div class="slide__img-wrap">
                         <div class="slide__img"
-                             style="background-image: url(<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/img/1.jpg);"></div>
+                             style="background-image: url(<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/img/6.jpg);"></div>
                         <div class="slide__img-reveal"></div>
                     </div>
                     <div class="slide__title-wrap">
@@ -146,7 +146,7 @@
                 <div class="slide">
                     <div class="slide__img-wrap">
                         <div class="slide__img"
-                             style="background-image: url(<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/img/6.jpg);"></div>
+                             style="background-image: url(<?php echo PROJECT_DIR ?>views/assets/HomeSlideShow/img/3.jpg);"></div>
                         <div class="slide__img-reveal"></div>
                     </div>
                     <div class="slide__title-wrap">
